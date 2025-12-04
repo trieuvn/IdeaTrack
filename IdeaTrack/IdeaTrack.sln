@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35507.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdeaTrack", "IdeaTrack\IdeaTrack.csproj", "{A8B39863-86E7-4976-B3F6-5F0FC7734B13}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8B39863-86E7-4976-B3F6-5F0FC7734B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8B39863-86E7-4976-B3F6-5F0FC7734B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8B39863-86E7-4976-B3F6-5F0FC7734B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8B39863-86E7-4976-B3F6-5F0FC7734B13}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E88E75F-F34F-4EBB-A12C-0B65C15FA5F6}
+	EndGlobalSection
+EndGlobal
