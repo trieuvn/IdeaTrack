@@ -1,8 +1,61 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+﻿<div class="topbar">
+    <input class="search" placeholder="Search initiatives, drafts..." />
+    <button class="btn-primary">+ Create New Initiative</button>
 </div>
+
+<section class="welcome">
+    <div class="welcome-card">
+        <h2>Welcome back, John! 👋</h2>
+        <p>You have 2 pending drafts and 1 initiative under review.</p>
+        <div class="actions">
+            <button class="btn-light">Continue Drafts</button>
+            <button class="btn-outline">View Guidelines</button>
+        </div>
+    </div>
+    <div class="overview">
+        <h4>Submission Overview</h4>
+        <div class="overview-item"><span>Drafts</span><strong>2</strong></div>
+        <div class="overview-item"><span>Submitted</span><strong>5</strong></div>
+        <div class="overview-item"><span>Approved</span><strong>12</strong></div>
+    </div>
+</section>
+
+<section class="metrics">
+    <div class="metric blue">
+        <span>Total Score</span>
+        <h3>845 pts</h3>
+    </div>
+    <div class="metric orange">
+        <span>Under Review</span>
+        <h3>3 Items</h3>
+    </div>
+    <div class="metric green">
+        <span>Success Rate</span>
+        <h3>92%</h3>
+    </div>
+    <div class="metric purple">
+        <span>Rank</span>
+        <h3>Top 10%</h3>
+    </div>
+</section>
+
+<section class="card">
+    <h3 style="margin-bottom:12px">Recent Initiatives</h3>
+    <table>
+        <thead>
+            <tr><th>Title</th><th>Date</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>AI in Classroom Learning</td>
+                <td>Oct 24, 2024</td>
+                <td><span class="badge review">Under Review</span></td>
+            </tr>
+            <tr>
+                <td>Student Wellbeing Program</td>
+                <td>Oct 20, 2024</td>
+                <td><span class="badge approved">Approved</span></td>
+            </tr>
+        </tbody>
+    </table>
+</section>
