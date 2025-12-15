@@ -202,12 +202,8 @@ namespace IdeaTrack.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-<<<<<<< HEAD
-=======
                     b.Property<int>("Role")
                         .HasColumnType("int");
-
->>>>>>> d1c795b103ceec0ecfab0e936d47e204b79df8d4
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -250,13 +246,10 @@ namespace IdeaTrack.Migrations
                     b.Property<Guid>("ReviewerId")
                         .HasColumnType("uniqueidentifier");
 
-<<<<<<< HEAD
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-=======
->>>>>>> d1c795b103ceec0ecfab0e936d47e204b79df8d4
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
