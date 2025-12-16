@@ -1,22 +1,58 @@
-html {
-  font-size: 14px;
+/* ===== LMS Navbar Style ===== */
+.rui-navbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    .rui-navbar .navbar-brand span {
+        font-size: 1.05rem;
+    }
+
+    .rui-navbar .nav-link {
+        color: #1f2937;
+    }
+
+        .rui-navbar .nav-link:hover {
+            color: #2563eb;
+        }
+
+.btn-outline-primary {
+    border-radius: 999px;
+    padding: 6px 16px;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.btn-outline-danger {
+    border-radius: 999px;
+}
+.nav-home {
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+    .nav-home:hover,
+    .nav-home:active {
+        text-decoration: underline;
+    }
+
+.page-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-top: 40px;
 }
 
-body {
-  margin-bottom: 60px;
+.alert-danger {
+    background-color: #fdecea;
+    color: #8a1c1c;
+    border: none;
+    padding: 24px;
+    border-radius: 8px;
+}
+
+.btn-continue {
+    background-color: #0033cc;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 18px;
+    font-weight: 600;
 }
