@@ -6,7 +6,7 @@
     <title>UEF Initiative Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="@Url.Content("/css/main.css")" rel="stylesheet" />
     <link rel="icon" type="image/x-icon" href="/lib/favicon.ico">
 </head>
 <body>
@@ -67,6 +67,24 @@
                 });
             });
 
+        });
+         const tabs = document.querySelectorAll('.filter-tabs .tab');
+        const cards = document.querySelectorAll('.history-card');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const status = tab.textContent.trim().toLowerCase();
+                cards.forEach(card => {
+                    if (status === 'all status') {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = card.classList.contains(status)
+                            ? 'flex'
+                            : 'none';
+                    }
+                });
+            });
         });
 
     </script>

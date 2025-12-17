@@ -401,3 +401,168 @@ textarea {
     align-items: center;
     gap: 10px;
 }
+
+
+
+
+
+/*H*/
+
+/* ================= HISTORY ================= */
+
+.history-container {
+    max-width: 1200px;
+    margin: 24px 0 24px 16px;
+}
+
+/* Title */
+.page-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 6px;
+}
+
+.page-subtitle {
+    font-size: 14px;
+    color: #475569;
+    margin-bottom: 26px;
+}
+
+/* ================= TABS ================= */
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 26px;
+}
+
+.tab {
+    background: #e0ecff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .tab:hover {
+        background: #dbeafe;
+    }
+
+    .tab.active {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        color: #ffffff;
+        border: none;
+    }
+
+/* ================= LIST ================= */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ================= CARD ================= */
+.history-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #ffffff, #f4f8ff);
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 8px 20px rgba(30, 64, 175, 0.08);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+    .history-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 26px rgba(30, 64, 175, 0.12);
+    }
+
+/* Left */
+.card-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Status dot */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+.history-card.cancelled .status-dot {
+    background: #ef4444;
+}
+
+/* Content */
+.card-content {
+    flex: 1;
+}
+
+    .card-content h3 {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e3a8a;
+        margin: 0 0 6px;
+    }
+
+    .card-content p {
+        font-size: 13px;
+        color: #475569;
+        margin: 0 0 10px;
+    }
+
+/* ================= META ================= */
+.meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.badge {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+    .badge.completed {
+        background: #bbf7d0;
+        color: #065f46;
+    }
+
+    .badge.cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+.date {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ================= BUTTON ================= */
+.btn-detail {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border: none;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+    .btn-detail.ghost {
+        background: transparent;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+    }
