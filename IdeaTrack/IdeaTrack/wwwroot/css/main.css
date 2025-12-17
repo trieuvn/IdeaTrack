@@ -566,3 +566,190 @@ textarea {
         border: 1px solid #bfdbfe;
         color: #1e40af;
     }
+
+
+
+/* ===============================
+   SETTINGS CONTAINER
+================================ */
+.settings-container {
+    max-width: 1100px;
+    margin: 28px 0 28px 24px;
+}
+
+/* ===============================
+   SETTINGS PANEL – XANH TƯƠI, RÕ
+================================ */
+.settings-panel {
+    background: linear-gradient( 180deg, #2563eb 0%, /* blue-600 */
+    #1e40af 100% /* blue-800 */
+    );
+    border: 1px solid rgba(147, 197, 253, 0.75);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(30, 64, 175, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+/* ===============================
+   SETTINGS ITEM
+================================ */
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid rgba(219, 234, 254, 0.35);
+    transition: background 0.2s ease;
+}
+
+    .settings-item:last-child {
+        border-bottom: none;
+    }
+
+    .settings-item:hover {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+/* ===============================
+   LEFT SIDE
+================================ */
+.item-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+    /* ICON – XANH SÁNG, RÕ MÀU */
+    .item-left i {
+        font-size: 18px;
+        width: 22px;
+        color: #dbeafe; /* xanh học thuật */
+        filter: drop-shadow(0 1px 2px rgba(30, 64, 175, 0.6));
+    }
+
+/* ===============================
+   TEXT
+================================ */
+.item-info h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #ffffff;
+}
+
+.item-info p {
+    font-size: 13px;
+    color: #e0f2fe;
+}
+
+/* ===============================
+   BUTTONS
+================================ */
+.btn-action {
+    background: linear-gradient( 135deg, #60a5fa, #3b82f6 );
+    border: none;
+    color: #020617;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.6);
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+    .btn-action:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(37, 99, 235, 0.85);
+    }
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.28);
+    color: #fee2e2;
+    border: 1px solid rgba(239, 68, 68, 0.6);
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ===============================
+   TOGGLE SWITCH
+================================ */
+.switch {
+    width: 44px;
+    height: 22px;
+    position: relative;
+}
+
+    .switch input {
+        display: none;
+    }
+
+.slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    border: 1px solid rgba(219, 234, 254, 0.8);
+    box-shadow: inset 0 2px 4px rgba(30, 64, 175, 0.45);
+}
+
+    .slider::before {
+        content: "";
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        background: #ffffff;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.25s ease;
+        box-shadow: 0 2px 6px rgba(30, 64, 175, 0.6);
+    }
+
+.switch input:checked + .slider {
+    background: green;
+}
+
+    .switch input:checked + .slider::before {
+        transform: translateX(22px);
+    }
+
+/* ===============================
+   LOGOUT – DANGER (ĐỎ ĐẬM)
+================================ */
+.settings-item.danger {
+    background: red; /* red-700 */
+}
+
+    .settings-item.danger:hover {
+        background: linear-gradient( 90deg, rgba(185, 28, 28, 0.7), rgba(127, 29, 29, 0.45) );
+    }
+
+    /* Icon */
+    .settings-item.danger .item-left i {
+        color: #fecaca;
+        filter: drop-shadow(0 1px 3px rgba(220, 38, 38, 0.85));
+    }
+
+    /* Text */
+    .settings-item.danger .item-info h3 {
+        color: #fff1f2;
+    }
+
+    .settings-item.danger .item-info p {
+        color: #fee2e2;
+    }
+
+    /* Button */
+    .settings-item.danger .btn-danger {
+        background: linear-gradient( 135deg, #ef4444, #991b1b );
+        border: none;
+        color: #ffffff;
+        box-shadow: 0 6px 16px rgba(185, 28, 28, 0.7);
+    }
+
+        .settings-item.danger .btn-danger:hover {
+            box-shadow: 0 10px 26px rgba(185, 28, 28, 0.9);
+        }
+

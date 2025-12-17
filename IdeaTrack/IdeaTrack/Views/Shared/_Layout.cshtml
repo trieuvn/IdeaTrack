@@ -23,7 +23,10 @@
                class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "History" ? "active" : "")">
                 <i class="bi bi-clock-history"></i>
             </a>
-            <div class="nav"><i class="bi bi-gear fs-5"></i></div>
+            <a href="@Url.Action("Setting", "Home")"
+               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Setting" ? "active" : "")">
+                <i class="bi bi-gear fs-5"></i>
+            </a>
         </aside>
 
         <main class="main">

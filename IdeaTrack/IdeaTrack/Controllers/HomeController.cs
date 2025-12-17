@@ -32,5 +32,9 @@ namespace IdeaTrack.Controllers
         {
             return View();
         }
+        public IActionResult Setting()
+        {
+            return View();
+        }
     }
 }
