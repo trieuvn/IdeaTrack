@@ -1,0 +1,98 @@
+﻿.sample-files {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sample-file {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    font-size: 13px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .sample-file:hover {
+        background: #eef2ff;
+    }
+
+.upload.dragover {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+.source-panel {
+    margin-top: 12px;
+}
+
+.existing-file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    background: #fff;
+    position: relative;
+    transition: background 0.2s ease;
+}
+
+    .existing-file:hover {
+        background: #f9fafb;
+    }
+
+.file-icon {
+    font-size: 20px;
+}
+
+    .file-icon.pdf {
+        color: #e11d48; /* đỏ PDF */
+    }
+
+    .file-icon.doc {
+        color: #2563eb; /* xanh Word */
+    }
+
+    .file-icon.xlsx {
+        color: #16a34a; /* xanh lá Excel */
+    }
+
+.file-name {
+    flex: 1;
+}
+
+/* Toggle chọn */
+.file-toggle {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #c7d2fe;
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .file-toggle::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 6px;
+        width: 8px;
+        height: 14px;
+        border: solid #2563eb;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .file-toggle.selected::after {
+        opacity: 1;
+    }

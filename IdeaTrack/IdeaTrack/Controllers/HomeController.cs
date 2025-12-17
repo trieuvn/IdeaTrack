@@ -43,5 +43,9 @@ namespace IdeaTrack.Controllers
         {
             return View();
         }
+        public IActionResult Files()
+        {
+            return View();
+        }
     }
 }

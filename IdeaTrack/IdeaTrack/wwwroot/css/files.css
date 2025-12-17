@@ -1,0 +1,77 @@
+﻿/* ===== FILE STORAGE VIEW ===== */
+.files-view {
+    padding: 24px;
+}
+
+    .files-view h2 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+/* grid danh sách file */
+.files-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+.file-preview iframe {
+    width: 100%;
+    height: 80vh;
+    min-height: 700px;
+    border: none;
+    border-radius: 10px;
+    margin-top:20px;
+}
+.file-preview img {
+    max-width: 420px;
+    max-height: 420px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+/* item file */
+.file-item {
+    margin-bottom:20p;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #ffffff;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #1f2937;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: all 0.25s ease;
+}
+
+    /* hover */
+    .file-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        background: #f8fafc;
+    }
+
+    /* icon */
+    .file-item i {
+        font-size: 28px;
+        color: #ef4444; /* mặc định PDF */
+    }
+
+    /* tên file */
+    .file-item span {
+        font-size: 14px;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    /* ============================= */
+    /* icon theo loại file (tuỳ chọn) */
+    .file-item .bi-file-earmark-word-fill {
+        color: #2563eb;
+    }
+
+    .file-item .bi-file-earmark-image-fill {
+        color: #16a34

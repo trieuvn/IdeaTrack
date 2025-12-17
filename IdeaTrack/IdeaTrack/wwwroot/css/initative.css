@@ -1,0 +1,103 @@
+﻿/* ===== FILE SOURCE TOGGLE ===== */
+.file-source-toggle {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.source-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .source-btn i {
+        font-size: 16px;
+    }
+
+    .source-btn:hover {
+        background: #f1f5f9;
+    }
+
+    .source-btn.active {
+        background: #2563eb;
+        border-color: #2563eb;
+        color: #ffffff;
+    }
+
+        .source-btn.active i {
+            color: #ffffff;
+        }
+
+/* ===== EXISTING FILE LIST ===== */
+#existingFiles {
+    margin-top: 12px;
+}
+
+.existing-file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    background: #ffffff;
+    transition: background 0.2s ease, border 0.2s ease;
+}
+
+    .existing-file:hover {
+        background: #f9fafb;
+        border-color: #c7d2fe;
+    }
+
+    .existing-file input {
+        cursor: pointer;
+    }
+
+/* ===== UPLOAD BOX ===== */
+.upload {
+    margin-top: 12px;
+    border: 2px dashed #c7d2fe;
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: #ffffff;
+}
+
+    .upload strong {
+        color: #1e3a8a;
+    }
+
+    .upload.dragover {
+        background: #eef2ff;
+        border-color: #2563eb;
+    }
+
+/* ===== FILE LIST (UPLOAD) ===== */
+#fileList {
+    margin-top: 16px;
+    text-align: left;
+}
+
+.uploaded-file {
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    background: #f8fafc;
+}

@@ -1,29 +1,52 @@
-﻿const uploadBox = document.getElementById("uploadBox");
-const fileInput = document.getElementById("fileInput");
-const fileList = document.getElementById("fileList");
-const fileCount = document.getElementById("fileCount");
+﻿const buttons = document.querySelectorAll(".source-btn");
+const existingFiles = document.getElementById("existingFiles");
 
+const localUploadBox = document.getElementById("uploadBox");
+const localFileInput = document.getElementById("fileInput");
+const localFileList = document.getElementById("fileList");
 let files = [];
 
-uploadBox.addEventListener("dragover", e => {
-    e.preventDefault();
-    uploadBox.classList.add("dragover");
+/* ===== TOGGLE FILE SOURCE ===== */
+buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        buttons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        if (btn.dataset.source === "existing") {
+            existingFiles.style.display = "block";
+            localUploadBox.style.display = "none";
+        } else {
+            existingFiles.style.display = "none";
+            localUploadBox.style.display = "block";
+        }
+    });
 });
 
-uploadBox.addEventListener("dragleave", () => {
-    uploadBox.classList.remove("dragover");
+/* ===== CLICK UPLOAD BOX ===== */
+localUploadBox.addEventListener("click", () => {
+    localFileInput.click();
 });
 
-uploadBox.addEventListener("drop", e => {
+/* ===== DRAG & DROP ===== */
+localUploadBox.addEventListener("dragover", e => {
     e.preventDefault();
-    uploadBox.classList.remove("dragover");
+    localUploadBox.classList.add("dragover");
+});
+localUploadBox.addEventListener("dragleave", () => {
+    localUploadBox.classList.remove("dragover");
+});
+localUploadBox.addEventListener("drop", e => {
+    e.preventDefault();
+    localUploadBox.classList.remove("dragover");
     handleFiles(e.dataTransfer.files);
 });
 
-fileInput.addEventListener("change", e => {
+/* ===== FILE INPUT ===== */
+localFileInput.addEventListener("change", e => {
     handleFiles(e.target.files);
 });
 
+/* ===== HANDLE FILES ===== */
 function handleFiles(selectedFiles) {
     [...selectedFiles].forEach(file => {
         if (!validateFile(file)) return;
@@ -50,19 +73,12 @@ function validateFile(file) {
 }
 
 function renderFiles() {
-    fileList.innerHTML = "";
+    localFileList.innerHTML = "";
     files.forEach((file, index) => {
-        const iconClass = file.type.includes("pdf")
-            ? "pdf"
-            : file.type.includes("sheet")
-                ? "excel"
-                : "";
-
         const item = document.createElement("div");
         item.className = "document-item";
-
         item.innerHTML = `
-            <div class="file-icon ${iconClass}">
+            <div class="file-icon">
                 <i class="bi bi-file-earmark"></i>
             </div>
             <div class="file-info">
@@ -74,14 +90,16 @@ function renderFiles() {
                 <i class="bi bi-trash" onclick="removeFile(${index})"></i>
             </div>
         `;
-
-        fileList.appendChild(item);
+        localFileList.appendChild(item);
     });
-
-    fileCount.textContent = files.length;
 }
 
 function removeFile(index) {
     files.splice(index, 1);
     renderFiles();
+}
+
+
+function toggleSelect(el) {
+    el.classList.toggle("selected");
 }
