@@ -752,4 +752,296 @@ textarea {
         .settings-item.danger .btn-danger:hover {
             box-shadow: 0 10px 26px rgba(185, 28, 28, 0.9);
         }
+/* ===============================
+   BREADCRUMB
+================================ */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
 
+.breadcrumb-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+    .breadcrumb-link:hover {
+        text-decoration: underline;
+    }
+
+.breadcrumb-separator {
+    color: #94a3b8;
+}
+
+.breadcrumb-current {
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.initiative-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+    .initiative-header h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #1e40af;
+    }
+
+.edit-btn {
+    background: linear-gradient(135deg, #60a5fa, #2563eb);
+    border: none;
+    color: #020617;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+}
+
+/* ===============================
+   META
+================================ */
+.initiative-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+    color: #475569;
+    margin-bottom: 24px;
+}
+
+/* ===============================
+   BODY LAYOUT
+================================ */
+.initiative-body {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 28px;
+}
+
+/* ===============================
+   LEFT PANEL
+================================ */
+.left-panel section {
+    background: linear-gradient( 180deg, #ffffff, #f1f5f9 );
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.left-panel h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 12px;
+}
+
+.left-panel h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin-top: 16px;
+}
+
+.left-panel p,
+.left-panel li {
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.65;
+}
+
+.left-panel ul {
+    padding-left: 18px;
+}
+
+/* ===============================
+   DOCUMENTS
+================================ */
+.documents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.file-info {
+    flex: 1;
+    margin-left: 12px;
+}
+
+.file-name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.file-meta {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.file-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #dbeafe;
+}
+
+    .file-icon.pdf {
+        background: #fee2e2;
+    }
+
+    .file-icon.excel {
+        background: #dcfce7;
+    }
+
+.download-arrow {
+    font-size: 18px;
+    color: #2563eb;
+    cursor: pointer;
+}
+
+.download-all-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+}
+
+/* ===============================
+   RIGHT PANEL
+================================ */
+.right-panel section {
+    background: linear-gradient( 180deg, #2563eb, #1e40af );
+    color: #ffffff;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 28px rgba(30, 64, 175, 0.4);
+}
+
+.right-panel h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+/* ===============================
+   APPROVAL STATUS
+================================ */
+.status-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.step-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    margin-top: 4px;
+}
+
+.step.completed .step-circle {
+    background: #22c55e;
+}
+
+.step.active .step-circle {
+    background: #fde047;
+}
+
+.step-label strong {
+    font-size: 13px;
+}
+
+.step-label small {
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+/* ===============================
+   REVIEW FEEDBACK
+================================ */
+.pending-tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.feedback-placeholder {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.file-icon {
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    /* PDF */
+    .file-icon.pdf {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    /* EXCEL */
+    .file-icon.excel {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+/* Download icon */
+.download-arrow {
+    font-size: 18px;
+    color: #2563eb;
+    cursor: pointer;
+    transition: transform .15s ease, color .15s ease;
+}
+
+    .download-arrow:hover {
+        transform: translateY(2px);
+        color: #1d4ed8;
+    }
