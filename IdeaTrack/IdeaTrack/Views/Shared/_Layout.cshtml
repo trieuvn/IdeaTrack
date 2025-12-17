@@ -18,7 +18,10 @@
                 <i class="bi bi-grid fs-4"></i>
             </a>
             <div class="nav"><i class="bi bi-bar-chart fs-5"></i></div>
-            <div class="nav"><i class="bi bi-file-earmark-text fs-5"></i></div>
+            <a href="@Url.Action("Attachments", "Home")"
+               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Attachments" ? "active" : "")">
+                <i class="bi bi-file-earmark-text fs-5"></i>
+            </a>
             <a href="@Url.Action("History", "Home")"
                class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "History" ? "active" : "")">
                 <i class="bi bi-clock-history"></i>
@@ -34,6 +37,7 @@
         </main>
     </div>
 
+    <script src="@Url.Content("/js/script.js")"></script>
     <script>
         const logo = document.querySelector('.sidebar .logo');
         const navItems = document.querySelectorAll('.sidebar .nav');

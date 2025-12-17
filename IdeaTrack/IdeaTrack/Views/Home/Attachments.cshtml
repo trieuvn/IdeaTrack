@@ -1,0 +1,42 @@
+﻿<div class="breadcrumb">
+    <a class="breadcrumb-link" asp-action="Home" asp-controller="Index">Home</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Attachments</span>
+</div>
+
+<!-- Header -->
+<div class="initiative-header">
+    <div>
+        <h1>Manage Attachments</h1>
+        <div class="initiative-meta">
+            <span><strong>Initiative #1024</strong></span>
+            <span>Sustainable Campus Project</span>
+        </div>
+    </div>
+
+    <button class="btn-primary">
+        <i class="bi bi-save"></i> Save Changes
+    </button>
+</div>
+
+<!-- Upload -->
+<div class="card upload" id="uploadBox">
+    <i class="bi bi-cloud-arrow-up fs-3"></i>
+    <p>
+        <strong>Drag & drop files here</strong><br>
+        or click to browse from your computer
+    </p>
+    <small>Max size 10MB • PDF, DOCX, XLSX</small><br><br>
+    <button class="btn-primary" onclick="fileInput.click()">Browse Files</button>
+    <input type="file" id="fileInput" hidden multiple>
+</div>
+
+<!-- File List -->
+<div class="card" style="margin-top:24px;">
+    <div class="initiative-header">
+        <h2>Attached Files <span class="badge approved" id="fileCount">0</span></h2>
+    </div>
+
+    <div class="documents-list" id="fileList"></div>
+</div>
+

@@ -17,7 +17,10 @@ namespace IdeaTrack.Controllers
         {
             return View();
         }
-
+        public IActionResult Attachments()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
