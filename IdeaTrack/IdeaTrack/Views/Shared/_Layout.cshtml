@@ -13,13 +13,16 @@
     <div class="app">
         <aside class="sidebar">
             <div class="logo d-flex align-items-center justify-content-center">UEF</div>
-            <div class="nav active">
-                <i class="bi bi-grid fs-4 text-white"></i>
-            </div>
-
+            <a href="@Url.Action("Index", "Home")"
+               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                <i class="bi bi-grid fs-4"></i>
+            </a>
             <div class="nav"><i class="bi bi-bar-chart fs-5"></i></div>
             <div class="nav"><i class="bi bi-file-earmark-text fs-5"></i></div>
-            <div class="nav"><i class="bi bi-clock-history"></i></div>
+            <a href="@Url.Action("History", "Home")"
+               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "History" ? "active" : "")">
+                <i class="bi bi-clock-history"></i>
+            </a>
             <div class="nav"><i class="bi bi-gear fs-5"></i></div>
         </aside>
 
