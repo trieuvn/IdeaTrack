@@ -1,6 +1,67 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿
+            <div class="page-header">
+                <a href="/" class="btn-return">← Return</a>
+                <h1>Create New Initiative</h1>
+                <p>Fill in the details below to propose a new initiative for evaluation.</p>
+            </div>
 
-<p>Use this page to detail your site's privacy policy.</p>
+            <div class="card">
+
+                <div class="grid">
+                    <div>
+                        <label>Academic Year *</label>
+                        <select>
+                            <option>Select Academic Year...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Category *</label>
+                        <select>
+                            <option>Select Category...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:20px">
+                    <label>Initiative Title *</label>
+                    <input placeholder="Enter a descriptive title for your initiative" />
+                </div>
+
+                <div style="margin-bottom:20px">
+                    <label>Abstract</label>
+                    <textarea placeholder="Brief summary of the initiative (max 200 words)..."></textarea>
+                </div>
+
+                <div style="margin-bottom:20px">
+                    <label>Detailed Description *</label>
+                    <div class="editor">
+                        <div class="editor-toolbar">B · I · U · Align · Link</div>
+                        <textarea placeholder="Provide full details, objectives, and expected outcomes..."></textarea>
+                    </div>
+                </div>
+                <label>Supporting Documents</label>
+
+                <div class="upload" onclick="fileInput.click()">
+
+                    <div id="uploadHint">
+                        <strong>Click to upload</strong> or drag and drop<br>
+                        PDF, DOCX, XLSX (Max 10MB)
+                    </div>
+
+                    <div id="fileList"></div>
+                </div>
+
+                <input type="file"
+                       id="fileInput"
+                       accept=".pdf,.docx,.xlsx"
+                       multiple
+                       style="display:none">
+
+
+                <div class="actions">
+                    <button class="btn btn-secondary">Cancel</button>
+                    <button class="btn btn-secondary">Save Draft</button>
+                    <button class="btn btn-primary">Submit for Review →</button>
+                </div>
+
+            </div>
