@@ -948,28 +948,47 @@ textarea {
     font-weight: 600;
     margin-bottom: 14px;
 }
-
-/* ===============================
-   APPROVAL STATUS
-================================ */
 .status-steps {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    position: relative;
 }
 
+/* mỗi step có line phía sau circle */
 .step {
+    position: relative;
     display: flex;
     gap: 12px;
     align-items: flex-start;
-    margin-bottom: 14px;
+    padding-left: 20px;
+    margin-bottom: 18px;
 }
 
+    /* thanh dọc */
+    .step::before {
+        content: "";
+        position: absolute;
+        left: 25px;
+        top: 16px;
+        width: 2px;
+        height: 28px; /* ⭐ KHÔNG DÙNG 100% */
+        background: rgba(255, 255, 255, 0.4);
+    }
+
+    /* step cuối không có line */
+    .step:last-child::before {
+        display: none;
+    }
+
+    /* 🔵 step completed → thanh dưới xanh */
+    .step.completed::before {
+        background: #22c55e;
+    }
+
+/* chấm */
 .step-circle {
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255,255,255,0.4);
     margin-top: 4px;
 }
 
@@ -989,7 +1008,6 @@ textarea {
     font-size: 12px;
     opacity: 0.85;
 }
-
 /* ===============================
    REVIEW FEEDBACK
 ================================ */
