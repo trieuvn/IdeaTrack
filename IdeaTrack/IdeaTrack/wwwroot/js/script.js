@@ -1,50 +1,56 @@
 ﻿const buttons = document.querySelectorAll(".source-btn");
 const existingFiles = document.getElementById("existingFiles");
-
 const localUploadBox = document.getElementById("uploadBox");
 const localFileInput = document.getElementById("fileInput");
 const localFileList = document.getElementById("fileList");
 let files = [];
 
 /* ===== TOGGLE FILE SOURCE ===== */
-buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        buttons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        if (btn.dataset.source === "existing") {
-            existingFiles.style.display = "block";
-            localUploadBox.style.display = "none";
-        } else {
-            existingFiles.style.display = "none";
-            localUploadBox.style.display = "block";
-        }
+if (buttons.length > 0) {
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            if (btn.dataset.source === "existing" && existingFiles) {
+                existingFiles.style.display = "block";
+                if (localUploadBox) localUploadBox.style.display = "none";
+            } else {
+                if (existingFiles) existingFiles.style.display = "none";
+                if (localUploadBox) localUploadBox.style.display = "block";
+            }
+        });
     });
-});
+}
 
 /* ===== CLICK UPLOAD BOX ===== */
-localUploadBox.addEventListener("click", () => {
-    localFileInput.click();
-});
+if (localUploadBox && localFileInput) {
+    localUploadBox.addEventListener("click", () => {
+        localFileInput.click();
+    });
+}
 
 /* ===== DRAG & DROP ===== */
-localUploadBox.addEventListener("dragover", e => {
-    e.preventDefault();
-    localUploadBox.classList.add("dragover");
-});
-localUploadBox.addEventListener("dragleave", () => {
-    localUploadBox.classList.remove("dragover");
-});
-localUploadBox.addEventListener("drop", e => {
-    e.preventDefault();
-    localUploadBox.classList.remove("dragover");
-    handleFiles(e.dataTransfer.files);
-});
+if (localUploadBox) {
+    localUploadBox.addEventListener("dragover", e => {
+        e.preventDefault();
+        localUploadBox.classList.add("dragover");
+    });
+    localUploadBox.addEventListener("dragleave", () => {
+        localUploadBox.classList.remove("dragover");
+    });
+    localUploadBox.addEventListener("drop", e => {
+        e.preventDefault();
+        localUploadBox.classList.remove("dragover");
+        if (e.dataTransfer.files) handleFiles(e.dataTransfer.files);
+    });
+}
 
 /* ===== FILE INPUT ===== */
-localFileInput.addEventListener("change", e => {
-    handleFiles(e.target.files);
-});
+if (localFileInput) {
+    localFileInput.addEventListener("change", e => {
+        if (e.target.files) handleFiles(e.target.files);
+    });
+}
 
 /* ===== HANDLE FILES ===== */
 function handleFiles(selectedFiles) {
