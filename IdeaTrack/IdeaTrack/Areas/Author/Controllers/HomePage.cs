@@ -15,7 +15,7 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             return View();
         }
-        public IActionResult Privacy()
+        public IActionResult Create()
         {
             return View();
         }
