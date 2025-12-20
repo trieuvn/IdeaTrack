@@ -1,0 +1,247 @@
+﻿/* Custom Hero Banner */
+.hero-banner {
+    background: linear-gradient(rgba(185, 28, 28, 0.8), rgba(185, 28, 28, 0.8)), url('/images/login-background.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    min-height: 400px;
+}
+
+.award-circle {
+    position: absolute;
+    right: 50px;
+    bottom: 20px;
+    width: 250px;
+    height: 250px;
+    border: 2px dashed rgba(255,255,255,0.5);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    color: white;
+    text-align: center;
+}
+
+.floating-buttons {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-float {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    color: white;
+    transition: transform 0.3s;
+}
+
+    .btn-float:hover {
+        transform: scale(1.1);
+        color: white;
+    }
+body {
+    font-family: Roboto, sans-serif;
+    background: #f3f4f6;
+}
+
+/* HEADER */
+.app-header {
+    height: 56px;
+    background: #b91c1c;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+
+.app-title {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* LAYOUT */
+.app-layout {
+    display: flex;
+    height: calc(100vh - 56px);
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.login-box {
+    background: #b91c1c;
+    color: #fff;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 6px 15px rgba(185,28,28,.4);
+}
+
+.sidebar-nav {
+    flex: 1;
+    padding-top: 8px;
+}
+
+.sidebar a {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #374151;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+}
+
+    .sidebar a.active,
+    .sidebar a:hover {
+        background: rgba(185,28,28,.08);
+        color: #b91c1c;
+        border-color: #b91c1c;
+    }
+
+/* MAIN */
+.main-content {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+
+
+/* CSS Tùy chỉnh để khớp với UI trong ảnh */
+.hero-section {
+    background: linear-gradient(135deg, #0d3b66 0%, #0056b3 100%);
+    background-image: url('/images/Technology.jpg');
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.icon-circle {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.btn-primary-custom {
+    background-color: #007bff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+}
+
+.btn-outline-custom {
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+}
+
+.card-custom {
+    border: 1px solid #edf2f7;
+    border-radius: 15px;
+    transition: transform 0.2s;
+}
+
+.system-card {
+    border-radius: 12px;
+    border: none;
+}
+
+.bg-light-blue {
+    background-color: #eef7ff;
+}
+
+.bg-light-yellow {
+    background-color: #fff9e6;
+}
+
+.bg-light-green {
+    background-color: #f0fff4;
+}
+
+
+/* Sidebar Login Section */
+.sidebar-header {
+    padding: 24px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Nút Đăng nhập mới - Tinh tế hơn */
+.login-box {
+    background: #f8f9fa; /* Nền sáng nhẹ */
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+    /* Tùy chỉnh nút bên trong _LoginPartial */
+    /* Giả sử _LoginPartial sinh ra thẻ <a> hoặc <button> */
+    .login-box a, .login-box button, .btn-login-custom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #b91c1c; /* Màu đỏ thương hiệu */
+        color: #ffffff !important;
+        padding: 12px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        width: 100%;
+    }
+
+        .login-box a:hover {
+            background: #991b1b;
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.2);
+            transform: translateY(-1px);
+        }
+
+/* Sidebar Nav */
+.sidebar-nav a {
+    margin: 4px 12px;
+    border-radius: 8px; /* Bo góc nhẹ cho các item menu */
+    border-left: none !important; /* Bỏ border trái kiểu cũ */
+    transition: 0.2s;
+}
+
+    .sidebar-nav a.active {
+        background: rgba(185, 28, 28, 0.1) !important;
+        color: #b91c1c !important;
+        font-weight: 600;
+    }

@@ -2,49 +2,36 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-
-<nav class="navbar navbar-expand-lg rui-navbar shadow-sm">
-    <div class="container-fluid px-4">
-        <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center" href="~/">
-            <img src="/images/logo-uef.png" alt="UEF LMS" height="42" class="me-2" />
-            <span class="fw-semibold text-dark">UEF LMS</span>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav align-items-center gap-2">
-
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium" asp-area="Identity" asp-page="/Account/Manage/Index">
-                            Hello, @User.Identity?.Name
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <form asp-area="Identity" asp-page="/Account/Logout" method="post">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                Logout
-                            </button>
-                        </form>
-                    </li>
-                }
-                else
-                {
-                    <li class="nav-item">
-                        <a class="btn btn-outline-primary btn-sm"
-                           asp-area="Identity"
-                           asp-page="/Account/Login">
-                            Log in
-                        </a>
-                    </li>
-                }
-            </ul>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="text-start">
+            <div class="fw-semibold small text-white">
+                @User.Identity?.Name
+            </div>
+            <a asp-area="Identity"
+               asp-page="/Account/Manage/Index"
+               class="text-warning text-decoration-none small">
+                Quản lý tài khoản
+            </a>
         </div>
+
+        <form asp-area="Identity"
+              asp-page="/Account/Logout"
+              method="post">
+            <button type="submit"
+                    class="btn btn-sm btn-outline-light">
+                <span class="material-icons fs-6 align-middle">logout</span>
+            </button>
+        </form>
     </div>
-</nav>
+}
+else
+{
+    <a asp-area="Identity"
+       asp-page="/Account/Login"
+       class="btn btn-warning w-100 fw-bold">
+        <span class="material-icons align-middle me-1">login</span>
+        Đăng nhập
+    </a>
+}

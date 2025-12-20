@@ -551,3 +551,34 @@ button {
         background: var(--success-bg);
         color: var(--success-text);
     }
+.bg-danger-subtle {
+    background-color: #fee2e2 !important;
+}
+
+.nav-link:hover {
+    color: #d32f2f !important;
+}
+
+.ms-n1 {
+    margin-left: -2px !important;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+    .card:hover {
+        transform: translateY(-3px);
+    }
+.section-target {
+    scroll-margin-top: 2rem;
+}
+
+/* Style cho link đang được chọn */
+.nav-link.active-link {
+    color: #d32f2f !important; /* Màu đỏ giống ảnh */
+    font-weight: bold !important;
+    border-left: 3px solid #d32f2f;
+    margin-left: -2px; /* Đè lên border xám của nav */
+    transition: all 0.2s ease;
+}
