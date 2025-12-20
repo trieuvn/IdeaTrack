@@ -1,25 +1,47 @@
 ﻿@model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "UEF LMS";
+    Layout = "_Layout";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="container">
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+    <!-- Home -->
+    <div class="mt-3">
+        <a href="/" class="nav-home">Home</a>
+    </div>
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    <!-- Title -->
+    <h1 class="page-title">UEF LMS</h1>
+
+    <!-- Error message -->
+    <div class="alert alert-danger mt-4">
+        <div class="fw-bold">
+            An error occurred while processing your request.
+        </div>
+
+        @if (Model.ShowRequestId)
+        {
+            <div class="mt-2">
+                <small>
+                    <strong>Request ID:</strong>
+                    <code>@Model.RequestId</code>
+                </small>
+            </div>
+        }
+
+        <div class="mt-2">
+            <a href="#" class="text-decoration-none fw-semibold text-danger">
+                More information about this error
+            </a>
+        </div>
+    </div>
+
+    <!-- Continue button -->
+    <div class="text-end mt-5">
+        <a href="/Identity/Account/Login" class="btn btn-primary btn-continue">
+            Continue
+        </a>
+    </div>
+
+</div>

@@ -1,174 +1,50 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UEF Initiative Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="@Url.Content("/css/sample.css")" rel="stylesheet" />
-    <link href="@Url.Content("/css/main.css")" rel="stylesheet" />
-    <link href="@Url.Content("/css/files.css")" rel="stylesheet" />
-    <link href="@Url.Content("/css/initative.css")" rel="stylesheet" />
-    <link rel="icon" type="image/x-icon" href="/lib/favicon.ico">
-    <script src="@Url.Content("/js/script.js")" defer></script>
+    <title>@ViewData["Title"] - IdeaTrack</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/IdeaTrack.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="app">
-        <aside class="sidebar">
-            <div class="logo d-flex align-items-center justify-content-center">UEF</div>
-            <a href="@Url.Action("Index", "Home")"
-               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
-                <i class="bi bi-grid fs-4"></i>
-            </a>
-
-            <div class="nav"><i class="bi bi-bar-chart fs-5"></i></div>
-            <a href="@Url.Action("Attachments", "Home")"
-               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Attachments" ? "active" : "")">
-                <i class="bi bi-file-earmark-text fs-5"></i>
-            </a>
-            <a href="@Url.Action("History", "Home")"
-               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "History" ? "active" : "")">
-                <i class="bi bi-clock-history"></i>
-            </a>
-            <a href="@Url.Action("Setting", "Home")"
-               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Setting" ? "active" : "")">
-                <i class="bi bi-gear fs-5"></i>
-            </a>
-        </aside>
-
-        <main class="main">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">IdeaTrack</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    
-    <script>
-        const logo = document.querySelector('.sidebar .logo');
-        const navItems = document.querySelectorAll('.sidebar .nav');
-
-        navItems.forEach(nav => {
-          nav.addEventListener('click', () => {
-            // bỏ tím logo
-            logo.classList.remove('active');
-
-            // active nav
-            navItems.forEach(i => i.classList.remove('active'));
-            nav.classList.add('active');
-          });
-        });
-            document.addEventListener("DOMContentLoaded", function () {
-            const fileInput = document.getElementById("fileInput");
-            const fileList = document.getElementById("fileList");
-            const uploadHint = document.getElementById("uploadHint");
-
-            if (!fileInput) return;
-
-            fileInput.addEventListener("change", function () {
-
-                if (this.files.length === 0) return;
-
-                uploadHint.style.display = "none";
-                fileList.innerHTML = "";
-
-                Array.from(this.files).forEach(file => {
-                    const div = document.createElement("div");
-                    div.className = "file";
-                    div.innerHTML = `
-                        <i class="bi bi-file-earmark"></i>
-                        <span>${file.name}</span>
-                    `;
-                    fileList.appendChild(div);
-                });
-            });
-
-        });
-         const tabs = document.querySelectorAll('.filter-tabs .tab');
-        const cards = document.querySelectorAll('.history-card');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const status = tab.textContent.trim().toLowerCase();
-                cards.forEach(card => {
-                    if (status === 'all status') {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = card.classList.contains(status)
-                            ? 'flex'
-                            : 'none';
-                    }
-                });
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Hàm previewFile
-            window.previewFile = function(event, fileUrl) {
-                event.preventDefault();
-                const preview = document.getElementById("file-preview");
-                if (!preview) return;
-
-                const extension = fileUrl.split('.').pop().toLowerCase();
-                const fileName = fileUrl.split('/').pop();
-
-                preview.innerHTML = "";
-                preview.style.display = "block";
-
-                let content = "";
-
-                if (extension === "pdf") {
-                    content = `
-                        <div style="text-align:center; margin-bottom:10px; font-weight:600;">
-                            ${fileName}
-                        </div>
-                        <iframe src="${fileUrl}"
-                                style="width:100%; height:80vh; border:none; border-radius:8px;"
-                                frameborder="0">
-                        </iframe>
-                    `;
-                } else if (["jpg","jpeg","png","gif","webp","bmp"].includes(extension)) {
-                    content = `
-                        <div style="text-align:center; margin-bottom:10px; font-weight:600;">
-                            ${fileName}
-                        </div>
-                        <img src="${fileUrl}"
-                             style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);"
-                             alt="${fileName}">
-                    `;
-                } else if (["doc","docx"].includes(extension)) {
-                    content = `
-                        <div style="text-align:center; padding:40px; background:#f8fafc; border-radius:8px;">
-                            <i class="bi bi-file-earmark-word-fill" style="font-size:64px; color:#1e40af;"></i>
-                            <h4 style="margin:20px 0 10px;">${fileName}</h4>
-                                    <p style="
-            margin-bottom: 12px;
-        ">Không thể xem trực tiếp file Word trong trình duyệt.</p>
-                            <a href="${fileUrl}" download class="btn" style="padding:10px 20px; background:#1e40af; color:white; text-decoration:none; border-radius:6px;">
-                                <i class="bi bi-download"></i> Tải xuống để xem
-                            </a>
-                        </div>
-                    `;
-                } else {
-                    content = `
-                        <div style="text-align:center; padding:40px; background:#f8fafc; border-radius:8px;">
-                            <i class="bi bi-file-earmark" style="font-size:64px; color:#999;"></i>
-                            <h4 style="margin:20px 0 10px;">${fileName}</h4>
-                            <p>Không hỗ trợ xem trước loại file này.</p>
-                            <a href="${fileUrl}" download style="color:#1e40af; text-decoration:underline;">Tải xuống file</a>
-                        </div>
-                    `;
-                }
-
-                preview.innerHTML = content;
-                preview.scrollIntoView({behavior:"smooth", block:"nearest"});
-            }
-        });
-
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4/turn.min.js"></script>
-
-
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - IdeaTrack - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
