@@ -10,6 +10,7 @@
     <link href="@Url.Content("/css/main.css")" rel="stylesheet" />
     <link href="@Url.Content("/css/files.css")" rel="stylesheet" />
     <link href="@Url.Content("/css/initative.css")" rel="stylesheet" />
+    <link href="@Url.Content("/css/dailyreport.css")" rel="stylesheet" />
     <link rel="icon" type="image/x-icon" href="/lib/favicon.ico">
     <script src="@Url.Content("/js/script.js")" defer></script>
 </head>
@@ -17,20 +18,23 @@
     <div class="app">
         <aside class="sidebar">
             <div class="logo d-flex align-items-center justify-content-center">UEF</div>
-            <a href="@Url.Action("Index", "Home")"
+            <a href="@Url.Action("Index", "HomePage")"
                class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                 <i class="bi bi-grid fs-4"></i>
             </a>
-            <div class="nav"><i class="bi bi-bar-chart fs-5"></i></div>
-            <a href="@Url.Action("Attachments", "Home")"
+            <a href="@Url.Action("DailyReport", "HomePage")"
+               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "DailyReport" ? "active" : "")">
+                <i class="bi bi-bar-chart fs-5"></i>
+            </a>
+            <a href="@Url.Action("Attachments", "HomePage")"
                class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Attachments" ? "active" : "")">
                 <i class="bi bi-file-earmark-text fs-5"></i>
             </a>
-            <a href="@Url.Action("History", "Home")"
+            <a href="@Url.Action("History", "HomePage")"
                class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "History" ? "active" : "")">
                 <i class="bi bi-clock-history"></i>
             </a>
-            <a href="@Url.Action("Setting", "Home")"
+            <a href="@Url.Action("Setting", "HomePage")"
                class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Setting" ? "active" : "")">
                 <i class="bi bi-gear fs-5"></i>
             </a>
@@ -41,7 +45,7 @@
         </main>
     </div>
 
-
+    
     <script>
         const logo = document.querySelector('.sidebar .logo');
         const navItems = document.querySelectorAll('.sidebar .nav');
@@ -167,6 +171,21 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4/turn.min.js"></script>
+
+
+    <script>
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.day-btn')
+                    .forEach(b => b.classList.remove('active-day'));
+
+                btn.classList.add('active-day');
+
+                const title = document.getElementById('panel-title');
+                title.textContent = `Submissions for Oct ${btn.textContent.trim()}`;
+            });
+        });
+    </script>
 
 
 </body>

@@ -21,6 +21,7 @@
                class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                 <i class="bi bi-grid fs-4"></i>
             </a>
+
             <div class="nav"><i class="bi bi-bar-chart fs-5"></i></div>
             <a href="@Url.Action("Attachments", "Home")"
                class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Attachments" ? "active" : "")">
@@ -140,7 +141,9 @@
                         <div style="text-align:center; padding:40px; background:#f8fafc; border-radius:8px;">
                             <i class="bi bi-file-earmark-word-fill" style="font-size:64px; color:#1e40af;"></i>
                             <h4 style="margin:20px 0 10px;">${fileName}</h4>
-                            <p>Không thể xem trực tiếp file Word trong trình duyệt.</p>
+                                    <p style="
+            margin-bottom: 12px;
+        ">Không thể xem trực tiếp file Word trong trình duyệt.</p>
                             <a href="${fileUrl}" download class="btn" style="padding:10px 20px; background:#1e40af; color:white; text-decoration:none; border-radius:6px;">
                                 <i class="bi bi-download"></i> Tải xuống để xem
                             </a>

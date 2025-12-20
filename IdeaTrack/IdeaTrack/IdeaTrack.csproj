@@ -19,8 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Author\Data\" />
+    <Folder Include="Areas\Author\Models\" />
     <Folder Include="Areas\FacultyLeader\Data\" />
     <Folder Include="Areas\FacultyLeader\Models\" />
+    <Folder Include="Views\Home\" />
   </ItemGroup>
 
 </Project>
