@@ -5,6 +5,7 @@ namespace IdeaTrack.Areas.FacultyLeader.Controllers
     [Area("FacultyLeader")]
     public class DashboardController : Controller
     {
+
         
         public IActionResult Index()
         {
@@ -19,6 +20,10 @@ namespace IdeaTrack.Areas.FacultyLeader.Controllers
             return View();
         }
         public IActionResult Progress()
+        {
+            return View();
+        }
+        public IActionResult Profile()
         {
             return View();
         }

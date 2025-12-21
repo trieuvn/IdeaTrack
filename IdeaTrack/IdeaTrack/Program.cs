@@ -53,6 +53,11 @@ var rewriteOptionsdetails = new RewriteOptions()
         skipRemainingRules: true
     )
     .AddRewrite(
+        "^FacultyLeader/Profile/?$",
+        "FacultyLeader/Dashboard/Profile",
+        skipRemainingRules: true
+    )
+    .AddRewrite(
         "^FacultyLeader/Progress/?$",
         "FacultyLeader/Dashboard/Progress",
         skipRemainingRules: true

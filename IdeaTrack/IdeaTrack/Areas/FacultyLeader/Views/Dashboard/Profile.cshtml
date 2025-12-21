@@ -1,0 +1,54 @@
+﻿<div class="text-center mb-5">
+    <img src="https://i.pravatar.cc/100" alt="Avatar" class="rounded-circle border border-3 border-white mb-3" style="width:100px;height:100px;">
+    <h3 id="userName">Nguyễn Văn A</h3>
+    <p id="userEmail" class="text-muted">nguyenvana@example.com</p>
+    <button class="btn btn-primary btn-sm" onclick="editProfile()">Chỉnh sửa thông tin</button>
+</div>
+
+<!-- INFO & STAT CARD -->
+<div class="row g-4">
+
+    <!-- Thông tin chi tiết -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm p-4 h-100">
+            <h5 class="mb-3">Thông tin chi tiết</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><i class="bi bi-telephone me-2"></i>Số điện thoại</span>
+                    <span id="userPhone">+84 912 345 678</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><i class="bi bi-geo-alt me-2"></i>Vị trí</span>
+                    <span id="userLocation">Hà Nội - Khoa Công nghệ thông tin</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><i class="bi bi-person-badge me-2"></i>Vai trò</span>
+                    <span id="userRole">Giảng viên</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><i class="bi bi-calendar me-2"></i>Ngày đăng ký tài khoản</span>
+                    <span id="userJoin">01/01/2023</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Card số liệu -->
+    <div class="col-lg-6">
+        <div class="row g-3">
+            <div class="col-6">
+                <div class="card shadow-sm p-3 text-center h-100">
+                    <h6>Số hồ sơ</h6>
+                    <h3 id="totalRecords">24</h3>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card shadow-sm p-3 text-center h-100">
+                    <h6>Các thành tựu</h6>
+                    <h3 id="totalAchievements">5</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

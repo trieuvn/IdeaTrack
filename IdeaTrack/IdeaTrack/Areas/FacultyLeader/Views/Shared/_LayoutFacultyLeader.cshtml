@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/facultyleader/main.css" />
+    <link rel="icon" type="image/x-icon" href="/lib/favicon.ico">
 </head>
 <body>
     <header class="header">
@@ -38,19 +39,17 @@
                     </li>
 
                     <li>
-                        <a href="#"
-                           class="nav-link @(currentAction == "Settings" ? "active" : "")">
-                            Cấu hình
-                        </a>
-                    </li>
-
-                    <li>
                         <a href="/FacultyLeader/Review"
                            class="nav-link @(currentAction == "Review" ? "active" : "")">
                             Yêu cầu chỉnh sửa
                         </a>
                     </li>
-
+                    <li>
+                        <a href="/FacultyLeader/Profile"
+                           class="nav-link @(currentAction == "Profile" ? "active" : "")">
+                            Hồ sơ người dùng 
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -138,6 +137,8 @@
             });
 
         });
+
+          
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
