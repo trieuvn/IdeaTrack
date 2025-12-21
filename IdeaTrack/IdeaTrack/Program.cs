@@ -1,6 +1,7 @@
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,7 +40,26 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+var rewriteOptions = new RewriteOptions()
+    .AddRewrite(
+        "^FacultyLeader/Review/?$",
+        "FacultyLeader/Dashboard/Review",
+        skipRemainingRules: true
+    );
+var rewriteOptionsdetails = new RewriteOptions()
+    .AddRewrite(
+        "^FacultyLeader/Details/?$",
+        "FacultyLeader/Dashboard/Details",
+        skipRemainingRules: true
+    )
+    .AddRewrite(
+        "^FacultyLeader/Progress/?$",
+        "FacultyLeader/Dashboard/Progress",
+        skipRemainingRules: true
+    );
 
+app.UseRewriter(rewriteOptions);
+app.UseRewriter(rewriteOptionsdetails);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

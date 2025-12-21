@@ -1,62 +1,187 @@
-﻿
-<div class="topbar">
-    <input class="search" placeholder="Search initiatives, drafts..." />
-    <a href="/Home/Privacy" class="btn-primary">+ Create New Initiative</a>
-</div>
+﻿<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Quản lý Hồ sơ Khoa</h2>
+            <p class="text-secondary">Xem, duyệt và quản lý các đề tài nghiên cứu từ giảng viên.</p>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm bg-white shadow-sm">
+            <i class="bi bi-download me-2"></i>Xuất Excel
+        </button>
+    </div>
 
-<section class="welcome">
-    <div class="welcome-card">
-        <h2>Welcome back, John! 👋</h2>
-        <p>You have 2 pending drafts and 1 initiative under review.</p>
-        <div class="actions">
-            <button class="btn-light">Continue Drafts</button>
-            <button class="btn-outline">View Guidelines</button>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-3">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" placeholder="Tìm kiếm tên đề tài, mã hồ sơ...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option>Tất cả trạng thái</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option>Tất cả giảng viên</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-info w-100 text-white fw-medium">Lọc dữ liệu</button>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="overview">
-        <h4>Submission Overview</h4>
-        <div class="overview-item"><span>Drafts</span><strong>2</strong></div>
-        <div class="overview-item"><span>Submitted</span><strong>5</strong></div>
-        <div class="overview-item"><span>Approved</span><strong>12</strong></div>
-    </div>
-</section>
 
-<section class="metrics">
-    <div class="metric blue">
-        <span>Total Score</span>
-        <h3>845 pts</h3>
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-blue-light text-primary me-3">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                    <div>
+                        <small class="text-secondary d-block">Chờ duyệt Khoa</small>
+                        <div class="d-flex align-items-center">
+                            <span class="fs-3 fw-bold me-2">12</span>
+                            <span class="text-danger small"><i class="bi bi-arrow-up"></i> 2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-yellow-light text-warning me-3">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div>
+                        <small class="text-secondary d-block">Yêu cầu chỉnh sửa</small>
+                        <span class="fs-3 fw-bold">5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-green-light text-success me-3">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div>
+                        <small class="text-secondary d-block">Đã duyệt (PKHCN)</small>
+                        <span class="fs-3 fw-bold">24</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-purple-light text-purple me-3">
+                        <i class="bi bi-folder-fill"></i>
+                    </div>
+                    <div>
+                        <small class="text-secondary d-block">Tổng số hồ sơ</small>
+                        <span class="fs-3 fw-bold">45</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="metric orange">
-        <span>Under Review</span>
-        <h3>3 Items</h3>
-    </div>
-    <div class="metric green">
-        <span>Success Rate</span>
-        <h3>92%</h3>
-    </div>
-    <div class="metric purple">
-        <span>Rank</span>
-        <h3>Top 10%</h3>
-    </div>
-</section>
 
-<section class="card">
-    <h3 style="margin-bottom:12px">Recent Initiatives</h3>
-    <table>
-        <thead>
-            <tr><th>Title</th><th>Date</th><th>Status</th></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>AI in Classroom Learning</td>
-                <td>Oct 24, 2024</td>
-                <td><span class="badge review">Under Review</span></td>
-            </tr>
-            <tr>
-                <td>Student Wellbeing Program</td>
-                <td>Oct 20, 2024</td>
-                <td><span class="badge approved">Approved</span></td>
-            </tr>
-        </tbody>
-    </table>
-</section>
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="bg-light">
+                    <tr class="text-secondary small fw-bold text-uppercase">
+                        <th class="ps-4 py-3">Tên đề tài / Mã hồ sơ</th>
+                        <th>Giảng viên</th>
+                        <th>Ngày nộp</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end pe-4">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <div class="file-icon bg-blue-light text-primary me-3"><i class="bi bi-file-earmark-text-fill"></i></div>
+                                <div>
+                                    <div class="fw-bold text-dark">Nghiên cứu ứng dụng AI trong quản lý...</div>
+                                    <small class="text-secondary">Mã: DT-2023-01</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">TS. Trần Văn B</div>
+                            <small class="text-secondary">Bộ môn KHMT</small>
+                        </td>
+                        <td class="text-secondary">20/10/2023</td>
+                        <td><span class="badge-custom bg-blue-light text-primary">Chờ duyệt Khoa</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-link text-decoration-none fw-bold me-2 p-0">Duyệt nhanh</button>
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">Xem chi tiết</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <div class="file-icon bg-yellow-light text-warning me-3"><i class="bi bi-broadcast-pin"></i></div>
+                                <div>
+                                    <div class="fw-bold text-dark">Phát triển hệ thống IoT giám sát môi...</div>
+                                    <small class="text-secondary">Mã: DT-2023-05</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">ThS. Lê Thị C</div>
+                            <small class="text-secondary">Bộ môn Mạng MT</small>
+                        </td>
+                        <td class="text-secondary">18/10/2023</td>
+                        <td><span class="badge-custom bg-yellow-light text-warning">Yêu cầu chỉnh sửa</span></td>
+                        <td class="text-end pe-4">
+                            <span class="text-secondary small me-2">Đã gửi YC</span>
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">Xem chi tiết</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <div class="file-icon bg-green-light text-success me-3"><i class="bi bi-shield-check"></i></div>
+                                <div>
+                                    <div class="fw-bold text-dark">Tối ưu hóa thuật toán Blockchain tro...</div>
+                                    <small class="text-secondary">Mã: DT-2023-08</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">PGS.TS Phạm Văn D</div>
+                            <small class="text-secondary">Bộ môn CNPM</small>
+                        </td>
+                        <td class="text-secondary">15/10/2023</td>
+                        <td><span class="badge-custom bg-green-light text-success">Đã duyệt - Chuyển PKHCN</span></td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">Xem chi tiết</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center p-4">
+            <span class="text-secondary small">Hiển thị 1 đến 5 trong số 45 kết quả</span>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

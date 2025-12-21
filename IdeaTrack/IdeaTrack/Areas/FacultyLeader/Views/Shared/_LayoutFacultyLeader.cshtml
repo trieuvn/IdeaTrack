@@ -1,173 +1,145 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UEF Initiative Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="@Url.Content("/css/sample.css")" rel="stylesheet" />
-    <link href="@Url.Content("/css/main.css")" rel="stylesheet" />
-    <link href="@Url.Content("/css/files.css")" rel="stylesheet" />
-    <link href="@Url.Content("/css/initative.css")" rel="stylesheet" />
-    <link rel="icon" type="image/x-icon" href="/lib/favicon.ico">
-    <script src="@Url.Content("/js/script.js")" defer></script>
+    <title>Faculty Manager (LDK)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/facultyleader/main.css" />
 </head>
 <body>
-    <div class="app">
-        <aside class="sidebar">
-            <div class="logo d-flex align-items-center justify-content-center">UEF</div>
-            <a href="@Url.Action("Index", "Home")"
-               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
-                <i class="bi bi-grid fs-4"></i>
+    <header class="header">
+        <div class="header-left">
+            <a href="/FacultyLeader" class="logo-container">
+                <i class="bi bi-mortarboard-fill logo-icon"></i>
+                <span class="logo-text">Faculty Manager <span class="logo-sub">(LĐK)</span></span>
             </a>
-            <div class="nav"><i class="bi bi-bar-chart fs-5"></i></div>
-            <a href="@Url.Action("Attachments", "Home")"
-               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Attachments" ? "active" : "")">
-                <i class="bi bi-file-earmark-text fs-5"></i>
-            </a>
-            <a href="@Url.Action("History", "Home")"
-               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "History" ? "active" : "")">
-                <i class="bi bi-clock-history"></i>
-            </a>
-            <a href="@Url.Action("Setting", "Home")"
-               class="nav @(ViewContext.RouteData.Values["action"]?.ToString() == "Setting" ? "active" : "")">
-                <i class="bi bi-gear fs-5"></i>
-            </a>
-        </aside>
 
-        <main class="main">
-            @RenderBody()
-        </main>
-    </div>
+            <nav>
+                <ul class="nav-custom">
+                    <li>
+                        <a href="/FacultyLeader"
+                           class="nav-link @(currentController == "Dashboard" && currentAction == "Index" ? "active" : "")">
+                            Danh sách Hồ sơ
+                        </a>
+                    </li>
 
+                    <li>
+                        <a href="/FacultyLeader/Progress"
+                           class="nav-link @(currentAction == "Progress" ? "active" : "")">
+                            Thống kê
+                        </a>
+                    </li>
 
+                    <li>
+                        <a href="#"
+                           class="nav-link @(currentAction == "Settings" ? "active" : "")">
+                            Cấu hình
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/FacultyLeader/Review"
+                           class="nav-link @(currentAction == "Review" ? "active" : "")">
+                            Yêu cầu chỉnh sửa
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+        </div>
+
+        <div class="header-right">
+            <button class="notification-btn" aria-label="Thông báo">
+                <i class="bi bi-bell-fill"></i>
+            </button>
+
+            <div class="divider"></div>
+
+            <div class="user-profile">
+                <div class="user-info text-end">
+                    <span class="user-name">Nguyễn Văn A</span>
+                    <span class="user-role">Trưởng Khoa</span>
+                </div>
+                <div class="avatar-wrapper">
+                    <img src="https://i.pravatar.cc/100?img=11" alt="Avatar" class="avatar" />
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const logo = document.querySelector('.sidebar .logo');
-        const navItems = document.querySelectorAll('.sidebar .nav');
+                document.addEventListener("DOMContentLoaded", function() {
 
-        navItems.forEach(nav => {
-          nav.addEventListener('click', () => {
-            // bỏ tím logo
-            logo.classList.remove('active');
-
-            // active nav
-            navItems.forEach(i => i.classList.remove('active'));
-            nav.classList.add('active');
-          });
-        });
-            document.addEventListener("DOMContentLoaded", function () {
-            const fileInput = document.getElementById("fileInput");
-            const fileList = document.getElementById("fileList");
-            const uploadHint = document.getElementById("uploadHint");
-
-            if (!fileInput) return;
-
-            fileInput.addEventListener("change", function () {
-
-                if (this.files.length === 0) return;
-
-                uploadHint.style.display = "none";
-                fileList.innerHTML = "";
-
-                Array.from(this.files).forEach(file => {
-                    const div = document.createElement("div");
-                    div.className = "file";
-                    div.innerHTML = `
-                        <i class="bi bi-file-earmark"></i>
-                        <span>${file.name}</span>
-                    `;
-                    fileList.appendChild(div);
-                });
-            });
-
-        });
-         const tabs = document.querySelectorAll('.filter-tabs .tab');
-        const cards = document.querySelectorAll('.history-card');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const status = tab.textContent.trim().toLowerCase();
-                cards.forEach(card => {
-                    if (status === 'all status') {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = card.classList.contains(status)
-                            ? 'flex'
-                            : 'none';
-                    }
-                });
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Hàm previewFile
-            window.previewFile = function(event, fileUrl) {
-                event.preventDefault();
-                const preview = document.getElementById("file-preview");
-                if (!preview) return;
-
-                const extension = fileUrl.split('.').pop().toLowerCase();
-                const fileName = fileUrl.split('/').pop();
-
-                preview.innerHTML = "";
-                preview.style.display = "block";
-
-                let content = "";
-
-                if (extension === "pdf") {
-                    content = `
-                        <div style="text-align:center; margin-bottom:10px; font-weight:600;">
-                            ${fileName}
-                        </div>
-                        <iframe src="${fileUrl}"
-                                style="width:100%; height:80vh; border:none; border-radius:8px;"
-                                frameborder="0">
-                        </iframe>
-                    `;
-                } else if (["jpg","jpeg","png","gif","webp","bmp"].includes(extension)) {
-                    content = `
-                        <div style="text-align:center; margin-bottom:10px; font-weight:600;">
-                            ${fileName}
-                        </div>
-                        <img src="${fileUrl}"
-                             style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);"
-                             alt="${fileName}">
-                    `;
-                } else if (["doc","docx"].includes(extension)) {
-                    content = `
-                        <div style="text-align:center; padding:40px; background:#f8fafc; border-radius:8px;">
-                            <i class="bi bi-file-earmark-word-fill" style="font-size:64px; color:#1e40af;"></i>
-                            <h4 style="margin:20px 0 10px;">${fileName}</h4>
-                                    <p style="
-            margin-bottom: 12px;
-        ">Không thể xem trực tiếp file Word trong trình duyệt.</p>
-                            <a href="${fileUrl}" download class="btn" style="padding:10px 20px; background:#1e40af; color:white; text-decoration:none; border-radius:6px;">
-                                <i class="bi bi-download"></i> Tải xuống để xem
-                            </a>
-                        </div>
-                    `;
-                } else {
-                    content = `
-                        <div style="text-align:center; padding:40px; background:#f8fafc; border-radius:8px;">
-                            <i class="bi bi-file-earmark" style="font-size:64px; color:#999;"></i>
-                            <h4 style="margin:20px 0 10px;">${fileName}</h4>
-                            <p>Không hỗ trợ xem trước loại file này.</p>
-                            <a href="${fileUrl}" download style="color:#1e40af; text-decoration:underline;">Tải xuống file</a>
-                        </div>
-                    `;
+            // Pie Chart
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Chờ duyệt', 'Đã chuyển PKHCN', 'Yêu cầu sửa'],
+                    datasets: [{
+                        data: [18.5, 69.2, 12.3],
+                        backgroundColor: ['#ffc107', '#198754', '#dc3545'],
+                        borderWidth: 0,
+                        cutout: '80%'
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    maintainAspectRatio: false
                 }
+            });
 
-                preview.innerHTML = content;
-                preview.scrollIntoView({behavior:"smooth", block:"nearest"});
-            }
+            // Line Chart với gradient xanh nhẹ
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            const gradient = trendCtx.createLinearGradient(0, 0, 0, 220);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // light blue
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['20/10', '21/10', '22/10', '23/10', '24/10'],
+                    datasets: [{
+                        label: 'Số hồ sơ',
+                        data: [3, 7, 5, 9, 6],
+                        fill: true,
+                        backgroundColor: gradient,
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            beginAtZero: true,
+                            grid: { display: false },
+                            ticks: { stepSize: 2 }
+                        }
+                    }
+                }
+            });
+
         });
-
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4/turn.min.js"></script>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

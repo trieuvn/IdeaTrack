@@ -2,10 +2,23 @@
 
 namespace IdeaTrack.Areas.FacultyLeader.Controllers
 {
+    [Area("FacultyLeader")]
     public class DashboardController : Controller
     {
-        [Area("FacultyLeader")]
+        
         public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult Review()
+        {
+            return View();
+        }
+        public IActionResult Details()
+        {
+            return View();
+        }
+        public IActionResult Progress()
         {
             return View();
         }
