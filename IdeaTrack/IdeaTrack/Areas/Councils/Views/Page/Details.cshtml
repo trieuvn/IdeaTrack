@@ -1,0 +1,120 @@
+﻿<div class="dashboard-main">
+    <header class="page-header">
+        <div class="breadcrumb">Dashboard / Initiatives / <strong>Final Approval</strong></div>
+        <div class="page-title">
+            <div class="title-left">
+                <h1>Project Phoenix</h1>
+                <span class="badge-pending">PENDING DECISION</span>
+            </div>
+            <p class="subtitle">Review aggregated evaluation scores, assign the final global rank, and record the board's official decision for this initiative.</p>
+        </div>
+    </header>
+
+    <section class="content-grid">
+        <div class="left-panel">
+            <section class="card">
+                <div class="section-title">
+                    <span class="material-icons">info</span> Initiative Summary
+                </div>
+                <p class="description">
+                    Project Phoenix aims to modernize our core legacy banking infrastructure by migrating to a cloud-native architecture. This initiative is expected to reduce operational costs by 25% and improve system uptime to 99.99%.
+                </p>
+                <div class="meta-grid">
+                    <div class="meta-item"><span>BUDGET</span><strong>$1.2M</strong></div>
+                    <div class="meta-item"><span>TIMELINE</span><strong>Q4 2024</strong></div>
+                    <div class="meta-item"><span>LEAD</span><strong>Dr. A. Smith</strong></div>
+                    <div class="meta-item"><span>DEPT</span><strong>Innovation</strong></div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-title">
+                    <span class="material-icons">bar_chart</span> Score Verification
+                </div>
+                <div class="score-container">
+                    <div class="progress-group">
+                        <div class="progress-item">
+                            <label>Technical Feasibility <span>85/100</span></label>
+                            <div class="progress-bar"><div class="fill blue" style="width:85%"></div></div>
+                        </div>
+                        <div class="progress-item">
+                            <label>Financial Impact <span>92/100</span></label>
+                            <div class="progress-bar"><div class="fill green" style="width:92%"></div></div>
+                        </div>
+                        <div class="progress-item">
+                            <label>Strategic Fit <span>88/100</span></label>
+                            <div class="progress-bar"><div class="fill blue" style="width:88%"></div></div>
+                        </div>
+                    </div>
+                    <div class="total-score-box">
+                        <p>TOTAL WEIGHTED SCORE</p>
+                        <div class="score-value">89.5</div>
+                        <span class="rank-badge">↗ Top 5%</span>
+                    </div>
+                </div>
+                <div class="score-footer">
+                    <span><span class="material-icons">history</span> Last calculated: Oct 24, 2024 by System</span>
+                    <a href="#" class="footer-link">View detailed score breakdown</a>
+                </div>
+            </section>
+
+            <div class="section-title" style="margin: 24px 0 16px 0;">
+                <span class="material-icons">folder</span> Supporting Documents
+            </div>
+            <div class="docs-grid">
+                <div class="doc-item card-mini">
+                    <div class="doc-icon pdf"><span class="material-icons">picture_as_pdf</span></div>
+                    <div class="doc-info">
+                        <p class="doc-name">Full_Evaluation_Report.pdf</p>
+                        <p class="doc-meta">2.4 MB • Added yesterday</p>
+                    </div>
+                </div>
+                <div class="doc-item card-mini">
+                    <div class="doc-icon excel"><span class="material-icons">table_view</span></div>
+                    <div class="doc-info">
+                        <p class="doc-name">Financial_Model_v3.xlsx</p>
+                        <p class="doc-meta">850 KB • Added Oct 20</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="right-panel">
+            <div class="decision-console card">
+                <div class="section-title">
+                    <span class="material-icons">gavel</span> Decision Console
+                </div>
+
+                <div class="input-group">
+                    <label>Assign Final Score</label>
+                    <div class="input-wrapper">
+                        <input type="number"
+                               placeholder="e.g. 89.5"
+                               min="0"
+                               max="100"
+                               step="0.1">
+                        <span class="input-suffix">/ 100</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Board Decision</label>
+                    <div class="decision-buttons">
+                        <button class="btn-decision active">
+                            <span class="material-icons">check_circle</span> Approve
+                        </button>
+                        <button class="btn-decision">
+                            <span class="material-icons">cancel</span> Reject
+                        </button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Reason for Decision <span class="mandatory">Mandatory</span></label>
+                    <textarea placeholder="Provide a detailed rationale for the selected decision..."></textarea>
+                    <span class="char-count">0/500 characters</span>
+                </div>
+                <button class="btn-confirm">Confirm <span class="material-icons" style="transform:translateY(5px);">arrow_forward</span></button>
+                <p class="audit-note">This action is final and will be recorded in the audit log.</p>
+            </div>
+        </aside>
+    </section>
+</div>

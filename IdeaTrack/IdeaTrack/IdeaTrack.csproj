@@ -23,8 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Areas\Author\Data\" />
     <Folder Include="Areas\Author\Models\" />
+    <Folder Include="Areas\Councils\Data\" />
+    <Folder Include="Areas\Councils\Models\" />
     <Folder Include="Areas\FacultyLeader\Data\" />
     <Folder Include="Areas\FacultyLeader\Models\" />
   </ItemGroup>

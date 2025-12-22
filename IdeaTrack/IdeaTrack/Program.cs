@@ -46,6 +46,20 @@ var rewriteOptions = new RewriteOptions()
         "FacultyLeader/Dashboard/Review",
         skipRemainingRules: true
     );
+var rewriteOptionscouncils = new RewriteOptions()
+    .AddRewrite(
+       @"^Councils(/Home)?/?$",
+        "Councils/Page",
+        skipRemainingRules: true
+    )
+    .AddRewrite(
+        "^Councils/AssignedInitiatives?$",
+        "Councils/Page/AssignedInitiatives",
+        skipRemainingRules: true)
+    .AddRewrite(
+        "^Councils/Details?$",
+        "Councils/Page/Details",
+        skipRemainingRules: true);
 var rewriteOptionsdetails = new RewriteOptions()
     .AddRewrite(
         "^FacultyLeader/Details/?$",
@@ -64,6 +78,7 @@ var rewriteOptionsdetails = new RewriteOptions()
     );
 
 app.UseRewriter(rewriteOptions);
+app.UseRewriter(rewriteOptionscouncils);
 app.UseRewriter(rewriteOptionsdetails);
 app.UseHttpsRedirection();
 app.UseStaticFiles();

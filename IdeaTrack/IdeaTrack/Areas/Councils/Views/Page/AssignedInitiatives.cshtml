@@ -1,0 +1,81 @@
+﻿<div class="dashboard-container">
+    <nav class="breadcrumb">Dashboard &nbsp; <span>›</span> &nbsp; Assigned Initiatives</nav>
+    <div class="header-main">
+        <div>
+            <h1 class="page-title">Assigned Initiatives</h1>
+            <p class="subtitle">Track and evaluate your assigned initiatives for Q3 2023.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary"><span class="material-icons">filter_list</span> Filter</button>
+            <button class="btn-primary"><span class="material-icons">add</span> Request New</button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card progress-card">
+            <div class="stat-header">
+                <div class="progress-icon"><span class="material-icons">sync</span></div>
+                <div>
+                    <h4>Evaluation Progress</h4>
+                    <p>3 of 12 initiatives completed</p>
+                </div>
+                <div class="stat-value">25%</div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 25%"></div>
+            </div>
+        </div>
+
+        <div class="stat-card info-card">
+            <h4>Pending Review</h4>
+            <div class="big-number">9 <span>initiatives</span></div>
+            <div class="warning-text">
+                <span class="material-icons">warning</span> 2 due this week
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-filters">
+            <div class="tabs">
+                <button class="tab active">All Initiatives</button>
+                <button class="tab">Assigned</button>
+                <button class="tab">Completed</button>
+            </div>
+            <div class="sort-section">
+                Sort by: <strong>Date Assigned (Newest)</strong> <span class="material-icons">expand_more</span>
+            </div>
+        </div>
+
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>INITIATIVE TITLE</th>
+                    <th>ID</th>
+                    <th>DATE ASSIGNED</th>
+                    <th>DUE DATE</th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Project Alpha Sustainability Review</strong></td>
+                    <td class="text-muted">#INIT-2024-001</td>
+                    <td>Oct 24, 2023</td>
+                    <td class="text-danger">Oct 28, 2023</td>
+                    <td><span class="badge badge-assigned">● Assigned</span></td>
+                    <td><button class="btn-evaluate">Evaluate</button></td>
+                </tr>
+                <tr>
+                    <td><strong>Q3 Marketing Initiative Budget</strong></td>
+                    <td class="text-muted">#INIT-2023-892</td>
+                    <td>Oct 10, 2023</td>
+                    <td>Oct 15, 2023</td>
+                    <td><span class="badge badge-completed">✓ Completed</span></td>
+                    <td><button class="btn-view">View Result</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
