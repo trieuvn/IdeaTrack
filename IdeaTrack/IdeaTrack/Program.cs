@@ -93,6 +93,10 @@ var rewriteOptionsadmin = new RewriteOptions()
         "Admin/Intro/User",
         skipRemainingRules: true
     )
+    .AddRewrite(
+    @"^Admin(/Dashboard)?/?$",
+        "Admin/Intro/Dashboard",
+        skipRemainingRules: true)
     ;
 app.UseRewriter(rewriteOptionsadmin);
 app.UseRewriter(rewriteOptions);

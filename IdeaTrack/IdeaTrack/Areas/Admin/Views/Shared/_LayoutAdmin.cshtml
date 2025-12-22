@@ -1,4 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    bool isDashboard =
+        currentArea == "Admin" &&
+        currentController == "Intro" &&
+        (currentAction == "Dashboard" || string.IsNullOrEmpty(currentAction));
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,21 +38,31 @@
             </div>
             <ul class="nav nav-pills flex-column gap-1">
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="/Admin">
-                        <span class="material-symbols-outlined">dashboard</span> Dashboard
+                    <a class="nav-link d-flex align-items-center gap-2 @(isDashboard ? "active" : "")"
+                       href="/Admin">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link d-flex align-items-center gap-2" href="/Admin/Users">
-                        <span class="material-symbols-outlined">group</span> Users
+                    <a class="nav-link d-flex align-items-center gap-2
+       @(currentArea == "Admin" && currentController == "Intro" && currentAction == "User" ? "active" : "")"
+                       href="/Admin/Users">
+                        <span class="material-symbols-outlined">group</span>
+                        Users
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link active d-flex align-items-center gap-2" href="/Admin/AuditLog">
-                        <span class="material-symbols-outlined">fact_check</span> Audit Logs
+                    <a class="nav-link d-flex align-items-center gap-2
+       @(currentArea == "Admin" && currentController == "Intro" && currentAction == "AuditLog" ? "active" : "")"
+                       href="/Admin/AuditLog">
+                        <span class="material-symbols-outlined">fact_check</span>
+                        Audit Logs
                     </a>
                 </li>
-                
+
             </ul>
             <div class="mt-auto pt-3 border-top">
                 <div class="d-flex align-items-center gap-2">
