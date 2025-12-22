@@ -1,0 +1,58 @@
+﻿.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}
+
+.card-footer .badge {
+    font-size: 0.75rem;
+    padding: 0.25em 0.5em;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+    .table td .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.85rem;
+    }
+
+.card-body div.bg-purple {
+    --bs-bg-opacity: 0.1;
+    color: #6f42c1;
+}
+
+.card-body div.bg-warning {
+    --bs-bg-opacity: 0.1;
+    color: #ffc107;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.sidebar {
+    min-width: 250px;
+    max-width: 250px;
+}
+
+    .sidebar .nav-link.active {
+        background-color: rgba(19,127,236,.1);
+        color: #137fec;
+        font-weight: bold;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: rgba(0,0,0,.05);
+    }
+
+.table-responsive {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}

@@ -82,7 +82,19 @@ var rewriteOptionsdetails = new RewriteOptions()
         "FacultyLeader/Dashboard/Progress",
         skipRemainingRules: true
     );
-
+var rewriteOptionsadmin = new RewriteOptions()
+    .AddRewrite(
+        "^Admin/AuditLog/?$",
+        "Admin/Intro/AuditLog",
+        skipRemainingRules: true
+    )
+    .AddRewrite(
+        "^Admin/User/?$",
+        "Admin/Intro/User",
+        skipRemainingRules: true
+    )
+    ;
+app.UseRewriter(rewriteOptionsadmin);
 app.UseRewriter(rewriteOptions);
 app.UseRewriter(rewriteOptionscouncils);
 app.UseRewriter(rewriteOptionsdetails);
