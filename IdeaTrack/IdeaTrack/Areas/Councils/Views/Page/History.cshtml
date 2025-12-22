@@ -1,1 +1,95 @@
-﻿
+﻿<header class="header">
+    <div class="header-title">
+        <h1>Lịch sử chấm sáng kiến</h1>
+        <p>Lịch sử các lần chấm điểm sáng kiến trong vai trò giảng viên hội đồng.</p>
+    </div>
+
+    <div class="user-card">
+        <img src="https://i.pravatar.cc/80?img=15" class="avatar">
+        <div>
+            <div class="user-name">TS. Nguyễn Văn A</div>
+            <div class="user-role"><i class="fas fa-user-check"></i> Thành viên Hội đồng</div>
+        </div>
+    </div>
+</header>
+
+<section class="filter-bar">
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Tìm theo tên sáng kiến...">
+    </div>
+
+    <div class="filter-options">
+        <span>Lọc theo khoa:</span>
+        <select class="select-filter">
+            <option>Tất cả khoa</option>
+            <option>Công nghệ thông tin</option>
+            <option>Kinh tế</option>
+            <option>Thiết kế & Truyền thông</option>
+            <option>Luật</option>
+        </select>
+        <select class="select-filter">
+            <option>Mới nhất</option>
+            <option>Cũ nhất</option>
+            <option>Điểm cao nhất</option>
+            <option>Điểm thấp nhất</option>
+        </select>
+    </div>
+</section>
+
+<section class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>TÊN SÁNG KIẾN</th>
+                <th>KHOA</th>
+                <th>NGƯỜI ĐỀ XUẤT</th>
+                <th>VAI TRÒ CHẤM</th>
+                <th>NGÀY CHẤM</th>
+                <th>ĐIỂM</th>
+                <th>HÀNH ĐỘNG</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <div class="project-name">Hệ thống quản lý đổi mới sáng tạo nội bộ</div>
+                    <div class="initiative-code">Mã SK: INNO-2025-014</div>
+                </td>
+                <td><span class="faculty-badge it">CNTT</span></td>
+                <td><span class="author-name">ThS. Trần Văn B</span></td>
+                <td><span class="role-badge">Phản biện</span></td>
+                <td>18/12/2025</td>
+                <td><span class="score-badge">8.8</span></td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-success d-flex align-items-center gap-1"
+                                title="Xem chi tiết">
+                            <i class="bi bi-eye"></i>
+                            Xem
+                        </button>
+
+                        <button class="btn btn-sm btn-warning d-flex align-items-center gap-1 text-white"
+                                title="Chỉnh sửa điểm">
+                            <i class="bi bi-pencil-square"></i>
+                            Sửa
+                        </button>
+                    </div>
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<footer class="pagination-container">
+    <span>Hiển thị 1–5 trong 38 sáng kiến</span>
+    <div class="pagination">
+        <button class="page-nav"><i class="fas fa-chevron-left"></i></button>
+        <button class="page-num active">1</button>
+        <button class="page-num">2</button>
+        <button class="page-num">3</button>
+        <button class="page-nav"><i class="fas fa-chevron-right"></i></button>
+    </div>
+</footer>
