@@ -56,3 +56,140 @@ body {
     text-overflow: ellipsis;
     max-width: 200px;
 }
+.small-text {
+    font-size: 11px;
+}
+
+.smaller-text {
+    font-size: 12px;
+}
+
+.text-indigo {
+    color: #6366f1;
+}
+
+.bg-blue-light {
+    background-color: #eff6ff;
+}
+
+.bg-orange-light {
+    background-color: #fff7ed;
+}
+
+.bg-green-light {
+    background-color: #f0fdf4;
+}
+
+.bg-red-light {
+    background-color: #fef2f2;
+}
+
+.bg-indigo-light {
+    background-color: #eef2ff;
+}
+
+/* COMPONENTS */
+.icon-box {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+    .icon-box i {
+        font-size: 18px;
+    }
+
+/* CHART - CSS Bar Chart mimicking the image */
+.chart-wrapper {
+    height: 180px;
+    width: 100%;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 10px;
+}
+
+.bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.bar {
+    width: 100%;
+    background-color: #dbeafe;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    transition: 0.3s;
+}
+
+    .bar.active {
+        background-color: #1d7ffd;
+    }
+
+.bar-item span {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* TABLE CUSTOMIZATION */
+.custom-table thead th {
+    font-size: 11px;
+    color: #64748b;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 15px;
+}
+
+.custom-table tbody td {
+    padding: 18px 0;
+    border-bottom: 1px solid #f8fafc;
+    font-size: 14px;
+}
+
+.badge-custom {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* ACTIONS & ALERTS */
+.action-row {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .action-row:hover {
+        background-color: #f8fafc;
+    }
+
+.alert-red {
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+
+.alert-orange {
+    background-color: #fff7ed;
+    color: #9a3412;
+}
+
+.alert-blue {
+    background-color: #eff6ff;
+    color: #1e40af;
+}
+
+/* GENERAL OVERRIDES */
+.card {
+    border-radius: 12px;
+}
+
+h2 {
+    letter-spacing: -1px;
+}
