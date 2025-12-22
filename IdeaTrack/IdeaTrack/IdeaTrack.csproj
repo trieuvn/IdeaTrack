@@ -32,6 +32,7 @@
     <Folder Include="Areas\Councils\Models\" />
     <Folder Include="Areas\FacultyLeader\Data\" />
     <Folder Include="Areas\FacultyLeader\Models\" />
+    <Folder Include="wwwroot\css\admin\" />
   </ItemGroup>
 
 </Project>
