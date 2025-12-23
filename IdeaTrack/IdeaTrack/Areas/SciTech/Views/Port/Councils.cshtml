@@ -1,0 +1,273 @@
+﻿<!-- HEADER -->
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="fw-bold mb-1">Phiếu Chấm Điểm Đồ Án</h1>
+        <p class="text-muted mb-0">
+            Hội đồng đánh giá Đồ án Tốt nghiệp – HK2 (2023–2024)
+        </p>
+    </div>
+    <span class="badge bg-primary-subtle text-primary px-3 py-2 d-flex align-items-center">
+        <i class="fa-solid fa-pen me-1"></i> Đang chấm
+    </span>
+</div>
+
+<div class="row g-4">
+
+    <!-- LEFT: GRADING FORM -->
+    <div class="col-lg-8">
+
+        <!-- CRITERIA CARD -->
+        <div class="card shadow-sm mb-4 border-0 rounded-3">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center border-bottom">
+                <h6 class="fw-bold mb-0">Tiêu chí đánh giá</h6>
+                <span class="text-muted small">Thang điểm 100</span>
+            </div>
+
+            <div class="card-body p-0">
+
+                <!-- Criterion 1 -->
+                <div class="p-4 border-bottom criterion">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                1. Tính cấp thiết & Tổng quan đề tài
+                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 10</span>
+                            </h6>
+                            <p class="text-muted small mb-0">Đánh giá mức độ quan trọng và tổng quan nghiên cứu.</p>
+                        </div>
+                        <div class="input-group input-group-sm w-auto">
+                            <input type="number" class="form-control text-end fw-bold" max="10" min="0" value="9">
+                            <span class="input-group-text">/10</span>
+                        </div>
+                    </div>
+                    <textarea class="form-control form-control-sm mt-3" rows="2" placeholder="Nhận xét (tùy chọn)"></textarea>
+                </div>
+
+                <!-- Criterion 2 -->
+                <div class="p-4 border-bottom criterion">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                2. Cơ sở lý thuyết & Phương pháp
+                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 20</span>
+                            </h6>
+                            <p class="text-muted small mb-0">Độ sâu lý thuyết và giải pháp công nghệ.</p>
+                        </div>
+                        <div class="input-group input-group-sm w-auto">
+                            <input type="number" class="form-control text-end fw-bold" max="20" min="0">
+                            <span class="input-group-text">/20</span>
+                        </div>
+                    </div>
+                    <textarea class="form-control form-control-sm mt-3" rows="2" placeholder="Nhận xét (tùy chọn)"></textarea>
+                </div>
+
+                <!-- Criterion 3 -->
+                <div class="p-4 border-bottom criterion">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                3. Kết quả thực nghiệm & Demo
+                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 40</span>
+                            </h6>
+                            <p class="text-muted small mb-0">Mức độ hoàn thiện, demo và kết quả đạt được.</p>
+                        </div>
+                        <div class="input-group input-group-sm w-auto">
+                            <input type="number" class="form-control text-end fw-bold" max="40" min="0" value="35">
+                            <span class="input-group-text">/40</span>
+                        </div>
+                    </div>
+                    <textarea class="form-control form-control-sm mt-3" rows="2">Demo chạy tốt, giao diện cần cải thiện.</textarea>
+                </div>
+
+                <!-- Criterion 4 -->
+                <div class="p-4 criterion">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                4. Trình bày & Trả lời câu hỏi
+                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 30</span>
+                            </h6>
+                            <p class="text-muted small mb-0">Kỹ năng thuyết trình và phản biện.</p>
+                        </div>
+                        <div class="input-group input-group-sm w-auto">
+                            <input type="number" class="form-control text-end fw-bold" max="30" min="0">
+                            <span class="input-group-text">/30</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- GENERAL COMMENT -->
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-light">
+                <h6 class="fw-bold mb-0">Nhận xét chung & Câu hỏi</h6>
+            </div>
+            <div class="card-body">
+                <textarea class="form-control" rows="4" placeholder="Nhận xét chung cho sinh viên..."></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT: INFO & SUMMARY -->
+    <div class="col-lg-4">
+
+        <!-- STUDENT CARD -->
+        <div class="card shadow-sm mb-4 border-0 rounded-3 text-center">
+            <div class="card-body">
+                <img src="https://i.pravatar.cc/120" class="rounded-circle mb-3" width="96" height="96">
+                <h5 class="fw-bold mb-0">Nguyễn Văn A</h5>
+                <p class="text-muted small mb-3">MSSV: 1912000 • K19 CNTT</p>
+
+                <div class="text-start small mb-3">
+                    <div class="fw-semibold">Đề tài</div>
+                    <div class="text-muted">Hệ thống quản lý kho thông minh dùng AI</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SESSION INFO -->
+        <div class="card shadow-sm mb-4 border-0 rounded-3">
+            <div class="card-body small">
+                <h6 class="fw-bold mb-3"><i class="fa-regular fa-calendar me-1"></i> Thông tin phiên bảo vệ</h6>
+                <div class="d-flex justify-content-between mb-1"><span class="text-muted">Thời gian</span><span class="fw-semibold">08:00 – 08:45</span></div>
+                <div class="d-flex justify-content-between mb-1"><span class="text-muted">Phòng</span><span class="fw-semibold">A-101</span></div>
+                <div class="d-flex justify-content-between"><span class="text-muted">Mã hội đồng</span><span class="fw-semibold">HD-2024-01</span></div>
+            </div>
+        </div>
+
+        <!-- FILE MANAGER -->
+        <div class="card shadow-sm border-0 rounded-3 mb-4">
+            <div class="card-header bg-light">
+                <h6 class="fw-bold mb-0"><i class="fa-solid fa-folder-open me-2"></i> Quản lý File</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush file-list">
+                    <!-- PPTX -->
+                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center" style="margin-right:15px;">
+                            <i class="fa-solid fa-file-powerpoint text-danger fs-5"></i>
+                            <span class="ms-2">Report_HK2.pptx</span>
+                        </div>
+                        <div class="d-flex">
+                            <!-- 2 nút sát nhau -->
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </li>
+
+                    <!-- DOCX -->
+                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center" style="margin-right:15px;">
+                            <i class="fa-solid fa-file-word text-primary fs-5"></i>
+                            <span class="ms-2">ThuyetTrinh.docx</span>
+                        </div>
+                        <div class="d-flex">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </li>
+
+                    <!-- XLSX -->
+                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center" style="margin-right:15px;">
+                            <i class="fa-solid fa-file-excel text-success fs-5"></i>
+                            <span class="ms-2">DiemSinhVien.xlsx</span>
+                        </div>
+                        <div class="d-flex">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+        <!-- TOTAL SCORE -->
+        <div class="card shadow border-primary rounded-3">
+            <div class="card-body text-center">
+                <div class="text-muted small mb-1">Tổng điểm tạm tính</div>
+                <div class="display-5 fw-bold text-primary mb-3">44 <span class="fs-5 text-muted">/100</span></div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary btn-hover">
+                        <i class="fa-solid fa-save me-1"></i> Lưu kết quả
+                    </button>
+                    <button class="btn btn-link text-danger text-decoration-none">Hủy & Quay lại</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+    /* Card rounded + shadow */
+    .card {
+        border-radius: 0.75rem;
+    }
+
+    /* Criterion spacing */
+    .criterion {
+        transition: background 0.2s ease;
+    }
+
+        .criterion:hover {
+            background-color: #f8f9fa;
+        }
+
+    /* Input number styling */
+    input[type="number"] {
+        max-width: 80px;
+    }
+
+    /* Button hover effect */
+    .btn-hover:hover {
+        background-color: #0b5ed7;
+        color: #fff;
+        transition: 0.3s;
+    }
+
+    /* Badge tweaks */
+    .badge {
+        font-size: 0.85rem;
+    }
+
+    /* Smooth font appearance */
+    h1, h5, h6, p, span {
+        line-height: 1.4;
+    }
+
+    /* File list */
+    .file-list li {
+        transition: background 0.2s ease;
+        cursor: default;
+    }
+
+        .file-list li:hover {
+            background-color: #f8f9fa;
+        }
+
+    .file-list i {
+        width: 24px;
+        text-align: center;
+    }
+
+    .btn-sm i {
+        pointer-events: none;
+    }
+</style>
