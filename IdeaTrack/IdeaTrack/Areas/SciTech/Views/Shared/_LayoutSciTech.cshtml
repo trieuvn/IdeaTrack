@@ -233,22 +233,23 @@
                 </a>
 
                 <!-- Hội đồng -->
+                <!-- Hội đồng -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Councils" ? "active" : "")"
                    href="@Url.Action("Councils", "Port", new { area = "SciTech" })">
-                    <i class="fas fa-chalkboard-teacher"></i>
+                    <i class="fas fa-users"></i> <!-- đổi icon -->
                     <span>Hội đồng</span>
                 </a>
 
+                <!-- Chủ tịch hội đồng -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "CouncilChair" ? "active" : "")"
+                   href="@Url.Action("Chair", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-user-tie"></i> <!-- icon Chủ tịch -->
+                    <span>Chủ tịch hội đồng</span>
+                </a>
+
+
             </nav>
 
-            <!-- FOOTER -->
-            <div class="sidebar-footer px-3 py-3 border-top">
-                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "PanelSetup" ? "active" : "")"
-                   href="@Url.Action("PanelSetup", "Port", new { area = "SciTech" })">
-                    <i class="fas fa-cogs"></i>
-                    <span>Cấu hình hệ thống</span>
-                </a>
-            </div>
 
         </aside>
 

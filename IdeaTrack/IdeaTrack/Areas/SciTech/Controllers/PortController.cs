@@ -14,10 +14,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             return View();
 
         }
-        public IActionResult PanelSetup()
-        {
-            return View();
-        }
         public IActionResult Approve()
         {
             return View();
@@ -38,6 +34,10 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         {
                         return View();
 
+        }
+        public IActionResult CouncilChair()
+        {
+            return View();
         }
         public IActionResult Councils()
         {
