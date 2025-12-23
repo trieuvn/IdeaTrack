@@ -1,273 +1,234 @@
-﻿<!-- HEADER -->
-<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-    <div>
-        <h1 class="fw-bold mb-1">Phiếu Chấm Điểm Đồ Án</h1>
+﻿<main class="container-fluid py-4">
+
+
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h1 class="fw-bold mb-1">Quản lý Hội đồng</h1>
         <p class="text-muted mb-0">
-            Hội đồng đánh giá Đồ án Tốt nghiệp – HK2 (2023–2024)
+            Thiết lập và quản lý thành viên các hội đồng đánh giá.
         </p>
     </div>
-    <span class="badge bg-primary-subtle text-primary px-3 py-2 d-flex align-items-center">
-        <i class="fa-solid fa-pen me-1"></i> Đang chấm
-    </span>
-</div>
 
-<div class="row g-4">
+    <div class="row g-4">
 
-    <!-- LEFT: GRADING FORM -->
-    <div class="col-lg-8">
-
-        <!-- CRITERIA CARD -->
-        <div class="card shadow-sm mb-4 border-0 rounded-3">
-            <div class="card-header bg-light d-flex justify-content-between align-items-center border-bottom">
-                <h6 class="fw-bold mb-0">Tiêu chí đánh giá</h6>
-                <span class="text-muted small">Thang điểm 100</span>
-            </div>
-
-            <div class="card-body p-0">
-
-                <!-- Criterion 1 -->
-                <div class="p-4 border-bottom criterion">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="fw-bold mb-1">
-                                1. Tính cấp thiết & Tổng quan đề tài
-                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 10</span>
-                            </h6>
-                            <p class="text-muted small mb-0">Đánh giá mức độ quan trọng và tổng quan nghiên cứu.</p>
-                        </div>
-                        <div class="input-group input-group-sm w-auto">
-                            <input type="number" class="form-control text-end fw-bold" max="10" min="0" value="9">
-                            <span class="input-group-text">/10</span>
-                        </div>
-                    </div>
-                    <textarea class="form-control form-control-sm mt-3" rows="2" placeholder="Nhận xét (tùy chọn)"></textarea>
-                </div>
-
-                <!-- Criterion 2 -->
-                <div class="p-4 border-bottom criterion">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="fw-bold mb-1">
-                                2. Cơ sở lý thuyết & Phương pháp
-                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 20</span>
-                            </h6>
-                            <p class="text-muted small mb-0">Độ sâu lý thuyết và giải pháp công nghệ.</p>
-                        </div>
-                        <div class="input-group input-group-sm w-auto">
-                            <input type="number" class="form-control text-end fw-bold" max="20" min="0">
-                            <span class="input-group-text">/20</span>
-                        </div>
-                    </div>
-                    <textarea class="form-control form-control-sm mt-3" rows="2" placeholder="Nhận xét (tùy chọn)"></textarea>
-                </div>
-
-                <!-- Criterion 3 -->
-                <div class="p-4 border-bottom criterion">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="fw-bold mb-1">
-                                3. Kết quả thực nghiệm & Demo
-                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 40</span>
-                            </h6>
-                            <p class="text-muted small mb-0">Mức độ hoàn thiện, demo và kết quả đạt được.</p>
-                        </div>
-                        <div class="input-group input-group-sm w-auto">
-                            <input type="number" class="form-control text-end fw-bold" max="40" min="0" value="35">
-                            <span class="input-group-text">/40</span>
-                        </div>
-                    </div>
-                    <textarea class="form-control form-control-sm mt-3" rows="2">Demo chạy tốt, giao diện cần cải thiện.</textarea>
-                </div>
-
-                <!-- Criterion 4 -->
-                <div class="p-4 criterion">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h6 class="fw-bold mb-1">
-                                4. Trình bày & Trả lời câu hỏi
-                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 30</span>
-                            </h6>
-                            <p class="text-muted small mb-0">Kỹ năng thuyết trình và phản biện.</p>
-                        </div>
-                        <div class="input-group input-group-sm w-auto">
-                            <input type="number" class="form-control text-end fw-bold" max="30" min="0">
-                            <span class="input-group-text">/30</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- GENERAL COMMENT -->
-        <div class="card shadow-sm border-0 rounded-3">
-            <div class="card-header bg-light">
-                <h6 class="fw-bold mb-0">Nhận xét chung & Câu hỏi</h6>
-            </div>
-            <div class="card-body">
-                <textarea class="form-control" rows="4" placeholder="Nhận xét chung cho sinh viên..."></textarea>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- RIGHT: INFO & SUMMARY -->
-    <div class="col-lg-4">
-
-        <!-- STUDENT CARD -->
-        <div class="card shadow-sm mb-4 border-0 rounded-3 text-center">
-            <div class="card-body">
-                <img src="https://i.pravatar.cc/120" class="rounded-circle mb-3" width="96" height="96">
-                <h5 class="fw-bold mb-0">Nguyễn Văn A</h5>
-                <p class="text-muted small mb-3">MSSV: 1912000 • K19 CNTT</p>
-
-                <div class="text-start small mb-3">
-                    <div class="fw-semibold">Đề tài</div>
-                    <div class="text-muted">Hệ thống quản lý kho thông minh dùng AI</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SESSION INFO -->
-        <div class="card shadow-sm mb-4 border-0 rounded-3">
-            <div class="card-body small">
-                <h6 class="fw-bold mb-3"><i class="fa-regular fa-calendar me-1"></i> Thông tin phiên bảo vệ</h6>
-                <div class="d-flex justify-content-between mb-1"><span class="text-muted">Thời gian</span><span class="fw-semibold">08:00 – 08:45</span></div>
-                <div class="d-flex justify-content-between mb-1"><span class="text-muted">Phòng</span><span class="fw-semibold">A-101</span></div>
-                <div class="d-flex justify-content-between"><span class="text-muted">Mã hội đồng</span><span class="fw-semibold">HD-2024-01</span></div>
-            </div>
-        </div>
-
-        <!-- FILE MANAGER -->
-        <div class="card shadow-sm border-0 rounded-3 mb-4">
-            <div class="card-header bg-light">
-                <h6 class="fw-bold mb-0"><i class="fa-solid fa-folder-open me-2"></i> Quản lý File</h6>
-            </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush file-list">
-                    <!-- PPTX -->
-                    <li class="list-group-item d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center" style="margin-right:15px;">
-                            <i class="fa-solid fa-file-powerpoint text-danger fs-5"></i>
-                            <span class="ms-2">Report_HK2.pptx</span>
-                        </div>
-                        <div class="d-flex">
-                            <!-- 2 nút sát nhau -->
-                            <button class="btn btn-sm btn-outline-primary">
-                                <i class="fa-solid fa-download"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </li>
-
-                    <!-- DOCX -->
-                    <li class="list-group-item d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center" style="margin-right:15px;">
-                            <i class="fa-solid fa-file-word text-primary fs-5"></i>
-                            <span class="ms-2">ThuyetTrinh.docx</span>
-                        </div>
-                        <div class="d-flex">
-                            <button class="btn btn-sm btn-outline-primary">
-                                <i class="fa-solid fa-download"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </li>
-
-                    <!-- XLSX -->
-                    <li class="list-group-item d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center" style="margin-right:15px;">
-                            <i class="fa-solid fa-file-excel text-success fs-5"></i>
-                            <span class="ms-2">DiemSinhVien.xlsx</span>
-                        </div>
-                        <div class="d-flex">
-                            <button class="btn btn-sm btn-outline-primary">
-                                <i class="fa-solid fa-download"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-
-        <!-- TOTAL SCORE -->
-        <div class="card shadow border-primary rounded-3">
-            <div class="card-body text-center">
-                <div class="text-muted small mb-1">Tổng điểm tạm tính</div>
-                <div class="display-5 fw-bold text-primary mb-3">44 <span class="fs-5 text-muted">/100</span></div>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary btn-hover">
-                        <i class="fa-solid fa-save me-1"></i> Lưu kết quả
+        <!-- LEFT: COUNCIL LIST -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0">Danh sách Hội đồng</h6>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fa-solid fa-plus"></i>
                     </button>
-                    <button class="btn btn-link text-danger text-decoration-none">Hủy & Quay lại</button>
+                </div>
+
+                <div class="card-body d-flex flex-column gap-3">
+
+                    <!-- Search -->
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input class="form-control" placeholder="Tìm hội đồng...">
+                    </div>
+
+                    <!-- Active Council -->
+                    <div class="border border-primary rounded p-3 bg-primary bg-opacity-10">
+                        <div class="d-flex justify-content-between">
+                            <div class="fw-bold">
+                                <i class="fa-solid fa-laptop-code me-1 text-primary"></i>
+                                Hội đồng CNTT 2023
+                            </div>
+                            <span class="badge bg-success" style="margin-top:70px;">Hoạt động</span>
+                        </div>
+                        <div class="text-muted small mt-1">
+                            <i class="fa-regular fa-calendar"></i> 20/10/2023 ·
+                            <i class="fa-solid fa-users"></i> 5 thành viên
+                        </div>
+                    </div>
+
+                    <!-- Other councils -->
+                    <div class="border rounded p-3 hover-shadow-sm">
+                        <div class="d-flex justify-content-between">
+                            <div class="fw-medium">Hội đồng Kinh tế 2024</div>
+                            <span class="badge bg-warning text-dark" style="margin-top:70px;">Dự thảo</span>
+                        </div>
+                        <div class="text-muted small mt-1">
+                            <i class="fa-regular fa-calendar"></i> 01/01/2024 ·
+                            <i class="fa-solid fa-users"></i> 7 thành viên
+                        </div>
+                    </div>
+
+                    <div class="border rounded p-3 opacity-75">
+                        <div class="d-flex justify-content-between">
+                            <div class="fw-medium">Hội đồng KHCB 2022</div>
+                            <span class="badge bg-secondary" style="margin-top:70px;">Đã kết thúc</span>
+                        </div>
+                        <div class="text-muted small mt-1">
+                            <i class="fa-regular fa-calendar"></i> 15/05/2022 ·
+                            <i class="fa-solid fa-users"></i> 4 thành viên
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
+        <!-- RIGHT: COUNCIL DETAIL -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm h-100">
+
+                <!-- Council Info -->
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h4 class="fw-bold mb-1">
+                                Hội đồng CNTT 2023
+                                <button class="btn btn-sm btn-link text-primary">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            </h4>
+                            <p class="text-muted small mb-2">
+                                Đánh giá các sáng kiến thuộc lĩnh vực Công nghệ thông tin.
+                            </p>
+                            <div class="small text-muted">
+                                <i class="fa-regular fa-calendar"></i>
+                                20/10/2023 – 20/12/2023 |
+                                <i class="fa-solid fa-user-tie"></i>
+                                TS. Nguyễn Văn A (Chủ tịch)
+                            </div>
+                        </div>
+
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="fa-solid fa-gear"></i> Cấu hình
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Member Toolbar -->
+                <div class="card-body border-bottom">
+                    <div class="d-flex flex-wrap gap-3 justify-content-between">
+                        <h6 class="fw-bold mb-0">Thành viên Hội đồng</h6>
+
+                        <div class="d-flex gap-2">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light">
+                                    <i class="fa-solid fa-search"></i>
+                                </span>
+                                <input class="form-control" placeholder="Tìm thành viên">
+                            </div>
+                            <button class="btn btn-primary btn-sm">
+                                <i class="fa-solid fa-user-plus"></i> Thêm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Thành viên</th>
+                                <th>Chức danh / Đơn vị</th>
+                                <th>Vai trò</th>
+                                <th class="text-end">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">Nguyễn Văn A</div>
+                                    <small class="text-muted">nguyenva@university.edu.vn</small>
+                                </td>
+                                <td>
+                                    <div class="fw-medium">Tiến sĩ</div>
+                                    <small class="text-muted">Khoa CNTT</small>
+                                </td>
+                                <td>
+                                    <select class="form-select form-select-sm bg-danger-subtle text-danger fw-semibold">
+                                        <option selected>Chủ tịch</option>
+                                        <option>Thư ký</option>
+                                        <option>Ủy viên</option>
+                                    </select>
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">Trần Thị B</div>
+                                    <small class="text-muted">trantb@university.edu.vn</small>
+                                </td>
+                                <td>
+                                    <div class="fw-medium">Thạc sĩ</div>
+                                    <small class="text-muted">Phòng Đào tạo</small>
+                                </td>
+                                <td>
+                                    <select class="form-select form-select-sm bg-primary-subtle text-primary fw-semibold">
+                                        <option>Chủ tịch</option>
+                                        <option selected>Thư ký</option>
+                                        <option>Ủy viên</option>
+                                    </select>
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">Lê Văn C</div>
+                                    <small class="text-muted">levanc@university.edu.vn</small>
+                                </td>
+                                <td>
+                                    <div class="fw-medium">PGS</div>
+                                    <small class="text-muted">Khoa CNTT</small>
+                                </td>
+                                <td>
+                                    <select class="form-select form-select-sm">
+                                        <option>Chủ tịch</option>
+                                        <option>Thư ký</option>
+                                        <option selected>Ủy viên</option>
+                                    </select>
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer d-flex justify-content-between small text-muted">
+                    Hiển thị 3 / 5 thành viên
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary" disabled>Trước</button>
+                        <button class="btn btn-sm btn-outline-secondary">Sau</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
-
-</div>
-
-<style>
-    /* Card rounded + shadow */
-    .card {
-        border-radius: 0.75rem;
-    }
-
-    /* Criterion spacing */
-    .criterion {
-        transition: background 0.2s ease;
-    }
-
-        .criterion:hover {
-            background-color: #f8f9fa;
-        }
-
-    /* Input number styling */
-    input[type="number"] {
-        max-width: 80px;
-    }
-
-    /* Button hover effect */
-    .btn-hover:hover {
-        background-color: #0b5ed7;
-        color: #fff;
-        transition: 0.3s;
-    }
-
-    /* Badge tweaks */
-    .badge {
-        font-size: 0.85rem;
-    }
-
-    /* Smooth font appearance */
-    h1, h5, h6, p, span {
-        line-height: 1.4;
-    }
-
-    /* File list */
-    .file-list li {
-        transition: background 0.2s ease;
-        cursor: default;
-    }
-
-        .file-list li:hover {
-            background-color: #f8f9fa;
-        }
-
-    .file-list i {
-        width: 24px;
-        text-align: center;
-    }
-
-    .btn-sm i {
-        pointer-events: none;
-    }
-</style>
+</main>

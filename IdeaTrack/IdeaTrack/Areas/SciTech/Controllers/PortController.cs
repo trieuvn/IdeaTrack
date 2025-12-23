@@ -35,10 +35,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                         return View();
 
         }
-        public IActionResult CouncilChair()
-        {
-            return View();
-        }
         public IActionResult Councils()
         {
             return View();

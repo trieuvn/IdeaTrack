@@ -22,6 +22,11 @@ namespace IdeaTrack.Areas.Councils.Controllers
         {
             return View();
         }
+        public IActionResult CouncilChair()
+        {
+            return View();
+        }
+    
 
     }
 }

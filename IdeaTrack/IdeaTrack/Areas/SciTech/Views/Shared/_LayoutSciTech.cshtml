@@ -233,18 +233,10 @@
                 </a>
 
                 <!-- Hội đồng -->
-                <!-- Hội đồng -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Councils" ? "active" : "")"
                    href="@Url.Action("Councils", "Port", new { area = "SciTech" })">
                     <i class="fas fa-users"></i> <!-- đổi icon -->
                     <span>Hội đồng</span>
-                </a>
-
-                <!-- Chủ tịch hội đồng -->
-                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "CouncilChair" ? "active" : "")"
-                   href="@Url.Action("CouncilChair", "Port", new { area = "SciTech" })">
-                    <i class="fas fa-user-tie"></i> <!-- icon Chủ tịch -->
-                    <span>Chủ tịch hội đồng</span>
                 </a>
 
 

@@ -65,7 +65,12 @@ var rewriteOptionscouncils = new RewriteOptions()
         "^Councils/History?$",
         "Councils/Page/History",
         skipRemainingRules: true
-        );
+        
+        )
+    .AddRewrite(
+        "^Councils/CouncilChair?$",
+        "Councils/Page/CouncilChair",
+        skipRemainingRules: true);
 var rewriteOptionsdetails = new RewriteOptions()
     .AddRewrite(
         "^FacultyLeader/Details/?$",

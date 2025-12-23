@@ -577,3 +577,56 @@ body {
     .warning-text .material-icons {
         font-size: 18px;
     }
+.card {
+    border-radius: 0.75rem;
+}
+
+/* Criterion spacing */
+.criterion {
+    transition: background 0.2s ease;
+}
+
+    .criterion:hover {
+        background-color: #f8f9fa;
+    }
+
+/* Input number styling */
+input[type="number"] {
+    max-width: 80px;
+}
+
+/* Button hover effect */
+.btn-hover:hover {
+    background-color: #0b5ed7;
+    color: #fff;
+    transition: 0.3s;
+}
+
+/* Badge tweaks */
+.badge {
+    font-size: 0.85rem;
+}
+
+/* Smooth font appearance */
+h1, h5, h6, p, span {
+    line-height: 1.4;
+}
+
+/* File list */
+.file-list li {
+    transition: background 0.2s ease;
+    cursor: default;
+}
+
+    .file-list li:hover {
+        background-color: #f8f9fa;
+    }
+
+.file-list i {
+    width: 24px;
+    text-align: center;
+}
+
+.btn-sm i {
+    pointer-events: none;
+}

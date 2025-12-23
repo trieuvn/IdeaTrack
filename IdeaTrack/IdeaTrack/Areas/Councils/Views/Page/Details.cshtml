@@ -1,169 +1,198 @@
-﻿<div class="dashboard-main">
-    <header class="page-header">
-        <div class="breadcrumb">Dashboard / Initiatives / <strong>Final Approval</strong></div>
-        <div class="page-title">
-            <div class="title-left">
-                <h1>Project Phoenix</h1>
-                <span class="badge-pending">PENDING DECISION</span>
+﻿<!-- HEADER -->
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="fw-bold mb-1">Phiếu Chấm Điểm Đồ Án</h1>
+        <p class="text-muted mb-0">
+            Hội đồng đánh giá Đồ án Tốt nghiệp – HK2 (2023–2024)
+        </p>
+    </div>
+    <span class="badge bg-primary-subtle text-primary px-3 py-2 d-flex align-items-center">
+        <i class="fa-solid fa-pen me-1"></i> Đang chấm
+    </span>
+</div>
+
+<!-- MAIN ROW: Form + Info -->
+<div class="row g-4">
+
+    <!-- LEFT: GRADING FORM -->
+    <div class="col-lg-8">
+
+        <!-- CRITERIA CARD -->
+        <div class="card shadow-sm mb-4 border-0 rounded-3">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center border-bottom">
+                <h6 class="fw-bold mb-0">Tiêu chí đánh giá</h6>
+                <span class="text-muted small">Thang điểm 100</span>
             </div>
-            <p class="subtitle">Review aggregated evaluation scores, assign the final global rank, and record the board's official decision for this initiative.</p>
+
+            <div class="card-body p-0">
+                <!-- Criterion 1 -->
+                <div class="p-4 border-bottom criterion">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                1. Tính cấp thiết & Tổng quan đề tài
+                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 10</span>
+                            </h6>
+                            <p class="text-muted small mb-0">Đánh giá mức độ quan trọng và tổng quan nghiên cứu.</p>
+                        </div>
+                        <div class="input-group input-group-sm w-auto">
+                            <input type="number" class="form-control text-end fw-bold" max="10" min="0" value="9">
+                            <span class="input-group-text">/10</span>
+                        </div>
+                    </div>
+                    <textarea class="form-control form-control-sm mt-3" rows="2" placeholder="Nhận xét (tùy chọn)"></textarea>
+                </div>
+
+                <!-- Criterion 2 -->
+                <div class="p-4 border-bottom criterion">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                2. Cơ sở lý thuyết & Phương pháp
+                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 20</span>
+                            </h6>
+                            <p class="text-muted small mb-0">Độ sâu lý thuyết và giải pháp công nghệ.</p>
+                        </div>
+                        <div class="input-group input-group-sm w-auto">
+                            <input type="number" class="form-control text-end fw-bold" max="20" min="0">
+                            <span class="input-group-text">/20</span>
+                        </div>
+                    </div>
+                    <textarea class="form-control form-control-sm mt-3" rows="2" placeholder="Nhận xét (tùy chọn)"></textarea>
+                </div>
+
+                <!-- Criterion 3 -->
+                <div class="p-4 border-bottom criterion">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                3. Kết quả thực nghiệm & Demo
+                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 40</span>
+                            </h6>
+                            <p class="text-muted small mb-0">Mức độ hoàn thiện, demo và kết quả đạt được.</p>
+                        </div>
+                        <div class="input-group input-group-sm w-auto">
+                            <input type="number" class="form-control text-end fw-bold" max="40" min="0" value="35">
+                            <span class="input-group-text">/40</span>
+                        </div>
+                    </div>
+                    <textarea class="form-control form-control-sm mt-3">Demo chạy tốt, giao diện cần cải thiện.</textarea>
+                </div>
+
+                <!-- Criterion 4 -->
+                <div class="p-4 criterion">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                4. Trình bày & Trả lời câu hỏi
+                                <span class="badge bg-secondary-subtle text-secondary ms-2">Max 30</span>
+                            </h6>
+                            <p class="text-muted small mb-0">Kỹ năng thuyết trình và phản biện.</p>
+                        </div>
+                        <div class="input-group input-group-sm w-auto">
+                            <input type="number" class="form-control text-end fw-bold" max="30" min="0">
+                            <span class="input-group-text">/30</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </header>
 
-    <section class="content-grid">
-        <div class="left-panel">
-            <section class="card">
-                <div class="section-title">
-                    <span class="material-icons">info</span> Initiative Summary
-                </div>
-                <p class="description">
-                    Project Phoenix aims to modernize our core legacy banking infrastructure by migrating to a cloud-native architecture. This initiative is expected to reduce operational costs by 25% and improve system uptime to 99.99%.
-                </p>
-                <div class="meta-grid">
-                    <div class="meta-item"><span>BUDGET</span><strong>$1.2M</strong></div>
-                    <div class="meta-item"><span>TIMELINE</span><strong>Q4 2024</strong></div>
-                    <div class="meta-item"><span>LEAD</span><strong>Dr. A. Smith</strong></div>
-                    <div class="meta-item"><span>DEPT</span><strong>Innovation</strong></div>
-                </div>
-            </section>
-
-            <section class="card">
-                <div class="section-title">
-                    <span class="material-icons">bar_chart</span> Score Verification
-                </div>
-                <div class="score-container">
-                    <div class="progress-group">
-                        <div class="progress-item">
-                            <label>Technical Feasibility <span>85/100</span></label>
-                            <div class="progress-bar"><div class="fill blue" style="width:85%"></div></div>
-                        </div>
-                        <div class="progress-item">
-                            <label>Financial Impact <span>92/100</span></label>
-                            <div class="progress-bar"><div class="fill green" style="width:92%"></div></div>
-                        </div>
-                        <div class="progress-item">
-                            <label>Strategic Fit <span>88/100</span></label>
-                            <div class="progress-bar"><div class="fill blue" style="width:88%"></div></div>
-                        </div>
-                    </div>
-                    <div class="total-score-box">
-                        <p>TOTAL WEIGHTED SCORE</p>
-                        <div class="score-value">89.5</div>
-                        <span class="rank-badge">↗ Top 5%</span>
-                    </div>
-                </div>
-                <div class="score-footer">
-                    <span><span class="material-icons">history</span> Last calculated: Oct 24, 2024 by System</span>
-                    <a href="#" class="footer-link">View detailed score breakdown</a>
-                </div>
-            </section>
-
-            <div class="section-title" style="margin: 24px 0 16px 0;">
-                <span class="material-icons">folder</span> Supporting Documents
+        <!-- GENERAL COMMENT -->
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-light">
+                <h6 class="fw-bold mb-0">Nhận xét chung & Câu hỏi</h6>
             </div>
-            <div class="docs-grid">
-                <div class="doc-item card-mini">
-                    <div class="doc-icon pdf"><span class="material-icons">picture_as_pdf</span></div>
-                    <div class="doc-info">
-                        <p class="doc-name">Full_Evaluation_Report.pdf</p>
-                        <p class="doc-meta">2.4 MB • Added yesterday</p>
-                    </div>
-                </div>
-                <div class="doc-item card-mini">
-                    <div class="doc-icon excel"><span class="material-icons">table_view</span></div>
-                    <div class="doc-info">
-                        <p class="doc-name">Financial_Model_v3.xlsx</p>
-                        <p class="doc-meta">850 KB • Added Oct 20</p>
-                    </div>
+            <div class="card-body">
+                <textarea class="form-control" rows="4" placeholder="Nhận xét chung cho sinh viên..."></textarea>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT: INFO, FILE + SCORE -->
+    <div class="col-lg-4 d-flex flex-column gap-3">
+
+        <!-- STUDENT CARD -->
+        <div class="card shadow-sm border-0 rounded-3 text-center">
+            <div class="card-body">
+                <img src="https://i.pravatar.cc/120" class="rounded-circle mb-3" width="96" height="96">
+                <h5 class="fw-bold mb-0">Nguyễn Văn A</h5>
+                <p class="text-muted small mb-3">MSSV: 1912000 • K19 CNTT</p>
+
+                <div class="text-start small mb-3">
+                    <div class="fw-semibold">Đề tài</div>
+                    <div class="text-muted">Hệ thống quản lý kho thông minh dùng AI</div>
                 </div>
             </div>
         </div>
 
-        <aside class="right-panel">
-            <div class="review-team card">
-                <div class="section-title">
-                    <span class="material-icons">groups</span> Review Committee
-                </div>
+        <!-- SESSION INFO -->
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body small">
+                <h6 class="fw-bold mb-3"><i class="fa-regular fa-calendar me-1"></i> Thông tin phiên bảo vệ</h6>
+                <div class="d-flex justify-content-between mb-1"><span class="text-muted">Thời gian</span><span class="fw-semibold">08:00 – 08:45</span></div>
+                <div class="d-flex justify-content-between mb-1"><span class="text-muted">Phòng</span><span class="fw-semibold">A-101</span></div>
+                <div class="d-flex justify-content-between"><span class="text-muted">Mã hội đồng</span><span class="fw-semibold">HD-2024-01</span></div>
+            </div>
+        </div>
 
-                <div class="committee-list">
-
-                    <!-- ĐÃ CHẤM -->
-                    <div class="committee-member scored">
-                        <div class="avatar">
-                            <img src="https://i.pravatar.cc/80?img=15">
+        <!-- FILE MANAGER -->
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-header bg-light">
+                <h6 class="fw-bold mb-0"><i class="fa-solid fa-folder-open me-2"></i> Quản lý File</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush file-list">
+                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center text-truncate" style="max-width:calc(100% - 50px);">
+                            <i class="fa-solid fa-file-powerpoint text-danger fs-5 me-2 flex-shrink-0"></i>
+                            <span class="text-truncate">Report_HK2.pptx</span>
                         </div>
-
-                        <div class="member-main">
-                            <div class="member-header">
-                                <strong>PGS. TS. Nguyễn Văn A</strong>
-                                <span class="role">Council Chair</span>
-                            </div>
-
-                            <div class="member-status done">
-                                <span class="material-icons">check_circle</span>
-                                Scored: <strong>92</strong>
-                            </div>
+                        <button class="btn btn-sm btn-outline-primary flex-shrink-0">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center text-truncate" style="max-width:calc(100% - 50px);">
+                            <i class="fa-solid fa-file-word text-primary fs-5 me-2 flex-shrink-0"></i>
+                            <span class="text-truncate">ThuyetTrinh.docx</span>
                         </div>
-                    </div>
-
-                    <!-- CHƯA CHẤM -->
-                    <div class="committee-member pending">
-                        <div class="avatar">
-                            <img src="https://i.pravatar.cc/80?img=22">
+                        <button class="btn btn-sm btn-outline-primary flex-shrink-0">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </li>
+                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center text-truncate" style="max-width:calc(100% - 50px);">
+                            <i class="fa-solid fa-file-excel text-success fs-5 me-2 flex-shrink-0"></i>
+                            <span class="text-truncate">DiemSinhVien.xlsx</span>
                         </div>
+                        <button class="btn btn-sm btn-outline-primary flex-shrink-0">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-                        <div class="member-main">
-                            <div class="member-header">
-                                <strong>ThS. Trần Thị B</strong>
-                                <span class="role">Secretary</span>
-                            </div>
 
-                            <div class="member-status waiting">
-                                <span class="material-icons">hourglass_top</span>
-                                Not scored yet
-                            </div>
-                        </div>
-                    </div>
-
+        <!-- TOTAL SCORE -->
+        <div class="card shadow-sm border-primary rounded-3 mt-2">
+            <div class="card-body text-center">
+                <div class="text-muted small mb-1">Tổng điểm tạm tính</div>
+                <div class="display-5 fw-bold text-primary mb-3">44 <span class="fs-5 text-muted">/100</span></div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary btn-hover">
+                        <i class="fa-solid fa-save me-1"></i> Lưu kết quả
+                    </button>
+                    <button class="btn btn-link text-danger text-decoration-none">Hủy & Quay lại</button>
                 </div>
             </div>
+        </div>
 
+    </div>
 
-            <div class="decision-console card">
-                <div class="section-title">
-                    <span class="material-icons">gavel</span> Decision Console
-                </div>
+    </div>
 
-                <div class="input-group">
-                    <label>Assign Final Score</label>
-                    <div class="input-wrapper">
-                        <input type="number"
-                               placeholder="e.g. 89.5"
-                               min="0"
-                               max="100"
-                               step="0.1">
-                        <span class="input-suffix">/ 100</span>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Board Decision</label>
-                    <div class="decision-buttons">
-                        <button class="btn-decision active">
-                            <span class="material-icons">check_circle</span> Approve
-                        </button>
-                        <button class="btn-decision">
-                            <span class="material-icons">cancel</span> Reject
-                        </button>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Reason for Decision <span class="mandatory">Mandatory</span></label>
-                    <textarea placeholder="Provide a detailed rationale for the selected decision..."></textarea>
-                    <span class="char-count">0/500 characters</span>
-                </div>
-                <button class="btn-confirm">Confirm <span class="material-icons" style="transform:translateY(5px);">arrow_forward</span></button>
-                <p class="audit-note">This action is final and will be recorded in the audit log.</p>
-            </div>
-        </aside>
-    </section>
 </div>
