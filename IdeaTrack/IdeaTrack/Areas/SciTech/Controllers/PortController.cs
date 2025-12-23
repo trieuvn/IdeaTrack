@@ -9,5 +9,39 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         {
             return View();
         }
+        public IActionResult Result()
+        {
+            return View();
+
+        }
+        public IActionResult PanelSetup()
+        {
+            return View();
+        }
+        public IActionResult Approve()
+        {
+            return View();
+        }
+        public IActionResult Follow()
+        {
+            return View();
+        }
+        public IActionResult Rule()
+        {
+            return View();
+        }
+        public IActionResult Dashboard()
+        {
+            return View();
+        }
+        public IActionResult User()
+        {
+                        return View();
+
+        }
+        public IActionResult Councils()
+        {
+            return View();
+        }
     }
 }

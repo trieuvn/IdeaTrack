@@ -1,0 +1,167 @@
+﻿
+
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb mb-4">
+        <a class="breadcrumb-item text-decoration-none" href="#">
+            <i class="fas fa-home me-1"></i>Trang chủ
+        </a>
+        <a class="breadcrumb-item text-decoration-none" href="#">Quản lý hồ sơ</a>
+        <span class="breadcrumb-item active fw-semibold">
+            Phê duyệt hồ sơ 2023-CN-05
+        </span>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+        <div>
+            <span class="badge bg-warning-subtle text-warning mb-2">
+                <i class="fas fa-hourglass-half me-1"></i>Chờ quyết định
+            </span>
+
+            <h2 class="fw-bold mb-1">
+                Nghiên cứu ứng dụng AI trong Nông nghiệp
+            </h2>
+
+            <p class="text-muted mb-0">
+                <i class="fas fa-fingerprint me-1"></i>Mã hồ sơ: <strong>2023-CN-05</strong>
+                <span class="mx-2">|</span>
+                <i class="fas fa-calendar-alt me-1"></i>15/09/2023
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary">
+                <i class="fas fa-print me-1"></i>In hồ sơ
+            </button>
+            <button class="btn btn-outline-danger">
+                <i class="fas fa-file-pdf me-1"></i>Xuất PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- LEFT COLUMN -->
+        <div class="col-lg-8">
+
+            <!-- INFO CARD -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light fw-bold">
+                    <i class="fas fa-info-circle me-1"></i>Thông tin chung
+                </div>
+
+                <div class="card-body row g-4">
+                    <div class="col-md-6">
+                        <small class="text-muted">Chủ nhiệm đề tài</small>
+                        <p class="fw-semibold mb-0">
+                            <i class="fas fa-user me-1"></i>TS. Nguyễn Văn A
+                        </p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted">Đơn vị thực hiện</small>
+                        <p class="fw-semibold mb-0">Khoa Công nghệ Thông tin</p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted">Lĩnh vực</small>
+                        <p class="fw-semibold mb-0">Khoa học máy tính &amp; Nông nghiệp</p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted">Loại hình</small>
+                        <p class="fw-semibold mb-0">Nghiên cứu ứng dụng</p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted">Kinh phí đề xuất</small>
+                        <p class="fw-bold text-primary fs-5 mb-0">
+                            500.000.000 VNĐ
+                        </p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <small class="text-muted">Thời gian thực hiện</small>
+                        <p class="fw-semibold mb-0">12 tháng (01/2024 – 12/2024)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABSTRACT -->
+            <div class="accordion mb-4" id="abstractAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button fw-semibold" data-bs-toggle="collapse" data-bs-target="#abstract">
+                            <i class="fas fa-align-left me-2"></i>Tóm tắt nội dung
+                        </button>
+                    </h2>
+                    <div id="abstract" class="accordion-collapse collapse show">
+                        <div class="accordion-body text-muted">
+                            Dự án triển khai hệ thống AI giám sát sức khỏe cây trồng bằng
+                            CNN phân tích ảnh drone, giúp phát hiện sớm sâu bệnh,
+                            giảm chi phí thuốc và tăng năng suất cây trồng.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-semibold" data-bs-toggle="collapse" data-bs-target="#files">
+                            <i class="fas fa-paperclip me-2"></i>Tài liệu đính kèm
+                        </button>
+                    </h2>
+                    <div id="files" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-file-pdf text-danger me-2"></i>Thuyết minh đề tài.pdf</span>
+                                    <a href="#" class="text-decoration-none">Tải</a>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas fa-file-excel text-success me-2"></i>Dự toán kinh phí.xlsx</span>
+                                    <a href="#" class="text-decoration-none">Tải</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="col-lg-4">
+            <!-- DECISION PANEL -->
+            <div class="card shadow border-primary">
+                <div class="card-header fw-bold text-primary">
+                    <i class="fas fa-pen-alt me-1"></i>Quyết định PKHCN
+                </div>
+
+                <div class="card-body">
+                    <label class="form-label fw-semibold">Ghi chú / Kết luận</label>
+                    <textarea class="form-control mb-3" rows="4"
+                              placeholder="Nhập ý kiến hoặc lý do..."></textarea>
+
+                    <button class="btn btn-success w-100 mb-2">
+                        <i class="fas fa-check-circle me-1"></i>Duyệt hồ sơ
+                    </button>
+
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <button class="btn btn-outline-warning w-100">
+                                <i class="fas fa-sync-alt me-1"></i>Yêu cầu sửa
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-outline-danger w-100">
+                                <i class="fas fa-times-circle me-1"></i>Không
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>

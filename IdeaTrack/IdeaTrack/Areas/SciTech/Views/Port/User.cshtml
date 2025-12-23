@@ -1,0 +1,189 @@
+﻿<main class="container-fluid py-4">
+
+    <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="#">Quản trị</a></li>
+            <li class="breadcrumb-item active fw-semibold">Người dùng & Truy cập</li>
+        </ol>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">Quản lý Người dùng & Truy cập</h1>
+            <p class="text-muted mb-0">
+                Quản lý tài khoản, phân quyền và theo dõi hoạt động truy cập hệ thống.
+            </p>
+        </div>
+        <button class="btn btn-outline-primary">
+            <i class="fa-solid fa-file-export me-1"></i>Xuất báo cáo
+        </button>
+    </div>
+
+    <!-- STATS -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <i class="fa-solid fa-users text-primary fs-4"></i>
+                    <p class="text-muted small mb-1">Tổng người dùng</p>
+                    <h3 class="fw-bold mb-0">1,240</h3>
+                    <small class="text-success">
+                        <i class="fa-solid fa-arrow-up"></i> +12% tháng này
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <i class="fa-solid fa-circle-check text-success fs-4"></i>
+                    <p class="text-muted small mb-1">Đang hoạt động</p>
+                    <h3 class="fw-bold mb-0">98%</h3>
+                    <small class="text-muted">1,215 tài khoản</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <i class="fa-solid fa-right-to-bracket text-info fs-4"></i>
+                    <p class="text-muted small mb-1">Đăng nhập gần đây</p>
+                    <h3 class="fw-bold mb-0">85</h3>
+                    <small class="text-muted">24 giờ qua</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <i class="fa-solid fa-clock text-warning fs-4"></i>
+                    <p class="text-muted small mb-1">Chờ duyệt</p>
+                    <h3 class="fw-bold mb-0">12</h3>
+                    <small class="text-muted">Yêu cầu mới</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex flex-column flex-lg-row gap-3 justify-content-between">
+
+            <div class="d-flex flex-wrap gap-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-white">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input class="form-control" placeholder="Tìm theo tên hoặc email">
+                </div>
+
+                <select class="form-select">
+                    <option>Tất cả vai trò</option>
+                    <option>Quản trị viên</option>
+                    <option>Giảng viên</option>
+                    <option>Sinh viên</option>
+                </select>
+
+                <select class="form-select">
+                    <option>Tất cả trạng thái</option>
+                    <option>Hoạt động</option>
+                    <option>Đã khóa</option>
+                    <option>Chờ duyệt</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary">
+                <i class="fa-solid fa-user-plus me-1"></i>Thêm người dùng
+            </button>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Người dùng</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                        <th>Đăng nhập cuối</th>
+                        <th class="text-center">Lượt truy cập</th>
+                        <th class="text-end">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">Lê Thị Mai</div>
+                            <small class="text-muted">mai.le@university.edu.vn</small>
+                        </td>
+                        <td><span class="badge bg-primary-subtle text-primary">Giảng viên</span></td>
+                        <td><span class="badge bg-success">Hoạt động</span></td>
+                        <td>20/10/2023 09:30</td>
+                        <td class="text-center fw-semibold">124</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-outline-warning"><i class="fa-solid fa-lock-open"></i></button>
+                            <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">Trần Văn Bình</div>
+                            <small class="text-muted">binh.tran@university.edu.vn</small>
+                        </td>
+                        <td><span class="badge bg-purple">Quản trị viên</span></td>
+                        <td><span class="badge bg-success">Hoạt động</span></td>
+                        <td>20/10/2023 08:15</td>
+                        <td class="text-center fw-semibold">850</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-outline-warning"><i class="fa-solid fa-lock-open"></i></button>
+                            <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">Phạm Thu Hương</div>
+                            <small class="text-muted">huong.pham@university.edu.vn</small>
+                        </td>
+                        <td><span class="badge bg-primary-subtle text-primary">Giảng viên</span></td>
+                        <td><span class="badge bg-danger">Đã khóa</span></td>
+                        <td>15/10/2023 14:20</td>
+                        <td class="text-center fw-semibold">32</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn btn-sm btn-outline-success"><i class="fa-solid fa-lock"></i></button>
+                            <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <small class="text-muted">Hiển thị 1–10 / 1,240 người dùng</small>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled"><a class="page-link">‹</a></li>
+                    <li class="page-item active"><a class="page-link">1</a></li>
+                    <li class="page-item"><a class="page-link">2</a></li>
+                    <li class="page-item"><a class="page-link">›</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+</main>
