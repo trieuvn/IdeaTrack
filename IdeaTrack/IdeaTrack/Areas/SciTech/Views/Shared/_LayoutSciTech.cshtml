@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -180,8 +185,11 @@
 
             <!-- NAV -->
             <nav class="nav flex-column px-2 mt-2 flex-grow-1">
-                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                    <span class="material-symbols-outlined fs-5">dashboard</span>
+
+                <!-- Tổng quan -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Index" ? "active" : "")"
+                   href="@Url.Action("Index", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-tachometer-alt"></i>
                     <span>Tổng quan</span>
                 </a>
 
@@ -189,21 +197,55 @@
                     Quản lý đề tài
                 </div>
 
-                <a class="nav-link active d-flex align-items-center gap-2" href="#">
-                    <span class="material-symbols-outlined fs-5">folder_shared</span>
-                    <span>Hồ sơ sau cấp khoa</span>
-                </a>
-
-                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                    <span class="material-symbols-outlined fs-5">assignment_turned_in</span>
+                <!-- Đề tài đang thực hiện -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Result" ? "active" : "")"
+                   href="@Url.Action("Result", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-tasks"></i>
                     <span>Đề tài đang thực hiện</span>
                 </a>
+
+                <!-- Theo dõi hồ sơ -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Follow" ? "active" : "")"
+                   href="@Url.Action("Follow", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-eye"></i>
+                    <span>Theo dõi hồ sơ</span>
+                </a>
+
+                <!-- Quy định -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Rule" ? "active" : "")"
+                   href="@Url.Action("Rule", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-gavel"></i>
+                    <span>Quy định</span>
+                </a>
+
+                <!-- Hồ sơ cá nhân -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Profile" ? "active" : "")"
+                   href="@Url.Action("Profile", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-user"></i>
+                    <span>Hồ sơ cá nhân</span>
+                </a>
+
+                <!-- Người dùng -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "User" ? "active" : "")"
+                   href="@Url.Action("User", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-users"></i>
+                    <span>Người dùng</span>
+                </a>
+
+                <!-- Hội đồng -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Councils" ? "active" : "")"
+                   href="@Url.Action("Councils", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Hội đồng</span>
+                </a>
+
             </nav>
 
             <!-- FOOTER -->
             <div class="sidebar-footer px-3 py-3 border-top">
-                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                    <span class="material-symbols-outlined fs-5">settings</span>
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "PanelSetup" ? "active" : "")"
+                   href="@Url.Action("PanelSetup", "Port", new { area = "SciTech" })">
+                    <i class="fas fa-cogs"></i>
                     <span>Cấu hình hệ thống</span>
                 </a>
             </div>

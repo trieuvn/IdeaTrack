@@ -30,7 +30,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         {
             return View();
         }
-        public IActionResult Dashboard()
+        public IActionResult Profile()
         {
             return View();
         }
