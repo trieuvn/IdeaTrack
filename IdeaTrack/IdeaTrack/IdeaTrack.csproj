@@ -31,6 +31,8 @@
     <Folder Include="Areas\Councils\Models\" />
     <Folder Include="Areas\FacultyLeader\Data\" />
     <Folder Include="Areas\FacultyLeader\Models\" />
+    <Folder Include="Areas\SciTech\Data\" />
+    <Folder Include="Areas\SciTech\Models\" />
   </ItemGroup>
 
 </Project>
