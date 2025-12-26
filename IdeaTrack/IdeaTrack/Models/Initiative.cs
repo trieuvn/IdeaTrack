@@ -1,37 +1,40 @@
-﻿using IdeaTrack.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-public class Initiative
+namespace IdeaTrack.Models
 {
-    public int Id { get; set; }
+    public class Initiative
+    {
+        public int Id { get; set; }
+        public string InitiativeCode { get; set; }
+        public string Title { get; set; }
+        public string? Description { get; set; }
+        public decimal Budget { get; set; }
+        public InitiativeStatus Status { get; set; } = InitiativeStatus.Draft;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? SubmittedDate { get; set; }
+        public virtual FinalResult? FinalResult { get; set; }
 
-    public string Title { get; set; } = null!;
-    public string Description { get; set; } = null!;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public int ProposerId { get; set; }
+        [ForeignKey("ProposerId")]
+        public virtual ApplicationUser Proposer { get; set; }
+        
+        // --- QUAN HỆ VỚI PHÒNG BAN/KHOA ---
+        public int DepartmentId { get; set; }
+        [ForeignKey("DepartmentId")]
+        public virtual Department Department { get; set; }
+        
+        // --- CÁC QUAN HỆ KHÁC ---
+        public int CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
+        public virtual InitiativeCategory Category { get; set; }
 
-    // Trạng thái
-    public string Status { get; set; } = "Submitted";
-    // Submitted – Reviewing – NeedSupplement – Scoring – Approved – Rejected
+        // Thêm quan hệ với Năm học
+        public int AcademicYearId { get; set; }
+        [ForeignKey("AcademicYearId")]
+        public virtual AcademicYear AcademicYear { get; set; }
 
-    // Người tạo
-    public Guid CreatorId { get; set; }
-    public ApplicationUser Creator { get; set; } = null!;
-
-    // Khoa
-    public int DepartmentId { get; set; }
-    public Department Department { get; set; } = null!;
-
-    // Danh mục
-    public int CategoryId { get; set; }
-    public InitiativeCategory Category { get; set; } = null!;
-    public List<ActivityLog> ActivityLogs { get; set; } = new();
-
-    // Năm học
-    public int AcademicYearId { get; set; }
-    public AcademicYear AcademicYear { get; set; } = null!;
-
-    public ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
-    public ICollection<ApprovalRecord> ApprovalRecords { get; set; } = new List<ApprovalRecord>();
-    public ICollection<ScoreItem> ScoreItems { get; set; } = new List<ScoreItem>();
-    public ICollection<CommitteeAssignment> Assignments { get; set; } = new List<CommitteeAssignment>();
+        public virtual ICollection<InitiativeFile> Files { get; set; } = new List<InitiativeFile>();
+        public virtual ICollection<InitiativeAssignment> Assignments { get; set; } = new List<InitiativeAssignment>();
+        public virtual ICollection<RevisionRequest> RevisionRequests { get; set; } = new List<RevisionRequest>();
+    }
 }

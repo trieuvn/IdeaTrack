@@ -17,7 +17,7 @@ namespace IdeaTrack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsCurrent = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -29,7 +29,9 @@ namespace IdeaTrack.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -40,16 +42,50 @@ namespace IdeaTrack.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Boards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BoardName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FiscalYear = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Boards", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Departments",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EvaluationTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EvaluationTemplates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,32 +94,12 @@ namespace IdeaTrack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InitiativeCategories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Criteria",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MaxScore = table.Column<int>(type: "int", nullable: false),
-                    AcademicYearId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Criteria", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Criteria_AcademicYears_AcademicYearId",
-                        column: x => x.AcademicYearId,
-                        principalTable: "AcademicYears",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,7 +108,7 @@ namespace IdeaTrack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -111,10 +127,16 @@ namespace IdeaTrack.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DepartmentId = table.Column<int>(type: "int", nullable: true),
-                    Role = table.Column<int>(type: "int", nullable: false),
+                    AcademicRank = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Degree = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    LastActive = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -141,12 +163,35 @@ namespace IdeaTrack.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EvaluationCriteria",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
+                    CriteriaName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MaxScore = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    SortOrder = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EvaluationCriteria", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EvaluationCriteria_EvaluationTemplates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "EvaluationTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -168,7 +213,7 @@ namespace IdeaTrack.Migrations
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,8 +230,8 @@ namespace IdeaTrack.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -209,7 +254,7 @@ namespace IdeaTrack.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -226,16 +271,47 @@ namespace IdeaTrack.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BoardMembers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BoardId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BoardMembers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BoardMembers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BoardMembers_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Initiatives",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    InitiativeCode = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Budget = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SubmittedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ProposerId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     AcademicYearId = table.Column<int>(type: "int", nullable: false)
@@ -250,8 +326,8 @@ namespace IdeaTrack.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Initiatives_AspNetUsers_CreatorId",
-                        column: x => x.CreatorId,
+                        name: "FK_Initiatives_AspNetUsers_ProposerId",
+                        column: x => x.ProposerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -266,62 +342,59 @@ namespace IdeaTrack.Migrations
                         column: x => x.CategoryId,
                         principalTable: "InitiativeCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ActivityLogs",
+                name: "SystemAuditLogs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    InitiativeId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Detail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TargetTable = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TargetId = table.Column<int>(type: "int", nullable: false),
+                    Details = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActivityLogs", x => x.Id);
+                    table.PrimaryKey("PK_SystemAuditLogs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ActivityLogs_AspNetUsers_UserId",
+                        name: "FK_SystemAuditLogs_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ActivityLogs_Initiatives_InitiativeId",
-                        column: x => x.InitiativeId,
-                        principalTable: "Initiatives",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ApprovalRecords",
+                name: "FinalResults",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InitiativeId = table.Column<int>(type: "int", nullable: false),
-                    ApproverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Level = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ApprovedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AverageScore = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    FinalScore = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    Rank = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChairmanDecision = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DecisionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ChairmanId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApprovalRecords", x => x.Id);
+                    table.PrimaryKey("PK_FinalResults", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ApprovalRecords_AspNetUsers_ApproverId",
-                        column: x => x.ApproverId,
+                        name: "FK_FinalResults_AspNetUsers_ChairmanId",
+                        column: x => x.ChairmanId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ApprovalRecords_Initiatives_InitiativeId",
+                        name: "FK_FinalResults_Initiatives_InitiativeId",
                         column: x => x.InitiativeId,
                         principalTable: "Initiatives",
                         principalColumn: "Id",
@@ -329,56 +402,100 @@ namespace IdeaTrack.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Attachments",
+                name: "InitiativeAssignments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InitiativeId = table.Column<int>(type: "int", nullable: false),
+                    BoardId = table.Column<int>(type: "int", nullable: true),
+                    MemberId = table.Column<int>(type: "int", nullable: false),
+                    TemplateId = table.Column<int>(type: "int", nullable: false),
+                    AssignedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Decision = table.Column<bool>(type: "bit", nullable: true),
+                    ReviewComment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DecisionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InitiativeAssignments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InitiativeAssignments_AspNetUsers_MemberId",
+                        column: x => x.MemberId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_InitiativeAssignments_Boards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "Boards",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_InitiativeAssignments_EvaluationTemplates_TemplateId",
+                        column: x => x.TemplateId,
+                        principalTable: "EvaluationTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InitiativeAssignments_Initiatives_InitiativeId",
+                        column: x => x.InitiativeId,
+                        principalTable: "Initiatives",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InitiativeFiles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    InitiativeId = table.Column<int>(type: "int", nullable: false),
-                    UploadedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    InitiativeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Attachments", x => x.Id);
+                    table.PrimaryKey("PK_InitiativeFiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attachments_AspNetUsers_UploadedById",
-                        column: x => x.UploadedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Attachments_Initiatives_InitiativeId",
+                        name: "FK_InitiativeFiles_Initiatives_InitiativeId",
                         column: x => x.InitiativeId,
                         principalTable: "Initiatives",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CommitteeAssignments",
+                name: "RevisionRequests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InitiativeId = table.Column<int>(type: "int", nullable: false),
-                    ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AssignedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RequesterId = table.Column<int>(type: "int", nullable: false),
+                    RequestContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RequestedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Deadline = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsResolved = table.Column<bool>(type: "bit", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommitteeAssignments", x => x.Id);
+                    table.PrimaryKey("PK_RevisionRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CommitteeAssignments_AspNetUsers_ReviewerId",
-                        column: x => x.ReviewerId,
+                        name: "FK_RevisionRequests_AspNetUsers_RequesterId",
+                        column: x => x.RequesterId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CommitteeAssignments_Initiatives_InitiativeId",
+                        name: "FK_RevisionRequests_Initiatives_InitiativeId",
                         column: x => x.InitiativeId,
                         principalTable: "Initiatives",
                         principalColumn: "Id",
@@ -386,66 +503,37 @@ namespace IdeaTrack.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ScoreItems",
+                name: "EvaluationDetails",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CriterionId = table.Column<int>(type: "int", nullable: false),
-                    InitiativeId = table.Column<int>(type: "int", nullable: false),
-                    ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Score = table.Column<int>(type: "int", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AssignmentId = table.Column<int>(type: "int", nullable: false),
+                    CriteriaId = table.Column<int>(type: "int", nullable: false),
+                    ScoreGiven = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ScoreItems", x => x.Id);
+                    table.PrimaryKey("PK_EvaluationDetails", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ScoreItems_AspNetUsers_ReviewerId",
-                        column: x => x.ReviewerId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_EvaluationDetails_EvaluationCriteria_CriteriaId",
+                        column: x => x.CriteriaId,
+                        principalTable: "EvaluationCriteria",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ScoreItems_Criteria_CriterionId",
-                        column: x => x.CriterionId,
-                        principalTable: "Criteria",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ScoreItems_Initiatives_InitiativeId",
-                        column: x => x.InitiativeId,
-                        principalTable: "Initiatives",
+                        name: "FK_EvaluationDetails_InitiativeAssignments_AssignmentId",
+                        column: x => x.AssignmentId,
+                        principalTable: "InitiativeAssignments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AcademicYears_IsCurrent",
+                name: "IX_AcademicYears_Name",
                 table: "AcademicYears",
-                column: "IsCurrent",
-                unique: true,
-                filter: "[IsCurrent] = 1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ActivityLogs_InitiativeId",
-                table: "ActivityLogs",
-                column: "InitiativeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ActivityLogs_UserId",
-                table: "ActivityLogs",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApprovalRecords_ApproverId",
-                table: "ApprovalRecords",
-                column: "ApproverId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApprovalRecords_InitiativeId_Level",
-                table: "ApprovalRecords",
-                columns: new[] { "InitiativeId", "Level" },
+                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -493,35 +581,70 @@ namespace IdeaTrack.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_InitiativeId",
-                table: "Attachments",
-                column: "InitiativeId");
+                name: "IX_BoardMembers_BoardId",
+                table: "BoardMembers",
+                column: "BoardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_UploadedById",
-                table: "Attachments",
-                column: "UploadedById");
+                name: "IX_BoardMembers_UserId",
+                table: "BoardMembers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommitteeAssignments_InitiativeId_ReviewerId",
-                table: "CommitteeAssignments",
-                columns: new[] { "InitiativeId", "ReviewerId" },
+                name: "IX_EvaluationCriteria_TemplateId",
+                table: "EvaluationCriteria",
+                column: "TemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EvaluationDetails_AssignmentId",
+                table: "EvaluationDetails",
+                column: "AssignmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EvaluationDetails_CriteriaId",
+                table: "EvaluationDetails",
+                column: "CriteriaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FinalResults_ChairmanId",
+                table: "FinalResults",
+                column: "ChairmanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FinalResults_InitiativeId",
+                table: "FinalResults",
+                column: "InitiativeId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CommitteeAssignments_ReviewerId",
-                table: "CommitteeAssignments",
-                column: "ReviewerId");
+                name: "IX_InitiativeAssignments_BoardId",
+                table: "InitiativeAssignments",
+                column: "BoardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Criteria_AcademicYearId",
-                table: "Criteria",
-                column: "AcademicYearId");
+                name: "IX_InitiativeAssignments_InitiativeId",
+                table: "InitiativeAssignments",
+                column: "InitiativeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Initiatives_AcademicYearId_CreatorId",
+                name: "IX_InitiativeAssignments_MemberId",
+                table: "InitiativeAssignments",
+                column: "MemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InitiativeAssignments_TemplateId",
+                table: "InitiativeAssignments",
+                column: "TemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InitiativeFiles_InitiativeId",
+                table: "InitiativeFiles",
+                column: "InitiativeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Initiatives_AcademicYearId",
                 table: "Initiatives",
-                columns: new[] { "AcademicYearId", "CreatorId" });
+                column: "AcademicYearId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Initiatives_CategoryId",
@@ -529,46 +652,40 @@ namespace IdeaTrack.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Initiatives_CreatorId",
-                table: "Initiatives",
-                column: "CreatorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Initiatives_DepartmentId",
                 table: "Initiatives",
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Initiatives_Status",
+                name: "IX_Initiatives_InitiativeCode",
                 table: "Initiatives",
-                column: "Status");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ScoreItems_CriterionId",
-                table: "ScoreItems",
-                column: "CriterionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ScoreItems_InitiativeId_CriterionId_ReviewerId",
-                table: "ScoreItems",
-                columns: new[] { "InitiativeId", "CriterionId", "ReviewerId" },
+                column: "InitiativeCode",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ScoreItems_ReviewerId",
-                table: "ScoreItems",
-                column: "ReviewerId");
+                name: "IX_Initiatives_ProposerId",
+                table: "Initiatives",
+                column: "ProposerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RevisionRequests_InitiativeId",
+                table: "RevisionRequests",
+                column: "InitiativeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RevisionRequests_RequesterId",
+                table: "RevisionRequests",
+                column: "RequesterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SystemAuditLogs_UserId",
+                table: "SystemAuditLogs",
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ActivityLogs");
-
-            migrationBuilder.DropTable(
-                name: "ApprovalRecords");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -585,19 +702,37 @@ namespace IdeaTrack.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Attachments");
+                name: "BoardMembers");
 
             migrationBuilder.DropTable(
-                name: "CommitteeAssignments");
+                name: "EvaluationDetails");
 
             migrationBuilder.DropTable(
-                name: "ScoreItems");
+                name: "FinalResults");
+
+            migrationBuilder.DropTable(
+                name: "InitiativeFiles");
+
+            migrationBuilder.DropTable(
+                name: "RevisionRequests");
+
+            migrationBuilder.DropTable(
+                name: "SystemAuditLogs");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Criteria");
+                name: "EvaluationCriteria");
+
+            migrationBuilder.DropTable(
+                name: "InitiativeAssignments");
+
+            migrationBuilder.DropTable(
+                name: "Boards");
+
+            migrationBuilder.DropTable(
+                name: "EvaluationTemplates");
 
             migrationBuilder.DropTable(
                 name: "Initiatives");
