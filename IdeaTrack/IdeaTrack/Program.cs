@@ -3,7 +3,13 @@ using IdeaTrack.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
+using OfficeOpenXml;
+using QuestPDF.Infrastructure;
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var builder = WebApplication.CreateBuilder(args);
 
 // DB Context
@@ -35,7 +41,15 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+    await FakeInitiativeService.SeedAllAsync(context, userManager);
+}
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -108,6 +122,7 @@ var rewriteOptionsadmin = new RewriteOptions()
         "Admin/Intro/Dashboard",
         skipRemainingRules: true)
     ;
+app.UseRouting();
 app.UseRewriter(rewriteOptionsadmin);
 app.UseRewriter(rewriteOptions);
 app.UseRewriter(rewriteOptionscouncils);
@@ -115,7 +130,7 @@ app.UseRewriter(rewriteOptionsdetails);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
+
 
 app.UseAuthentication();  
 app.UseAuthorization();

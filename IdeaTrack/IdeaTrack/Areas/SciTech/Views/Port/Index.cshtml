@@ -1,4 +1,6 @@
-﻿<!-- HEADER -->
+﻿@model IdeaTrack.Areas.SciTech.Models.InitiativeReportVM
+
+<!-- HEADER -->
 <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
     <div>
         <h1 class="fw-bold mb-1">Báo cáo và Thống kê</h1>
@@ -7,14 +9,47 @@
         </p>
     </div>
     <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary">
-            <i class="fa-solid fa-print me-1"></i>In báo cáo
-        </button>
-        <button class="btn btn-primary">
-            <i class="fa-solid fa-download me-1"></i>Xuất dữ liệu
-        </button>
+        <form method="post" action="/SciTech/Port/ExportPdf">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="fromDate" value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+            <input type="hidden" name="toDate" value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+            <input type="hidden" name="status" value="@Model.Status" />
+            <input type="hidden" name="keyword" value="@Model.Keyword" />
+
+            <button type="submit" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-print me-1"></i>In báo cáo (PDF)
+            </button>
+        </form>
+
+
+        <form method="post" action="/SciTech/Port/ExportExcel">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="fromDate"
+                   value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" />
+            <input type="hidden" name="toDate"
+                   value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" />
+            <input type="hidden" name="status" value="@Model.Status" />
+            <input type="hidden" name="keyword" value="@Model.Keyword" />
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-download me-1"></i> Xuất dữ liệu
+            </button>
+        </form>
+
+
     </div>
+
 </div>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-warning">
+        <i class="fa-solid fa-triangle-exclamation me-1"></i>
+        @ViewBag.ErrorMessage
+    </div>
+}
 
 <!-- STATS -->
 <div class="row g-4 mb-4">
@@ -23,7 +58,7 @@
             <div class="card-body">
                 <i class="fa-solid fa-folder-open text-primary fs-4"></i>
                 <p class="text-muted small mb-1">Tổng số hồ sơ</p>
-                <h3 class="fw-bold mb-0">120</h3>
+                <h3 class="fw-bold mb-0">@Model.TotalItems</h3>
             </div>
         </div>
     </div>
@@ -33,7 +68,9 @@
             <div class="card-body">
                 <i class="fa-solid fa-clock text-warning fs-4"></i>
                 <p class="text-muted small mb-1">Đang xử lý</p>
-                <h3 class="fw-bold mb-0">15</h3>
+                <h3 class="fw-bold mb-0">
+                    @Model.Items.Count(x => x.Status == "Pending")
+                </h3>
             </div>
         </div>
     </div>
@@ -42,78 +79,74 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <i class="fa-solid fa-circle-check text-success fs-4"></i>
-                <p class="text-muted small mb-1">Đã hoàn thành</p>
-                <h3 class="fw-bold mb-0">105</h3>
+                <p class="text-muted small mb-1">Đã duyệt</p>
+                <h3 class="fw-bold mb-0">
+                    @Model.Items.Count(x => x.Status == "Approved")
+                </h3>
             </div>
         </div>
     </div>
 
     <div class="col-md-3">
+        @{
+            var approved = Model.Items.Count(x => x.Status == "Approved");
+            var rate = Model.TotalItems == 0
+            ? 0
+            : Math.Round((double)approved / Model.TotalItems * 100, 1);
+        }
         <div class="card bg-primary text-white shadow-sm">
             <div class="card-body">
                 <i class="fa-solid fa-chart-pie fs-4"></i>
-                <p class="small mb-1">Tỷ lệ hoàn thành</p>
-                <h3 class="fw-bold mb-0">87.5%</h3>
+                <p class="small mb-1">Tỷ lệ duyệt</p>
+                <h3 class="fw-bold mb-0">@rate%</h3>
             </div>
         </div>
     </div>
 </div>
 
 <!-- FILTER -->
-<div class="card shadow-sm mb-4">
-    <div class="card-header fw-semibold">
-        <i class="fa-solid fa-filter me-1"></i>Bộ lọc tìm kiếm
+<form method="get" class="row g-3 mb-4">
+    <input type="hidden" name="page" value="1" />
+
+    <div class="col-md-3">
+        <label class="form-label">Từ ngày</label>
+        <input type="date" name="fromDate" class="form-control"
+               value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
     </div>
-    <div class="card-body row g-3">
-        <div class="col-md-3">
-            <label class="form-label">Từ ngày</label>
-            <input type="date" class="form-control" value="2023-01-01">
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Đến ngày</label>
-            <input type="date" class="form-control" value="2023-12-31">
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Trạng thái</label>
-            <select class="form-select">
-                <option>Tất cả</option>
-                <option>Đang xử lý</option>
-                <option>Đã duyệt</option>
-                <option>Từ chối</option>
-            </select>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Loại hồ sơ</label>
-            <select class="form-select">
-                <option>Tất cả</option>
-                <option>Đề tài khoa học</option>
-                <option>Sáng kiến</option>
-                <option>Dự án</option>
-            </select>
-        </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Đến ngày</label>
+        <input type="date" name="toDate" class="form-control"
+               value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
     </div>
-    <div class="card-footer text-end">
+
+    <div class="col-md-3">
+        <label class="form-label">Trạng thái</label>
+        <select name="status" class="form-select">
+            <option value="">Tất cả</option>
+            <option value="Approved" selected="@(Model.Status == "Approved")">Đã duyệt</option>
+            <option value="Rejected" selected="@(Model.Status == "Rejected")">Từ chối</option>
+            <option value="Pending" selected="@(Model.Status == "Pending")">Đang xử lý</option>
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Từ khóa</label>
+        <input name="keyword"
+               class="form-control"
+               value="@Model.Keyword"
+               placeholder="Mã / Tên hồ sơ" />
+    </div>
+
+    <div class="col-12 text-end">
         <button class="btn btn-primary">
-            <i class="fa-solid fa-magnifying-glass me-1"></i>Áp dụng
+            <i class="fa-solid fa-filter me-1"></i>Áp dụng
         </button>
     </div>
-</div>
+</form>
 
 <!-- TABLE -->
 <div class="card shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <span class="fw-semibold">Danh sách hồ sơ</span>
-        <div class="d-flex gap-2">
-            <input class="form-control form-control-sm" placeholder="Tìm trong bảng">
-            <button class="btn btn-sm btn-outline-success" title="Excel">
-                <i class="fa-solid fa-file-excel"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger" title="PDF">
-                <i class="fa-solid fa-file-pdf"></i>
-            </button>
-        </div>
-    </div>
-
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
@@ -122,67 +155,84 @@
                     <th>Tên hồ sơ</th>
                     <th>Người gửi</th>
                     <th>Ngày nộp</th>
-                    <th>Loại hình</th>
+                    <th>Đơn vị</th>
                     <th>Trạng thái</th>
                     <th class="text-end">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
-
-                <tr>
-                    <td class="fw-semibold">HS-001</td>
-                    <td>Nghiên cứu AI trong chẩn đoán y tế</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>12/10/2023</td>
-                    <td>Đề tài khoa học</td>
-                    <td>
-                        <span class="badge bg-success">Đã duyệt</span>
-                    </td>
-                    <td class="text-end">
-                        <a href="#" class="btn btn-sm btn-link">Chi tiết</a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="fw-semibold">HS-002</td>
-                    <td>Cải tiến quy trình nông nghiệp sạch</td>
-                    <td>Trần Thị B</td>
-                    <td>15/10/2023</td>
-                    <td>Sáng kiến</td>
-                    <td>
-                        <span class="badge bg-warning text-dark">Đang xử lý</span>
-                    </td>
-                    <td class="text-end">
-                        <a href="#" class="btn btn-sm btn-link">Chi tiết</a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="fw-semibold">HS-003</td>
-                    <td>Hệ thống quan trắc môi trường</td>
-                    <td>Lê Văn C</td>
-                    <td>20/10/2023</td>
-                    <td>Dự án</td>
-                    <td>
-                        <span class="badge bg-danger">Từ chối</span>
-                    </td>
-                    <td class="text-end">
-                        <a href="#" class="btn btn-sm btn-link">Chi tiết</a>
-                    </td>
-                </tr>
-
+                @if (!Model.Items.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            Không có dữ liệu
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@item.InitiativeCode</td>
+                            <td>@item.Title</td>
+                            <td>@item.ProposerName</td>
+                            <td>@item.SubmittedDate?.ToString("dd/MM/yyyy")</td>
+                            <td>@item.DepartmentName</td>
+                            <td>
+                                @if (item.Status == "Approved")
+                                {
+                                    <span class="badge bg-success">Đã duyệt</span>
+                                }
+                                else if (item.Status == "Rejected")
+                                {
+                                    <span class="badge bg-danger">Từ chối</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Đang xử lý</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-sm btn-link">
+                                    Chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>
 
-    <div class="card-footer d-flex justify-content-between">
-        <small class="text-muted">Hiển thị 1–3 / 120 hồ sơ</small>
+    <!-- PAGINATION -->
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        @{
+            var start = (Model.CurrentPage - 1) * 5 + 1;
+            var end = Math.Min(Model.CurrentPage * 5, Model.TotalItems);
+        }
+        <small class="text-muted">
+            Hiển thị @start–@end / @Model.TotalItems hồ sơ
+        </small>
+
         <nav>
             <ul class="pagination pagination-sm mb-0">
-                <li class="page-item disabled"><a class="page-link">‹</a></li>
-                <li class="page-item active"><a class="page-link">1</a></li>
-                <li class="page-item"><a class="page-link">2</a></li>
-                <li class="page-item"><a class="page-link">›</a></li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@i"
+                           asp-route-fromDate="@Model.FromDate"
+                           asp-route-toDate="@Model.ToDate"
+                           asp-route-status="@Model.Status"
+                           asp-route-keyword="@Model.Keyword">
+                            @i
+                        </a>
+                    </li>
+                }
             </ul>
         </nav>
     </div>
