@@ -32,7 +32,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Include(i => i.Department)
                 .AsQueryable();
 
-            // ===== FILTER =====
             if (fromDate.HasValue)
             {
                 query = query.Where(i =>
@@ -45,7 +44,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     (i.SubmittedDate ?? i.CreatedAt) <= toDate.Value);
             }
 
-            // ✅ FIX ENUM FILTER
             if (!string.IsNullOrEmpty(status)
                 && Enum.TryParse<InitiativeStatus>(status, out var parsedStatus))
             {
@@ -72,6 +70,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     Title = i.Title,
                     ProposerName = i.Proposer.FullName,
                     DepartmentName = i.Department.Name,
+                   
                     SubmittedDate = i.SubmittedDate ?? i.CreatedAt,
                     Status = i.Status.ToString() // OK vì chạy sau SQL
                 })
@@ -182,7 +181,42 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
 
         public IActionResult Result() => View();
-        public IActionResult Approve() => View();
+        [HttpGet]
+        public IActionResult Approve(int id)
+        {
+            var initiative = _context.Initiatives
+                .Include(i => i.Proposer)
+                .Include(i => i.Department)
+                .Include(i => i.Category)
+                .Include(i => i.Files) // thêm include Files
+                .FirstOrDefault(i => i.Id == id);
+
+            if (initiative == null) return NotFound();
+
+            var vm = new InitiativeDetailVM
+            {
+                Id = initiative.Id,
+                InitiativeCode = initiative.InitiativeCode,
+                Title = initiative.Title,
+                ProposerName = initiative.Proposer.FullName,
+                DepartmentName = initiative.Department.Name,
+                SubmittedDate = initiative.SubmittedDate ?? initiative.CreatedAt,
+                Status = initiative.Status,
+                Budget = initiative.Budget,
+                Description = initiative.Description,
+                Category = initiative.Category.Name,
+                Files = initiative.Files.Select(f => new InitiativeFileVM
+                {
+                    FileName = f.FileName,
+                    FilePath = f.FilePath,
+                    FileType = f.FileType
+                }).ToList()
+            };
+
+            return View(vm);
+        }
+
+
         public IActionResult Follow() => View();
         public IActionResult Rule() => View();
         public IActionResult Profile() => View();
