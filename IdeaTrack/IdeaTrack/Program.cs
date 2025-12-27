@@ -122,6 +122,7 @@ var rewriteOptionsadmin = new RewriteOptions()
         "Admin/Intro/Dashboard",
         skipRemainingRules: true)
     ;
+
 app.UseRouting();
 app.UseRewriter(rewriteOptionsadmin);
 app.UseRewriter(rewriteOptions);

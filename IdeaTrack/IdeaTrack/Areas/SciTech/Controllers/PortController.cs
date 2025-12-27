@@ -215,6 +215,35 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             return View(vm);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ApproveInitiative(int id)
+        {
+            var initiative = _context.Initiatives.Find(id);
+            if (initiative == null) return NotFound();
+
+            initiative.Status = InitiativeStatus.Approved;
+            _context.SaveChanges();
+
+            TempData["Message"] = "Duyệt hồ sơ thành công!";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RejectInitiative(int id)
+        {
+            var initiative = _context.Initiatives.Find(id);
+            if (initiative == null) return NotFound();
+
+            initiative.Status = InitiativeStatus.Rejected;
+            _context.SaveChanges();
+
+            TempData["Message"] = "Hồ sơ bị từ chối!";
+            return RedirectToAction("Index");
+        }
+
+
 
 
         public IActionResult Follow() => View();

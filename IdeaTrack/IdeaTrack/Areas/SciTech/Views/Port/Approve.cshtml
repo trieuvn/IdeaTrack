@@ -260,15 +260,22 @@
                 <label class="form-label fw-semibold"><i class="fas fa-sticky-note me-1 text-warning"></i>Ghi chú / Kết luận</label>
                 <textarea class="form-control mb-3" rows="4" placeholder="Nhập ý kiến hoặc lý do..."></textarea>
 
-                <button class="btn btn-success w-100 mb-2">
-                    <i class="fas fa-check-circle me-1 text-white"></i>Duyệt hồ sơ
-                </button>
+                <form asp-area="SciTech" asp-controller="Port" asp-action="ApproveInitiative" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-success w-100 mb-2">
+                        <i class="fas fa-check-circle me-1 text-white"></i>Duyệt hồ sơ
+                    </button>
+                </form>
 
-                <div class="row g-2">
-                    <button class="btn btn-outline-danger w-100 mb-2">
+                <form asp-area="SciTech" asp-controller="Port" asp-action="RejectInitiative" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger w-100 mb-2">
                         <i class="fas fa-times-circle me-1 text-danger"></i>Không duyệt hồ sơ
                     </button>
-                </div>
+                </form>
+
+
+
             </div>
         </div>
     </div>
