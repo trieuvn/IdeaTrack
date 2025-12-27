@@ -3,7 +3,6 @@
 @model InitiativeDetailVM
 
 @{
-    // Badge màu theo trạng thái
     string statusBadgeClass = Model.Status switch
     {
         InitiativeStatus.Draft => "bg-secondary text-white",
@@ -20,39 +19,103 @@
     string deptIcon = "fa-building";
     string deptColor = "text-secondary";
 
-    switch (Model.DepartmentName)
+    switch (Model.DepartmentName.Replace("Khoa ", "").Trim())
     {
-        case "Khoa Nông nghiệp":
-            deptIcon = "fa-seedling";
-            deptColor = "text-success";
+        case "Nông nghiệp":
+            deptIcon = "fa-seedling"; deptColor = "text-success";
             break;
-        case "Khoa Môi trường":
-            deptIcon = "fa-leaf";
-            deptColor = "text-info";
+        case "Môi trường":
+            deptIcon = "fa-leaf"; deptColor = "text-info";
             break;
-        case "Khoa Công nghệ Thông tin":
-            deptIcon = "fa-laptop-code";
-            deptColor = "text-primary";
+        case "Công nghệ thông tin":
+            deptIcon = "fa-laptop-code"; deptColor = "text-primary";
             break;
-        case "Khoa Cơ khí":
-            deptIcon = "fa-cogs";
-            deptColor = "text-warning";
+        case "Cơ khí":
+            deptIcon = "fa-cogs"; deptColor = "text-warning";
             break;
-        case "Khoa Điện - Điện tử":
-            deptIcon = "fa-bolt";
-            deptColor = "text-danger";
+        case "Điện - Điện tử":
+            deptIcon = "fa-bolt"; deptColor = "text-danger";
             break;
-        case "Khoa Hóa học":
-            deptIcon = "fa-flask";
-            deptColor = "text-success";
+        case "Hóa học":
+            deptIcon = "fa-flask"; deptColor = "text-danger";
             break;
-        case "Khoa Sinh học":
-            deptIcon = "fa-seedling";
-            deptColor = "text-success";
+        case "Sinh học":
+            deptIcon = "fa-dna"; deptColor = "text-success";
+            break;
+        case "Kinh tế":
+            deptIcon = "fa-chart-line"; deptColor = "text-primary";
+            break;
+        case "Luật":
+            deptIcon = "fa-gavel"; deptColor = "text-warning";
+            break;
+        case "Ngôn ngữ Anh":
+            deptIcon = "fa-language"; deptColor = "text-info";
+            break;
+        case "Xây dựng":
+            deptIcon = "fa-hard-hat"; deptColor = "text-secondary";
+            break;
+        case "Điều dưỡng":
+            deptIcon = "fa-user-nurse"; deptColor = "text-danger";
+            break;
+        case "Quản trị Du lịch & Khách sạn":
+            deptIcon = "fa-hotel"; deptColor = "text-warning";
+            break;
+        case "Truyền thông":
+            deptIcon = "fa-bullhorn"; deptColor = "text-primary";
+            break;
+        case "Toán - Tin":
+            deptIcon = "fa-square-root-alt"; deptColor = "text-info";
+            break;
+        case "Vật lý":
+            deptIcon = "fa-atom"; deptColor = "text-info";
+            break;
+        case "Sinh học & Công nghệ":
+            deptIcon = "fa-seedling"; deptColor = "text-success";
+            break;
+        case "Khoa học Xã hội & Nhân văn":
+            deptIcon = "fa-users"; deptColor = "text-secondary";
+            break;
+        case "Giáo dục":
+            deptIcon = "fa-chalkboard-teacher"; deptColor = "text-primary";
+            break;
+        case "Tài chính - Ngân hàng":
+            deptIcon = "fa-piggy-bank"; deptColor = "text-success";
+            break;
+        case "Quản trị Kinh doanh":
+            deptIcon = "fa-briefcase"; deptColor = "text-primary";
+            break;
+        case "Marketing":
+            deptIcon = "fa-bullseye"; deptColor = "text-info";
+            break;
+        case "Du lịch & Lữ hành":
+            deptIcon = "fa-route"; deptColor = "text-warning";
+            break;
+        case "Kiến trúc":
+            deptIcon = "fa-drafting-compass"; deptColor = "text-danger";
+            break;
+        case "Dược":
+            deptIcon = "fa-prescription-bottle-alt"; deptColor = "text-danger";
+            break;
+        case "Y học":
+            deptIcon = "fa-stethoscope"; deptColor = "text-danger";
+            break;
+        case "Răng Hàm Mặt":
+            deptIcon = "fa-tooth"; deptColor = "text-danger";
+            break;
+        case "Nhiệt đới học":
+            deptIcon = "fa-temperature-high"; deptColor = "text-secondary";
+            break;
+        case "Khoa học Tự nhiên":
+            deptIcon = "fa-flask"; deptColor = "text-secondary";
+            break;
+        case "Tâm lý học":
+            deptIcon = "fa-brain"; deptColor = "text-info";
+            break;
+        case "Luật Quốc tế":
+            deptIcon = "fa-balance-scale"; deptColor = "text-warning";
             break;
         default:
-            deptIcon = "fa-building";
-            deptColor = "text-secondary";
+            deptIcon = "fa-building"; deptColor = "text-secondary";
             break;
     }
 }
@@ -104,14 +167,17 @@
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted">Kinh phí đề xuất</small>
+                    <small class="text-muted d-block mb-1">Thời gian thực hiện</small>
+                    <p class="fw-semibold mb-0 gradient-text">
+                        <i class="fas fa-clock me-1"></i>
+                        @Model.SubmittedDate.ToString("dd/MM/yyyy")
+                    </p>
+                </div>
+                <div class="col-md-6">
+                     <small class="text-muted">Kinh phí đề xuất</small>
                     <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VNĐ</p>
                 </div>
 
-                <div class="col-md-6">
-                    <small class="text-muted">Thời gian thực hiện</small>
-                    <p class="fw-semibold mb-0"><i class="fas fa-clock me-1 text-secondary"></i>@Model.SubmittedDate.ToString("dd/MM/yyyy")</p>
-                </div>
             </div>
         </div>
 
@@ -208,3 +274,16 @@
     </div>
 
 </div>
+<style>
+    .gradient-text {
+        background: linear-gradient(90deg, #ff7e5f, #feb47b); /* gradient từ cam sang vàng */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+    .gradient-text i {
+        background: linear-gradient(90deg, #ff7e5f, #feb47b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
