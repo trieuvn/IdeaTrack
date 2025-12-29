@@ -253,44 +253,71 @@
     <div class="col-lg-4">
         <div class="card shadow border-primary">
             <div class="card-header fw-bold text-primary">
-                <i class="fas fa-pen-alt me-1 text-primary"></i>Quyết định PKHCN
+                <i class="fas fa-pen-alt me-1"></i>Quyết định PKHCN
             </div>
 
             <div class="card-body">
-                <label class="form-label fw-semibold"><i class="fas fa-sticky-note me-1 text-warning"></i>Ghi chú / Kết luận</label>
-                <textarea class="form-control mb-3" rows="4" placeholder="Nhập ý kiến hoặc lý do..."></textarea>
 
-                <form asp-area="SciTech" asp-controller="Port" asp-action="ApproveInitiative" asp-route-id="@Model.Id" method="post">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-success w-100 mb-2">
-                        <i class="fas fa-check-circle me-1 text-white"></i>Duyệt hồ sơ
-                    </button>
-                </form>
+                <!-- GHI CHÚ -->
+                <label class="form-label fw-semibold">
+                    <i class="fas fa-sticky-note me-1 text-warning"></i>
+                    Ghi chú / Nội dung yêu cầu
+                </label>
 
-                <form asp-area="SciTech" asp-controller="Port" asp-action="RejectInitiative" asp-route-id="@Model.Id" method="post">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-outline-danger w-100 mb-2">
-                        <i class="fas fa-times-circle me-1 text-danger"></i>Không duyệt hồ sơ
-                    </button>
-                </form>
+                <textarea id="requestContent"
+                          class="form-control mb-3"
+                          rows="4"
+                          placeholder="Nhập nội dung yêu cầu chỉnh sửa hoặc kết luận...">
+            </textarea>
 
+                <!-- DEADLINE -->
+                <label class="form-label fw-semibold">
+                    <i class="fas fa-calendar-alt me-1 text-info"></i>
+                    Hạn chỉnh sửa
+                </label>
 
+                <input type="date"
+                       id="deadline"
+                       class="form-control mb-3">
+
+                <!-- DUYỆT -->
+                <a href="/SciTech/Port/ApproveInitiative/@Model.Id"
+                   class="btn btn-success w-100 mb-2">
+                    <i class="fas fa-check-circle me-1 text-white"></i>Duyệt hồ sơ
+                </a>
+
+                <!-- YÊU CẦU CHỈNH SỬA -->
+                <a href="/SciTech/Port/RejectInitiative/@Model.Id"
+                   id="revisionLink"
+                   class="btn btn-outline-warning w-100 mb-2">
+                    <i class="fas fa-undo me-1"></i>Yêu cầu chỉnh sửa
+                </a>
 
             </div>
         </div>
     </div>
 
+
+    <script>
+        document.getElementById("revisionLink").addEventListener("click", function (e) {
+            e.preventDefault(); // chặn chuyển trang mặc định
+
+            const content = document.getElementById("requestContent").value;
+            const deadline = document.getElementById("deadline").value;
+
+            if (!content || !deadline) {
+                alert("Vui lòng nhập nội dung và hạn chỉnh sửa!");
+                return;
+            }
+
+            const baseUrl = this.getAttribute("href");
+            const url = baseUrl
+                + "?requestContent=" + encodeURIComponent(content)
+                + "&deadline=" + deadline;
+
+            window.location.href = url;
+        });
+    </script>
+
+
 </div>
-<style>
-    .gradient-text {
-        background: linear-gradient(90deg, #ff7e5f, #feb47b); /* gradient từ cam sang vàng */
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: inline-block;
-    }
-    .gradient-text i {
-        background: linear-gradient(90deg, #ff7e5f, #feb47b);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-</style>

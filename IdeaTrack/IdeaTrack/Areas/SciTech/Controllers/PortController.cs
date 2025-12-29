@@ -215,8 +215,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             return View(vm);
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult ApproveInitiative(int id)
         {
             var initiative = _context.Initiatives.Find(id);
@@ -224,24 +222,39 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             initiative.Status = InitiativeStatus.Approved;
             _context.SaveChanges();
-
-            TempData["Message"] = "Duyệt hồ sơ thành công!";
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult RejectInitiative(int id)
+        public IActionResult RejectInitiative(
+     int id,
+     DateTime deadline,
+     string requestContent)
         {
-            var initiative = _context.Initiatives.Find(id);
-            if (initiative == null) return NotFound();
+            var initiative = _context.Initiatives
+                                     .FirstOrDefault(i => i.Id == id);
+
+            if (initiative == null)
+                return NotFound();
+
+            var revision = new RevisionRequest
+            {
+                InitiativeId = id,
+                RequesterId = 1,
+                RequestContent = requestContent,
+                Deadline = deadline,
+                RequestedDate = DateTime.Now,
+                Status = "Open"
+            };
 
             initiative.Status = InitiativeStatus.Rejected;
+
+            _context.RevisionRequests.Add(revision);
             _context.SaveChanges();
 
-            TempData["Message"] = "Hồ sơ bị từ chối!";
+            TempData["Message"] = "Đã gửi yêu cầu chỉnh sửa!";
             return RedirectToAction("Index");
         }
+
 
 
 
