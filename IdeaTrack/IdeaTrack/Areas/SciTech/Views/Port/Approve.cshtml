@@ -267,18 +267,19 @@
                 <textarea id="requestContent"
                           class="form-control mb-3"
                           rows="4"
-                          placeholder="Nhập nội dung yêu cầu chỉnh sửa hoặc kết luận...">
-            </textarea>
+                          placeholder="Nhập nội dung yêu cầu chỉnh sửa hoặc kết luận..."></textarea>
 
                 <!-- DEADLINE -->
-                <label class="form-label fw-semibold">
-                    <i class="fas fa-calendar-alt me-1 text-info"></i>
-                    Hạn chỉnh sửa
-                </label>
+                <div id="deadlineWrapper" class="d-none">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-calendar-alt me-1 text-info"></i>
+                        Hạn chỉnh sửa
+                    </label>
 
-                <input type="date"
-                       id="deadline"
-                       class="form-control mb-3">
+                    <input type="date"
+                           id="deadline"
+                           class="form-control mb-3">
+                </div>
 
                 <!-- DUYỆT -->
                 <a href="/SciTech/Port/ApproveInitiative/@Model.Id" id="revisionLink2"
@@ -298,41 +299,52 @@
     </div>
 
 
-    <script>
-        document.getElementById("revisionLink").addEventListener("click", function (e) {
-            e.preventDefault(); 
-
-            const content = document.getElementById("requestContent").value;
-            const deadline = document.getElementById("deadline").value;
-
-            if (!content || !deadline) {
-                alert("Vui lòng nhập nội dung và hạn chỉnh sửa!");
-                return;
-            }
-
-            const baseUrl = this.getAttribute("href");
-            const url = baseUrl
-                + "?requestContent=" + encodeURIComponent(content)
-                + "&deadline=" + deadline;
-
-            window.location.href = url;
-        });
-         document.getElementById("revisionLink2").addEventListener("click", function (e) {
-            e.preventDefault();
-
-           const content = document.getElementById("requestContent").value;
-            if (!content) {
-                alert("Vui lòng nhập nội dung !");
-                return;
-            }
-
-            const baseUrl = this.getAttribute("href");
-            const url = baseUrl
-                + "?requestContent=" + encodeURIComponent(content);
-
-            window.location.href = url;
-        });
-    </script>
-
 
 </div>
+<script>
+    document.getElementById("revisionLink").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const deadlineWrapper = document.getElementById("deadlineWrapper");
+        const content = document.getElementById("requestContent").value;
+        const deadlineInput = document.getElementById("deadline");
+
+        // Nếu deadline đang ẩn → hiện lên và dừng lại
+        if (deadlineWrapper.classList.contains("d-none")) {
+            deadlineWrapper.classList.remove("d-none");
+            deadlineInput.focus();
+            return;
+        }
+
+        const deadline = deadlineInput.value;
+
+        if (!content || !deadline) {
+            alert("Vui lòng nhập nội dung và hạn chỉnh sửa!");
+            return;
+        }
+
+        const baseUrl = this.getAttribute("href");
+        const url = baseUrl
+            + "?requestContent=" + encodeURIComponent(content)
+            + "&deadline=" + deadline;
+
+        window.location.href = url;
+    });
+
+    document.getElementById("revisionLink2").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const content = document.getElementById("requestContent").value;
+
+        if (!content) {
+            alert("Vui lòng nhập nội dung!");
+            return;
+        }
+
+        const baseUrl = this.getAttribute("href");
+        const url = baseUrl
+            + "?requestContent=" + encodeURIComponent(content);
+
+        window.location.href = url;
+    });
+</script>

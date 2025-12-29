@@ -277,7 +277,43 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
 
         public IActionResult Follow() => View();
-        public IActionResult Rule() => View();
+        [HttpGet]
+        public IActionResult Rule()
+        {
+            var criteria = _context.EvaluationCriteria.ToList();
+            return View(criteria);
+        }
+
+        [HttpPost]
+        public IActionResult Rule(List<EvaluationCriteriaDto> criteria)
+        {
+            if (criteria == null || !criteria.Any())
+            {
+                ModelState.AddModelError("", "Không có dữ liệu gửi lên");
+                return RedirectToAction(nameof(Rule));
+            }
+
+            int templateId = 1;
+            int order = 1;
+
+            var entities = criteria.Select(c => new EvaluationCriteria
+            {
+                CriteriaName = c.CriteriaName,
+                Description = c.Description,
+                MaxScore = c.MaxScore,
+                SortOrder = order++,
+                TemplateId = templateId
+            }).ToList();
+
+            _context.EvaluationCriteria.AddRange(entities);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Rule));
+        }
+
+
+
+
         public IActionResult Profile() => View();
         public IActionResult User() => View();
         public IActionResult Councils() => View();

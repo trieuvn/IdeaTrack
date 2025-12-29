@@ -1,4 +1,7 @@
-﻿<div class="card shadow-sm mb-4">
+﻿@using IdeaTrack.Models
+@model List<EvaluationCriteria>
+
+<div class="card shadow-sm mb-4">
     <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
         <div>
             <h2 class="fw-bold mb-1">Quản lý Tiêu chí & Trọng số</h2>
@@ -6,9 +9,7 @@
                 Tổng trọng số của tất cả tiêu chí phải bằng <strong>100%</strong> để kích hoạt chấm điểm.
             </p>
         </div>
-        <button class="btn btn-primary">
-            <i class="fa-solid fa-floppy-disk me-1"></i>Lưu thay đổi
-        </button>
+        
     </div>
 </div>
 
@@ -18,7 +19,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <small class="text-muted">Tổng số tiêu chí</small>
-                <h3 class="fw-bold mb-0">4</h3>
+                <h3 class="fw-bold mb-0" id="totalCriteria">0</h3>
             </div>
         </div>
     </div>
@@ -28,11 +29,13 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <small class="text-muted">Tổng trọng số</small>
-                    <span class="badge bg-success">Hợp lệ</span>
+                    <span class="badge bg-success" id="weightStatus">Hợp lệ</span>
                 </div>
-                <h3 class="fw-bold text-success mb-0">100%</h3>
+                <h3 class="fw-bold text-success mb-0">
+                    <span id="totalWeight">0</span>%
+                </h3>
                 <div class="progress mt-2" style="height:6px">
-                    <div class="progress-bar bg-success" style="width:100%"></div>
+                    <div id="weightProgress" class="progress-bar bg-success" style="width:0%"></div>
                 </div>
             </div>
         </div>
@@ -42,8 +45,8 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <small class="text-muted">Cập nhật lần cuối</small>
-                <h6 class="fw-bold mb-0">14:30 – 20/10/2023</h6>
-                <small class="text-muted">bởi Admin Khoa</small>
+                <h6 class="fw-bold mb-0">@DateTime.Now.ToString("HH:mm – dd/MM/yyyy")</h6>
+                <small class="text-muted">bởi Admin</small>
             </div>
         </div>
     </div>
@@ -52,11 +55,14 @@
 <!-- ACTION -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="fw-bold mb-0">Danh sách tiêu chí</h5>
-    <button class="btn btn-primary">
+    <button type="button" class="btn btn-primary" onclick="addCriteriaRow()">
         <i class="fa-solid fa-circle-plus me-1"></i>Thêm tiêu chí
     </button>
 </div>
-
+<form asp-controller="SciTech"
+      asp-action="Rule"
+      method="post"
+      id="ruleForm">
 <!-- TABLE -->
 <div class="card shadow-sm mb-4">
     <div class="table-responsive">
@@ -69,117 +75,63 @@
                     <th class="text-end">Thao tác</th>
                 </tr>
             </thead>
-            <tbody>
 
-                <!-- ROW -->
-                <tr>
-                    <td>
-                        <strong>Tính mới</strong><br>
-                        <span class="badge bg-primary-subtle text-primary">Cốt lõi</span>
-                    </td>
-                    <td class="text-muted">
-                        Đánh giá mức độ sáng tạo, tính độc đáo của giải pháp.
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong class="text-primary">30%</strong>
-                            <input type="number" value="30"
-                                   class="form-control form-control-sm text-center"
-                                   style="width:70px">
-                        </div>
-                        <input type="range" class="form-range" value="30">
-                    </td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-secondary">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
+            <tbody id="criteriaTable">
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <input class="form-control form-control-sm"
+                                       name="criteria[@i].CriteriaName"
+                                       value="@Model[i].CriteriaName" />
+                            </td>
 
-                <tr>
-                    <td><strong>Tính khả thi</strong></td>
-                    <td class="text-muted">
-                        Khả năng triển khai thực tế với nguồn lực hiện có.
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong class="text-primary">20%</strong>
-                            <input type="number" value="20"
-                                   class="form-control form-control-sm text-center"
-                                   style="width:70px">
-                        </div>
-                        <input type="range" class="form-range" value="20">
-                    </td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-secondary">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
+                            <td>
+                                <input class="form-control form-control-sm"
+                                       name="criteria[@i].Description"
+                                       value="@Model[i].Description" />
+                            </td>
 
-                <tr>
-                    <td>
-                        <strong>Hiệu quả</strong><br>
-                        <span class="badge bg-purple-subtle text-purple">KT & XH</span>
-                    </td>
-                    <td class="text-muted">
-                        Tác động kinh tế hoặc xã hội của sáng kiến.
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong class="text-primary">30%</strong>
-                            <input type="number" value="30"
-                                   class="form-control form-control-sm text-center"
-                                   style="width:70px">
-                        </div>
-                        <input type="range" class="form-range" value="30">
-                    </td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-secondary">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
+                            <td>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong class="text-primary">
+                                        @* Xóa ID weightLabel, dùng class weight-label *@
+                                        <span class="weight-label">@Model[i].MaxScore.ToString("F2")</span>%
+                                    </strong>
 
-                <tr>
-                    <td><strong>Mức độ lan tỏa</strong></td>
-                    <td class="text-muted">
-                        Khả năng nhân rộng sang đơn vị hoặc lĩnh vực khác.
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <strong class="text-primary">20%</strong>
-                            <input type="number" value="20"
-                                   class="form-control form-control-sm text-center"
-                                   style="width:70px">
-                        </div>
-                        <input type="range" class="form-range" value="20">
-                    </td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-secondary">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
+                                    @* Thêm class weight-input và đổi hàm oninput thành syncWeight *@
+                                    <input type="number"
+                                           class="form-control form-control-sm text-center weight-input"
+                                           style="width:70px"
+                                           name="criteria[@i].MaxScore"
+                                           value="@Model[i].MaxScore.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                           min="0" max="100" step="0.01"
+                                           oninput="syncWeight(this)" />
+                                </div>
 
+                                @* Đổi hàm oninput thành syncRange *@
+                                <input type="range"
+                                       min="0" max="100" step="0.01"
+                                       value="@Model[i].MaxScore.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                       class="form-range weight-range"
+                                       oninput="syncRange(this)" />
+                            </td>
+
+                            <td class="text-end">
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
             </tbody>
         </table>
     </div>
 
     <div class="card-footer d-flex justify-content-between">
-        <small class="text-muted">Hiển thị 4 / 4 tiêu chí</small>
+        <small class="text-muted">
+            Hiển thị <span id="countRow">0</span> tiêu chí
+        </small>
         <a href="#" class="fw-semibold text-decoration-none">Khôi phục mặc định</a>
     </div>
 </div>
@@ -188,13 +140,175 @@
 <div class="alert alert-secondary">
     <i class="fa-solid fa-eye me-1"></i>
     <strong>Cách tính điểm:</strong>
-    (Tính mới × 0.3) + (Khả thi × 0.2) + (Hiệu quả × 0.3) + (Lan tỏa × 0.2)
+    <span id="previewFormula"></span>
 </div>
 
 <!-- FOOTER ACTION -->
 <div class="d-flex justify-content-end gap-3">
     <button class="btn btn-outline-secondary">Hủy</button>
-    <button class="btn btn-primary">
-        <i class="fa-solid fa-floppy-disk me-1"></i>Lưu thay đổi
-    </button>
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-floppy-disk me-1"></i>Lưu thay đổi
+        </button>
+
 </div>
+</form>
+        <script>
+    let rowIndex = @Model.Count;
+
+    /* =========================
+       UTILITY: CLAMP
+    ========================== */
+    function clamp(value) {
+        value = Number(value || 0);
+        if (value < 0) return 0;
+        if (value > 100) return 100;
+        return Number(value.toFixed(2)); // ép 2 chữ số thập phân
+    }
+
+    /* =========================
+       SYNC INPUT <-> RANGE
+    ========================== */
+    function syncWeight(input) {
+        const td = input.closest("td");
+        const range = td.querySelector(".weight-range");
+        const label = td.querySelector(".weight-label");
+        const value = clamp(input.value);
+
+        if (range) range.value = value;
+        if (label) label.innerText = value.toFixed(2);
+
+        updateSummary();
+    }
+
+    function syncRange(range) {
+        const td = range.closest("td");
+        const input = td.querySelector(".weight-input");
+        const label = td.querySelector(".weight-label");
+        const value = clamp(range.value);
+
+        if (input) input.value = value;
+        if (label) label.innerText = value.toFixed(2);
+
+        updateSummary();
+    }
+
+    /* =========================
+       ADD / REMOVE ROW
+    ========================== */
+    function addCriteriaRow() {
+        const table = document.getElementById("criteriaTable");
+
+        table.insertAdjacentHTML("beforeend", `
+        <tr>
+            <td>
+                <input class="form-control form-control-sm"
+                       name="criteria[${rowIndex}].CriteriaName"
+                       placeholder="Tên tiêu chí" />
+            </td>
+
+            <td>
+                <input class="form-control form-control-sm"
+                       name="criteria[${rowIndex}].Description"
+                       placeholder="Mô tả" />
+            </td>
+
+            <td>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong class="text-primary">
+                        <span class="weight-label">0.00</span>%
+                    </strong>
+
+                    <input type="number"
+                           name="criteria[${rowIndex}].MaxScore"
+                           value="0"
+                           min="0"
+                           max="100"
+                           step="0.01"
+                           class="form-control form-control-sm text-center weight-input"
+                           style="width:70px"
+                           oninput="syncWeight(this)" />
+                </div>
+
+                <input type="range"
+                       value="0"
+                       min="0"
+                       max="100"
+                       step="0.01"
+                       class="form-range weight-range"
+                       oninput="syncRange(this)" />
+            </td>
+
+            <td class="text-end">
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        onclick="removeRow(this)">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+        `);
+
+        rowIndex++;
+        syncAllRowsFromInput();
+        updateSummary();
+    }
+
+    function removeRow(btn) {
+        btn.closest("tr").remove();
+        updateSummary();
+    }
+
+    /* =========================
+       SYNC ALL ROWS ON PAGE LOAD
+    ========================== */
+    function syncAllRowsFromInput() {
+        document.querySelectorAll(".weight-input").forEach(input => {
+            const td = input.closest("td");
+            const range = td.querySelector(".weight-range");
+            const label = td.querySelector(".weight-label");
+            const value = clamp(input.value);
+
+            if (range) range.value = value;
+            if (label) label.innerText = value.toFixed(2);
+        });
+    }
+
+    /* =========================
+       UPDATE SUMMARY
+    ========================== */
+    function updateSummary() {
+        const inputs = document.querySelectorAll(".weight-input");
+        const count = inputs.length;
+
+        let sum = 0;
+        inputs.forEach(x => sum += Number(x.value || 0));
+
+        const totalWeight = sum; // tổng trọng số
+
+        document.getElementById("totalCriteria").innerText = count;
+        document.getElementById("countRow").innerText = count;
+
+        document.getElementById("totalWeight").innerText = totalWeight.toFixed(2);
+        document.getElementById("weightProgress").style.width = Math.min(totalWeight, 100) + "%";
+
+        const valid = totalWeight === 100;
+        const weightStatus = document.getElementById("weightStatus");
+        weightStatus.innerText = valid ? "Hợp lệ" : "Chưa hợp lệ";
+        weightStatus.className = "badge " + (valid ? "bg-success" : "bg-danger");
+
+        // Preview formula
+        document.getElementById("previewFormula").innerText =
+            [...document.querySelectorAll(".weight-label")]
+                .map(x => `(${x.innerText}%)`)
+                .join(" + ");
+    }
+
+    /* =========================
+       INIT ON DOM CONTENT LOADED
+    ========================== */
+    document.addEventListener("DOMContentLoaded", () => {
+        syncAllRowsFromInput();
+        updateSummary();
+    });
+</script>
+
