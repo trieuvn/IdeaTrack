@@ -281,7 +281,7 @@
                        class="form-control mb-3">
 
                 <!-- DUYỆT -->
-                <a href="/SciTech/Port/ApproveInitiative/@Model.Id"
+                <a href="/SciTech/Port/ApproveInitiative/@Model.Id" id="revisionLink2"
                    class="btn btn-success w-100 mb-2">
                     <i class="fas fa-check-circle me-1 text-white"></i>Duyệt hồ sơ
                 </a>
@@ -300,7 +300,7 @@
 
     <script>
         document.getElementById("revisionLink").addEventListener("click", function (e) {
-            e.preventDefault(); // chặn chuyển trang mặc định
+            e.preventDefault(); 
 
             const content = document.getElementById("requestContent").value;
             const deadline = document.getElementById("deadline").value;
@@ -314,6 +314,21 @@
             const url = baseUrl
                 + "?requestContent=" + encodeURIComponent(content)
                 + "&deadline=" + deadline;
+
+            window.location.href = url;
+        });
+         document.getElementById("revisionLink2").addEventListener("click", function (e) {
+            e.preventDefault();
+
+           const content = document.getElementById("requestContent").value;
+            if (!content) {
+                alert("Vui lòng nhập nội dung !");
+                return;
+            }
+
+            const baseUrl = this.getAttribute("href");
+            const url = baseUrl
+                + "?requestContent=" + encodeURIComponent(content);
 
             window.location.href = url;
         });

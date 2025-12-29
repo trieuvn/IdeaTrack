@@ -215,13 +215,31 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             return View(vm);
         }
-        public IActionResult ApproveInitiative(int id)
+        public IActionResult ApproveInitiative(
+     int id,
+     string requestContent)
         {
-            var initiative = _context.Initiatives.Find(id);
-            if (initiative == null) return NotFound();
+            var initiative = _context.Initiatives
+                                     .FirstOrDefault(i => i.Id == id);
+
+            if (initiative == null)
+                return NotFound();
+
+            var revision = new RevisionRequest
+            {
+                InitiativeId = id,
+                RequesterId = 1,
+                RequestContent = requestContent,
+                RequestedDate = DateTime.Now,
+                Status = "Open",
+                IsResolved=true
+            };
 
             initiative.Status = InitiativeStatus.Approved;
+
+            _context.RevisionRequests.Add(revision);
             _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 
@@ -251,7 +269,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             _context.RevisionRequests.Add(revision);
             _context.SaveChanges();
 
-            TempData["Message"] = "Đã gửi yêu cầu chỉnh sửa!";
             return RedirectToAction("Index");
         }
 
