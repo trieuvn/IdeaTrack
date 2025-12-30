@@ -168,11 +168,20 @@
     /* =========================
        SYNC INPUT <-> RANGE
     ========================== */
-    function syncWeight(input) {
+        function syncWeight(input) {
         const td = input.closest("td");
         const range = td.querySelector(".weight-range");
         const label = td.querySelector(".weight-label");
-        const value = clamp(input.value);
+
+        // Nếu người dùng xóa trống ô thì coi như là 0
+        let val = input.value.replace(',', '.');
+        let value = Number(val || 0);
+
+        // Chặn ngay lập tức nếu gõ quá 100
+        if (value > 100) {
+            value = 100;
+            input.value = 100;
+        }
 
         if (range) range.value = value;
         if (label) label.innerText = value.toFixed(2);
@@ -276,27 +285,40 @@
     /* =========================
        UPDATE SUMMARY
     ========================== */
-    function updateSummary() {
+       function updateSummary() {
         const inputs = document.querySelectorAll(".weight-input");
         const count = inputs.length;
 
         let sum = 0;
-        inputs.forEach(x => sum += Number(x.value || 0));
+        inputs.forEach(x => {
+            // Thay thế dấu phẩy thành dấu chấm để JS tính toán đúng
+            let val = x.value.replace(',', '.');
+            sum += clamp(val);
+        });
 
-        const totalWeight = sum; // tổng trọng số
+        const totalWeight = sum;
 
         document.getElementById("totalCriteria").innerText = count;
         document.getElementById("countRow").innerText = count;
-
         document.getElementById("totalWeight").innerText = totalWeight.toFixed(2);
-        document.getElementById("weightProgress").style.width = Math.min(totalWeight, 100) + "%";
 
-        const valid = totalWeight === 100;
+        // Cập nhật Progress Bar
+        const progress = document.getElementById("weightProgress");
+        const percent = Math.min(totalWeight, 100);
+        progress.style.width = percent + "%";
+
+        // Đổi màu progress bar nếu vượt quá 100
+        if (totalWeight > 100) {
+            progress.className = "progress-bar bg-danger";
+        } else {
+            progress.className = "progress-bar bg-success";
+        }
+
+        const valid = Math.abs(totalWeight - 100) < 0.01; // So sánh số thực
         const weightStatus = document.getElementById("weightStatus");
         weightStatus.innerText = valid ? "Hợp lệ" : "Chưa hợp lệ";
         weightStatus.className = "badge " + (valid ? "bg-success" : "bg-danger");
 
-        // Preview formula
         document.getElementById("previewFormula").innerText =
             [...document.querySelectorAll(".weight-label")]
                 .map(x => `(${x.innerText}%)`)

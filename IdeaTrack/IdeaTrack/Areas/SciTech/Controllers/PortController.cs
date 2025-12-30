@@ -296,18 +296,34 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             int templateId = 1;
             int order = 1;
 
-            var entities = criteria.Select(c => new EvaluationCriteria
+            foreach (var c in criteria)
             {
-                CriteriaName = c.CriteriaName,
-                Description = c.Description,
-                MaxScore = c.MaxScore,
-                SortOrder = order++,
-                TemplateId = templateId
-            }).ToList();
+                var existing = _context.EvaluationCriteria
+                                       .FirstOrDefault(e => e.TemplateId == templateId && e.CriteriaName == c.CriteriaName);
 
-            _context.EvaluationCriteria.AddRange(entities);
+                if (existing != null)
+                {
+                    existing.Description = c.Description;
+                    existing.MaxScore = c.MaxScore;
+                    existing.SortOrder = order++;
+                    _context.EvaluationCriteria.Update(existing);
+                }
+                else
+                {
+                   
+                    var entity = new EvaluationCriteria
+                    {
+                        CriteriaName = c.CriteriaName,
+                        Description = c.Description,
+                        MaxScore = c.MaxScore,
+                        SortOrder = order++,
+                        TemplateId = templateId
+                    };
+                    _context.EvaluationCriteria.Add(entity);
+                }
+            }
+
             _context.SaveChanges();
-
             return RedirectToAction(nameof(Rule));
         }
 
