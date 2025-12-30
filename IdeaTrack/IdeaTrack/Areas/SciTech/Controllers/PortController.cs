@@ -279,16 +279,16 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
         public IActionResult Follow() => View();
         [HttpGet]
-        public IActionResult Rule()
+        public IActionResult Rule(int id)
         {
-            var criteria = _context.EvaluationCriteria.ToList();
+            var criteria = _context.EvaluationCriteria.Where(c=>c.TemplateId==id).ToList();
             return View(criteria);
         }
 
         [HttpPost]
-        public IActionResult Rule(Dictionary<int, EvaluationCriteriaDto> criteria)
+        public IActionResult Rule(Dictionary<int, EvaluationCriteriaDto> criteria,int id)
         {
-            int templateId = 1;
+            int templateId = id;
             if (criteria == null) criteria = new Dictionary<int, EvaluationCriteriaDto>();
             var dbItems = _context.EvaluationCriteria
                                   .Where(x => x.TemplateId == templateId)
@@ -330,7 +330,11 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             return RedirectToAction(nameof(Rule));
         }
 
-        public IActionResult Template() => View();
+        public IActionResult Template()
+        {
+            var templates = _context.EvaluationTemplates.ToList();
+            return View(templates);
+        }
         public IActionResult Profile() => View();
         public IActionResult User() => View();
         public IActionResult Councils() => View();

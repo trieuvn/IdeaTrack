@@ -1,4 +1,4 @@
-﻿
+﻿@model List<IdeaTrack.Models.EvaluationTemplate>
 <style>
     body {
         font-family: 'Noto Sans', sans-serif;
@@ -84,89 +84,39 @@
             </div>
         </div>
     </div>
-
     <div class="row g-4">
-        <div class="col-12 col-md-6 col-xl-4">
-            <div class="card h-100 template-card bg-white rounded-xl">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="rounded-lg bg-primary-light d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #eff6ff; color: #2563eb;">
-                            <i class="fa-solid fa-flask-vial fa-lg"></i>
+        @foreach (var template in Model)
+        {
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card h-100 template-card bg-white rounded-xl">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="rounded-lg bg-primary-light d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #eff6ff; color: #2563eb;">
+                                <i class="fa-solid fa-flask-vial fa-lg"></i>
+                            </div>
+                            <span class="status-badge bg-success-light text-success border border-success-subtle" style="background-color: #f0fdf4; color: #15803d !important;">
+                                <small class="fa-solid fa-circle fa-2xs"></small> @template.IsActive
+                            </span>
                         </div>
-                        <span class="status-badge bg-success-light text-success border border-success-subtle" style="background-color: #f0fdf4; color: #15803d !important;">
-                            <small class="fa-solid fa-circle fa-2xs"></small> Active
-                        </span>
-                    </div>
-                    <h5 class="font-weight-bold mb-1">Q3 Lab Safety Audit</h5>
-                    <code class="small text-muted d-block mb-3">ID: TEM-2023-001</code>
-                    <span class="badge badge-light border text-muted mb-4">Lab Safety</span>
+                        <h5 class="font-weight-bold mb-1">@template.Description</h5>
+                        <code class="small text-muted d-block mb-3">ID: @template.Id </code>
+                        <span class="badge badge-light border text-muted mb-4">@template.TemplateName</span>
 
-                    <div class="mt-auto pt-3 border-top border-light">
-                        <div class="text-muted small mb-1"><i class="fa-regular fa-calendar-check me-2"></i>Updated Oct 24, 2023</div>
-                        <div class="text-muted small"><i class="fa-regular fa-user me-2"></i>by Dr. A. Smith</div>
+                        <div class="mt-auto pt-3 border-top border-light">
+                            <div class="text-muted small mb-1"><i class="fa-regular fa-calendar-check me-2"></i>Updated Oct 24, 2023</div>
+                            <div class="text-muted small"><i class="fa-regular fa-user me-2"></i>by Dr. A. Smith</div>
+                        </div>
                     </div>
-                </div>
-                <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
-                    <button class="btn btn-white border flex-grow-1 shadow-sm"><i class="fa-regular fa-eye me-1"></i> View</button>
-                    <button class="btn btn-white border flex-grow-1 shadow-sm text-primary"><i class="fa-regular fa-pen-to-square me-1"></i> Edit</button>
+                    <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
+                        <a href="/SciTech/Port/Rule/@template.Id"
+                           class="btn btn-white border flex-grow-1 shadow-sm">
+                            <i class="fa-regular fa-eye me-1"></i> View
+                        </a>
+                        <button class="btn btn-white border flex-grow-1 shadow-sm text-primary"><i class="fa-regular fa-pen-to-square me-1"></i> Edit</button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-4">
-            <div class="card h-100 template-card bg-white rounded-xl">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="rounded-lg d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #f5f3ff; color: #7c3aed;">
-                            <i class="fa-solid fa-graduation-cap fa-lg"></i>
-                        </div>
-                        <span class="status-badge text-success border border-success-subtle" style="background-color: #f0fdf4; color: #15803d !important;">
-                            <small class="fa-solid fa-circle fa-2xs"></small> Active
-                        </span>
-                    </div>
-                    <h5 class="font-weight-bold mb-1">Junior Peer Review</h5>
-                    <code class="small text-muted d-block mb-3">ID: TEM-2023-042</code>
-                    <span class="badge badge-light border text-muted mb-4">Peer Review</span>
-
-                    <div class="mt-auto pt-3 border-top border-light">
-                        <div class="text-muted small mb-1"><i class="fa-regular fa-calendar-check me-2"></i>Updated Oct 20, 2023</div>
-                        <div class="text-muted small"><i class="fa-regular fa-user me-2"></i>by HR Dept.</div>
-                    </div>
-                </div>
-                <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
-                    <button class="btn btn-white border flex-grow-1 shadow-sm"><i class="fa-regular fa-eye me-1"></i> View</button>
-                    <button class="btn btn-white border flex-grow-1 shadow-sm text-primary"><i class="fa-regular fa-pen-to-square me-1"></i> Edit</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-xl-4">
-            <div class="card h-100 template-card bg-white rounded-xl">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="rounded-lg d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #fff7ed; color: #ea580c;">
-                            <i class="fa-solid fa-file-invoice-dollar fa-lg"></i>
-                        </div>
-                        <span class="status-badge text-muted border border-secondary-subtle" style="background-color: #f8fafc;">
-                            <small class="fa-solid fa-circle fa-2xs text-secondary"></small> Inactive
-                        </span>
-                    </div>
-                    <h5 class="font-weight-bold mb-1">Grant Proposal Scoring</h5>
-                    <code class="small text-muted d-block mb-3">ID: TEM-2022-089</code>
-                    <span class="badge badge-light border text-muted mb-4">Grant Scoring</span>
-
-                    <div class="mt-auto pt-3 border-top border-light">
-                        <div class="text-muted small mb-1"><i class="fa-regular fa-calendar-check me-2"></i>Updated Sep 15, 2023</div>
-                        <div class="text-muted small"><i class="fa-regular fa-user me-2"></i>by Finance</div>
-                    </div>
-                </div>
-                <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
-                    <button class="btn btn-white border flex-grow-1 shadow-sm"><i class="fa-regular fa-eye me-1"></i> View</button>
-                    <button class="btn btn-white border flex-grow-1 shadow-sm text-primary"><i class="fa-regular fa-pen-to-square me-1"></i> Edit</button>
-                </div>
-            </div>
-        </div>
-    </div>
+        }
 
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 gap-3">
         <div class="text-muted small">
