@@ -333,7 +333,10 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             {
                 int idSent = item.Key;
                 var data = item.Value;
-
+                if (string.IsNullOrWhiteSpace(data.CriteriaName))
+                {
+                    data.CriteriaName = "Empty";
+                }
                 var existing = dbItems.FirstOrDefault(x => x.Id == idSent);
                 if (existing != null)
                 {

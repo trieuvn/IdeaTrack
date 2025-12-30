@@ -100,6 +100,7 @@
                                     </strong>
 
                                     <input type="number"
+                                           lang="en-US"
                                            class="form-control form-control-sm text-center weight-input"
                                            style="width:70px"
                                            name="criteria[@item.Id].MaxScore"
@@ -223,12 +224,15 @@
                     <strong class="text-primary">
                         <span class="weight-label">0.00</span>%
                     </strong>
-                    <input type="number"
-                           name="criteria[${nextId}].MaxScore"
-                           value="0"
-                           class="form-control form-control-sm text-center weight-input"
-                           style="width:70px"
-                           oninput="syncWeight(this)" />
+                        
+                <input type="number"
+                       lang="en-US"
+                       step="0.01"
+                       name="criteria[${nextId}].MaxScore"
+                       value="0"
+                       class="form-control form-control-sm text-center weight-input"
+                       style="width:70px"
+                       oninput="syncWeight(this)" />
                 </div>
                 <input type="range" value="0" step="0.01" class="form-range weight-range" oninput="syncRange(this)" />
             </td>
