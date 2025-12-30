@@ -398,6 +398,29 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             return View(templates);
         }
+        [HttpPost]
+        public IActionResult UpdateTemplate([FromBody] EvaluationTemplate model)
+        {
+            var template = _context.EvaluationTemplates.Find(model.Id);
+            if (template == null) return NotFound();
+
+            template.TemplateName = model.TemplateName;
+            template.Description = model.Description;
+
+            _context.SaveChanges();
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteTemplate(int id)
+        {
+            var template = _context.EvaluationTemplates.Find(id);
+            if (template == null) return NotFound();
+
+            _context.EvaluationTemplates.Remove(template);
+            _context.SaveChanges();
+            return Json(new { success = true });
+        }
         public IActionResult Profile() => View();
         public IActionResult User() => View();
         public IActionResult Councils() => View();
