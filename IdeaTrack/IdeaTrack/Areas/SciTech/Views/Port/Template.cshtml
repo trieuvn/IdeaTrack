@@ -1,0 +1,185 @@
+﻿
+<style>
+    body {
+        font-family: 'Noto Sans', sans-serif;
+        background-color: #f8fafc;
+    }
+
+    .font-display {
+        font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .btn-primary-custom {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        transition: all 0.2s;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+    .template-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+    }
+
+        .template-card:hover {
+            border-color: #bfdbfe;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+</style>
+
+<div class="container-fluid px-md-5 py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb bg-transparent p-0" style="font-size: 0.875rem;">
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Home</a></li>
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Settings</a></li>
+            <li class="breadcrumb-item active text-dark font-weight-bold" aria-current="page">Evaluations</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+        <div>
+            <h1 class="font-display font-weight-bold text-dark mb-1" style="letter-spacing: -0.02em; font-size: 2.25rem;">Evaluation Templates</h1>
+            <p class="text-secondary mb-0">Manage, organize, and deploy your research evaluation forms.</p>
+        </div>
+        <button class="btn btn-primary-custom px-4 py-2 rounded-lg d-flex align-items-center gap-2">
+            <i class="fa-solid fa-plus"></i>
+            <span class="font-weight-bold">Create Template</span>
+        </button>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-xl mb-4">
+        <div class="card-body p-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0 ps-0" placeholder="Search templates by name...">
+                    </div>
+                </div>
+                <div class="col-12 col-lg-8 d-flex flex-wrap justify-content-lg-end gap-2">
+                    <button class="btn btn-outline-light text-dark border shadow-sm dropdown-toggle">All Types</button>
+                    <button class="btn btn-outline-light text-dark border shadow-sm dropdown-toggle">Status: Active</button>
+                    <button class="btn btn-outline-light text-dark border shadow-sm">
+                        <i class="fa-solid fa-arrow-down-wide-short me-1"></i> Sort
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 template-card bg-white rounded-xl">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="rounded-lg bg-primary-light d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #eff6ff; color: #2563eb;">
+                            <i class="fa-solid fa-flask-vial fa-lg"></i>
+                        </div>
+                        <span class="status-badge bg-success-light text-success border border-success-subtle" style="background-color: #f0fdf4; color: #15803d !important;">
+                            <small class="fa-solid fa-circle fa-2xs"></small> Active
+                        </span>
+                    </div>
+                    <h5 class="font-weight-bold mb-1">Q3 Lab Safety Audit</h5>
+                    <code class="small text-muted d-block mb-3">ID: TEM-2023-001</code>
+                    <span class="badge badge-light border text-muted mb-4">Lab Safety</span>
+
+                    <div class="mt-auto pt-3 border-top border-light">
+                        <div class="text-muted small mb-1"><i class="fa-regular fa-calendar-check me-2"></i>Updated Oct 24, 2023</div>
+                        <div class="text-muted small"><i class="fa-regular fa-user me-2"></i>by Dr. A. Smith</div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
+                    <button class="btn btn-white border flex-grow-1 shadow-sm"><i class="fa-regular fa-eye me-1"></i> View</button>
+                    <button class="btn btn-white border flex-grow-1 shadow-sm text-primary"><i class="fa-regular fa-pen-to-square me-1"></i> Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 template-card bg-white rounded-xl">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="rounded-lg d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #f5f3ff; color: #7c3aed;">
+                            <i class="fa-solid fa-graduation-cap fa-lg"></i>
+                        </div>
+                        <span class="status-badge text-success border border-success-subtle" style="background-color: #f0fdf4; color: #15803d !important;">
+                            <small class="fa-solid fa-circle fa-2xs"></small> Active
+                        </span>
+                    </div>
+                    <h5 class="font-weight-bold mb-1">Junior Peer Review</h5>
+                    <code class="small text-muted d-block mb-3">ID: TEM-2023-042</code>
+                    <span class="badge badge-light border text-muted mb-4">Peer Review</span>
+
+                    <div class="mt-auto pt-3 border-top border-light">
+                        <div class="text-muted small mb-1"><i class="fa-regular fa-calendar-check me-2"></i>Updated Oct 20, 2023</div>
+                        <div class="text-muted small"><i class="fa-regular fa-user me-2"></i>by HR Dept.</div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
+                    <button class="btn btn-white border flex-grow-1 shadow-sm"><i class="fa-regular fa-eye me-1"></i> View</button>
+                    <button class="btn btn-white border flex-grow-1 shadow-sm text-primary"><i class="fa-regular fa-pen-to-square me-1"></i> Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 template-card bg-white rounded-xl">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="rounded-lg d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #fff7ed; color: #ea580c;">
+                            <i class="fa-solid fa-file-invoice-dollar fa-lg"></i>
+                        </div>
+                        <span class="status-badge text-muted border border-secondary-subtle" style="background-color: #f8fafc;">
+                            <small class="fa-solid fa-circle fa-2xs text-secondary"></small> Inactive
+                        </span>
+                    </div>
+                    <h5 class="font-weight-bold mb-1">Grant Proposal Scoring</h5>
+                    <code class="small text-muted d-block mb-3">ID: TEM-2022-089</code>
+                    <span class="badge badge-light border text-muted mb-4">Grant Scoring</span>
+
+                    <div class="mt-auto pt-3 border-top border-light">
+                        <div class="text-muted small mb-1"><i class="fa-regular fa-calendar-check me-2"></i>Updated Sep 15, 2023</div>
+                        <div class="text-muted small"><i class="fa-regular fa-user me-2"></i>by Finance</div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
+                    <button class="btn btn-white border flex-grow-1 shadow-sm"><i class="fa-regular fa-eye me-1"></i> View</button>
+                    <button class="btn btn-white border flex-grow-1 shadow-sm text-primary"><i class="fa-regular fa-pen-to-square me-1"></i> Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 gap-3">
+        <div class="text-muted small">
+            Showing <span class="text-dark font-weight-bold">1</span> to <span class="text-dark font-weight-bold">4</span> of <span class="text-dark font-weight-bold">12</span> templates
+        </div>
+        <nav>
+            <ul class="pagination mb-0 shadow-sm">
+                <li class="page-item disabled"><a class="page-link border-0 px-3" href="#">Previous</a></li>
+                <li class="page-item active"><a class="page-link border-0 px-3" href="#" style="background-color:#2563eb;">1</a></li>
+                <li class="page-item"><a class="page-link border-0 px-3 text-dark" href="#">2</a></li>
+                <li class="page-item"><a class="page-link border-0 px-3 text-dark" href="#">3</a></li>
+                <li class="page-item"><a class="page-link border-0 px-3 text-primary font-weight-bold" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>

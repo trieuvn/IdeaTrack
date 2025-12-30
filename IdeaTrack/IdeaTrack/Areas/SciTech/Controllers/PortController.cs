@@ -330,7 +330,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             return RedirectToAction(nameof(Rule));
         }
 
-
+        public IActionResult Template() => View();
         public IActionResult Profile() => View();
         public IActionResult User() => View();
         public IActionResult Councils() => View();
