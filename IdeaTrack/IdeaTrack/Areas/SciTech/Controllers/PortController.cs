@@ -276,7 +276,36 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateTemplate([FromBody] EvaluationTemplate model)
+        {
+            if (model == null) return BadRequest(new { message = "Data is null" });
 
+            ModelState.Remove("CriteriaList");
+            ModelState.Remove("Type");
+            ModelState.Remove("Id");
+
+            if (string.IsNullOrEmpty(model.TemplateName))
+            {
+                ModelState.AddModelError("TemplateName", "Tên template không được để trống");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    errors = ModelState.Where(x => x.Value.Errors.Count > 0)
+                                       .ToDictionary(k => k.Key, v => v.Value.Errors.Select(e => e.ErrorMessage))
+                });
+            }
+            model.IsActive = false;
+            model.Type = TemplateType.Screening;
+            _context.EvaluationTemplates.Add(model);
+            _context.SaveChanges();
+
+            return Ok(new { id = model.Id });
+        }
         public IActionResult Follow() => View();
         [HttpGet]
         public IActionResult Rule(int id)
@@ -329,10 +358,44 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Rule));
         }
-
-        public IActionResult Template()
+        public IActionResult Template(int page = 1, int? type = null, bool? isActive = null, string sortOrder = "asc", string search = "")
         {
-            var templates = _context.EvaluationTemplates.ToList();
+            int pageSize = 6;
+            var query = _context.EvaluationTemplates.AsQueryable();
+
+            // 1. Tìm kiếm (Search)
+            if (!string.IsNullOrEmpty(search))
+            {
+                string s = search.ToLower().Trim();
+                query = query.Where(t => t.TemplateName.ToLower().Contains(s)
+                                      || (t.Description != null && t.Description.ToLower().Contains(s)));
+            }
+
+            // 2. Lọc (Filter)
+            if (type.HasValue) query = query.Where(t => (int)t.Type == type.Value);
+            if (isActive.HasValue) query = query.Where(t => t.IsActive == isActive.Value);
+
+            // 3. Sắp xếp (FIXED)
+            // Nếu sortOrder là "asc" thì OrderBy, ngược lại thì OrderByDescending
+            query = (sortOrder == "asc")
+                    ? query.OrderBy(x => x.Id)
+                    : query.OrderByDescending(x => x.Id);
+
+            // 4. Phân trang
+            int totalItems = query.Count();
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+            var templates = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            // ViewBag giữ trạng thái
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.TotalItems = totalItems;
+            ViewBag.PageSize = pageSize;
+            ViewBag.SelectedType = type;
+            ViewBag.SelectedStatus = isActive;
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.SearchTerm = search;
+
             return View(templates);
         }
         public IActionResult Profile() => View();

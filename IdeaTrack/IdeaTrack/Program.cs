@@ -37,7 +37,10 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 // MVC + Razor
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
 var app = builder.Build();
 var supportedCultures = new[] { "en-US" };
 var localizationOptions = new RequestLocalizationOptions()
