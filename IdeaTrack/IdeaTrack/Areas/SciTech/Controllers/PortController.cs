@@ -3,6 +3,7 @@ using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using QuestPDF.Fluent;
 using System.Reflection.Metadata;
 
@@ -285,49 +286,49 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         }
 
         [HttpPost]
-        public IActionResult Rule(List<EvaluationCriteriaDto> criteria)
+        public IActionResult Rule(Dictionary<int, EvaluationCriteriaDto> criteria)
         {
-            if (criteria == null || !criteria.Any())
-            {
-                ModelState.AddModelError("", "Không có dữ liệu gửi lên");
-                return RedirectToAction(nameof(Rule));
-            }
-
             int templateId = 1;
+            if (criteria == null) criteria = new Dictionary<int, EvaluationCriteriaDto>();
+            var dbItems = _context.EvaluationCriteria
+                                  .Where(x => x.TemplateId == templateId)
+                                  .ToList();
+
+            
+            var sentIds = criteria.Keys.ToList();
+            var toDelete = dbItems.Where(x => !sentIds.Contains(x.Id)).ToList();
+            if (toDelete.Any()) _context.EvaluationCriteria.RemoveRange(toDelete);
+
             int order = 1;
-
-            foreach (var c in criteria)
+            foreach (var item in criteria)
             {
-                var existing = _context.EvaluationCriteria
-                                       .FirstOrDefault(e => e.TemplateId == templateId && e.CriteriaName == c.CriteriaName);
+                int idSent = item.Key;
+                var data = item.Value;
 
+                var existing = dbItems.FirstOrDefault(x => x.Id == idSent);
                 if (existing != null)
                 {
-                    existing.Description = c.Description;
-                    existing.MaxScore = c.MaxScore;
+                    existing.CriteriaName = data.CriteriaName;
+                    existing.Description = data.Description;
+                    existing.MaxScore = data.MaxScore;
                     existing.SortOrder = order++;
-                    _context.EvaluationCriteria.Update(existing);
                 }
                 else
                 {
-                   
-                    var entity = new EvaluationCriteria
+                    _context.EvaluationCriteria.Add(new EvaluationCriteria
                     {
-                        CriteriaName = c.CriteriaName,
-                        Description = c.Description,
-                        MaxScore = c.MaxScore,
+                        CriteriaName = data.CriteriaName,
+                        Description = data.Description,
+                        MaxScore = data.MaxScore,
                         SortOrder = order++,
                         TemplateId = templateId
-                    };
-                    _context.EvaluationCriteria.Add(entity);
+                    });
                 }
             }
 
             _context.SaveChanges();
             return RedirectToAction(nameof(Rule));
         }
-
-
 
 
         public IActionResult Profile() => View();

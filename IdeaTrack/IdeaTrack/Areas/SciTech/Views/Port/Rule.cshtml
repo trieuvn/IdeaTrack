@@ -76,43 +76,41 @@
                 </tr>
             </thead>
 
-            <tbody id="criteriaTable">
-                    @for (int i = 0; i < Model.Count; i++)
+                <tbody id="criteriaTable">
+                    @foreach (var item in Model)
                     {
                         <tr>
                             <td>
+                                @* Dùng name với ID để Controller Dictionary nhận diện được *@
                                 <input class="form-control form-control-sm"
-                                       name="criteria[@i].CriteriaName"
-                                       value="@Model[i].CriteriaName" />
+                                       name="criteria[@item.Id].CriteriaName"
+                                       value="@item.CriteriaName" />
                             </td>
 
                             <td>
                                 <input class="form-control form-control-sm"
-                                       name="criteria[@i].Description"
-                                       value="@Model[i].Description" />
+                                       name="criteria[@item.Id].Description"
+                                       value="@item.Description" />
                             </td>
 
                             <td>
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <strong class="text-primary">
-                                        @* Xóa ID weightLabel, dùng class weight-label *@
-                                        <span class="weight-label">@Model[i].MaxScore.ToString("F2")</span>%
+                                        <span class="weight-label">@item.MaxScore.ToString("F2")</span>%
                                     </strong>
 
-                                    @* Thêm class weight-input và đổi hàm oninput thành syncWeight *@
                                     <input type="number"
                                            class="form-control form-control-sm text-center weight-input"
                                            style="width:70px"
-                                           name="criteria[@i].MaxScore"
-                                           value="@Model[i].MaxScore.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                           name="criteria[@item.Id].MaxScore"
+                                           value="@item.MaxScore.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
                                            min="0" max="100" step="0.01"
                                            oninput="syncWeight(this)" />
                                 </div>
 
-                                @* Đổi hàm oninput thành syncRange *@
                                 <input type="range"
                                        min="0" max="100" step="0.01"
-                                       value="@Model[i].MaxScore.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
+                                       value="@item.MaxScore.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
                                        class="form-range weight-range"
                                        oninput="syncRange(this)" />
                             </td>
@@ -124,7 +122,7 @@
                             </td>
                         </tr>
                     }
-            </tbody>
+                </tbody>
         </table>
     </div>
 
@@ -204,61 +202,44 @@
     /* =========================
        ADD / REMOVE ROW
     ========================== */
-    function addCriteriaRow() {
+        function addCriteriaRow() {
         const table = document.getElementById("criteriaTable");
+        const nextId = getMaxId() + 1; // Sử dụng Max ID + 1 thay vì index
 
         table.insertAdjacentHTML("beforeend", `
         <tr>
             <td>
                 <input class="form-control form-control-sm"
-                       name="criteria[${rowIndex}].CriteriaName"
+                       name="criteria[${nextId}].CriteriaName"
                        placeholder="Tên tiêu chí" />
             </td>
-
             <td>
                 <input class="form-control form-control-sm"
-                       name="criteria[${rowIndex}].Description"
+                       name="criteria[${nextId}].Description"
                        placeholder="Mô tả" />
             </td>
-
             <td>
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <strong class="text-primary">
                         <span class="weight-label">0.00</span>%
                     </strong>
-
                     <input type="number"
-                           name="criteria[${rowIndex}].MaxScore"
+                           name="criteria[${nextId}].MaxScore"
                            value="0"
-                           min="0"
-                           max="100"
-                           step="0.01"
                            class="form-control form-control-sm text-center weight-input"
                            style="width:70px"
                            oninput="syncWeight(this)" />
                 </div>
-
-                <input type="range"
-                       value="0"
-                       min="0"
-                       max="100"
-                       step="0.01"
-                       class="form-range weight-range"
-                       oninput="syncRange(this)" />
+                <input type="range" value="0" step="0.01" class="form-range weight-range" oninput="syncRange(this)" />
             </td>
-
             <td class="text-end">
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger"
-                        onclick="removeRow(this)">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
         </tr>
         `);
 
-        rowIndex++;
-        syncAllRowsFromInput();
         updateSummary();
     }
 
@@ -332,5 +313,25 @@
         syncAllRowsFromInput();
         updateSummary();
     });
+
+        function getMaxId() {
+        let max = 0;
+        document.querySelectorAll("#criteriaTable tr").forEach(row => {
+            const input = row.querySelector("input");
+            if (input) {
+                const name = input.getAttribute("name"); // Ví dụ: criteria[5].CriteriaName
+                const match = name.match(/\[(\d+)\]/);
+                if (match) {
+                    const id = parseInt(match[1]);
+                    if (id > max) max = id;
+                }
+            }
+        });
+        return max;
+    }
+        function removeRow(btn) {
+        btn.closest("tr").remove();
+        updateSummary();
+    }
 </script>
 
