@@ -426,6 +426,129 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         }
         public IActionResult Profile() => View();
         public IActionResult User() => View();
-        public IActionResult Councils() => View();
+        public async Task<IActionResult> Councils(int? id)
+        {
+            var vm = new BoardManagementVM();
+
+            // Lấy danh sách hội đồng
+            vm.Boards = await _context.Boards
+                .Include(b => b.Members)
+                .OrderBy(b => b.FiscalYear)
+                .ToListAsync();
+
+            // XỬ LÝ ID MẶC ĐỊNH: Nếu id null, lấy Id của phần tử đầu tiên
+            vm.SelectedBoardId = id ?? vm.Boards.FirstOrDefault()?.Id;
+
+            if (vm.SelectedBoardId.HasValue)
+            {
+                vm.SelectedBoard = await _context.Boards
+                    .Include(b => b.Members)
+                        .ThenInclude(m => m.User)
+                            .ThenInclude(u => u.Department)
+                    .FirstOrDefaultAsync(b => b.Id == vm.SelectedBoardId);
+            }
+
+            return View(vm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchUsers(string term)
+        {
+            var users = await _context.Users
+                .Include(u => u.Department)
+                .Where(u => u.FullName.Contains(term) || u.Email.Contains(term))
+                .Select(u => new {
+                    id = u.Id,
+                    fullName = u.FullName,
+                    email = u.Email,
+                    departmentName = u.Department.Name
+                }).Take(10).ToListAsync();
+
+            return Json(users);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveBoard(Board model)
+        {
+            try
+            {
+                if (model.Id == 0)
+                {
+                    // Thêm mới
+                    model.IsActive = true;
+                    _context.Boards.Add(model);
+                }
+                else
+                {
+                    // Cập nhật
+                    var boardInDb = await _context.Boards.FindAsync(model.Id);
+                    if (boardInDb == null) return Json(new { success = false, message = "Không tìm thấy hội đồng" });
+
+                    boardInDb.BoardName = model.BoardName;
+                    boardInDb.FiscalYear = model.FiscalYear;
+                    boardInDb.Description = model.Description;
+                }
+
+                await _context.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // 2. Xóa Hội đồng
+        [HttpPost]
+        public async Task<IActionResult> DeleteBoard(int id)
+        {
+            var board = await _context.Boards
+                .Include(b => b.Members)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (board == null) return Json(new { success = false, message = "Hội đồng không tồn tại" });
+
+            // Xóa các thành viên thuộc hội đồng trước để tránh lỗi ràng buộc DB
+            if (board.Members != null && board.Members.Any())
+            {
+                _context.BoardMembers.RemoveRange(board.Members);
+            }
+
+            _context.Boards.Remove(board);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+
+        // 3. Xóa Thành viên khỏi hội đồng
+        [HttpPost]
+        public async Task<IActionResult> RemoveMember(int memberId)
+        {
+            var member = await _context.BoardMembers.FindAsync(memberId);
+            if (member == null) return Json(new { success = false, message = "Không tìm thấy thành viên" });
+
+            _context.BoardMembers.Remove(member);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+        [HttpPost]
+public async Task<IActionResult> AddMember(int boardId, int userId)
+{
+    // Kiểm tra trùng lặp
+    var exists = await _context.BoardMembers
+        .AnyAsync(m => m.BoardId == boardId && m.UserId == userId);
+    
+    if (exists) return Json(new { success = false, message = "Nhân sự này đã có trong hội đồng." });
+
+    var member = new BoardMember
+    {
+        BoardId = boardId,
+        UserId = userId,
+        Role = BoardRole.Member // Mặc định là Ủy viên
+    };
+
+    _context.BoardMembers.Add(member);
+    await _context.SaveChangesAsync();
+    return Json(new { success = true });
+}
     }
 }
