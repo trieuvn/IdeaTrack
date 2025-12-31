@@ -9,62 +9,77 @@
                 Quản lý tài khoản, phân quyền và theo dõi hoạt động truy cập hệ thống.
             </p>
         </div>
-        <button class="btn btn-outline-primary">
-            <i class="fa-solid fa-file-export me-1"></i>Xuất báo cáo
-        </button>
+        <a class="btn btn-outline-primary"
+   href="@Url.Action("ExportExcelUser", "Port", new {
+        keyword = ViewBag.Keyword,
+        role = ViewBag.Role,
+        status = ViewBag.Status
+   })">
+    <i class="fa-solid fa-file-export me-1"></i>Xuất báo cáo
+</a>
+
     </div>
 
     <!-- STATS -->
     <div class="row g-4 mb-4">
+
+        <!-- Tổng người dùng -->
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <i class="fa-solid fa-users text-primary fs-4"></i>
                     <p class="text-muted small mb-1">Tổng người dùng</p>
-                    <h3 class="fw-bold mb-0">1,240</h3>
+                    <h3 class="fw-bold mb-0">@ViewBag.TotalUsers</h3>
                     <small class="text-success">
-                        <i class="fa-solid fa-arrow-up"></i> +12% tháng này
+                        <i class="fa-solid fa-arrow-up"></i>
+                        Hoạt động hệ thống
                     </small>
                 </div>
             </div>
         </div>
 
+        <!-- Đang hoạt động -->
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <i class="fa-solid fa-circle-check text-success fs-4"></i>
                     <p class="text-muted small mb-1">Đang hoạt động</p>
-                    <h3 class="fw-bold mb-0">98%</h3>
-                    <small class="text-muted">1,215 tài khoản</small>
+                    <h3 class="fw-bold mb-0">@ViewBag.ActivePercent%</h3>
+                    <small class="text-muted">
+                        @ViewBag.ActiveUsers tài khoản
+                    </small>
                 </div>
             </div>
         </div>
 
+        <!-- Đăng nhập gần đây -->
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <i class="fa-solid fa-right-to-bracket text-info fs-4"></i>
                     <p class="text-muted small mb-1">Đăng nhập gần đây</p>
-                    <h3 class="fw-bold mb-0">85</h3>
+                    <h3 class="fw-bold mb-0">@ViewBag.RecentLogins</h3>
                     <small class="text-muted">24 giờ qua</small>
                 </div>
             </div>
         </div>
 
+        <!-- Chờ duyệt -->
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <i class="fa-solid fa-clock text-warning fs-4"></i>
                     <p class="text-muted small mb-1">Chờ duyệt</p>
-                    <h3 class="fw-bold mb-0">12</h3>
-                    <small class="text-muted">Yêu cầu mới</small>
+                    <h3 class="fw-bold mb-0">@ViewBag.PendingUsers</h3>
+                    <small class="text-muted">Tài khoản</small>
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- TOOLBAR -->
-    <div class="card shadow-sm mb-4">
+    <form method="get" class="card shadow-sm mb-4">
         <div class="card-body d-flex flex-wrap align-items-center gap-2">
 
             <!-- Search input -->
@@ -73,39 +88,49 @@
                     <span class="input-group-text bg-white">
                         <i class="fa-solid fa-search"></i>
                     </span>
-                    <input class="form-control" placeholder="Tìm theo tên hoặc email">
+                    <input class="form-control"
+                           name="keyword"
+                           value="@ViewBag.Keyword"
+                           placeholder="Tìm theo tên hoặc email">
                 </div>
             </div>
 
             <!-- Role select -->
             <div style="min-width: 150px;">
-                <select class="form-select">
-                    <option>Tất cả vai trò</option>
-                    <option>Quản trị viên</option>
-                    <option>Giảng viên</option>
-                    <option>Sinh viên</option>
+                <select class="form-select" name="role">
+                    <option value="">Tất cả vai trò</option>
+                    @foreach (var r in ViewBag.Roles as List<string>)
+                    {
+                        <option value="@r" selected="@(ViewBag.Role == r)">
+                            @r
+                        </option>
+                    }
                 </select>
             </div>
 
             <!-- Status select -->
             <div style="min-width: 150px;">
-                <select class="form-select">
-                    <option>Tất cả trạng thái</option>
-                    <option>Hoạt động</option>
-                    <option>Đã khóa</option>
-                    <option>Chờ duyệt</option>
+                <select class="form-select" name="status">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="active" selected="@(ViewBag.Status == "active")">Hoạt động</option>
+                    <option value="locked" selected="@(ViewBag.Status == "locked")">Đã khóa</option>
+                    <option value="pending" selected="@(ViewBag.Status == "pending")">Chờ duyệt</option>
                 </select>
             </div>
 
-            <!-- Button -->
-            <div>
-                <button class="btn btn-primary d-flex align-items-center">
-                    <i class="fa-solid fa-user-plus me-1"></i>Thêm người dùng
-                </button>
-            </div>
+            <!-- Filter button -->
+            <button type="submit" class="btn btn-outline-primary d-flex align-items-center">
+                <i class="fa-solid fa-filter me-1"></i>Lọc
+            </button>
+
+            <!-- Add user -->
+            <a asp-action="Create" class="btn btn-primary d-flex align-items-center">
+                <i class="fa-solid fa-user-plus me-1"></i>Thêm người dùng
+            </a>
 
         </div>
-    </div>
+    </form>
+
 
 
     <!-- TABLE -->
@@ -123,71 +148,104 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">@user.FullName</div>
+                                <small class="text-muted">@user.Email</small>
+                            </td>
 
-                    <tr>
-                        <td>
-                            <div class="fw-semibold">Lê Thị Mai</div>
-                            <small class="text-muted">mai.le@university.edu.vn</small>
-                        </td>
-                        <td><span class="badge bg-primary-subtle text-primary">Giảng viên</span></td>
-                        <td><span class="badge bg-success">Hoạt động</span></td>
-                        <td>20/10/2023 09:30</td>
-                        <td class="text-center fw-semibold">124</td>
-                        <td class="text-end">
-                            <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn btn-sm btn-outline-warning"><i class="fa-solid fa-lock-open"></i></button>
-                            <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
+                            <td>
+                                <span class="badge bg-primary-subtle text-primary">
+                                    @user.Role
+                                </span>
+                            </td>
 
-                    <tr>
-                        <td>
-                            <div class="fw-semibold">Trần Văn Bình</div>
-                            <small class="text-muted">binh.tran@university.edu.vn</small>
-                        </td>
-                        <td><span class="badge bg-purple">Quản trị viên</span></td>
-                        <td><span class="badge bg-success">Hoạt động</span></td>
-                        <td>20/10/2023 08:15</td>
-                        <td class="text-center fw-semibold">850</td>
-                        <td class="text-end">
-                            <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn btn-sm btn-outline-warning"><i class="fa-solid fa-lock-open"></i></button>
-                            <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
+                            <td>
+                                @if (user.IsActive)
+                                {
+                                    <span class="badge bg-success">Hoạt động</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Đã khóa</span>
+                                }
+                            </td>
 
-                    <tr>
-                        <td>
-                            <div class="fw-semibold">Phạm Thu Hương</div>
-                            <small class="text-muted">huong.pham@university.edu.vn</small>
-                        </td>
-                        <td><span class="badge bg-primary-subtle text-primary">Giảng viên</span></td>
-                        <td><span class="badge bg-danger">Đã khóa</span></td>
-                        <td>15/10/2023 14:20</td>
-                        <td class="text-center fw-semibold">32</td>
-                        <td class="text-end">
-                            <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn btn-sm btn-outline-success"><i class="fa-solid fa-lock"></i></button>
-                            <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
+                            <td>
+                                @(user.LastActive?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")
+                            </td>
 
+                            <td class="text-center fw-semibold">
+                                @user.LoginCount
+                            </td>
+
+                            <td class="text-end">
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+
+                                @if (user.IsActive)
+                                {
+                                    <button class="btn btn-sm btn-outline-warning">
+                                        <i class="fa-solid fa-lock"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-sm btn-outline-success">
+                                        <i class="fa-solid fa-unlock"></i>
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
 
         <!-- PAGINATION -->
         <div class="card-footer d-flex justify-content-between align-items-center">
-            <small class="text-muted">Hiển thị 1–10 / 1,240 người dùng</small>
+
+            <small class="text-muted">
+                Hiển thị @ViewBag.From–@ViewBag.To / @ViewBag.TotalUsers người dùng
+            </small>
+
             <nav>
                 <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled"><a class="page-link">‹</a></li>
-                    <li class="page-item active"><a class="page-link">1</a></li>
-                    <li class="page-item"><a class="page-link">2</a></li>
-                    <li class="page-item"><a class="page-link">›</a></li>
+
+                    <!-- Previous -->
+                    <li class="page-item @(ViewBag.Page == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           href="?page=@(ViewBag.Page - 1)&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
+                            ‹
+                        </a>
+                    </li>
+
+                    <!-- Page numbers -->
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                            <a class="page-link"
+                               href="?page=@i&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <!-- Next -->
+                    <li class="page-item @(ViewBag.Page == ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           href="?page=@(ViewBag.Page + 1)&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
+                            ›
+                        </a>
+                    </li>
+
                 </ul>
             </nav>
         </div>
+
     </div>
 
 </main>

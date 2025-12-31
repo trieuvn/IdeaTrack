@@ -4,6 +4,7 @@ using IdeaTrack.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
+using OfficeOpenXml;
 using QuestPDF.Fluent;
 using System.Reflection.Metadata;
 
@@ -425,7 +426,228 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             return Json(new { success = true });
         }
         public IActionResult Profile() => View();
-        public IActionResult User() => View();
+        public IActionResult User(
+    string keyword,
+    string role,
+    string status,
+    int page = 1,
+    int pageSize = 10)
+        {
+            var query = _context.Users.AsQueryable();
+
+            // =========================
+            // SEARCH
+            // =========================
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(u =>
+                    u.FullName.Contains(keyword) ||
+                    u.Email.Contains(keyword));
+            }
+
+            // =========================
+            // FILTER ROLE
+            // =========================
+            if (!string.IsNullOrWhiteSpace(role))
+            {
+                query = query.Where(u => u.Position == role);
+            }
+
+            // =========================
+            // FILTER STATUS
+            // =========================
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                switch (status)
+                {
+                    case "active":
+                        query = query.Where(u => u.IsActive);
+                        break;
+                    case "locked":
+                    case "pending":
+                        query = query.Where(u => !u.IsActive);
+                        break;
+                }
+            }
+
+            // =========================
+            // PAGINATION
+            // =========================
+            int totalUsers = query.Count();
+
+            var users = query
+                .OrderBy(u => u.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(u => new UserViewModel
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    IsActive = u.IsActive,
+                    Role = u.Position,
+                    LastLogin = _context.SystemAuditLogs
+                        .Where(l => l.UserId == u.Id && l.Action == "Login")
+                        .OrderByDescending(l => l.Timestamp)
+                        .Select(l => l.Timestamp)
+                        .FirstOrDefault(),
+                    LoginCount = _context.SystemAuditLogs
+                        .Count(l => l.UserId == u.Id && l.Action == "Login")
+                })
+                .ToList();
+
+            // =========================
+            // ROLE LIST
+            // =========================
+            ViewBag.Roles = _context.Users
+                .Select(u => u.Position)
+                .Distinct()
+                .ToList();
+
+            // =========================
+            // PAGINATION INFO
+            // =========================
+            ViewBag.Page = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalUsers = totalUsers;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
+
+            ViewBag.From = totalUsers == 0 ? 0 : (page - 1) * pageSize + 1;
+            ViewBag.To = Math.Min(page * pageSize, totalUsers);
+
+            // giữ filter
+            ViewBag.Keyword = keyword;
+            ViewBag.Role = role;
+            ViewBag.Status = status;
+
+            return View(users);
+        }
+        public IActionResult ExportExcelUser(string keyword, string role, string status)
+        {
+            var query = _context.Users.AsQueryable();
+
+            // =========================
+            // SEARCH
+            // =========================
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(u =>
+                    u.FullName.Contains(keyword) ||
+                    u.Email.Contains(keyword));
+            }
+
+            // =========================
+            // FILTER ROLE
+            // =========================
+            if (!string.IsNullOrWhiteSpace(role))
+            {
+                query = query.Where(u => u.Position == role);
+            }
+
+            // =========================
+            // FILTER STATUS
+            // =========================
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                switch (status)
+                {
+                    case "active":
+                        query = query.Where(u => u.IsActive);
+                        break;
+                    case "locked":
+                    case "pending":
+                        query = query.Where(u => !u.IsActive);
+                        break;
+                }
+            }
+
+            // =========================
+            // LẤY DỮ LIỆU
+            // =========================
+            var users = query
+                .OrderBy(u => u.Id)
+                .Select(u => new
+                {
+                    u.FullName,
+                    u.Email,
+                    Role = u.Position,
+                    Status = u.IsActive ? "Hoạt động" : "Đã khóa"
+                })
+                .ToList();
+
+            // =========================
+            // TẠO EXCEL
+            // =========================
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using var package = new ExcelPackage();
+            var ws = package.Workbook.Worksheets.Add("Danh sách người dùng");
+
+            int colCount = 4; // Họ tên, Email, Vai trò, Trạng thái
+
+            // -------------------------
+            // Tiêu đề báo cáo
+            // -------------------------
+            ws.Cells[1, 1, 1, colCount].Merge = true;
+            ws.Cells[1, 1].Value = "BÁO CÁO DANH SÁCH NGƯỜI DÙNG";
+            ws.Cells[1, 1].Style.Font.Size = 16;
+            ws.Cells[1, 1].Style.Font.Bold = true;
+            ws.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            ws.Cells[1, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+
+            // -------------------------
+            // Header
+            // -------------------------
+            var headers = new string[] { "Họ tên", "Email", "Vai trò", "Trạng thái" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ws.Cells[2, i + 1].Value = headers[i];
+                ws.Cells[2, i + 1].Style.Font.Bold = true;
+                ws.Cells[2, i + 1].Style.Font.Color.SetColor(System.Drawing.Color.White);
+                ws.Cells[2, i + 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                ws.Cells[2, i + 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(0, 112, 192)); // xanh
+                ws.Cells[2, i + 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                ws.Cells[2, i + 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                ws.Cells[2, i + 1].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin, System.Drawing.Color.Black);
+            }
+
+            // -------------------------
+            // Data
+            // -------------------------
+            int row = 3; // dữ liệu bắt đầu từ hàng 3
+            foreach (var u in users)
+            {
+                ws.Cells[row, 1].Value = u.FullName;
+                ws.Cells[row, 2].Value = u.Email;
+                ws.Cells[row, 3].Value = u.Role;
+                ws.Cells[row, 4].Value = u.Status;
+
+                // Border cho data
+                for (int col = 1; col <= colCount; col++)
+                {
+                    ws.Cells[row, col].Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin, System.Drawing.Color.Black);
+                }
+
+                row++;
+            }
+
+            ws.Cells.AutoFitColumns();
+
+            // =========================
+            // RETURN FILE
+            // =========================
+            var fileName = $"User_Report_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+            var fileBytes = package.GetAsByteArray();
+
+            return File(
+                fileBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                fileName
+            );
+        }
+
+
+
+
         public async Task<IActionResult> Councils(int? id)
         {
             var vm = new BoardManagementVM();
