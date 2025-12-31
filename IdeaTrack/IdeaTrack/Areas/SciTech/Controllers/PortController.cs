@@ -1,7 +1,9 @@
 ﻿using IdeaTrack.Areas.SciTech.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using OfficeOpenXml;
@@ -14,10 +16,12 @@ namespace IdeaTrack.Areas.SciTech.Controllers
     public class PortController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public PortController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public PortController(ApplicationDbContext context,
+                      UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult Index(
@@ -190,7 +194,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Include(i => i.Proposer)
                 .Include(i => i.Department)
                 .Include(i => i.Category)
-                .Include(i => i.Files) // thêm include Files
+                .Include(i => i.Files) 
                 .FirstOrDefault(i => i.Id == id);
 
             if (initiative == null) return NotFound();
@@ -205,6 +209,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 SubmittedDate = initiative.SubmittedDate ?? initiative.CreatedAt,
                 Status = initiative.Status,
                 Budget = initiative.Budget,
+                Code = initiative.Department.Code,
                 Description = initiative.Description,
                 Category = initiative.Category.Name,
                 Files = initiative.Files.Select(f => new InitiativeFileVM
@@ -376,7 +381,11 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             }
 
             // 2. Lọc (Filter)
-            if (type.HasValue) query = query.Where(t => (int)t.Type == type.Value);
+            if (type.HasValue)
+            {
+                var enumValue = (TemplateType)type.Value;
+                query = query.Where(t => t.Type == enumValue);
+            }
             if (isActive.HasValue) query = query.Where(t => t.IsActive == isActive.Value);
 
             // 3. Sắp xếp (FIXED)
@@ -427,11 +436,11 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         }
         public IActionResult Profile() => View();
         public IActionResult User(
-    string keyword,
-    string role,
-    string status,
-    int page = 1,
-    int pageSize = 10)
+     string keyword,
+     string role,
+     string status,
+     int page = 1,
+     int pageSize = 10)
         {
             var query = _context.Users.AsQueryable();
 
@@ -497,6 +506,21 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .ToList();
 
             // =========================
+            // DASHBOARD STATS
+            // =========================
+            ViewBag.TotalUsers = _context.Users.Count();
+
+            var activeUsers = _context.Users.Count(u => u.IsActive);
+            ViewBag.ActiveUsers = activeUsers;
+            ViewBag.ActivePercent = ViewBag.TotalUsers == 0 ? 0 : (activeUsers * 100 / ViewBag.TotalUsers);
+
+            var since = DateTime.Now.AddHours(-24);
+            ViewBag.RecentLogins = _context.SystemAuditLogs
+                .Count(l => l.Action == "Login" && l.Timestamp >= since);
+
+            ViewBag.PendingUsers = _context.Users.Count(u => !u.IsActive);
+
+            // =========================
             // ROLE LIST
             // =========================
             ViewBag.Roles = _context.Users
@@ -509,9 +533,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             // =========================
             ViewBag.Page = page;
             ViewBag.PageSize = pageSize;
-            ViewBag.TotalUsers = totalUsers;
             ViewBag.TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
-
             ViewBag.From = totalUsers == 0 ? 0 : (page - 1) * pageSize + 1;
             ViewBag.To = Math.Min(page * pageSize, totalUsers);
 
@@ -519,8 +541,61 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             ViewBag.Keyword = keyword;
             ViewBag.Role = role;
             ViewBag.Status = status;
+            ViewBag.Departments = new SelectList(_context.Departments.OrderBy(d => d.Name).ToList(), "Id", "Name");
 
             return View(users);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(CreateUserViewModel model)
+        {
+            // 1. Kiểm tra Model hợp lệ
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Dữ liệu nhập vào không hợp lệ. Vui lòng kiểm tra các trường bắt buộc.";
+                return RedirectToAction("User"); // Phải là tên Action hiển thị danh sách
+            }
+
+            // 2. Kiểm tra tài khoản đã tồn tại chưa
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                TempData["ErrorMessage"] = "Email này đã được sử dụng bởi một tài khoản khác.";
+                return RedirectToAction("User");
+            }
+
+            // 3. Khởi tạo User
+            var user = new ApplicationUser
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                FullName = model.FullName,
+                DepartmentId = model.DepartmentId,
+                IsActive = true,
+                EmailConfirmed = true,
+                AcademicRank=model.AcademicRank,
+                Degree=model.Degree,
+                Position=model.Position
+
+            };
+
+            // 4. Lưu vào SQL qua UserManager
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                // 5. Gán quyền (Role)
+                await _userManager.AddToRoleAsync(user, "User");
+
+                TempData["SuccessMessage"] = "Thêm người dùng " + model.FullName + " thành công!";
+                return RedirectToAction("User");
+            }
+
+            // 6. Nếu lỗi (Mật khẩu yếu, trùng UserName...) gom lỗi gửi về View
+            var errors = string.Join(" ", result.Errors.Select(e => e.Description));
+            TempData["ErrorMessage"] = "Lỗi từ hệ thống: " + errors;
+
+            return RedirectToAction("User");
         }
         public IActionResult ExportExcelUser(string keyword, string role, string status)
         {

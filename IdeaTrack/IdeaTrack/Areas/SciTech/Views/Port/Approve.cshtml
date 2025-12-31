@@ -19,100 +19,37 @@
     string deptIcon = "fa-building";
     string deptColor = "text-secondary";
 
-    switch (Model.DepartmentName.Replace("Khoa ", "").Trim())
+    switch (Model.Code)
     {
-        case "Nông nghiệp":
-            deptIcon = "fa-seedling"; deptColor = "text-success";
-            break;
-        case "Môi trường":
-            deptIcon = "fa-leaf"; deptColor = "text-info";
-            break;
-        case "Công nghệ thông tin":
+        case "CNTT":
             deptIcon = "fa-laptop-code"; deptColor = "text-primary";
             break;
-        case "Cơ khí":
-            deptIcon = "fa-cogs"; deptColor = "text-warning";
-            break;
-        case "Điện - Điện tử":
+        case "DTVT": // Điện tử Viễn thông
             deptIcon = "fa-bolt"; deptColor = "text-danger";
             break;
-        case "Hóa học":
-            deptIcon = "fa-flask"; deptColor = "text-danger";
+        case "KHCN": // Khoa học Công nghệ
+            deptIcon = "fa-microscope"; deptColor = "text-success";
             break;
-        case "Sinh học":
-            deptIcon = "fa-dna"; deptColor = "text-success";
+        case "CK": // Cơ khí
+            deptIcon = "fa-cogs"; deptColor = "text-warning";
             break;
-        case "Kinh tế":
-            deptIcon = "fa-chart-line"; deptColor = "text-primary";
-            break;
-        case "Luật":
-            deptIcon = "fa-gavel"; deptColor = "text-warning";
-            break;
-        case "Ngôn ngữ Anh":
-            deptIcon = "fa-language"; deptColor = "text-info";
-            break;
-        case "Xây dựng":
+        case "XD": // Xây dựng
             deptIcon = "fa-hard-hat"; deptColor = "text-secondary";
             break;
-        case "Điều dưỡng":
-            deptIcon = "fa-user-nurse"; deptColor = "text-danger";
+        case "MT": // Môi trường
+            deptIcon = "fa-leaf"; deptColor = "text-info";
             break;
-        case "Quản trị Du lịch & Khách sạn":
-            deptIcon = "fa-hotel"; deptColor = "text-warning";
+        case "KT": // Kinh tế
+            deptIcon = "fa-chart-line"; deptColor = "text-primary";
             break;
-        case "Truyền thông":
-            deptIcon = "fa-bullhorn"; deptColor = "text-primary";
-            break;
-        case "Toán - Tin":
-            deptIcon = "fa-square-root-alt"; deptColor = "text-info";
-            break;
-        case "Vật lý":
-            deptIcon = "fa-atom"; deptColor = "text-info";
-            break;
-        case "Sinh học & Công nghệ":
-            deptIcon = "fa-seedling"; deptColor = "text-success";
-            break;
-        case "Khoa học Xã hội & Nhân văn":
-            deptIcon = "fa-users"; deptColor = "text-secondary";
-            break;
-        case "Giáo dục":
-            deptIcon = "fa-chalkboard-teacher"; deptColor = "text-primary";
-            break;
-        case "Tài chính - Ngân hàng":
-            deptIcon = "fa-piggy-bank"; deptColor = "text-success";
-            break;
-        case "Quản trị Kinh doanh":
+        case "QTKD": // Quản trị Kinh doanh
             deptIcon = "fa-briefcase"; deptColor = "text-primary";
             break;
-        case "Marketing":
-            deptIcon = "fa-bullseye"; deptColor = "text-info";
+        case "LUAT":
+            deptIcon = "fa-gavel"; deptColor = "text-warning";
             break;
-        case "Du lịch & Lữ hành":
-            deptIcon = "fa-route"; deptColor = "text-warning";
-            break;
-        case "Kiến trúc":
-            deptIcon = "fa-drafting-compass"; deptColor = "text-danger";
-            break;
-        case "Dược":
-            deptIcon = "fa-prescription-bottle-alt"; deptColor = "text-danger";
-            break;
-        case "Y học":
-            deptIcon = "fa-stethoscope"; deptColor = "text-danger";
-            break;
-        case "Răng Hàm Mặt":
-            deptIcon = "fa-tooth"; deptColor = "text-danger";
-            break;
-        case "Nhiệt đới học":
-            deptIcon = "fa-temperature-high"; deptColor = "text-secondary";
-            break;
-        case "Khoa học Tự nhiên":
-            deptIcon = "fa-flask"; deptColor = "text-secondary";
-            break;
-        case "Tâm lý học":
-            deptIcon = "fa-brain"; deptColor = "text-info";
-            break;
-        case "Luật Quốc tế":
-            deptIcon = "fa-balance-scale"; deptColor = "text-warning";
+        case "NN": // Nông nghiệp
+            deptIcon = "fa-seedling"; deptColor = "text-success";
             break;
         default:
             deptIcon = "fa-building"; deptColor = "text-secondary";

@@ -1,7 +1,19 @@
-﻿<main class="container-fluid py-4">
-
-    <!-- BREADCRUMB -->
-    <!-- HEADER -->
+﻿@model IEnumerable<IdeaTrack.Areas.SciTech.Models.UserViewModel>
+<main class="container-fluid py-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
         <div>
             <h1 class="fw-bold mb-1">Quản lý Người dùng & Truy cập</h1>
@@ -9,12 +21,12 @@
                 Quản lý tài khoản, phân quyền và theo dõi hoạt động truy cập hệ thống.
             </p>
         </div>
-        <a class="btn btn-outline-primary"
-   href="@Url.Action("ExportExcelUser", "Port", new {
-        keyword = ViewBag.Keyword,
-        role = ViewBag.Role,
-        status = ViewBag.Status
-   })">
+        <a class="btn btn-outline-primary custom-btn" style="height:70px;padding-top:20px;"
+           href="@Url.Action("ExportExcelUser", "Port", new {
+                keyword = ViewBag.Keyword,
+                role = ViewBag.Role,
+                status = ViewBag.Status
+           })">
     <i class="fa-solid fa-file-export me-1"></i>Xuất báo cáo
 </a>
 
@@ -124,9 +136,9 @@
             </button>
 
             <!-- Add user -->
-            <a asp-action="Create" class="btn btn-primary d-flex align-items-center">
-                <i class="fa-solid fa-user-plus me-1"></i>Thêm người dùng
-            </a>
+            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createUserModal">
+    <i class="fa-solid fa-user-plus me-1"></i> Thêm người dùng
+</a>
 
         </div>
     </form>
@@ -249,3 +261,83 @@
     </div>
 
 </main>
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> <div class="modal-content">
+            <form action="@Url.Action("CreateUser", "Port", new { area = "SciTech" })" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="createUserModalLabel">Thêm người dùng mới</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Tên đăng nhập</label>
+                                <input name="UserName" class="form-control" placeholder="Nhập tên đăng nhập..." required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Địa chỉ Email</label>
+                                <input name="Email" class="form-control" type="email" placeholder="vi-du@email.com" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Họ và tên</label>
+                                <input name="FullName" class="form-control" placeholder="Nhập họ tên đầy đủ..." required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Mật khẩu hệ thống</label>
+                                <input name="Password" class="form-control" type="password" placeholder="Mật khẩu (VD: Abc@123)" required />
+                                <small class="text-muted small">Tối thiểu 6 ký tự, có chữ hoa, số và ký tự đặc biệt.</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Thuộc Khoa/Phòng</label>
+                                <select name="DepartmentId" id="DepartmentId" class="form-select" required>
+                                    <option value="">-- Chọn khoa/phòng --</option>
+                                    @if (ViewBag.Departments != null)
+                                    {
+                                        foreach (var item in (SelectList)ViewBag.Departments)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Học hàm</label>
+                                <select name="AcademicRank" class="form-select">
+                                    <option value="">-- Chọn học hàm --</option>
+                                    <option value="Giáo sư">Giáo sư</option>
+                                    <option value="Phó giáo sư">Phó giáo sư</option>
+                                    <option value="Không">Không</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Học vị</label>
+                                <select name="Degree" class="form-select">
+                                    <option value="">-- Chọn học vị --</option>
+                                    <option value="Tiến sĩ">Tiến sĩ</option>
+                                    <option value="Thạc sĩ">Thạc sĩ</option>
+                                    <option value="Cử nhân">Cử nhân</option>
+                                    <option value="Kỹ sư">Kỹ sư</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Chức vụ</label>
+                                <input name="Position" class="form-control" placeholder="Ví dụ: Trưởng phòng, Giảng viên..." />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-user-plus me-1"></i> Xác nhận thêm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

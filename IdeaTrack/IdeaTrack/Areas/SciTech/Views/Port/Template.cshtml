@@ -77,12 +77,12 @@
                 <div class="col-12 col-lg-8 d-flex flex-wrap justify-content-lg-end gap-2">
                     <div class="dropdown">
                         <button class="btn btn-outline-light text-dark border shadow-sm dropdown-toggle" data-bs-toggle="dropdown">
-                            @(ViewBag.SelectedType == 1 ? "Chấm điểm" : ViewBag.SelectedType == 0 ? "Duyệt/Từ chối" : "All Types")
+                            @(ViewBag.SelectedType == 1 ? "Chấm điểm" : ViewBag.SelectedType == 2 ? "Duyệt/Từ chối" : "All Types")
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="?page=1&type=&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">All Types</a></li>
                             <li><a class="dropdown-item" href="?page=1&type=1&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Chấm điểm</a></li>
-                            <li><a class="dropdown-item" href="?page=1&type=0&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Duyệt / Từ chối</a></li>
+                            <li><a class="dropdown-item" href="?page=1&type=2&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Duyệt / Từ chối</a></li>
                         </ul>
                     </div>
 
