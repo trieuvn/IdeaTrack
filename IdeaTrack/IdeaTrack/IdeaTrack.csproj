@@ -29,8 +29,8 @@
     <Folder Include="Areas\Author\Models\" />
     <Folder Include="Areas\Councils\Data\" />
     <Folder Include="Areas\Councils\Models\" />
-    <Folder Include="Areas\FacultyLeader\Data\" />
-    <Folder Include="Areas\FacultyLeader\Models\" />
+    <Folder Include="Areas\Faculty\Data\" />
+    <Folder Include="Areas\Faculty\Models\" />
     <Folder Include="Areas\SciTech\Data\" />
     <Folder Include="Areas\SciTech\Models\" />
   </ItemGroup>

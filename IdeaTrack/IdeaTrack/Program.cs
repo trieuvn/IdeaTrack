@@ -1,3 +1,4 @@
+using IdeaTrack.Areas.Faculty.Hubs;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +33,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 // MVC + Razor
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -70,7 +72,7 @@ var rewriteOptionscouncils = new RewriteOptions()
         "^Councils/History?$",
         "Councils/Page/History",
         skipRemainingRules: true
-        
+
         )
     .AddRewrite(
         "^Councils/CouncilChair?$",
@@ -117,7 +119,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();  
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "areas",
@@ -126,6 +128,10 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapHub<NotificationHub>("/notificationHub");
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 

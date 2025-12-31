@@ -17,7 +17,7 @@
 <body>
     <header class="header">
         <div class="header-left">
-            <a href="/FacultyLeader" class="logo-container">
+            <a href="/Faculty" class="logo-container">
                 <i class="bi bi-mortarboard-fill logo-icon"></i>
                 <span class="logo-text">Faculty Manager <span class="logo-sub">(LĐK)</span></span>
             </a>
@@ -25,27 +25,27 @@
             <nav>
                 <ul class="nav-custom">
                     <li>
-                        <a href="/FacultyLeader"
+                        <a href="/Faculty"
                            class="nav-link @(currentController == "Dashboard" && currentAction == "Index" ? "active" : "")">
                             Danh sách Hồ sơ
                         </a>
                     </li>
 
                     <li>
-                        <a href="/FacultyLeader/Progress"
+                        <a href="/Faculty/Progress"
                            class="nav-link @(currentAction == "Progress" ? "active" : "")">
                             Thống kê
                         </a>
                     </li>
 
                     <li>
-                        <a href="/FacultyLeader/Review"
+                        <a href="/Faculty/Review"
                            class="nav-link @(currentAction == "Review" ? "active" : "")">
                             Yêu cầu chỉnh sửa
                         </a>
                     </li>
                     <li>
-                        <a href="/FacultyLeader/Profile"
+                        <a href="/Faculty/Profile"
                            class="nav-link @(currentAction == "Profile" ? "active" : "")">
                             Hồ sơ người dùng 
                         </a>
@@ -142,5 +142,6 @@
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
