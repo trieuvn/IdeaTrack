@@ -545,6 +545,73 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             return View(users);
         }
+        [HttpGet]
+        public IActionResult GetUserDetail(int id)
+        {
+            // Tìm user theo ID và lấy thêm thông tin từ bảng Department (nếu có)
+            var user = _context.Users
+                .Where(u => u.Id == id)
+                .Select(u => new
+                {
+                    fullName = u.FullName,
+                    avatarUrl = u.AvatarUrl, // Chuỗi Base64
+                    academicRank = u.AcademicRank,
+                    degree = u.Degree,
+                    // Giả sử bạn có mối quan hệ với bảng Departments
+                    departmentName = _context.Departments
+                                        .Where(d => d.Id == u.DepartmentId)
+                                        .Select(d => d.Name)
+                                        .FirstOrDefault() ?? "N/A",
+                    position = u.Position,
+                    isActive = u.IsActive
+                })
+                .FirstOrDefault();
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Json(user); // Trả về định dạng JSON cho JavaScript xử lý
+        }
+        public async Task<IActionResult> LockUser(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // 1. Gán IsActive = false để đánh dấu trạng thái trong ứng dụng của bạn
+            user.IsActive = false;
+
+            // 2. Sử dụng cơ chế Identity để khóa tài khoản đến năm 2099 (coi như vĩnh viễn)
+            // Cần đảm bảo LockoutEnabled là true cho User này
+            await _userManager.SetLockoutEnabledAsync(user, true);
+            await _userManager.SetLockoutEndDateAsync(user, new DateTimeOffset(new DateTime(2099, 1, 1)));
+            return RedirectToAction(nameof(User));
+        }
+        public async Task<IActionResult> UnlockUser(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // 1. Mở lại trạng thái trong ứng dụng
+            user.IsActive = true;
+
+            // 2. Bỏ khóa Identity
+            await _userManager.SetLockoutEndDateAsync(user, null);
+            await _userManager.SetLockoutEnabledAsync(user, false);
+
+            // 3. Lưu thay đổi
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction(nameof(User));
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(CreateUserViewModel model)

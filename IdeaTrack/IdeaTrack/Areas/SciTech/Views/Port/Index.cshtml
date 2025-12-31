@@ -217,20 +217,27 @@
 
         <nav>
             <ul class="pagination pagination-sm mb-0">
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
+               @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
                     <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
                         <a class="page-link"
-                           asp-action="Index"
-                           asp-route-page="@i"
-                           asp-route-fromDate="@Model.FromDate"
-                           asp-route-toDate="@Model.ToDate"
-                           asp-route-status="@Model.Status"
-                           asp-route-keyword="@Model.Keyword">
+                           href="@Url.Action(
+                               "Index",
+                               "Port",
+                               new {
+                                   area = "SciTech",
+                                   page = i,
+                                   fromDate = Model.FromDate,
+                                   toDate = Model.ToDate,
+                                   status = Model.Status,
+                                   keyword = Model.Keyword
+                               })">
                             @i
                         </a>
                     </li>
                 }
+
+
             </ul>
         </nav>
     </div>

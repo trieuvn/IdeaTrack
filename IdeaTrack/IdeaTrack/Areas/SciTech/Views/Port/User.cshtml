@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<IdeaTrack.Areas.SciTech.Models.UserViewModel>
-<main class="container-fluid py-4">
+
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -194,21 +194,24 @@
                             </td>
 
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-primary">
-                                    <i class="fa-solid fa-pen"></i>
+                                <button class="btn btn-sm btn-outline-primary" onclick="openUserModal(@user.Id)">
+                                     <i class="fa-solid fa-eye"></i>
                                 </button>
 
                                 @if (user.IsActive)
                                 {
-                                    <button class="btn btn-sm btn-outline-warning">
-                                        <i class="fa-solid fa-lock"></i>
-                                    </button>
+                                   <a href="@Url.Action("LockUser", "Port", new { area = "SciTech", id = user.Id })"
+                                       class="btn btn-sm btn-outline-danger"
+                                       onclick="return confirm('Bạn có chắc chắn muốn khóa tài khoản này?');">
+                                        <i class="fa-solid fa-user-slash"></i>
+                                    </a>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-sm btn-outline-success">
+                                   <a href="@Url.Action("UnlockUser","Port", new { area = "SciTech", id = user.Id })"
+                                       class="btn btn-sm btn-outline-success">
                                         <i class="fa-solid fa-unlock"></i>
-                                    </button>
+                                    </a>
                                 }
                             </td>
                         </tr>
@@ -260,7 +263,6 @@
 
     </div>
 
-</main>
 <div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg"> <div class="modal-content">
             <form action="@Url.Action("CreateUser", "Port", new { area = "SciTech" })" method="post">
@@ -341,3 +343,85 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="userInfoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Thông tin chi tiết</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-4">
+         <img id="displayAvatar" 
+     src="/images/default-avatar.png" 
+     onerror="this.src='/images/default-avatar.png';" 
+     class="rounded-circle img-thumbnail" 
+     style="width: 120px; height: 120px; object-fit: cover;">
+          <h4 id="displayFullName" class="mt-2 mb-0">Họ và tên</h4>
+          <span id="displayIsActive" class="badge rounded-pill mt-1">Trạng thái</span>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-6">
+            <label class="text-muted mb-0">Học hàm</label>
+            <p id="displayAcademicRank" class="fw-bold text-primary">-</p>
+          </div>
+          <div class="col-6">
+            <label class="text-muted mb-0">Học vị</label>
+            <p id="displayDegree" class="fw-bold text-primary">-</p>
+          </div>
+          <div class="col-12">
+            <label class="text-muted mb-0">Phòng ban / Khoa</label>
+            <p id="displayDepartment" class="fw-bold">-</p>
+          </div>
+          <div class="col-12">
+            <label class="text-muted mb-0">Chức vụ</label>
+            <p id="displayPosition" class="fw-bold">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function openUserModal(userId) {
+    // Đường dẫn trỏ tới Action 'GetUserDetail' trong cùng Controller
+    // ASP.NET Core sẽ hiểu đây là: /TenController/GetUserDetail?id=...
+    fetch(`./GetUserDetail?id=${userId}`) 
+        .then(response => {
+            if (!response.ok) throw new Error("Lỗi mạng hoặc không tìm thấy User");
+            return response.json();
+        })
+        .then(data => {
+            // Đổ dữ liệu vào Modal
+            document.getElementById('displayFullName').innerText = data.fullName;
+            document.getElementById('displayAcademicRank').innerText = data.academicRank || "-";
+            document.getElementById('displayDegree').innerText = data.degree || "-";
+            document.getElementById('displayDepartment').innerText = data.departmentName;
+            document.getElementById('displayPosition').innerText = data.position || "-";
+
+            // Xử lý ảnh Base64
+            const imgElement = document.getElementById('displayAvatar');
+            if (data.avatarUrl) {
+                // Nếu chuỗi base64 trong DB chưa có tiền tố thì cộng thêm vào
+                imgElement.src = data.avatarUrl.includes('base64,') 
+                                 ? data.avatarUrl 
+                                 : 'data:image/png;base64,' + data.avatarUrl;
+            } else {
+                imgElement.src = '/images/default-avatar.png';
+            }
+
+            // Trạng thái
+            const badge = document.getElementById('displayIsActive');
+            badge.innerText = data.isActive ? "Đang hoạt động" : "Ngừng hoạt động";
+            badge.className = `badge rounded-pill mt-1 ${data.isActive ? 'bg-success' : 'bg-danger'}`;
+
+            // Hiển thị Modal
+            var myModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
+            myModal.show();
+        })
+        .catch(error => console.error('Lỗi:', error));
+}
+</script>
