@@ -13,7 +13,7 @@
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
                     <h6 class="fw-bold mb-0 text-uppercase small">Danh sách Hội đồng</h6>
-                    <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="openBoardModal()">
+                    <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="openBoardModal()" style="width: 120px;">
                         <i class="fa-solid fa-plus me-1"></i> Tạo mới
                     </button>
                 </div>
@@ -70,10 +70,10 @@
                             </div>
                             <div class="d-flex gap-2">
                                 
-                                <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="deleteBoard(@Model.SelectedBoard.Id)">
+                                <button class="btn btn-outline-danger btn-sm rounded-pill" style=" width: 100px; "  onclick="deleteBoard(@Model.SelectedBoard.Id)">
                                     <i class="fa-solid fa-trash me-1"></i> Xóa HĐ
                                 </button>
-                                <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="openAddMemberModal(@Model.SelectedBoard.Id)">
+                                <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="openAddMemberModal(@Model.SelectedBoard.Id)" style="width: 120px;">
                                     <i class="fa-solid fa-user-plus me-1"></i> Thêm TV
                                 </button>
                             </div>
@@ -250,16 +250,15 @@
             });
     }
 
-    function openAddMemberModal(boardId) {
+        function openAddMemberModal(boardId) {
         currentBoardId = boardId;
-        $('#searchUserInput').val('');
-        $('#userSearchResult').html(
-            '<div class="text-center py-5 text-muted">Nhập từ khóa để tìm kiếm nhân sự</div>'
-        );
+        $('#searchUserInput').val(''); // Reset ô nhập liệu
+
+        // GỌI HÀM NÀY ĐỂ HIỂN THỊ DỮ LIỆU NGAY LẬP TỨC
+        fetchUsers("");
 
         new bootstrap.Modal(document.getElementById('addMemberModal')).show();
     }
-
     function addMember(userId) {
         $.post(API.addMember, {
             boardId: currentBoardId,
@@ -309,7 +308,9 @@
         $('#searchUserInput').on('keyup', function () {
             const term = $(this).val();
             clearTimeout(searchTimeout);
-
+            searchTimeout = setTimeout(() => {
+        fetchUsers(term);
+    }, 400);
             if (term.length < 2) return;
 
             searchTimeout = setTimeout(() => {
@@ -357,4 +358,33 @@
                 });
         });
     });
+        function fetchUsers(term = "") {
+        // Hiển thị loading trong khi chờ
+        $('#userSearchResult').html(
+            '<div class="text-center py-5"><div class="spinner-border text-primary spinner-border-sm"></div></div>'
+        );
+
+        $.get(API.searchUsers, { term: term })
+            .done(data => {
+                let html = '';
+                if (!data || data.length === 0) {
+                    html = '<div class="text-center py-5 text-muted">Không tìm thấy nhân sự</div>';
+                } else {
+                    data.forEach(user => {
+                        html += `
+                            <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <div>
+                                    <div class="fw-bold">${user.fullName}</div>
+                                    <div class="small text-muted">${user.email} - ${user.departmentName || ''}</div>
+                                </div>
+                                <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="addMember(${user.id})">
+                                    Chọn
+                                </button>
+                            </div>`;
+                    });
+                }
+                $('#userSearchResult').html(html);
+            });
+    }
+
 </script>

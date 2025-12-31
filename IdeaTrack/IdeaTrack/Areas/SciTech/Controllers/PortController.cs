@@ -454,18 +454,26 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchUsers(string term)
         {
-            var users = await _context.Users
-                .Include(u => u.Department)
-                .Where(u => u.FullName.Contains(term) || u.Email.Contains(term))
+            var query = _context.Users.Include(u => u.Department).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(term))
+            {
+                query = query.Where(u => u.FullName.Contains(term) || u.Email.Contains(term));
+            }
+
+            var users = await query
                 .Select(u => new {
                     id = u.Id,
                     fullName = u.FullName,
                     email = u.Email,
                     departmentName = u.Department.Name
-                }).Take(10).ToListAsync();
+                })
+                .Take(10)
+                .ToListAsync();
 
             return Json(users);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> SaveBoard(Board model)
@@ -531,24 +539,45 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             return Json(new { success = true });
         }
         [HttpPost]
-public async Task<IActionResult> AddMember(int boardId, int userId)
-{
-    // Kiểm tra trùng lặp
-    var exists = await _context.BoardMembers
-        .AnyAsync(m => m.BoardId == boardId && m.UserId == userId);
+        public async Task<IActionResult> AddMember(int boardId, int userId)
+        {
+            // Kiểm tra trùng lặp
+            var exists = await _context.BoardMembers
+                .AnyAsync(m => m.BoardId == boardId && m.UserId == userId);
     
-    if (exists) return Json(new { success = false, message = "Nhân sự này đã có trong hội đồng." });
+            if (exists) return Json(new { success = false, message = "Nhân sự này đã có trong hội đồng." });
 
-    var member = new BoardMember
-    {
-        BoardId = boardId,
-        UserId = userId,
-        Role = BoardRole.Member // Mặc định là Ủy viên
-    };
+            var member = new BoardMember
+            {
+                BoardId = boardId,
+                UserId = userId,
+                Role = BoardRole.Member // Mặc định là Ủy viên
+            };
 
-    _context.BoardMembers.Add(member);
-    await _context.SaveChangesAsync();
-    return Json(new { success = true });
-}
+            _context.BoardMembers.Add(member);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+        [HttpPost]
+        public IActionResult UpdateMemberRole(int memberId, int role)
+        {
+            try
+            {
+                var member = _context.BoardMembers.FirstOrDefault(m => m.Id == memberId);
+
+                if (member == null)
+                {
+                    return Json(new { success = false, message = "Không tìm thấy thành viên" });
+                }
+                member.Role = (BoardRole)role;
+                _context.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 }
