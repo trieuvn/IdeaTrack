@@ -25,27 +25,27 @@
             <nav>
                 <ul class="nav-custom">
                     <li>
-                        <a href="/Faculty"
+                        <a href="/Faculty/Dashboard"
                            class="nav-link @(currentController == "Dashboard" && currentAction == "Index" ? "active" : "")">
                             Danh sách Hồ sơ
                         </a>
                     </li>
 
                     <li>
-                        <a href="/Faculty/Progress"
+                        <a href="/Faculty/Dashboard/Progress"
                            class="nav-link @(currentAction == "Progress" ? "active" : "")">
                             Thống kê
                         </a>
                     </li>
 
                     <li>
-                        <a href="/Faculty/Review"
+                        <a href="/Faculty/Dashboard/Review"
                            class="nav-link @(currentAction == "Review" ? "active" : "")">
                             Yêu cầu chỉnh sửa
                         </a>
                     </li>
                     <li>
-                        <a href="/Faculty/Profile"
+                        <a href="/Faculty/Dashboard/Profile"
                            class="nav-link @(currentAction == "Profile" ? "active" : "")">
                             Hồ sơ người dùng 
                         </a>
@@ -78,67 +78,72 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-                document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function() {
 
-            // Pie Chart
-            const statusCtx = document.getElementById('statusChart').getContext('2d');
-            new Chart(statusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Chờ duyệt', 'Đã chuyển PKHCN', 'Yêu cầu sửa'],
-                    datasets: [{
-                        data: [18.5, 69.2, 12.3],
-                        backgroundColor: ['#ffc107', '#198754', '#dc3545'],
-                        borderWidth: 0,
-                        cutout: '80%'
-                    }]
-                },
-                options: {
-                    plugins: { legend: { display: false } },
-                    maintainAspectRatio: false
-                }
-            });
+            // 1. Kiểm tra xem có biểu đồ Status không mới chạy
+            const statusChartEl = document.getElementById('statusChart');
+            if (statusChartEl) {
+                const statusCtx = statusChartEl.getContext('2d');
+                new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Chờ duyệt', 'Đã chuyển PKHCN', 'Yêu cầu sửa'],
+                        datasets: [{
+                            data: [18.5, 69.2, 12.3],
+                            backgroundColor: ['#ffc107', '#198754', '#dc3545'],
+                            borderWidth: 0,
+                            cutout: '80%'
+                        }]
+                    },
+                    options: {
+                        plugins: { legend: { display: false } },
+                        maintainAspectRatio: false
+                    }
+                });
+            }
 
-            // Line Chart với gradient xanh nhẹ
-            const trendCtx = document.getElementById('trendChart').getContext('2d');
-            const gradient = trendCtx.createLinearGradient(0, 0, 0, 220);
-            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // light blue
-            gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+            // 2. Kiểm tra xem có biểu đồ Trend không mới chạy
+            const trendChartEl = document.getElementById('trendChart');
+            if (trendChartEl) {
+                const trendCtx = trendChartEl.getContext('2d');
 
-            new Chart(trendCtx, {
-                type: 'line',
-                data: {
-                    labels: ['20/10', '21/10', '22/10', '23/10', '24/10'],
-                    datasets: [{
-                        label: 'Số hồ sơ',
-                        data: [3, 7, 5, 9, 6],
-                        fill: true,
-                        backgroundColor: gradient,
-                        borderColor: '#3b82f6',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#3b82f6'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false } },
-                        y: {
-                            beginAtZero: true,
-                            grid: { display: false },
-                            ticks: { stepSize: 2 }
+                // Tạo Gradient
+                const gradient = trendCtx.createLinearGradient(0, 0, 0, 220);
+                gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // light blue
+                gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+
+                new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['20/10', '21/10', '22/10', '23/10', '24/10'],
+                        datasets: [{
+                            label: 'Số hồ sơ',
+                            data: [3, 7, 5, 9, 6],
+                            fill: true,
+                            backgroundColor: gradient,
+                            borderColor: '#3b82f6',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#3b82f6'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: {
+                                beginAtZero: true,
+                                grid: { display: false },
+                                ticks: { stepSize: 2 }
+                            }
                         }
                     }
-                }
-            });
-
+                });
+            }
         });
-
-          
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

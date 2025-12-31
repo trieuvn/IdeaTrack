@@ -1,12 +1,61 @@
-﻿<div class="container-fluid py-4">
+﻿@using IdeaTrack.Models
+@model IEnumerable<IdeaTrack.Models.Initiative>
+
+@{
+    ViewData["Title"] = "Theo dõi Chỉnh sửa";
+    // Lấy filter hiện tại từ Controller
+    string currentFilter = ViewBag.FilterType as string ?? "All";
+}
+
+<style>
+    .bg-blue-light {
+        background-color: #e3f2fd;
+        color: #0d6efd;
+    }
+
+    .bg-orange-light {
+        background-color: #fff3cd;
+        color: #ffc107;
+    }
+
+    .bg-red-light {
+        background-color: #f8d7da;
+        color: #dc3545;
+    }
+
+    .icon-box {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .badge-custom {
+        padding: 6px 12px;
+        border-radius: 50rem;
+        font-weight: 600;
+        font-size: 0.75rem;
+    }
+
+    .bg-light-gray {
+        background-color: #f8f9fa;
+    }
+
+    .btn-active-filter {
+        background-color: #6c757d;
+        color: white;
+    }
+</style>
+
+<div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold mb-1">Yêu cầu và Theo dõi Chỉnh sửa</h2>
             <p class="text-secondary">Quản lý các yêu cầu trả về cho Giảng viên (GV) và theo dõi trạng thái nộp lại.</p>
         </div>
-        <button class="btn btn-primary px-4 shadow-sm">
-            <i class="bi bi-plus-lg me-2"></i>Tạo yêu cầu mới
-        </button>
     </div>
 
     <div class="row g-4">
@@ -16,11 +65,21 @@
                     <i class="bi bi-send-plus text-primary me-2"></i>Gửi yêu cầu chỉnh sửa
                 </h5>
 
-                <form>
+                <form method="post" action="@Url.Action("SubmitRevision", "Dashboard", new { area = "Faculty" })">
+                    @Html.AntiForgeryToken()
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Chọn Hồ sơ / Đề tài</label>
-                        <select class="form-select bg-light">
-                            <option>-- Chọn hồ sơ --</option>
+                        <select class="form-select bg-light" id="selectInitiative" onchange="autoFillLecturer()" name="initiativeId" required>
+                            <option value="" data-lecturer="">-- Chọn hồ sơ --</option>
+                            @if (ViewBag.DropdownList != null)
+                            {
+                                foreach (var item in ViewBag.DropdownList)
+                                {
+                                    <option value="@item.Id" data-lecturer="@item.LecturerName">
+                                        @item.InitiativeCode - @item.Title
+                                    </option>
+                                }
+                            }
                         </select>
                     </div>
 
@@ -28,13 +87,13 @@
                         <label class="form-label small fw-bold text-secondary">Giảng viên nhận</label>
                         <div class="input-group">
                             <span class="input-group-text border-0 bg-light-gray text-secondary fw-bold">GV</span>
-                            <input type="text" class="form-control border-0 bg-light-gray" placeholder="Chọn hồ sơ để hiển thị" readonly>
+                            <input type="text" id="inputLecturer" class="form-control border-0 bg-light-gray" placeholder="Tự động hiển thị..." readonly>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Nội dung yêu cầu / Lý do trả về</label>
-                        <textarea class="form-control" rows="5" placeholder="Nhập chi tiết các mục cần chỉnh sửa..."></textarea>
+                        <textarea class="form-control" rows="5" name="content" placeholder="Nhập chi tiết các mục cần chỉnh sửa..." required></textarea>
                         <div class="form-text mt-2 small text-muted italic">
                             Yêu cầu này là bắt buộc trước khi hồ sơ được duyệt lên cấp Trường.
                         </div>
@@ -42,7 +101,7 @@
 
                     <div class="mb-4">
                         <label class="form-label small fw-bold text-secondary">Hạn nộp lại (Tùy chọn)</label>
-                        <input type="date" class="form-control">
+                        <input type="date" class="form-control" name="deadline">
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
@@ -57,19 +116,19 @@
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm p-3 border-start border-warning border-5">
                         <small class="text-secondary d-block mb-1">Đang chỉnh sửa</small>
-                        <span class="fs-2 fw-bold text-warning">4</span>
+                        <span class="fs-2 fw-bold text-warning">@ViewBag.CountEditing</span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm p-3 border-start border-primary border-5">
                         <small class="text-secondary d-block mb-1">Đã nộp lại (Chờ duyệt)</small>
-                        <span class="fs-2 fw-bold text-primary">2</span>
+                        <span class="fs-2 fw-bold text-primary">@ViewBag.CountResubmitted</span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm p-3 border-start border-success border-5">
                         <small class="text-secondary d-block mb-1">Hoàn thành tháng này</small>
-                        <span class="fs-2 fw-bold text-success">12</span>
+                        <span class="fs-2 fw-bold text-success">@ViewBag.CountCompleted</span>
                     </div>
                 </div>
             </div>
@@ -78,60 +137,111 @@
                 <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0">Tiến độ Hồ sơ</h5>
                     <div class="btn-group btn-group-sm border rounded">
-                        <button class="btn btn-light active fw-bold">Tất cả</button>
-                        <button class="btn btn-light">Chỉnh sửa</button>
-                        <button class="btn btn-light">Nộp lại</button>
+                        <a href="@Url.Action("Review", new { filterType = "All" })"
+                           class="btn @(currentFilter == "All" ? "btn-secondary fw-bold" : "btn-light")">
+                            Tất cả
+                        </a>
+                        <a href="@Url.Action("Review", new { filterType = "Editing" })"
+                           class="btn @(currentFilter == "Editing" ? "btn-secondary fw-bold" : "btn-light")">
+                            Chỉnh sửa
+                        </a>
+                        <a href="@Url.Action("Review", new { filterType = "Resubmitted" })"
+                           class="btn @(currentFilter == "Resubmitted" ? "btn-secondary fw-bold" : "btn-light")">
+                            Nộp lại
+                        </a>
                     </div>
                 </div>
 
                 <div class="card-body p-0">
-                    <div class="p-4 border-top border-bottom border-primary border-3 border-start-0 border-end-0 border-top-0">
-                        <div class="d-flex align-items-start mb-2">
-                            <div class="icon-box bg-blue-light text-primary me-3"><i class="bi bi-paperclip"></i></div>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="fw-bold text-primary mb-1">Đề tài: Tối ưu hóa năng lượng tái tạo</h6>
-                                    <span class="badge-custom bg-blue-light text-primary">Đã nộp lại</span>
-                                </div>
-                                <div class="small text-secondary mb-2">
-                                    <i class="bi bi-person me-1"></i> GV: Trần Minh Tuấn <span class="mx-2">|</span> <i class="bi bi-clock me-1"></i> Cập nhật: 2 giờ trước
-                                </div>
-                            </div>
-                        </div>
-                        <div class="comment-box bg-light p-2 rounded small border-start border-primary border-4 ms-5">
-                            <strong>Ghi chú từ GV:</strong> "Đã bổ sung mục 3.2 theo yêu cầu của Khoa. Mong LĐK xem xét duyệt."
-                            <a href="#" class="float-end text-decoration-none fw-bold">Xem chi tiết</a>
-                        </div>
-                    </div>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            // --- SỬA LỖI Ở ĐÂY: XÓA CẶP @{ VÀ } BAO QUANH ---
 
-                    <div class="p-4 border-bottom border-start border-warning border-4 border-end-0 border-top-0">
-                        <div class="d-flex align-items-start mb-2">
-                            <div class="icon-box bg-orange-light text-warning me-3"><i class="bi bi-pencil-fill"></i></div>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="fw-bold text-dark mb-1">Hồ sơ: Đăng ký sáng kiến cấp Khoa</h6>
-                                    <span class="badge-custom bg-orange-light text-warning">Đang chỉnh sửa</span>
+                            bool isResubmitted = (item.Status == InitiativeStatus.Reviewing);
+                            var lastRequest = item.RevisionRequests?.OrderByDescending(r => r.RequestedDate).FirstOrDefault();
+
+                            DateTime? displayDate;
+                            if (isResubmitted) { displayDate = item.SubmittedDate ?? item.CreatedAt; }
+                            else { displayDate = lastRequest?.RequestedDate ?? item.CreatedAt; }
+
+                            string borderClass = isResubmitted ? "border-primary" : "border-warning";
+                            string bgIcon = isResubmitted ? "bg-blue-light text-primary" : "bg-orange-light text-warning";
+                            string icon = isResubmitted ? "bi-paperclip" : "bi-pencil-fill";
+                            string statusLabel = isResubmitted ? "Đã nộp lại" : "Đang chỉnh sửa";
+                            string statusBadge = isResubmitted ? "bg-blue-light text-primary" : "bg-orange-light text-warning";
+
+                            string commentTitle = isResubmitted ? "Ghi chú từ GV:" : "Yêu cầu chỉnh sửa:";
+                            string commentContent = isResubmitted
+                            ? "Đã cập nhật hồ sơ theo yêu cầu. Mong Khoa xem xét."
+                            : (lastRequest?.RequestContent ?? "Vui lòng cập nhật lại nội dung...");
+
+                            // --- KẾT THÚC LOGIC ---
+
+                            <div class="p-4 border-bottom border-start @borderClass border-4 border-end-0 border-top-0">
+                                <div class="d-flex align-items-start mb-2">
+                                    <div class="icon-box @bgIcon me-3"><i class="bi @icon"></i></div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="fw-bold text-dark mb-1">@item.Title</h6>
+                                            <span class="badge-custom @statusBadge">@statusLabel</span>
+                                        </div>
+                                        <div class="small text-secondary mb-2">
+                                            <i class="bi bi-person me-1"></i> GV: @item.Proposer?.FullName
+                                            <span class="mx-2">|</span>
+                                            <i class="bi bi-clock me-1"></i> Cập nhật: @(displayDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="small text-secondary mb-2">
-                                    <i class="bi bi-person me-1"></i> GV: Nguyễn Thị Lan <span class="mx-2">|</span> <i class="bi bi-clock me-1"></i> Gửi yêu cầu: 1 ngày trước
+                                <div class="comment-box bg-light p-2 rounded small border-start @(isResubmitted ? "border-primary" : "border-danger") border-4 ms-5">
+                                    <strong>@commentTitle</strong> "@commentContent"
+                                    <a href="@Url.Action("Details", "Dashboard", new { id = item.Id })" class="float-end text-decoration-none fw-bold small">
+                                        @(isResubmitted ? "Xem chi tiết" : "Nhắc nhở")
+                                    </a>
                                 </div>
                             </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="p-5 text-center text-muted">
+                            <i class="bi bi-inbox fs-1"></i>
+                            <p class="mt-2">Không tìm thấy hồ sơ nào phù hợp với bộ lọc.</p>
                         </div>
-                        <div class="comment-box bg-red-light p-2 rounded small border-start border-danger border-4 ms-5">
-                            <strong>Yêu cầu chỉnh sửa:</strong> "Thiếu minh chứng ảnh hưởng của sáng kiến. Cần bổ sung số liệu cụ thể năm 2023."
-                            <a href="#" class="float-end text-secondary text-decoration-none small">Nhắc nhở</a>
-                        </div>
-                    </div>
+                    }
                 </div>
 
                 <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center p-4">
-                    <span class="text-secondary small">Hiển thị 1 đến 4 trong số 6 kết quả</span>
+                    @{
+                        int currentPage = ViewBag.CurrentPage;
+                        int totalPages = ViewBag.TotalPages;
+                        int totalItems = ViewBag.TotalItems;
+                        int pageSize = ViewBag.PageSize;
+                        int startItem = totalItems == 0 ? 0 : (currentPage - 1) * pageSize + 1;
+                        int endItem = Math.Min(currentPage * pageSize, totalItems);
+                    }
+                    <span class="text-secondary small">Hiển thị @startItem đến @endItem trong số @totalItems kết quả</span>
                     <nav>
                         <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Action("Review", new { pageNumber = currentPage - 1, filterType = currentFilter })">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            @for (int i = 1; i <= totalPages; i++)
+                            {
+                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Review", new { pageNumber = i, filterType = currentFilter })">@i</a>
+                                </li>
+                            }
+
+                            <li class="page-item @(currentPage == totalPages || totalPages == 0 ? "disabled" : "")">
+                                <a class="page-link" href="@Url.Action("Review", new { pageNumber = currentPage + 1, filterType = currentFilter })">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                 </div>
@@ -154,3 +264,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    function autoFillLecturer() {
+        var selectBox = document.getElementById("selectInitiative");
+        var selectedOption = selectBox.options[selectBox.selectedIndex];
+        var lecturerName = selectedOption.getAttribute("data-lecturer");
+        var inputBox = document.getElementById("inputLecturer");
+        inputBox.value = lecturerName ? lecturerName : "";
+    }
+</script>
