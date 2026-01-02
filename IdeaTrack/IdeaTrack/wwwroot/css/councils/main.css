@@ -306,6 +306,45 @@ body {
     border-radius: 8px;
 }
 
+/* ================= PAGINATION ================= */
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 14px 20px;
+}
+
+.page-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.page-link:hover {
+    background: var(--nav-hover-bg);
+    color: var(--text-primary);
+}
+
+.page-link.active {
+    background: var(--nav-active-bg);
+    color: var(--nav-active-text);
+    border-color: var(--nav-active-bg);
+}
+
+.page-link.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 
 
 
