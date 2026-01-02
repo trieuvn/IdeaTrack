@@ -2,6 +2,7 @@
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace IdeaTrack.Areas.Faculty.Controllers
 {
@@ -212,7 +213,102 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             return RedirectToAction(nameof(Details), new { id = id });
         }
 
-        public IActionResult Progress() => View();
+        // ==========================================
+        // 7. TRANG THỐNG KÊ (PROGRESS) - CÓ TÌM KIẾM
+        // ==========================================
+        public async Task<IActionResult> Progress(string searchString)
+        {
+            // --- A. LẤY DỮ LIỆU BẢNG (CÓ LỌC) ---
+            var query = _context.Initiatives
+                .Include(i => i.Proposer)
+                .AsQueryable();
+
+            // Logic tìm kiếm: Tìm theo Tên GV hoặc Tên Đề tài
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(i => i.Proposer.FullName.Contains(searchString)
+                                      || i.Title.Contains(searchString)
+                                      || i.InitiativeCode.Contains(searchString));
+            }
+
+            // Lấy 10 hồ sơ gần nhất thỏa mãn điều kiện tìm kiếm
+            var recentInitiatives = await query
+                .OrderByDescending(i => i.CreatedAt)
+                .Take(10)
+                .ToListAsync();
+
+            // Lưu từ khóa để hiển thị lại trên View
+            ViewBag.CurrentSearch = searchString;
+
+            // --- B. DỮ LIỆU BIỂU ĐỒ (TÍNH TRÊN TOÀN BỘ, KHÔNG BỊ ẢNH HƯỞNG BỞI SEARCH) ---
+            // (Thường biểu đồ tổng quan sẽ thống kê toàn hệ thống)
+            var allData = _context.Initiatives.AsQueryable();
+
+            int countPending = await allData.CountAsync(i => i.Status == InitiativeStatus.Pending);
+            int countApproved = await allData.CountAsync(i => i.Status == InitiativeStatus.Dept_Review || i.Status == InitiativeStatus.Approved);
+            int countRevision = await allData.CountAsync(i => i.Status == InitiativeStatus.Revision_Required);
+
+            ViewBag.PieData = new List<int> { countPending, countApproved, countRevision };
+
+            // Biểu đồ đường (5 ngày gần nhất)
+            var today = DateTime.Today;
+            var trendData = new List<int>();
+            var trendLabels = new List<string>();
+
+            for (int i = 4; i >= 0; i--)
+            {
+                var date = today.AddDays(-i);
+                int count = await allData.CountAsync(x => x.CreatedAt.Date == date);
+                trendData.Add(count);
+                trendLabels.Add(date.ToString("dd/MM"));
+            }
+
+            ViewBag.TrendData = trendData;
+            ViewBag.TrendLabels = trendLabels;
+
+            return View(recentInitiatives);
+        }
+
+        // ==========================================
+        // 8. XUẤT EXCEL (CSV)
+        // ==========================================
+        public async Task<IActionResult> ExportToExcel()
+        {
+            // Lấy toàn bộ danh sách để xuất
+            var data = await _context.Initiatives
+                .Include(i => i.Proposer)
+                .OrderByDescending(i => i.CreatedAt)
+                .ToListAsync();
+
+            var builder = new StringBuilder();
+            // Header cột (Tiếng Việt có dấu cần Encoding UTF8 lúc return)
+            builder.AppendLine("Mã hồ sơ,Tên đề tài,Giảng viên,Ngày nộp,Trạng thái");
+
+            foreach (var item in data)
+            {
+                // Xử lý dữ liệu để tránh lỗi file CSV (ví dụ thay dấu phẩy trong tên thành chấm phẩy)
+                string title = item.Title?.Replace(",", ";") ?? "";
+                string proposer = item.Proposer?.FullName?.Replace(",", ";") ?? "";
+                string status = item.Status switch
+                {
+                    InitiativeStatus.Pending => "Chờ duyệt",
+                    InitiativeStatus.Dept_Review => "Đã chuyển PKHCN",
+                    InitiativeStatus.Revision_Required => "Yêu cầu sửa",
+                    _ => item.Status.ToString()
+                };
+
+                builder.AppendLine($"{item.InitiativeCode},{title},{proposer},{item.CreatedAt:dd/MM/yyyy},{status}");
+            }
+
+            // Trả về file CSV (Excel mở được) với Encoding UTF8-BOM để hiển thị đúng Tiếng Việt
+            byte[] buffer = Encoding.UTF8.GetBytes(builder.ToString());
+            byte[] bom = new byte[] { 0xEF, 0xBB, 0xBF }; // BOM cho UTF-8
+            var result = new byte[bom.Length + buffer.Length];
+            Buffer.BlockCopy(bom, 0, result, 0, bom.Length);
+            Buffer.BlockCopy(buffer, 0, result, bom.Length, buffer.Length);
+
+            return File(result, "text/csv", $"ThongKe_HoSo_{DateTime.Now:ddMMyyyy}.csv");
+        }
         public IActionResult Profile() => View();
     }
 }
