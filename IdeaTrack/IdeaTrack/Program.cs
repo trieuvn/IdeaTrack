@@ -1,9 +1,15 @@
-using IdeaTrack.Data;
+﻿using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
+using OfficeOpenXml;
+using QuestPDF.Infrastructure;
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var builder = WebApplication.CreateBuilder(args);
 
 // DB Context
@@ -19,12 +25,13 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
-    // Tùy chỉnh thêm về Password nếu muốn
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
+    options.Lockout.AllowedForNewUsers = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(36500);
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
@@ -32,8 +39,22 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 // MVC + Razor
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
 var app = builder.Build();
+var supportedCultures = new[] { "en-US" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
 // Seed data for lookup tables
 using (var scope = app.Services.CreateScope())
@@ -91,6 +112,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+    await FakeInitiativeService.SeedAllAsync(context, userManager);
+}
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -163,6 +186,8 @@ var rewriteOptionsadmin = new RewriteOptions()
         "Admin/Intro/Dashboard",
         skipRemainingRules: true)
     ;
+
+app.UseRouting();
 app.UseRewriter(rewriteOptionsadmin);
 app.UseRewriter(rewriteOptions);
 app.UseRewriter(rewriteOptionscouncils);
@@ -170,7 +195,7 @@ app.UseRewriter(rewriteOptionsdetails);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
+
 
 app.UseAuthentication();  
 app.UseAuthorization();
