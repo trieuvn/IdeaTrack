@@ -1,8 +1,10 @@
-﻿<div class="dashboard-container">
+﻿@model IdeaTrack.Areas.Councils.Models.DashboardVM
+
+<div class="dashboard-container">
     <header class="main-header">
         <div class="user-greeting">
             <h1>Welcome back, Alex</h1>
-            <p class="date-text">Today is Monday, October 24th</p>
+            <p class="date-text">Today is @DateTime.Now.ToString("dddd, MMMM dd")</p>
         </div>
         <div class="search-box">
             <span class="material-icons">search</span>
@@ -11,29 +13,29 @@
     </header>
 
     <div class="stats-row">
-    <div class="stat-card blue-card">
+        <div class="stat-card blue-card">
         <div class="icon-box blue">
             <span class="material-icons">inventory_2</span>
         </div>
-        <h3>34</h3>
+        <h3>@Model.TotalAssigned</h3>
         <p>Total Assigned</p>
         <span class="sub-label">Initiatives for review</span>
     </div>
 
-    <div class="stat-card green-card">
+        <div class="stat-card green-card">
         <div class="icon-box green">
             <span class="material-icons">check_circle</span>
         </div>
-        <h3>20</h3>
+        <h3>@Model.CompletedCount</h3>
         <p>Completed</p>
         <span class="sub-label">Successfully scored</span>
     </div>
 
-    <div class="stat-card orange-card orange-bg">
+        <div class="stat-card orange-card orange-bg">
         <div class="icon-box orange">
             <span class="material-icons">pending_actions</span>
         </div>
-        <h3>14</h3>
+        <h3>@Model.PendingCount</h3>
         <p>Pending Scoring</p>
         <span class="sub-label">Requires attention</span>
     </div>
@@ -42,17 +44,17 @@
     <div class="progress-section card">
         <div class="progress-header">
             <h4>Overall Progress</h4>
-            <span class="percentage">58%</span>
+            <span class="percentage">@Model.ProgressPercentage%</span>
         </div>
         <p class="progress-desc">You are on track to complete all reviews by Friday.</p>
         <div class="bar-container">
-            <div class="bar-fill" style="width: 58%"></div>
+            <div class="bar-fill" style="width: @(Model.ProgressPercentage)%"></div>
         </div>
         <div class="bar-labels">
             <span>0% Started</span>
-            <span>20 of 34 initiatives reviewed</span>
+            <span>@Model.CompletedCount of @Model.TotalAssigned initiatives reviewed</span>
             <span>100% Goal</span>
-        </div>
+    </div>
     </div>
 
     <div class="content-grid">
@@ -60,49 +62,66 @@
             <div class="section-header">
                 <h3>Up Next</h3>
                 <div class="view-all-wrapper">
-                    <a href="#" class="view-all">View All Pending</a>
-                </div>
+                    <a href="/Councils/Page/AssignedInitiatives?status=Assigned" class="view-all">View All Pending</a>
+            </div>
             </div>
 
-            <!-- Item 1 -->
-            <div class="list-item card">
+            @if (Model.UpNextList != null && Model.UpNextList.Any())
+            {
+                foreach (var item in Model.UpNextList)
+                {
+                <div class="list-item card">
                 <div class="item-icon">
                     <span class="material-icons">description</span>
                 </div>
-                <div class="item-info">
-                    <h4>Initiative #4829 - Solar Grid Expansion</h4>
-                    <span class="tag infra">Infrastructure</span> •
-                    <span class="time">Assigned 2 days ago</span>
+                    <div class="item-info">
+                    <h4>Initiative @item.InitiativeCode - @item.Title</h4>
+                    <span class="tag infra">@item.CategoryName</span> •
+                    <span class="time">Assigned @item.TimeAgo</span>
+                    </div>
+                <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-start">Start Review</a>
                 </div>
-                <button class="btn-start">Start Review</button>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="list-item card">
-                <div class="item-icon">
-                    <span class="material-icons">engineering</span>
+                }
+            }
+            else
+            {
+                <div class="list-item card">
+                    <div class="item-info">
+                        <h4>No pending initiatives</h4>
+                        <span class="time">You're all caught up.</span>
+                    </div>
                 </div>
-                <div class="item-info">
-                    <h4>Initiative #4830 - Smart Campus Monitoring</h4>
-                    <span class="tag tech">Technology</span> •
-                    <span class="time">Assigned 6 hours ago</span>
-                </div>
-                <button class="btn-start">Start Review</button>
-            </div>
+            }
         </section>
 
 
         <aside class="recent-activity card">
             <h3>Recent Activity</h3>
-            <div class="activity-item">
-                <div class="activity-info">
-                    <p class="title">#3211 - Youth Education</p>
-                    <p class="score">Scored: 8.5/10</p>
+            @if (Model.RecentActivityList != null && Model.RecentActivityList.Any())
+            {
+                foreach (var item in Model.RecentActivityList)
+                {
+                <div class="activity-item">
+                    <div class="activity-info">
+                    <p class="title">@item.InitiativeCode - @item.Title</p>
+                    <p class="score">Scored: @(item.Score?.ToString("0.#") ?? "0")/100</p>
                     <span class="status done">✓ Completed</span>
+                    </div>
+                <span class="timestamp">@item.TimeAgo</span>
                 </div>
-                <span class="timestamp">2h ago</span>
-            </div>
-            <button class="view-history-btn">View History</button>
+                }
+            }
+            else
+            {
+                <div class="activity-item">
+                    <div class="activity-info">
+                        <p class="title">No recent activity</p>
+                        <p class="score">Complete an evaluation to see it here.</p>
+                    </div>
+                    <span class="timestamp">-</span>
+                </div>
+            }
+            <a href="/Councils/Page/History" class="view-history-btn">View History</a>
         </aside>
     </div>
 </div>

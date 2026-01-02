@@ -8,7 +8,7 @@ namespace IdeaTrack.Models
         public int TemplateId { get; set; }
         public string CriteriaName { get; set; }
         public string? Description { get; set; }
-        public decimal MaxScore { get; set; } // Sẽ là 0 nếu là Template Duyệt
+        public decimal MaxScore { get; set; } 
         public int SortOrder { get; set; }
         [ForeignKey("TemplateId")]
         public virtual EvaluationTemplate Template { get; set; }
