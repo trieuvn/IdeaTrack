@@ -1,0 +1,168 @@
+﻿@using IdeaTrack.Models
+@model IEnumerable<IdeaTrack.Models.Initiative>
+
+@{
+    ViewData["Title"] = "Progress Statistics";
+
+    var pieData = ViewBag.PieData as List<int> ?? new List<int> { 0, 0, 0 };
+    var trendData = ViewBag.TrendData as List<int> ?? new List<int> { 0, 0, 0, 0, 0 };
+    var trendLabels = ViewBag.TrendLabels as List<string> ?? new List<string> { "", "", "", "", "" };
+
+    double total = pieData.Sum();
+    double pctPending = total > 0 ? Math.Round((pieData[0] / total) * 100, 1) : 0;
+    double pctApproved = total > 0 ? Math.Round((pieData[1] / total) * 100, 1) : 0;
+    double pctRevision = total > 0 ? Math.Round((pieData[2] / total) * 100, 1) : 0;
+}
+
+<div class="container-fluid px-4 py-4 bg-light">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Submissions per Day</h5>
+                    <div style="height:220px;">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Status Distribution</h5>
+                    <div style="position: relative; height: 240px;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div class="mt-4 vstack gap-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="small fw-medium"><i class="bi bi-circle-fill text-warning me-2"></i>Pending Review</div>
+                            <div class="fw-bold">@pctPending%</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="small fw-medium"><i class="bi bi-circle-fill text-success me-2"></i>Forwarded to R&D</div>
+                            <div class="fw-bold">@pctApproved%</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="small fw-medium"><i class="bi bi-circle-fill text-danger me-2"></i>Revision Required</div>
+                            <div class="fw-bold">@pctRevision%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">Recent Progress</h5>
+
+                    <div class="d-flex gap-2 align-items-center">
+                        <form method="get" action="@Url.Action("Progress")" class="d-flex gap-2">
+                            <div class="input-group input-group-sm border rounded-pill px-2">
+                                <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" name="searchString" value="@ViewBag.CurrentSearch"
+                                       class="form-control border-0 shadow-none" placeholder="Search lecturer, title...">
+                            </div>
+                            <button type="submit" class="btn btn-light btn-sm rounded-pill px-3 border" style="width: 80px;"><i class="bi bi-filter me-1"></i> Filter</button>
+                        </form>
+
+                        <a href="@Url.Action("ExportToExcel")" class="btn btn-primary btn-sm rounded-pill px-3 text-decoration-none">
+                            <i class="bi bi-download me-1"></i> Export
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover mb-0">
+                            <thead class="bg-light text-secondary small text-uppercase">
+                                <tr>
+                                    <th class="ps-4 py-3 border-0">Initiative / Title</th>
+                                    <th class="border-0">Lecturer</th>
+                                    <th class="border-0">Submitted Date</th>
+                                    <th class="border-0">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="small">
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        string badgeClass = "bg-secondary-subtle text-secondary";
+                                        string statusLabel = item.Status.ToString();
+                                        string dotColor = "bg-secondary";
+
+                                        if (item.Status == InitiativeStatus.Pending) { badgeClass = "bg-warning-subtle text-warning"; statusLabel = "Pending Review"; dotColor = "bg-warning"; }
+                                        else if (item.Status == InitiativeStatus.Dept_Review) { badgeClass = "bg-success-subtle text-success"; statusLabel = "Forwarded to R&D"; dotColor = "bg-success"; }
+                                        else if (item.Status == InitiativeStatus.Revision_Required) { badgeClass = "bg-danger-subtle text-danger"; statusLabel = "Revision Required"; dotColor = "bg-danger"; }
+
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="fw-bold d-flex align-items-center">
+                                                    <span class="p-1 @dotColor rounded-circle me-2"></span>
+                                                    <a href="@Url.Action("Details", new { id = item.Id })" class="text-dark text-decoration-none">@item.Title</a>
+                                                </div>
+                                                <div class="text-muted extra-small">Code: @item.InitiativeCode</div>
+                                            </td>
+                                            <td>@(item.Proposer?.FullName ?? "N/A")</td>
+                                            <td class="text-secondary">@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                            <td><span class="badge @badgeClass rounded-pill px-3 py-2">@statusLabel</span></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr><td colspan="4" class="text-center py-4 text-muted">No initiatives found.</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        const gradientBlue = ctxTrend.createLinearGradient(0, 0, 0, 400);
+        gradientBlue.addColorStop(0, 'rgba(13, 110, 253, 0.2)');
+        gradientBlue.addColorStop(1, 'rgba(13, 110, 253, 0)');
+
+        new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(trendLabels)),
+                datasets: [{
+                    label: 'Submissions',
+                    data: @Html.Raw(Json.Serialize(trendData)),
+                    borderColor: '#0d6efd',
+                    backgroundColor: gradientBlue,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#0d6efd'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { borderDash: [2, 4] } } } }
+        });
+
+        const ctxStatus = document.getElementById('statusChart').getContext('2d');
+        new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'Forwarded', 'Revision'],
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(pieData)),
+                    backgroundColor: ['#ffc107', '#198754', '#dc3545'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { display: false } } }
+        });
+    });
+</script>

@@ -1,0 +1,268 @@
+﻿@using IdeaTrack.Models
+@model IEnumerable<IdeaTrack.Models.Initiative>
+
+@{
+    ViewData["Title"] = "Faculty Initiative Management";
+}
+
+<style>
+    .bg-blue-light {
+        background-color: #e3f2fd;
+        color: #0d6efd;
+    }
+
+    .bg-yellow-light {
+        background-color: #fff9c4;
+        color: #ffc107;
+    }
+
+    .bg-green-light {
+        background-color: #d1e7dd;
+        color: #198754;
+    }
+
+    .bg-purple-light {
+        background-color: #e0cffc;
+        color: #6f42c1;
+    }
+
+    .bg-light-gray {
+        background-color: #f8f9fa;
+    }
+
+    .icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .file-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .badge-custom {
+        padding: 8px 16px;
+        border-radius: 50rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .btn-action-view {
+        border-radius: 50rem;
+        font-size: 0.85rem;
+        padding: 4px 16px;
+    }
+
+    .table > :not(caption) > * > * {
+        padding: 1rem 0.5rem;
+        border-bottom-color: #f0f0f0;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Faculty Initiative Management</h2>
+            <p class="text-secondary">View, approve, and manage research initiatives from lecturers.</p>
+        </div>
+
+        <a href="@Url.Action("ExportToExcel", "Dashboard", new { area = "Faculty" })" class="btn btn-outline-secondary btn-sm bg-white shadow-sm">
+            <i class="bi bi-download me-2"></i>Export to Excel
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <form method="get" action="@Url.Action("Index")">
+            <div class="card-body p-3">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
+                            <input type="text" name="searchString" class="form-control border-start-0 ps-0" placeholder="Search by title, code..." value="@ViewBag.CurrentSearch">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" name="statusFilter" asp-items="Html.GetEnumSelectList<InitiativeStatus>()">
+                            <option value="">All Statuses</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select">
+                            <option>All Lecturers</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-info w-100 text-white fw-medium">Filter Data</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box bg-blue-light me-3"><i class="bi bi-hourglass-split"></i></div>
+                    <div>
+                        <small class="text-secondary d-block">Pending Review</small>
+                        <div class="d-flex align-items-center">
+                            <span class="fs-3 fw-bold me-2 text-primary">@ViewBag.CountPending</span>
+                            @if (ViewBag.CountPending > 0)
+                            {
+                                <span class="text-danger small fw-bold"><i class="bi bi-arrow-up"></i> New</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box bg-yellow-light me-3"><i class="bi bi-pencil-square"></i></div>
+                    <div>
+                        <small class="text-secondary d-block">Revision Required</small>
+                        <span class="fs-3 fw-bold text-warning">@ViewBag.CountRevision</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box bg-green-light me-3"><i class="bi bi-check-circle-fill"></i></div>
+                    <div>
+                        <small class="text-secondary d-block">Forwarded (R&D Dept)</small>
+                        <span class="fs-3 fw-bold text-success">@ViewBag.CountApproved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm p-3 h-100">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box bg-purple-light me-3"><i class="bi bi-folder-fill"></i></div>
+                    <div>
+                        <small class="text-secondary d-block">Total Initiatives</small>
+                        <span class="fs-3 fw-bold" style="color: #6f42c1">@ViewBag.Total</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="bg-light">
+                    <tr class="text-secondary small fw-bold text-uppercase">
+                        <th class="ps-4 py-3">Title / Code</th>
+                        <th>Lecturer</th>
+                        <th>Submitted Date</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            string badgeClass = "bg-light text-secondary";
+                            string statusText = item.Status.ToString();
+                            string iconClass = "bg-light text-secondary";
+                            string iconHtml = "<i class='bi bi-file-earmark-text'></i>";
+
+                            switch (item.Status)
+                            {
+                                case InitiativeStatus.Pending:
+                                    badgeClass = "bg-blue-light text-primary"; statusText = "Pending Review";
+                                    iconClass = "bg-blue-light text-primary"; iconHtml = "<i class='bi bi-file-earmark-text-fill'></i>";
+                                    break;
+                                case InitiativeStatus.Revision_Required:
+                                    badgeClass = "bg-yellow-light text-warning"; statusText = "Revision Required";
+                                    iconClass = "bg-yellow-light text-warning"; iconHtml = "<i class='bi bi-broadcast-pin'></i>";
+                                    break;
+                                case InitiativeStatus.Approved:
+                                case InitiativeStatus.Dept_Review:
+                                    badgeClass = "bg-green-light text-success"; statusText = "Forwarded to R&D";
+                                    iconClass = "bg-green-light text-success"; iconHtml = "<i class='bi bi-shield-check'></i>";
+                                    break;
+                            }
+
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="file-icon @iconClass me-3">@Html.Raw(iconHtml)</div>
+                                        <div>
+                                            <div class="fw-bold text-dark">@item.Title</div>
+                                            <small class="text-secondary">Code: @item.InitiativeCode</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">@item.Proposer?.FullName</div>
+                                    <small class="text-secondary">@(item.Proposer?.Degree ?? "Lecturer")</small>
+                                </td>
+                                <td class="text-secondary">@item.CreatedAt.ToString("dd/MM/yyyy")</td>
+                                <td><span class="badge-custom @badgeClass">@statusText</span></td>
+                                <td class="text-end pe-4">
+                                    @if (item.Status == InitiativeStatus.Pending)
+                                    {
+                                        <a href="@Url.Action("Details", "Dashboard", new { area = "Faculty", id = item.Id })" class="text-decoration-none fw-bold me-2 p-0 text-primary">Quick Review</a>
+                                    }
+                                    else if (item.Status == InitiativeStatus.Revision_Required)
+                                    {
+                                        <span class="text-secondary small me-2">Req Sent</span>
+                                    }
+                                    <a href="@Url.Action("Details", "Dashboard", new { area = "Faculty", id = item.Id })" class="btn btn-outline-secondary btn-action-view">View Details</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="5" class="text-center py-5 text-muted"><i class="bi bi-inbox fs-1 d-block mb-2"></i>No initiatives found.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center p-4">
+            @{
+                int currentPage = ViewBag.CurrentPage; int totalPages = ViewBag.TotalPages;
+                int totalItems = ViewBag.TotalItems; int pageSize = ViewBag.PageSize;
+                int startItem = totalItems == 0 ? 0 : (currentPage - 1) * pageSize + 1;
+                int endItem = Math.Min(currentPage * pageSize, totalItems);
+            }
+            <span class="text-secondary small">Showing @startItem to @endItem of @totalItems results</span>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = currentPage - 1, searchString = ViewBag.CurrentSearch, statusFilter = ViewBag.CurrentStatus })"><i class="bi bi-chevron-left"></i></a>
+                    </li>
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, searchString = ViewBag.CurrentSearch, statusFilter = ViewBag.CurrentStatus })">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(currentPage == totalPages || totalPages == 0 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = currentPage + 1, searchString = ViewBag.CurrentSearch, statusFilter = ViewBag.CurrentStatus })"><i class="bi bi-chevron-right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
