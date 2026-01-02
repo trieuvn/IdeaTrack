@@ -55,68 +55,6 @@ var localizationOptions = new RequestLocalizationOptions()
 
 app.UseRequestLocalization(localizationOptions);
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-
-// Seed data for lookup tables
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    
-    // Seed AcademicYears
-    if (!context.AcademicYears.Any())
-    {
-        context.AcademicYears.AddRange(
-            new AcademicYear { Name = "2023-2024", IsCurrent = false },
-            new AcademicYear { Name = "2024-2025", IsCurrent = true },
-            new AcademicYear { Name = "2025-2026", IsCurrent = false }
-        );
-        context.SaveChanges();
-    }
-    
-    // Seed InitiativeCategories
-    if (!context.InitiativeCategories.Any())
-    {
-        context.InitiativeCategories.AddRange(
-            new InitiativeCategory { Name = "Cải tiến kỹ thuật", Description = "Sáng kiến về cải tiến quy trình, thiết bị" },
-            new InitiativeCategory { Name = "Phần mềm", Description = "Sáng kiến về phần mềm, ứng dụng" },
-            new InitiativeCategory { Name = "Quản lý", Description = "Sáng kiến về quản lý, điều hành" },
-            new InitiativeCategory { Name = "Giáo dục", Description = "Sáng kiến về phương pháp giảng dạy" }
-        );
-        context.SaveChanges();
-    }
-    
-    // Seed Departments
-    if (!context.Departments.Any())
-    {
-        context.Departments.AddRange(
-            new Department { Name = "Khoa Công nghệ thông tin", Code = "CNTT" },
-            new Department { Name = "Khoa Kinh tế", Code = "KT" },
-            new Department { Name = "Khoa Ngoại ngữ", Code = "NN" },
-            new Department { Name = "Phòng Đào tạo", Code = "PDT" }
-        );
-        context.SaveChanges();
-    }
-    
-    // Seed default user if needed
-    if (!context.Users.Any())
-    {
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        var defaultUser = new ApplicationUser
-        {
-            UserName = "author@uef.edu.vn",
-            Email = "author@uef.edu.vn",
-            FullName = "John Doe",
-            DepartmentId = context.Departments.First().Id
-        };
-        userManager.CreateAsync(defaultUser, "123456").Wait();
-    }
-}
-
-
-    await FakeInitiativeService.SeedAllAsync(context, userManager);
-}
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
