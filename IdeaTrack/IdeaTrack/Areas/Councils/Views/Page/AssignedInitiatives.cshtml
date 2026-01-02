@@ -1,81 +1,136 @@
-﻿<div class="dashboard-container">
-    <nav class="breadcrumb">Dashboard &nbsp; <span>›</span> &nbsp; Assigned Initiatives</nav>
-    <div class="header-main">
-        <div>
-            <h1 class="page-title">Assigned Initiatives</h1>
-            <p class="subtitle">Track and evaluate your assigned initiatives for Q3 2023.</p>
-        </div>
-        <div class="header-actions">
-            <button class="btn-secondary"><span class="material-icons">filter_list</span> Filter</button>
-            <button class="btn-primary"><span class="material-icons">add</span> Request New</button>
-        </div>
-    </div>
+﻿@model IdeaTrack.Areas.Councils.Models.AssignedListVM
 
-    <div class="stats-grid">
-        <div class="stat-card progress-card">
-            <div class="stat-header">
-                <div class="progress-icon"><span class="material-icons">sync</span></div>
-                <div>
-                    <h4 style="transform:translateY(12px);">Evaluation Progress</h4>
-                    <p>3 of 12 initiatives completed</p>
+    <div class="dashboard-container">
+        <nav class="breadcrumb">Dashboard &nbsp; <span>›</span> &nbsp; Assigned Initiatives</nav>
+        <div class="header-main">
+            <div>
+                <h1 class="page-title">Assigned Initiatives</h1>
+                <p class="subtitle">Track and evaluate your assigned initiatives.</p>
+            </div>
+            <div class="header-actions">
+                <form method="get" action="/Councils/Page/AssignedInitiatives" style="display:inline-flex;gap:8px;">
+                    <input type="hidden" name="status" value="@Model.Status" />
+                    <div class="search-box">
+                        <span class="material-icons">search</span>
+                        <input type="text" name="keyword" value="@Model.Keyword" placeholder="Search initiatives...">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card progress-card">
+                <div class="stat-header">
+                    <div class="progress-icon"><span class="material-icons">sync</span></div>
+                    <div>
+                        <h4 style="transform:translateY(12px);">Evaluation Progress</h4>
+                        <p>@Model.TotalCount initiatives total</p>
+                    </div>
+                    <div class="stat-value"></div>
                 </div>
-                <div class="stat-value">25%</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 25%;background-color:var(--primary-blue);"></div>
+                </div>
             </div>
-            <div class="progress-bar-container">
-                <div class="progress-bar" style="width: 25% ;background-color:var(--primary-blue);"></div>
+
+            <div class="stat-card info-card">
+                <h4>Current View</h4>
+                <div class="big-number">@Model.Items.Count <span>initiatives</span></div>
+                <div class="warning-text">
+                    <span class="material-icons">info</span> @Model.Status filter active
+                </div>
             </div>
         </div>
 
-        <div class="stat-card info-card">
-            <h4>Pending Review</h4>
-            <div class="big-number">9 <span>initiatives</span></div>
-            <div class="warning-text">
-                <span class="material-icons">warning</span> 2 due this week
+        <div class="table-card">
+            <div class="table-filters">
+                <div class="tabs">
+                    <a href="/Councils/Page/AssignedInitiatives?status=All&keyword=@Model.Keyword&sortOrder=@Model.SortOrder" class="tab @(Model.Status == "All" ? "active" : "")">All Initiatives</a>
+                    <a href="/Councils/Page/AssignedInitiatives?status=Assigned&keyword=@Model.Keyword&sortOrder=@Model.SortOrder" class="tab @(Model.Status == "Assigned" ? "active" : "")">Assigned</a>
+                    <a href="/Councils/Page/AssignedInitiatives?status=Completed&keyword=@Model.Keyword&sortOrder=@Model.SortOrder" class="tab @(Model.Status == "Completed" ? "active" : "")">Completed</a>
+                </div>
+                <div class="sort-section">
+                    <form method="get" action="/Councils/Page/AssignedInitiatives" style="display:inline;">
+                        <input type="hidden" name="status" value="@Model.Status" />
+                        <input type="hidden" name="keyword" value="@Model.Keyword" />
+                        Sort by:
+                        <select name="sortOrder" onchange="this.form.submit()" style="border:none;background:transparent;font-weight:700;cursor:pointer;">
+                            <option value="Deadline" @(Model.SortOrder == "Deadline" ? "selected" : "")>Deadline</option>
+                            <option value="Newest" @(Model.SortOrder == "Newest" ? "selected" : "")>Date Assigned (Newest)</option>
+                        </select>
+                        <span class="material-icons">expand_more</span>
+                    </form>
             </div>
+            </div>
+
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>INITIATIVE TITLE</th>
+                        <th>ID</th>
+                        <th>DATE ASSIGNED</th>
+                        <th>DUE DATE</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Items != null && Model.Items.Any())
+                    {
+                        foreach (var item in Model.Items)
+                        {
+                        <tr>
+                        <td><strong>@item.Title</strong></td>
+                        <td class="text-muted">#@item.InitiativeCode</td>
+                        <td>@item.AssignedDate.ToString("MMM dd, yyyy")</td>
+                        <td class="@(item.IsDueSoon ? "text-danger" : "")">@(item.DueDate?.ToString("MMM dd, yyyy") ?? "-")</td>
+                        <td>
+                            @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
+                            {
+                                <span class="badge badge-completed">✓ Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-assigned">● Assigned</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
+                            {
+                                <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-view">View Result</a>
+                            }
+                            else
+                            {
+                                <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-evaluate">Evaluate</a>
+                            }
+                        </td>
+                    </tr>
+                        }
+                    }
+                    else
+                    {
+                    <tr>
+                        <td colspan="6" class="text-muted" style="text-align:center;padding:40px;">No initiatives found.</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (Model.TotalPages > 1)
+            {
+            <div class="pagination">
+                <a href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&sortOrder=@Model.SortOrder&page=@(Model.CurrentPage - 1)"
+                   class="page-link @(Model.CurrentPage <= 1 ? "disabled" : "")">Prev</a>
+
+                @for (var p = 1; p <= Model.TotalPages; p++)
+                {
+                    <a href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&sortOrder=@Model.SortOrder&page=@p"
+                       class="page-link @(p == Model.CurrentPage ? "active" : "")">@p</a>
+                }
+
+                <a href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&sortOrder=@Model.SortOrder&page=@(Model.CurrentPage + 1)"
+                   class="page-link @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">Next</a>
+            </div>
+            }
         </div>
     </div>
-
-    <div class="table-card">
-        <div class="table-filters">
-            <div class="tabs">
-                <button class="tab active">All Initiatives</button>
-                <button class="tab">Assigned</button>
-                <button class="tab">Completed</button>
-            </div>
-            <div class="sort-section">
-                Sort by: <strong>Date Assigned (Newest)</strong> <span class="material-icons">expand_more</span>
-            </div>
-        </div>
-
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>INITIATIVE TITLE</th>
-                    <th>ID</th>
-                    <th>DATE ASSIGNED</th>
-                    <th>DUE DATE</th>
-                    <th>STATUS</th>
-                    <th>ACTION</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Project Alpha Sustainability Review</strong></td>
-                    <td class="text-muted">#INIT-2024-001</td>
-                    <td>Oct 24, 2023</td>
-                    <td class="text-danger">Oct 28, 2023</td>
-                    <td><span class="badge badge-assigned">● Assigned</span></td>
-                    <td><button class="btn-evaluate">Evaluate</button></td>
-                </tr>
-                <tr>
-                    <td><strong>Q3 Marketing Initiative Budget</strong></td>
-                    <td class="text-muted">#INIT-2023-892</td>
-                    <td>Oct 10, 2023</td>
-                    <td>Oct 15, 2023</td>
-                    <td><span class="badge badge-completed">✓ Completed</span></td>
-                    <td><button class="btn-view">View Result</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
