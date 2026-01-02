@@ -17,7 +17,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-        // 1. TRANG DANH SÁCH (INDEX)
+        // 1. DASHBOARD LIST (INDEX)
         // ==========================================
         public async Task<IActionResult> Index(string searchString, string statusFilter, int pageNumber = 1)
         {
@@ -43,7 +43,6 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                          .ThenByDescending(i => i.CreatedAt);
 
             var totalItems = await query.CountAsync();
-            // Fix lỗi chia cho 0 hoặc null
             var totalPages = totalItems > 0 ? (int)Math.Ceiling(totalItems / (double)pageSize) : 1;
             pageNumber = Math.Max(1, Math.Min(pageNumber, totalPages));
 
@@ -69,7 +68,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-        // 2. TRANG CHI TIẾT (DETAILS)
+        // 2. DETAILS PAGE
         // ==========================================
         [HttpGet]
         public async Task<IActionResult> Details(int? id)
@@ -88,7 +87,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-        // 3. TRANG REVIEW (ĐÃ KHÔI PHỤC LOGIC ĐẦY ĐỦ)
+        // 3. REVIEW PAGE (Tracking Revisions)
         // ==========================================
         public async Task<IActionResult> Review(int pageNumber = 1, string filterType = "All")
         {
@@ -99,7 +98,6 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Include(i => i.RevisionRequests)
                 .AsQueryable();
 
-            // Bộ lọc
             switch (filterType)
             {
                 case "Editing":
@@ -115,7 +113,6 @@ namespace IdeaTrack.Areas.Faculty.Controllers
 
             query = query.OrderByDescending(i => i.SubmittedDate);
 
-            // Phân trang
             var totalItems = await query.CountAsync();
             var totalPages = totalItems > 0 ? (int)Math.Ceiling(totalItems / (double)pageSize) : 1;
             pageNumber = Math.Max(1, Math.Min(pageNumber, totalPages));
@@ -125,7 +122,6 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            // Thống kê (ViewBag quan trọng để tránh lỗi RuntimeBinder)
             var allData = _context.Initiatives.AsQueryable();
             ViewBag.CountEditing = await allData.CountAsync(i => i.Status == InitiativeStatus.Revision_Required);
             ViewBag.CountResubmitted = await allData.CountAsync(i => i.Status == InitiativeStatus.Reviewing);
@@ -133,13 +129,11 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             var startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             ViewBag.CountCompleted = await allData.CountAsync(i => i.Status == InitiativeStatus.Approved && i.FinalResult.DecisionDate >= startOfMonth);
 
-            // Dropdown List
             ViewBag.DropdownList = await allData
                 .Where(i => i.Status == InitiativeStatus.Pending || i.Status == InitiativeStatus.Dept_Review)
                 .Select(i => new { i.Id, i.InitiativeCode, i.Title, LecturerName = i.Proposer.FullName })
                 .ToListAsync();
 
-            // Truyền biến sang View
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPages = totalPages;
             ViewBag.TotalItems = totalItems;
@@ -150,7 +144,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-        // 4. XỬ LÝ: GỬI YÊU CẦU CHỈNH SỬA (POST)
+        // 4. SUBMIT REVISION REQUEST (POST)
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -159,30 +153,27 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             var initiative = await _context.Initiatives.FindAsync(initiativeId);
             if (initiative == null) return NotFound();
 
-            // Cập nhật trạng thái
             initiative.Status = InitiativeStatus.Revision_Required;
 
-            // Tạo yêu cầu chỉnh sửa
             var revisionRequest = new RevisionRequest
             {
                 InitiativeId = initiativeId,
                 RequestContent = content,
                 RequestedDate = DateTime.Now,
-                Deadline = deadline, // Đã thêm lại tham số deadline
+                Deadline = deadline,
                 IsResolved = false,
                 Status = "Open",
-                RequesterId = 2 // TODO: Thay bằng User.Identity
+                RequesterId = 2 // TODO: Replace with real User.Identity
             };
 
             _context.RevisionRequests.Add(revisionRequest);
             await _context.SaveChangesAsync();
 
-            // QUAN TRỌNG: Load lại trang Review (thay vì Details) để đúng luồng làm việc
             return RedirectToAction(nameof(Review));
         }
 
         // ==========================================
-        // 5. XỬ LÝ: DUYỆT HỒ SƠ (POST)
+        // 5. APPROVE INITIATIVE (POST)
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -198,7 +189,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-        // 6. XỬ LÝ: TỪ CHỐI (POST)
+        // 6. REJECT INITIATIVE (POST)
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -214,16 +205,14 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-        // 7. TRANG THỐNG KÊ (PROGRESS) - CÓ TÌM KIẾM
+        // 7. STATISTICS PAGE (PROGRESS)
         // ==========================================
         public async Task<IActionResult> Progress(string searchString)
         {
-            // --- A. LẤY DỮ LIỆU BẢNG (CÓ LỌC) ---
             var query = _context.Initiatives
                 .Include(i => i.Proposer)
                 .AsQueryable();
 
-            // Logic tìm kiếm: Tìm theo Tên GV hoặc Tên Đề tài
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(i => i.Proposer.FullName.Contains(searchString)
@@ -231,17 +220,13 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                                       || i.InitiativeCode.Contains(searchString));
             }
 
-            // Lấy 10 hồ sơ gần nhất thỏa mãn điều kiện tìm kiếm
             var recentInitiatives = await query
                 .OrderByDescending(i => i.CreatedAt)
                 .Take(10)
                 .ToListAsync();
 
-            // Lưu từ khóa để hiển thị lại trên View
             ViewBag.CurrentSearch = searchString;
 
-            // --- B. DỮ LIỆU BIỂU ĐỒ (TÍNH TRÊN TOÀN BỘ, KHÔNG BỊ ẢNH HƯỞNG BỞI SEARCH) ---
-            // (Thường biểu đồ tổng quan sẽ thống kê toàn hệ thống)
             var allData = _context.Initiatives.AsQueryable();
 
             int countPending = await allData.CountAsync(i => i.Status == InitiativeStatus.Pending);
@@ -250,7 +235,6 @@ namespace IdeaTrack.Areas.Faculty.Controllers
 
             ViewBag.PieData = new List<int> { countPending, countApproved, countRevision };
 
-            // Biểu đồ đường (5 ngày gần nhất)
             var today = DateTime.Today;
             var trendData = new List<int>();
             var trendLabels = new List<string>();
@@ -270,45 +254,43 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-        // 8. XUẤT EXCEL (CSV)
+        // 8. EXPORT TO EXCEL
         // ==========================================
         public async Task<IActionResult> ExportToExcel()
         {
-            // Lấy toàn bộ danh sách để xuất
             var data = await _context.Initiatives
                 .Include(i => i.Proposer)
                 .OrderByDescending(i => i.CreatedAt)
                 .ToListAsync();
 
             var builder = new StringBuilder();
-            // Header cột (Tiếng Việt có dấu cần Encoding UTF8 lúc return)
-            builder.AppendLine("Mã hồ sơ,Tên đề tài,Giảng viên,Ngày nộp,Trạng thái");
+            // Translate CSV Headers to English
+            builder.AppendLine("Code,Title,Lecturer,Submitted Date,Status");
 
             foreach (var item in data)
             {
-                // Xử lý dữ liệu để tránh lỗi file CSV (ví dụ thay dấu phẩy trong tên thành chấm phẩy)
                 string title = item.Title?.Replace(",", ";") ?? "";
                 string proposer = item.Proposer?.FullName?.Replace(",", ";") ?? "";
                 string status = item.Status switch
                 {
-                    InitiativeStatus.Pending => "Chờ duyệt",
-                    InitiativeStatus.Dept_Review => "Đã chuyển PKHCN",
-                    InitiativeStatus.Revision_Required => "Yêu cầu sửa",
+                    InitiativeStatus.Pending => "Pending Review",
+                    InitiativeStatus.Dept_Review => "Forwarded to R&D Dept",
+                    InitiativeStatus.Revision_Required => "Revision Required",
                     _ => item.Status.ToString()
                 };
 
                 builder.AppendLine($"{item.InitiativeCode},{title},{proposer},{item.CreatedAt:dd/MM/yyyy},{status}");
             }
 
-            // Trả về file CSV (Excel mở được) với Encoding UTF8-BOM để hiển thị đúng Tiếng Việt
             byte[] buffer = Encoding.UTF8.GetBytes(builder.ToString());
-            byte[] bom = new byte[] { 0xEF, 0xBB, 0xBF }; // BOM cho UTF-8
+            byte[] bom = new byte[] { 0xEF, 0xBB, 0xBF };
             var result = new byte[bom.Length + buffer.Length];
             Buffer.BlockCopy(bom, 0, result, 0, bom.Length);
             Buffer.BlockCopy(buffer, 0, result, bom.Length, buffer.Length);
 
-            return File(result, "text/csv", $"ThongKe_HoSo_{DateTime.Now:ddMMyyyy}.csv");
+            return File(result, "text/csv", $"Initiative_Stats_{DateTime.Now:ddMMyyyy}.csv");
         }
+
         public IActionResult Profile() => View();
     }
 }

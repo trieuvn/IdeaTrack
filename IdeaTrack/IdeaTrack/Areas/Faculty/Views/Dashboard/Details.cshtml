@@ -2,26 +2,25 @@
 @model IdeaTrack.Models.Initiative
 
 @{
-    ViewData["Title"] = "Chi tiết hồ sơ: " + Model.InitiativeCode;
+    ViewData["Title"] = "Details: " + Model.InitiativeCode;
 
-    // Logic xác định trạng thái màu sắc
     string badgeClass = "bg-warning-subtle text-warning border border-warning";
-    string statusText = "Chờ duyệt Khoa";
+    string statusText = "Pending Faculty Review";
 
     if (Model.Status == InitiativeStatus.Approved || Model.Status == InitiativeStatus.Dept_Review)
     {
         badgeClass = "bg-success-subtle text-success border border-success";
-        statusText = "Đã duyệt - Chuyển PKHCN";
+        statusText = "Forwarded to R&D Dept";
     }
     else if (Model.Status == InitiativeStatus.Rejected)
     {
         badgeClass = "bg-danger-subtle text-danger border border-danger";
-        statusText = "Đã từ chối";
+        statusText = "Rejected";
     }
     else if (Model.Status == InitiativeStatus.Revision_Required)
     {
         badgeClass = "bg-info-subtle text-info border border-info";
-        statusText = "Đang yêu cầu sửa";
+        statusText = "Revision Requested";
     }
 }
 
@@ -29,8 +28,8 @@
     <nav class="mb-2" style="--bs-breadcrumb-divider: '>';">
         <ol class="breadcrumb small">
             <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text-decoration-none text-secondary"><i class="bi bi-house-door"></i> Dashboard</a></li>
-            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text-decoration-none text-secondary">Danh sách hồ sơ</a></li>
-            <li class="breadcrumb-item active">Chi tiết: @Model.InitiativeCode</li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text-decoration-none text-secondary">Initiative List</a></li>
+            <li class="breadcrumb-item active">Details: @Model.InitiativeCode</li>
         </ol>
     </nav>
 
@@ -41,9 +40,9 @@
                 <span class="badge rounded-pill @badgeClass px-3">@statusText</span>
             </div>
             <p class="text-secondary mb-0">
-                Được gửi bởi <span class="text-primary fw-bold">@(Model.Proposer?.FullName ?? "N/A")</span> - @(Model.Proposer?.Department?.Name ?? "Khoa")
+                Submitted by <span class="text-primary fw-bold">@(Model.Proposer?.FullName ?? "N/A")</span> - @(Model.Proposer?.Department?.Name ?? "Faculty")
             </p>
-            <small class="text-muted">Gửi ngày: @Model.CreatedAt.ToString("dd/MM/yyyy hh:mm tt")</small>
+            <small class="text-muted">Submitted on: @Model.CreatedAt.ToString("dd/MM/yyyy hh:mm tt")</small>
         </div>
 
         <div class="d-flex gap-2">
@@ -51,14 +50,14 @@
             {
                 <a href="javascript:void(0);"
                    class="btn btn-outline-danger px-4 rounded-3"
-                   onclick="submitPostAction('@Url.Action("Reject", "Dashboard", new { area = "Faculty" })', @Model.Id, 'Bạn có chắc chắn muốn TỪ CHỐI hồ sơ này?')">
-                    <i class="bi bi-x-circle me-2"></i>Từ chối
+                   onclick="submitPostAction('@Url.Action("Reject", "Dashboard", new { area = "Faculty" })', @Model.Id, 'Are you sure you want to REJECT this initiative?')">
+                    <i class="bi bi-x-circle me-2"></i>Reject
                 </a>
 
                 <a href="javascript:void(0);"
                    class="btn btn-info text-white px-4 rounded-3"
-                   onclick="submitPostAction('@Url.Action("Approve", "Dashboard", new { area = "Faculty" })', @Model.Id, 'Xác nhận DUYỆT hồ sơ này?')">
-                    <i class="bi bi-check-circle me-2"></i>Duyệt hồ sơ
+                   onclick="submitPostAction('@Url.Action("Approve", "Dashboard", new { area = "Faculty" })', @Model.Id, 'Confirm APPROVE and forward this initiative?')">
+                    <i class="bi bi-check-circle me-2"></i>Approve
                 </a>
             }
         </div>
@@ -68,31 +67,31 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm p-4 mb-4 rounded-4">
                 <h5 class="fw-bold mb-4 d-flex align-items-center">
-                    <i class="bi bi-file-earmark-text text-primary me-2"></i>Thông tin chung
+                    <i class="bi bi-file-earmark-text text-primary me-2"></i>General Information
                 </h5>
                 <div class="row g-4">
                     <div class="col-md-6">
-                        <label class="text-secondary small d-block mb-1">Mã đề tài</label>
+                        <label class="text-secondary small d-block mb-1">Initiative Code</label>
                         <div class="fw-bold">@Model.InitiativeCode</div>
                     </div>
                     <div class="col-md-6">
-                        <label class="text-secondary small d-block mb-1">Loại hình nghiên cứu</label>
+                        <label class="text-secondary small d-block mb-1">Research Type</label>
                         <div class="fw-bold">@(Model.Category?.Name ?? "N/A")</div>
                     </div>
                     <div class="col-md-6">
-                        <label class="text-secondary small d-block mb-1">Lĩnh vực</label>
-                        <div class="fw-bold">@(Model.Category?.Description ?? "Đang cập nhật")</div>
+                        <label class="text-secondary small d-block mb-1">Field</label>
+                        <div class="fw-bold">@(Model.Category?.Description ?? "Updating...")</div>
                     </div>
                     <div class="col-md-6">
-                        <label class="text-secondary small d-block mb-1">Thời gian thực hiện</label>
-                        <div class="fw-bold">12 tháng (Theo kế hoạch)</div>
+                        <label class="text-secondary small d-block mb-1">Duration</label>
+                        <div class="fw-bold">12 months (Planned)</div>
                     </div>
                     <div class="col-md-12">
-                        <label class="text-secondary small d-block mb-1">Kinh phí đề xuất</label>
+                        <label class="text-secondary small d-block mb-1">Proposed Budget</label>
                         <div class="fs-4 fw-bold text-primary">@Model.Budget.ToString("N0") VND</div>
                     </div>
                     <div class="col-md-12">
-                        <label class="text-secondary small d-block mb-1">Mục tiêu đề tài</label>
+                        <label class="text-secondary small d-block mb-1">Objective</label>
                         <p class="mb-0 text-dark" style="text-align: justify;">@Model.Description</p>
                     </div>
                 </div>
@@ -100,7 +99,7 @@
 
             <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
                 <h5 class="fw-bold mb-4 d-flex align-items-center">
-                    <i class="bi bi-paperclip text-primary me-2"></i>Tài liệu đính kèm
+                    <i class="bi bi-paperclip text-primary me-2"></i>Attachments
                 </h5>
                 <div class="vstack gap-3">
                     @if (Model.Files != null && Model.Files.Any())
@@ -124,7 +123,7 @@
                     }
                     else
                     {
-                        <div class="text-muted text-center py-3">Không có tài liệu đính kèm.</div>
+                        <div class="text-muted text-center py-3">No attachments found.</div>
                     }
                 </div>
             </div>
@@ -132,29 +131,30 @@
 
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm p-4 mb-4 rounded-4">
-                <h6 class="fw-bold mb-4">Chủ nhiệm đề tài</h6>
+                <h6 class="fw-bold mb-4">Principal Investigator</h6>
                 <div class="text-center mb-3">
                     <img src="https://via.placeholder.com/80" class="rounded-circle mb-2 border border-2 border-primary p-1" alt="Avatar">
                     <div class="fw-bold fs-5">@(Model.Proposer?.FullName ?? "N/A")</div>
-                    <small class="text-secondary">@(Model.Proposer?.Degree ?? "Giảng viên")</small>
+                    <small class="text-secondary">@(Model.Proposer?.Degree ?? "Lecturer")</small>
                 </div>
                 <div class="vstack gap-2 small">
                     <div class="d-flex align-items-center"><i class="bi bi-envelope me-3 text-secondary"></i>@(Model.Proposer?.Email ?? "N/A")</div>
                     <div class="d-flex align-items-center"><i class="bi bi-phone me-3 text-secondary"></i>@(Model.Proposer?.PhoneNumber ?? "N/A")</div>
-                    <div class="d-flex align-items-center"><i class="bi bi-geo-alt me-3 text-secondary"></i>@(Model.Proposer?.Department?.Name ?? "Khoa")</div>
+                    <div class="d-flex align-items-center"><i class="bi bi-geo-alt me-3 text-secondary"></i>@(Model.Proposer?.Department?.Name ?? "Faculty")</div>
                 </div>
             </div>
 
             <div class="card border-0 shadow-sm p-4 rounded-4">
-                <h6 class="fw-bold mb-4">Tiến độ xử lý</h6>
+                <h6 class="fw-bold mb-4">Progress Timeline</h6>
                 <div class="timeline">
                     <div class="timeline-item active pb-4">
                         <div class="timeline-point bg-success"></div>
                         <div class="timeline-content">
-                            <div class="fw-bold small">Giảng viên nộp hồ sơ</div>
+                            <div class="fw-bold small">Lecturer Submitted</div>
                             <small class="text-muted">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
                         </div>
                     </div>
+
                     @{
                         string step2Class = (Model.Status == InitiativeStatus.Pending || Model.Status == InitiativeStatus.Reviewing) ? "current" : (Model.Status == InitiativeStatus.Dept_Review ? "active" : "");
                         string step2Bg = (Model.Status == InitiativeStatus.Dept_Review) ? "bg-success" : "bg-primary border border-4 border-white shadow-sm";
@@ -162,13 +162,14 @@
                     <div class="timeline-item @step2Class pb-4">
                         <div class="timeline-point @step2Bg"></div>
                         <div class="timeline-content">
-                            <div class="fw-bold text-primary small">Duyệt cấp Khoa (LĐK)</div>
-                            <small class="text-secondary">@(Model.Status == InitiativeStatus.Dept_Review ? "Đã hoàn thành" : "Đang xử lý")</small>
+                            <div class="fw-bold text-primary small">Faculty Review</div>
+                            <small class="text-secondary">@(Model.Status == InitiativeStatus.Dept_Review ? "Completed" : "In Progress")</small>
                         </div>
                     </div>
+
                     <div class="timeline-item pb-4">
                         <div class="timeline-point bg-secondary"></div>
-                        <div class="timeline-content"><div class="text-secondary small">Chuyển lên PKHCN</div></div>
+                        <div class="timeline-content"><div class="text-secondary small">Forwarded to R&D Dept</div></div>
                     </div>
                 </div>
             </div>
@@ -178,39 +179,43 @@
     @if (Model.Status == InitiativeStatus.Pending || Model.Status == InitiativeStatus.Reviewing)
     {
         <div class="card border-0 shadow-sm p-4 mt-4 rounded-4">
-            <h5 class="fw-bold mb-2">Quyết định phê duyệt</h5>
-            <p class="text-secondary small mb-4">Vui lòng xem xét kỹ hồ sơ trước khi đưa ra quyết định.</p>
+            <h5 class="fw-bold mb-2">Approval Decision</h5>
+            <p class="text-secondary small mb-4">Please review the initiative carefully before making a decision. Your decision will change the status of the record.</p>
 
             <div class="row g-4">
                 <div class="col-md-7">
                     <form asp-action="SubmitRevision" asp-controller="Dashboard" asp-area="Faculty" method="post">
                         <input type="hidden" name="initiativeId" value="@Model.Id" />
 
-                        <label class="form-label small fw-bold">Lý do từ chối / Yêu cầu chỉnh sửa <span class="text-danger">*</span></label>
-                        <textarea class="form-control" name="content" rows="4" placeholder="Nhập lý do cụ thể..." required></textarea>
+                        <label class="form-label small fw-bold">Rejection Reason / Revision Request <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="content" rows="4" placeholder="Enter detailed reasons to send feedback to the lecturer..." required></textarea>
 
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div class="small">Trạng thái sẽ chuyển thành: <span class="text-danger fw-bold italic">Yêu cầu chỉnh sửa</span></div>
+                            <div class="small">Status will change to: <span class="text-danger fw-bold italic">Revision Required</span></div>
                             <button type="submit" class="btn btn-danger px-4 py-2 rounded-3">
-                                <i class="bi bi-send me-2"></i>Trả về chỉnh sửa
+                                <i class="bi bi-send me-2"></i>Return for Revision
                             </button>
                         </div>
                     </form>
                 </div>
 
                 <div class="col-md-5 border-start ps-md-4">
-                    <h6 class="fw-bold mb-2">Chấp thuận hồ sơ</h6>
-                    <p class="small text-muted mb-3">Bằng việc chấp thuận, bạn xác nhận rằng hồ sơ này đạt tiêu chuẩn của Khoa.</p>
+                    <form asp-action="Approve" asp-controller="Dashboard" asp-area="Faculty" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
 
-                    <div class="alert alert-primary py-2 px-3 mb-3 border-0 small d-flex align-items-center">
-                        <i class="bi bi-info-circle-fill me-2"></i> Hồ sơ sẽ chuyển sang trạng thái "Chờ duyệt PKHCN".
-                    </div>
+                        <h6 class="fw-bold mb-2">Approve Initiative</h6>
+                        <p class="small text-muted mb-3">By approving, you confirm that this initiative meets Faculty standards and agree to forward it to the R&D Department for further review.</p>
 
-                    <a href="javascript:void(0);"
-                       class="btn btn-info text-white w-100 py-3 fw-bold rounded-3 shadow-sm"
-                       onclick="submitPostAction('@Url.Action("Approve", "Dashboard", new { area = "Faculty" })', @Model.Id, 'Xác nhận DUYỆT và chuyển tiếp hồ sơ này?')">
-                        <i class="bi bi-check-all fs-5 me-2"></i>DUYỆT & CHUYỂN TIẾP
-                    </a>
+                        <div class="alert alert-primary py-2 px-3 mb-3 border-0 small d-flex align-items-center">
+                            <i class="bi bi-info-circle-fill me-2"></i> Record will be moved to "Forwarded to R&D Dept" immediately.
+                        </div>
+
+                        <a href="javascript:void(0);"
+                           class="btn btn-info text-white w-100 py-3 fw-bold rounded-3 shadow-sm"
+                           onclick="submitPostAction('@Url.Action("Approve", "Dashboard", new { area = "Faculty" })', @Model.Id, 'Confirm APPROVE and forward this initiative?')">
+                            <i class="bi bi-check-all fs-5 me-2"></i>APPROVE & FORWARD
+                        </a>
+                    </form>
                 </div>
             </div>
         </div>
@@ -221,23 +226,14 @@
 <script>
     function submitPostAction(url, id, confirmMessage) {
         if (!confirm(confirmMessage)) return false;
-
-        // Tạo form ảo để gửi POST
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = url;
-
-        // Thêm ID
         var inputId = document.createElement('input');
-        inputId.type = 'hidden';
-        inputId.name = 'id';
-        inputId.value = id;
+        inputId.type = 'hidden'; inputId.name = 'id'; inputId.value = id;
         form.appendChild(inputId);
-
-        // Thêm Token bảo mật (Chống lỗi 400 Bad Request)
         var token = document.querySelector('input[name="__RequestVerificationToken"]');
         if (token) form.appendChild(token.cloneNode(true));
-
         document.body.appendChild(form);
         form.submit();
     }

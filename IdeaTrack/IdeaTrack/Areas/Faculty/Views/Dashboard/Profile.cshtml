@@ -1,105 +1,104 @@
-﻿
-    <section class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 16px;">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div class="d-flex align-items-center">
-                <div class="position-relative">
-                    <img src="https://i.pravatar.cc/150?img=32" alt="Avatar" class="rounded-circle border border-3 border-white shadow-sm" style="width: 100px; height: 100px; object-fit: cover;">
-                    <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle" style="width: 18px; height: 18px;" title="Online"></span>
+﻿<section class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 16px;">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="d-flex align-items-center">
+            <div class="position-relative">
+                <img src="https://i.pravatar.cc/150?img=32" alt="Avatar" class="rounded-circle border border-3 border-white shadow-sm" style="width: 100px; height: 100px; object-fit: cover;">
+                <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle" style="width: 18px; height: 18px;" title="Online"></span>
+            </div>
+            <div class="ms-4">
+                <h2 class="fw-bold mb-1" style="color: #1a1d23;">Nguyen Van A</h2>
+                <p class="text-muted mb-2">Senior Lecturer, Faculty of Information Technology</p>
+                <div class="d-flex gap-2">
+                    <span class="badge rounded-pill px-3 py-2" style="background-color: #eff6ff; color: #3b82f6;">Permanent</span>
+                    <span class="badge rounded-pill px-3 py-2" style="background-color: #faf5ff; color: #8b5cf6;">PhD</span>
                 </div>
-                <div class="ms-4">
-                    <h2 class="fw-bold mb-1" style="color: #1a1d23;">Nguyễn Văn A</h2>
-                    <p class="text-muted mb-2">Giảng viên cao cấp, Khoa Công nghệ thông tin</p>
-                    <div class="d-flex gap-2">
-                        <span class="badge rounded-pill px-3 py-2" style="background-color: #eff6ff; color: #3b82f6;">Biên chế</span>
-                        <span class="badge rounded-pill px-3 py-2" style="background-color: #faf5ff; color: #8b5cf6;">Tiến sĩ</span>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-light border px-4 rounded-3 fw-medium">Edit Profile</button>
+            <button class="btn btn-primary px-4 rounded-3 fw-medium"><i class="bi bi-download me-2"></i>Download CV</button>
+        </div>
+    </div>
+</section>
+
+<div class="row g-4">
+    <aside class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 16px;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold m-0">Contact Info</h5>
+                <button class="btn btn-sm text-primary p-0"><i class="bi bi-pencil-square fs-5"></i></button>
+            </div>
+
+            <div class="vstack gap-4">
+                <div class="d-flex align-items-start">
+                    <div class="bg-light p-2 rounded-3 me-3 text-secondary"><i class="bi bi-envelope"></i></div>
+                    <div><small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Email</small><span>nguyenvana@example.com</span></div>
+                </div>
+                <div class="d-flex align-items-start">
+                    <div class="bg-light p-2 rounded-3 me-3 text-secondary"><i class="bi bi-telephone"></i></div>
+                    <div><small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Phone</small><span>+84 912 345 678</span></div>
+                </div>
+                <div class="d-flex align-items-start">
+                    <div class="bg-light p-2 rounded-3 me-3 text-secondary"><i class="bi bi-geo-alt"></i></div>
+                    <div><small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Location</small><span>Room 304, Building C1</span></div>
+                </div>
+            </div>
+
+            <div class="row g-3 mt-4">
+                <div class="col-6">
+                    <div class="p-3 border rounded-4">
+                        <small class="text-muted">Initiatives</small>
+                        <h3 class="fw-bold my-1">24</h3>
+                        <div class="progress" style="height: 4px;"><div class="progress-bar bg-primary" style="width: 65%"></div></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="p-3 border rounded-4">
+                        <small class="text-muted">Achievements</small>
+                        <h3 class="fw-bold my-1">05</h3>
+                        <div class="progress" style="height: 4px;"><div class="progress-bar bg-success" style="width: 40%"></div></div>
                     </div>
                 </div>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-light border px-4 rounded-3 fw-medium">Edit Profile</button>
-                <button class="btn btn-primary px-4 rounded-3 fw-medium"><i class="bi bi-download me-2"></i>Download CV</button>
+        </div>
+    </aside>
+
+    <section class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; overflow: hidden;">
+            <div class="p-4 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold m-0">Access Log</h5>
+                <button class="btn btn-link btn-sm text-decoration-none p-0 text-primary"><i class="bi bi-box-arrow-up-right me-1"></i> Export Log</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light text-muted small">
+                        <tr>
+                            <th class="ps-4 py-3 border-0">TIME</th>
+                            <th class="py-3 border-0">DEVICE</th>
+                            <th class="py-3 border-0">IP LOCATION</th>
+                            <th class="py-3 border-0">STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-4 small">Today, 10:42 AM</td>
+                            <td><i class="bi bi-pc-display me-2 text-secondary"></i>Chrome - Windows</td>
+                            <td class="small">192.168.1.45</td>
+                            <td><span class="badge bg-success-subtle text-success rounded-pill px-3">Success</span></td>
+                        </tr>
+                        <tr>
+                            <td class="ps-4 small">24/10/2024</td>
+                            <td><i class="bi bi-phone me-2 text-secondary"></i>Safari - iPhone</td>
+                            <td class="small">Mobile Data (US)</td>
+                            <td><span class="badge bg-info-subtle text-info rounded-pill px-3">Verified</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-auto p-3 text-center border-top">
+                <button class="btn btn-link btn-sm text-muted text-decoration-none fw-medium">View all history</button>
             </div>
         </div>
     </section>
-
-    <div class="row g-4">
-        <aside class="col-lg-4">
-            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 16px;">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold m-0">Contact Info</h5>
-                    <button class="btn btn-sm text-primary p-0"><i class="bi bi-pencil-square fs-5"></i></button>
-                </div>
-
-                <div class="vstack gap-4">
-                    <div class="d-flex align-items-start">
-                        <div class="bg-light p-2 rounded-3 me-3 text-secondary"><i class="bi bi-envelope"></i></div>
-                        <div><small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Email</small><span>nguyenvana@example.com</span></div>
-                    </div>
-                    <div class="d-flex align-items-start">
-                        <div class="bg-light p-2 rounded-3 me-3 text-secondary"><i class="bi bi-telephone"></i></div>
-                        <div><small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Số điện thoại</small><span>+84 912 345 678</span></div>
-                    </div>
-                    <div class="d-flex align-items-start">
-                        <div class="bg-light p-2 rounded-3 me-3 text-secondary"><i class="bi bi-geo-alt"></i></div>
-                        <div><small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Vị trí</small><span>Phòng 304, Nhà C1</span></div>
-                    </div>
-                </div>
-
-                <div class="row g-3 mt-4">
-                    <div class="col-6">
-                        <div class="p-3 border rounded-4">
-                            <small class="text-muted">Hồ sơ</small>
-                            <h3 class="fw-bold my-1">24</h3>
-                            <div class="progress" style="height: 4px;"><div class="progress-bar bg-primary" style="width: 65%"></div></div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="p-3 border rounded-4">
-                            <small class="text-muted">Thành tựu</small>
-                            <h3 class="fw-bold my-1">05</h3>
-                            <div class="progress" style="height: 4px;"><div class="progress-bar bg-success" style="width: 40%"></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <section class="col-lg-8">
-            <div class="card border-0 shadow-sm h-100" style="border-radius: 16px; overflow: hidden;">
-                <div class="p-4 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold m-0">Lịch sử truy cập</h5>
-                    <button class="btn btn-link btn-sm text-decoration-none p-0 text-primary"><i class="bi bi-box-arrow-up-right me-1"></i> Xuất Log</button>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table align-middle mb-0">
-                        <thead class="table-light text-muted small">
-                            <tr>
-                                <th class="ps-4 py-3 border-0">THỜI GIAN</th>
-                                <th class="py-3 border-0">THIẾT BỊ</th>
-                                <th class="py-3 border-0">VỊ TRÍ IP</th>
-                                <th class="py-3 border-0">TRẠNG THÁI</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="ps-4 small">Hôm nay, 10:42 AM</td>
-                                <td><i class="bi bi-pc-display me-2 text-secondary"></i>Chrome - Windows</td>
-                                <td class="small">192.168.1.45</td>
-                                <td><span class="badge bg-success-subtle text-success rounded-pill px-3">Thành công</span></td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4 small">24/10/2024</td>
-                                <td><i class="bi bi-phone me-2 text-secondary"></i>Safari - iPhone</td>
-                                <td class="small">Mobile Data (US)</td>
-                                <td><span class="badge bg-info-subtle text-info rounded-pill px-3">Đã xác minh</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-auto p-3 text-center border-top">
-                    <button class="btn btn-link btn-sm text-muted text-decoration-none fw-medium">Xem tất cả lịch sử</button>
-                </div>
-            </div>
-        </section>
-    </div>
+</div>
