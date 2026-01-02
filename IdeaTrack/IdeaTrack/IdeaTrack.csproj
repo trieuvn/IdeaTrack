@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="7.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.22" />
@@ -20,6 +21,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.22" />
+    <PackageReference Include="QuestPDF" Version="2025.12.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,10 +31,9 @@
     <Folder Include="Areas\Author\Models\" />
     <Folder Include="Areas\Councils\Data\" />
     <Folder Include="Areas\Councils\Models\" />
-    <Folder Include="Areas\FacultyLeader\Data\" />
-    <Folder Include="Areas\FacultyLeader\Models\" />
+    <Folder Include="Areas\Faculty\Data\" />
+    <Folder Include="Areas\Faculty\Models\" />
     <Folder Include="Areas\SciTech\Data\" />
-    <Folder Include="Areas\SciTech\Models\" />
   </ItemGroup>
 
 </Project>

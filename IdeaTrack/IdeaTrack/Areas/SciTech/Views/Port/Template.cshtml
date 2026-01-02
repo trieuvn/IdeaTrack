@@ -1,0 +1,350 @@
+﻿@using IdeaTrack.Models
+@model List<IdeaTrack.Models.EvaluationTemplate>
+@Html.AntiForgeryToken()
+@functions {
+    string GetPaginationLink(int page)
+    {
+        return $"?page={page}&type={ViewBag.SelectedType}&isActive={ViewBag.SelectedStatus}&sortOrder={ViewBag.SortOrder}";
+    }
+}
+<style>
+
+    .font-display {
+        font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .btn-primary-custom {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        transition: all 0.2s;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+    .template-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+    }
+
+        .template-card:hover {
+            border-color: #bfdbfe;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+</style>
+
+<div class="container-fluid px-md-5 py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+        <div>
+            <h1 class="font-display font-weight-bold text-dark mb-1" style="letter-spacing: -0.02em; font-size: 2.25rem;">Evaluation Templates</h1>
+            <p class="text-secondary mb-0">Manage, organize, and deploy your research evaluation forms.</p>
+        </div>
+        <button id="btnCreateTemplate"  class="btn btn-primary-custom px-4 py-2 rounded-lg d-flex align-items-center gap-2">
+            <i class="fa-solid fa-plus"></i>
+            <span class="font-weight-bold">Create Template</span>
+        </button>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-xl mb-4">
+        <div class="card-body p-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-lg-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text"
+                               id="searchInput"
+                               class="form-control border-start-0 ps-0"
+                               placeholder="Search templates by name..."
+                               value="@ViewBag.SearchTerm">
+                    </div>
+                </div>
+                <div class="col-12 col-lg-8 d-flex flex-wrap justify-content-lg-end gap-2">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light text-dark border shadow-sm dropdown-toggle" data-bs-toggle="dropdown">
+                            @(ViewBag.SelectedType == 1 ? "Chấm điểm" : ViewBag.SelectedType == 2 ? "Duyệt/Từ chối" : "All Types")
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="?page=1&type=&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">All Types</a></li>
+                            <li><a class="dropdown-item" href="?page=1&type=1&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Chấm điểm</a></li>
+                            <li><a class="dropdown-item" href="?page=1&type=2&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Duyệt / Từ chối</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light text-dark border shadow-sm dropdown-toggle" data-bs-toggle="dropdown">
+                            Status: @(ViewBag.SelectedStatus == true ? "Active" : ViewBag.SelectedStatus == false ? "Inactive" : "All")
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="?page=1&type=@ViewBag.SelectedType&isActive=&sortOrder=@ViewBag.SortOrder">All Status</a></li>
+                            <li><a class="dropdown-item" href="?page=1&type=@ViewBag.SelectedType&isActive=true&sortOrder=@ViewBag.SortOrder">Active</a></li>
+                            <li><a class="dropdown-item" href="?page=1&type=@ViewBag.SelectedType&isActive=false&sortOrder=@ViewBag.SortOrder">Inactive</a></li>
+                        </ul>
+                    </div>
+
+                    <a href="?page=@ViewBag.CurrentPage&type=@ViewBag.SelectedType&isActive=@ViewBag.SelectedStatus&sortOrder=@(ViewBag.SortOrder == "asc" ? "desc" : "asc")"
+                       class="btn btn-outline-light text-dark border shadow-sm">
+                        <i class="fa-solid @(ViewBag.SortOrder == "asc" ? "fa-arrow-up-1-9" : "fa-arrow-down-wide-short") me-1"></i> Sort
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-4" id="templateContainer">
+        @foreach (var template in Model)
+        {
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card h-100 template-card bg-white rounded-xl">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="rounded-lg bg-primary-light d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #eff6ff; color: #2563eb;">
+                                <i class="fa-solid fa-flask-vial fa-lg"></i>
+                            </div>
+                            <span class="status-badge bg-success-light text-success border border-success-subtle" style="background-color: #f0fdf4; color: #15803d !important;">
+                                <small class="fa-solid fa-circle fa-2xs"></small> @template.IsActive
+                            </span>
+                        </div>
+                        <code class="text-muted" style="min-width:70px">
+                            #@template.Id
+                        </code>
+
+                        <!-- Name -->
+                        <div style="min-width:180px">
+                            <strong>@template.TemplateName</strong>
+                        </div>
+                        <!-- Description -->
+                        <div class="text-muted small flex-grow-1">
+                            @template.Description
+                        </div>
+                        <!-- Type -->
+                        <div style="min-width:200px">
+                            <span class="badge @(template.Type == TemplateType.Scoring ? "bg-primary" : "bg-warning")">
+                                @(template.Type == TemplateType.Scoring
+                                    ? "Chấm điểm (Cấp Trường)"
+                                    : "Duyệt / Từ chối (Cấp Khoa)")
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
+                        <a href="/SciTech/Port/Rule/@template.Id"
+                           class="btn btn-white border flex-grow-1 shadow-sm">
+                            <i class="fa-regular fa-eye me-1"></i> View
+                        </a>
+                        <button class="btn btn-white border flex-grow-1 shadow-sm text-primary btn-edit-trigger"
+                                data-id="@template.Id"
+                                data-name="@template.TemplateName"
+                                data-desc="@template.Description">
+                            <i class="fa-regular fa-pen-to-square me-1"></i> Edit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 gap-3">
+            <div id="paginationInfo" class="text-muted small">
+                Showing <strong>@(((ViewBag.CurrentPage - 1) * ViewBag.PageSize) + 1)</strong>
+                to <strong>@Math.Min((ViewBag.CurrentPage * ViewBag.PageSize), ViewBag.TotalItems)</strong>
+                of <strong>@ViewBag.TotalItems</strong> templates
+            </div>
+
+            @if (ViewBag.TotalPages > 1)
+            {
+                <nav>
+                    <ul id="paginationList" class="pagination mb-0 shadow-sm border-0">
+                        <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link border-0 px-3" href="@GetPaginationLink(ViewBag.CurrentPage - 1)">Previous</a>
+                        </li>
+
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                <a class="page-link border-0 px-3"
+                                   style="@(i == ViewBag.CurrentPage ? "background-color:#2563eb; color:white;" : "color:#333;")"
+                                   href="@GetPaginationLink(i)">@i</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                            <a class="page-link border-0 px-3 text-primary font-weight-bold" href="@GetPaginationLink(ViewBag.CurrentPage + 1)">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+        </div>
+</div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // --- LOGIC SEARCH (Chuyển hướng về trang 1 kèm từ khóa) ---
+            const searchInput = document.querySelector('input[placeholder="Search templates by name..."]');
+            searchInput?.addEventListener("keypress", function(e) {
+                if (e.key === "Enter") {
+                    const term = e.target.value;
+                    window.location.href = `?page=1&search=${term}`;
+                }
+            });
+
+            // --- LOGIC CREATE MỚI (Giữ nguyên của bạn) ---
+            document.getElementById("btnCreateTemplate")?.addEventListener("click", function () {
+                const container = document.getElementById("templateContainer");
+                const template = document.getElementById("newTemplateCard");
+                const clone = template.content.cloneNode(true);
+
+                clone.querySelector(".btn-cancel").addEventListener("click", function (e) {
+                    e.target.closest(".col-12").remove();
+                });
+
+                container.prepend(clone);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Logic Save Template
+            document.addEventListener("click", function (e) {
+                if (!e.target.closest(".btn-save")) return;
+                const card = e.target.closest(".card");
+                const templateName = card.querySelector("input").value;
+                const description = card.querySelector("textarea").value;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                fetch("/SciTech/Port/CreateTemplate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "RequestVerificationToken": token },
+                    body: JSON.stringify({ TemplateName: templateName, Description: description, IsActive: true })
+                })
+                .then(res => res.ok ? res.json() : Promise.reject())
+                .then(() => window.location.reload())
+                .catch(() => alert("Error saving template"));
+            });
+        });
+                document.getElementById("searchInput")?.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                const term = e.target.value.trim();
+
+                // Lấy các giá trị hiện tại từ ViewBag (thông qua C# render vào JS)
+                const type = "@ViewBag.SelectedType";
+                const status = "@ViewBag.SelectedStatus";
+                const sort = "@ViewBag.SortOrder";
+
+                // Chuyển hướng: Luôn reset về page 1 khi search mới
+                let url = `?page=1&search=${encodeURIComponent(term)}`;
+                if (type) url += `&type=${type}`;
+                if (status) url += `&isActive=${status}`;
+                if (sort) url += `&sortOrder=${sort}`;
+
+                window.location.href = url;
+            }
+        });
+                document.addEventListener("click", function (e) {
+            // --- 1. KHI BẤM NÚT EDIT ---
+            if (e.target.closest(".btn-edit-trigger")) {
+                const btn = e.target.closest(".btn-edit-trigger");
+                const cardBody = btn.closest(".card").querySelector(".card-body");
+                const cardFooter = btn.closest(".card").querySelector(".card-footer");
+
+                const id = btn.getAttribute("data-id");
+                const name = btn.getAttribute("data-name");
+                const desc = btn.getAttribute("data-desc");
+
+                // Thay đổi nội dung Card Body thành Input
+                cardBody.innerHTML = `
+                    <div class="mb-2">
+                        <label class="small text-muted">Template Name</label>
+                        <input type="text" class="form-control edit-name" value="${name}">
+                    </div>
+                    <div class="mb-2">
+                        <label class="small text-muted">Description</label>
+                        <textarea class="form-control edit-desc" rows="2">${desc}</textarea>
+                    </div>
+                `;
+
+                // Thay đổi nút ở Footer
+                cardFooter.innerHTML = `
+                    <button class="btn btn-success btn-sm flex-grow-1 btn-update" data-id="${id}">
+                        <i class="fa-solid fa-check me-1"></i> Cập nhật
+                    </button>
+                    <button class="btn btn-danger btn-sm flex-grow-1 btn-delete" data-id="${id}">
+                        <i class="fa-solid fa-trash me-1"></i> Delete
+                    </button>
+                    <button class="btn btn-light btn-sm border btn-cancel-edit" onclick="window.location.reload()">
+                        Hủy
+                    </button>
+                `;
+            }
+
+            // --- 2. KHI BẤM CẬP NHẬT (Update) ---
+            if (e.target.closest(".btn-update")) {
+                const btn = e.target.closest(".btn-update");
+                const id = btn.getAttribute("data-id");
+                const card = btn.closest(".card");
+                const newName = card.querySelector(".edit-name").value;
+                const newDesc = card.querySelector(".edit-desc").value;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                fetch("/SciTech/Port/UpdateTemplate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "RequestVerificationToken": token },
+                    body: JSON.stringify({ Id: parseInt(id), TemplateName: newName, Description: newDesc })
+                })
+                .then(res => res.ok ? window.location.reload() : alert("Cập nhật thất bại"));
+            }
+
+            // --- 3. KHI BẤM XÓA (Delete) ---
+            if (e.target.closest(".btn-delete")) {
+                if (!confirm("Bạn có chắc chắn muốn xóa template này không?")) return;
+
+                const btn = e.target.closest(".btn-delete");
+                const id = btn.getAttribute("data-id");
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                fetch(`/SciTech/Port/DeleteTemplate/${id}`, {
+                    method: "POST",
+                    headers: { "RequestVerificationToken": token }
+                })
+                .then(res => res.ok ? window.location.reload() : alert("Xóa thất bại"));
+            }
+        });
+    </script>
+    <template id="newTemplateCard">
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 template-card bg-white rounded-xl border-primary">
+                <div class="card-body p-4">
+
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Template Name</label>
+                        <input type="text" class="form-control" placeholder="Enter template name">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Description</label>
+                        <textarea class="form-control" rows="2" placeholder="Enter description"></textarea>
+                    </div>
+
+                    <span class="badge bg-warning-light text-warning border">Draft</span>
+                </div>
+
+                <div class="card-footer bg-light border-0 p-3 d-flex gap-2">
+                    <button class="btn btn-primary flex-grow-1 btn-save">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Save
+                    </button>
+                    <button class="btn btn-outline-secondary flex-grow-1 btn-cancel">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>

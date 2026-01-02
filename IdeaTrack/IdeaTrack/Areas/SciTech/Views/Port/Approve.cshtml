@@ -1,157 +1,287 @@
-﻿
+﻿@using IdeaTrack.Models
+@using IdeaTrack.Areas.SciTech.Models
+@model InitiativeDetailVM
 
+@{
+    string statusBadgeClass = Model.Status switch
+    {
+        InitiativeStatus.Draft => "bg-secondary text-white",
+        InitiativeStatus.Pending => "bg-warning text-dark",
+        InitiativeStatus.Dept_Review => "bg-info text-white",
+        InitiativeStatus.Reviewing => "bg-primary text-white",
+        InitiativeStatus.Revision_Required => "bg-warning-subtle text-warning",
+        InitiativeStatus.Approved => "bg-success text-white",
+        InitiativeStatus.Rejected => "bg-danger text-white",
+        _ => "bg-secondary text-white"
+    };
 
-    <!-- HEADER -->
-    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
-        <div>
-            <span class="badge bg-warning-subtle text-warning mb-2">
-                <i class="fas fa-hourglass-half me-1"></i>Chờ quyết định
-            </span>
+    // Icon và màu cho Department
+    string deptIcon = "fa-building";
+    string deptColor = "text-secondary";
 
-            <h2 class="fw-bold mb-1">
-                Nghiên cứu ứng dụng AI trong Nông nghiệp
-            </h2>
+    switch (Model.Code)
+    {
+        case "CNTT":
+            deptIcon = "fa-laptop-code"; deptColor = "text-primary";
+            break;
+        case "DTVT": // Điện tử Viễn thông
+            deptIcon = "fa-bolt"; deptColor = "text-danger";
+            break;
+        case "KHCN": // Khoa học Công nghệ
+            deptIcon = "fa-microscope"; deptColor = "text-success";
+            break;
+        case "CK": // Cơ khí
+            deptIcon = "fa-cogs"; deptColor = "text-warning";
+            break;
+        case "XD": // Xây dựng
+            deptIcon = "fa-hard-hat"; deptColor = "text-secondary";
+            break;
+        case "MT": // Môi trường
+            deptIcon = "fa-leaf"; deptColor = "text-info";
+            break;
+        case "KT": // Kinh tế
+            deptIcon = "fa-chart-line"; deptColor = "text-primary";
+            break;
+        case "QTKD": // Quản trị Kinh doanh
+            deptIcon = "fa-briefcase"; deptColor = "text-primary";
+            break;
+        case "LUAT":
+            deptIcon = "fa-gavel"; deptColor = "text-warning";
+            break;
+        case "NN": // Nông nghiệp
+            deptIcon = "fa-seedling"; deptColor = "text-success";
+            break;
+        default:
+            deptIcon = "fa-building"; deptColor = "text-secondary";
+            break;
+    }
+}
 
-            <p class="text-muted mb-0">
-                <i class="fas fa-fingerprint me-1"></i>Mã hồ sơ: <strong>2023-CN-05</strong>
-                <span class="mx-2">|</span>
-                <i class="fas fa-calendar-alt me-1"></i>15/09/2023
-            </p>
-        </div>
+<!-- HEADER -->
+<div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+    <div>
+        <span class="badge @statusBadgeClass mb-2">
+            <i class="fas fa-hourglass-half me-1"></i>@Model.Status
+        </span>
 
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary">
-                <i class="fas fa-print me-1"></i>In hồ sơ
-            </button>
-            <button class="btn btn-outline-danger">
-                <i class="fas fa-file-pdf me-1"></i>Xuất PDF
-            </button>
-        </div>
+        <h2 class="fw-bold mb-1">
+            <i class="fas fa-lightbulb me-2 text-warning"></i>@Model.Title
+        </h2>
+
+        <p class="text-muted mb-0">
+            <i class="fas fa-fingerprint me-1 text-info"></i>Mã hồ sơ: <strong>@Model.InitiativeCode</strong>
+            <span class="mx-2">|</span>
+            <i class="fas fa-calendar-alt me-1 text-secondary"></i>@Model.SubmittedDate.ToString("dd/MM/yyyy")
+        </p>
     </div>
+</div>
 
-    <div class="row g-4">
+<div class="row g-4">
 
-        <!-- LEFT COLUMN -->
-        <div class="col-lg-8">
+    <!-- LEFT COLUMN -->
+    <div class="col-lg-8">
 
-            <!-- INFO CARD -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-light fw-bold">
-                    <i class="fas fa-info-circle me-1"></i>Thông tin chung
-                </div>
-
-                <div class="card-body row g-4">
-                    <div class="col-md-6">
-                        <small class="text-muted">Chủ nhiệm đề tài</small>
-                        <p class="fw-semibold mb-0">
-                            <i class="fas fa-user me-1"></i>TS. Nguyễn Văn A
-                        </p>
-                    </div>
-
-                    <div class="col-md-6">
-                        <small class="text-muted">Đơn vị thực hiện</small>
-                        <p class="fw-semibold mb-0">Khoa Công nghệ Thông tin</p>
-                    </div>
-
-                    <div class="col-md-6">
-                        <small class="text-muted">Lĩnh vực</small>
-                        <p class="fw-semibold mb-0">Khoa học máy tính &amp; Nông nghiệp</p>
-                    </div>
-
-                    <div class="col-md-6">
-                        <small class="text-muted">Loại hình</small>
-                        <p class="fw-semibold mb-0">Nghiên cứu ứng dụng</p>
-                    </div>
-
-                    <div class="col-md-6">
-                        <small class="text-muted">Kinh phí đề xuất</small>
-                        <p class="fw-bold text-primary fs-5 mb-0">
-                            500.000.000 VNĐ
-                        </p>
-                    </div>
-
-                    <div class="col-md-6">
-                        <small class="text-muted">Thời gian thực hiện</small>
-                        <p class="fw-semibold mb-0">12 tháng (01/2024 – 12/2024)</p>
-                    </div>
-                </div>
+        <!-- INFO CARD -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light fw-bold">
+                <i class="fas fa-info-circle me-1 text-primary"></i>Thông tin chung
             </div>
 
-            <!-- ABSTRACT -->
-            <div class="accordion mb-4" id="abstractAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button fw-semibold" data-bs-toggle="collapse" data-bs-target="#abstract">
-                            <i class="fas fa-align-left me-2"></i>Tóm tắt nội dung
-                        </button>
-                    </h2>
-                    <div id="abstract" class="accordion-collapse collapse show">
-                        <div class="accordion-body text-muted">
-                            Dự án triển khai hệ thống AI giám sát sức khỏe cây trồng bằng
-                            CNN phân tích ảnh drone, giúp phát hiện sớm sâu bệnh,
-                            giảm chi phí thuốc và tăng năng suất cây trồng.
-                        </div>
-                    </div>
+            <div class="card-body row g-4">
+                <div class="col-md-6">
+                    <small class="text-muted">Chủ nhiệm đề tài</small>
+                    <p class="fw-semibold mb-0"><i class="fas fa-user-tie me-1 text-primary"></i>@Model.ProposerName</p>
                 </div>
 
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-semibold" data-bs-toggle="collapse" data-bs-target="#files">
-                            <i class="fas fa-paperclip me-2"></i>Tài liệu đính kèm
-                        </button>
-                    </h2>
-                    <div id="files" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span><i class="fas fa-file-pdf text-danger me-2"></i>Thuyết minh đề tài.pdf</span>
-                                    <a href="#" class="text-decoration-none">Tải</a>
-                                </li>
-                                <li class="list-group-item d-flex justify-content-between">
-                                    <span><i class="fas fa-file-excel text-success me-2"></i>Dự toán kinh phí.xlsx</span>
-                                    <a href="#" class="text-decoration-none">Tải</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="col-md-6">
+                    <small class="text-muted">Đơn vị thực hiện</small>
+                    <p class="fw-semibold mb-0"><i class="fas @deptIcon @deptColor me-1"></i>@Model.DepartmentName</p>
                 </div>
+
+                <div class="col-md-6">
+                    <small class="text-muted">Lĩnh vực</small>
+                    <p class="fw-semibold mb-0"><i class="fas fa-brain me-1 text-info"></i>@Model.Category</p>
+                </div>
+
+                <div class="col-md-6">
+                    <small class="text-muted d-block mb-1">Thời gian thực hiện</small>
+                    <p class="fw-semibold mb-0 gradient-text">
+                        <i class="fas fa-clock me-1"></i>
+                        @Model.SubmittedDate.ToString("dd/MM/yyyy")
+                    </p>
+                </div>
+                <div class="col-md-6">
+                     <small class="text-muted">Kinh phí đề xuất</small>
+                    <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VNĐ</p>
+                </div>
+
             </div>
-
         </div>
 
-        <!-- RIGHT COLUMN -->
-        <div class="col-lg-4">
-            <!-- DECISION PANEL -->
-            <div class="card shadow border-primary">
-                <div class="card-header fw-bold text-primary">
-                    <i class="fas fa-pen-alt me-1"></i>Quyết định PKHCN
-                </div>
-
-                <div class="card-body">
-                    <label class="form-label fw-semibold">Ghi chú / Kết luận</label>
-                    <textarea class="form-control mb-3" rows="4"
-                              placeholder="Nhập ý kiến hoặc lý do..."></textarea>
-
-                    <button class="btn btn-success w-100 mb-2">
-                        <i class="fas fa-check-circle me-1"></i>Duyệt hồ sơ
+        <!-- DESCRIPTION & FILES -->
+        <div class="accordion mb-4" id="abstractAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-semibold" data-bs-toggle="collapse" data-bs-target="#description">
+                        <i class="fas fa-align-left me-2 text-primary"></i>Mô tả nội dung
                     </button>
-
-                    <div class="row g-2">
-                        <div class="col-6">
-                            <button class="btn btn-outline-warning w-100">
-                                <i class="fas fa-sync-alt me-1"></i>Yêu cầu sửa
-                            </button>
-                        </div>
-                        <div class="col-6">
-                            <button class="btn btn-outline-danger w-100">
-                                <i class="fas fa-times-circle me-1"></i>Không
-                            </button>
-                        </div>
+                </h2>
+                <div id="description" class="accordion-collapse collapse show">
+                    <div class="accordion-body text-muted">
+                        @Model.Description
                     </div>
-
                 </div>
             </div>
 
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed fw-semibold" data-bs-toggle="collapse" data-bs-target="#files">
+                        <i class="fas fa-paperclip me-2 text-secondary"></i>Tài liệu đính kèm
+                    </button>
+                </h2>
+                <div id="files" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <ul class="list-group list-group-flush">
+                            @foreach (var file in Model.Files ?? new List<InitiativeFileVM>())
+                            {
+                                var ext = System.IO.Path.GetExtension(file.FileName).ToLower();
+                                string iconClass = "fa-file";
+                                string textColor = "text-secondary";
+
+                                switch (ext)
+                                {
+                                    case ".pdf":
+                                        iconClass = "fa-file-pdf";
+                                        textColor = "text-danger";
+                                        break;
+                                    case ".xlsx":
+                                    case ".xls":
+                                        iconClass = "fa-file-excel";
+                                        textColor = "text-success";
+                                        break;
+                                    case ".docx":
+                                    case ".doc":
+                                        iconClass = "fa-file-word";
+                                        textColor = "text-primary";
+                                        break;
+                                    case ".pptx":
+                                    case ".ppt":
+                                        iconClass = "fa-file-powerpoint";
+                                        textColor = "text-warning";
+                                        break;
+                                }
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span><i class="fas @iconClass @textColor me-2"></i>@file.FileName</span>
+                                    <a href="@Url.Action("DownloadFile", "Port", new { fileName = file.FileName })" class="text-decoration-none">
+                                        <i class="fas fa-download me-1 text-primary"></i>Tải
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col-lg-4">
+        <div class="card shadow border-primary">
+            <div class="card-header fw-bold text-primary">
+                <i class="fas fa-pen-alt me-1"></i>Quyết định PKHCN
+            </div>
+
+            <div class="card-body">
+
+                <!-- GHI CHÚ -->
+                <label class="form-label fw-semibold">
+                    <i class="fas fa-sticky-note me-1 text-warning"></i>
+                    Ghi chú / Nội dung yêu cầu
+                </label>
+
+                <textarea id="requestContent"
+                          class="form-control mb-3"
+                          rows="4"
+                          placeholder="Nhập nội dung yêu cầu chỉnh sửa hoặc kết luận..."></textarea>
+
+                <!-- DEADLINE -->
+                <div id="deadlineWrapper" class="d-none">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-calendar-alt me-1 text-info"></i>
+                        Hạn chỉnh sửa
+                    </label>
+
+                    <input type="date"
+                           id="deadline"
+                           class="form-control mb-3">
+                </div>
+
+                <!-- DUYỆT -->
+                <a href="/SciTech/Port/ApproveInitiative/@Model.Id" id="revisionLink2"
+                   class="btn btn-success w-100 mb-2">
+                    <i class="fas fa-check-circle me-1 text-white"></i>Duyệt hồ sơ
+                </a>
+
+                <!-- YÊU CẦU CHỈNH SỬA -->
+                <a href="/SciTech/Port/RejectInitiative/@Model.Id"
+                   id="revisionLink"
+                   class="btn btn-outline-warning w-100 mb-2">
+                    <i class="fas fa-undo me-1"></i>Yêu cầu chỉnh sửa
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<script>
+    document.getElementById("revisionLink").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const deadlineWrapper = document.getElementById("deadlineWrapper");
+        const content = document.getElementById("requestContent").value;
+        const deadlineInput = document.getElementById("deadline");
+
+        // Nếu deadline đang ẩn → hiện lên và dừng lại
+        if (deadlineWrapper.classList.contains("d-none")) {
+            deadlineWrapper.classList.remove("d-none");
+            deadlineInput.focus();
+            return;
+        }
+
+        const deadline = deadlineInput.value;
+
+        if (!content || !deadline) {
+            alert("Vui lòng nhập nội dung và hạn chỉnh sửa!");
+            return;
+        }
+
+        const baseUrl = this.getAttribute("href");
+        const url = baseUrl
+            + "?requestContent=" + encodeURIComponent(content)
+            + "&deadline=" + deadline;
+
+        window.location.href = url;
+    });
+
+    document.getElementById("revisionLink2").addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const content = document.getElementById("requestContent").value;
+
+        if (!content) {
+            alert("Vui lòng nhập nội dung!");
+            return;
+        }
+
+        const baseUrl = this.getAttribute("href");
+        const url = baseUrl
+            + "?requestContent=" + encodeURIComponent(content);
+
+        window.location.href = url;
+    });
+</script>

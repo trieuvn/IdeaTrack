@@ -19,6 +19,19 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
+        .gradient-text {
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+            .gradient-text i {
+                background: linear-gradient(90deg, #ff7e5f, #feb47b);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
         .sidebar {
             width: 260px;
             min-height: 100vh;
@@ -168,6 +181,13 @@
             color: #ffffff;
         }
 
+        .topbar {
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 127px;
+            z-index: 1000;
+        }
     </style>
     @RenderSection("Styles", required: false)
 </head>
@@ -213,9 +233,9 @@
 
                 <!-- Quy định -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Rule" ? "active" : "")"
-                   href="@Url.Action("Rule", "Port", new { area = "SciTech" })">
+                   href="@Url.Action("Template", "Port", new { area = "SciTech" })">
                     <i class="fas fa-gavel"></i>
-                    <span>Quy định</span>
+                    <span>Bộ tiêu chí</span>
                 </a>
 
                 <!-- Hồ sơ cá nhân -->
@@ -250,7 +270,7 @@
         <div class="flex-grow-1 d-flex flex-column">
 
             <!-- TOPBAR -->
-            <header class="topbar bg-white border-bottom px-4 py-3 d-flex justify-content-between">
+            <header class="topbar bg-white border-bottom px-4 py-3 d-flex justify-content-between" >
                 <div></div>
                 <div class="d-flex align-items-center gap-3">
                     <span class="material-symbols-outlined">notifications</span>
@@ -270,6 +290,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

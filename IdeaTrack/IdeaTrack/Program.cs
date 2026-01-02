@@ -1,9 +1,16 @@
+using IdeaTrack.Areas.Faculty.Hubs;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
+using OfficeOpenXml;
+using QuestPDF.Infrastructure;
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var builder = WebApplication.CreateBuilder(args);
 
 // DB Context
@@ -16,10 +23,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Identity với GUID
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false; // tùy chỉnh
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Lockout.AllowedForNewUsers = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(36500);
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
@@ -27,9 +40,20 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
 // MVC + Razor
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
 var app = builder.Build();
+var supportedCultures = new[] { "en-US" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
 
+app.UseRequestLocalization(localizationOptions);
 
 if (app.Environment.IsDevelopment())
 {
@@ -65,7 +89,7 @@ var rewriteOptionscouncils = new RewriteOptions()
         "^Councils/History?$",
         "Councils/Page/History",
         skipRemainingRules: true
-        
+
         )
     .AddRewrite(
         "^Councils/CouncilChair?$",
@@ -103,6 +127,8 @@ var rewriteOptionsadmin = new RewriteOptions()
         "Admin/Intro/Dashboard",
         skipRemainingRules: true)
     ;
+
+app.UseRouting();
 app.UseRewriter(rewriteOptionsadmin);
 app.UseRewriter(rewriteOptions);
 app.UseRewriter(rewriteOptionscouncils);
@@ -110,9 +136,9 @@ app.UseRewriter(rewriteOptionsdetails);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
 
-app.UseAuthentication();  
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "areas",
@@ -121,6 +147,10 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapHub<NotificationHub>("/notificationHub");
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 
