@@ -9,6 +9,7 @@ obj/
 *.suo
 *.userosscache
 *.sln.docstates
+*.antigravityrules
 
 # --- Code config ---
 # User-specific files

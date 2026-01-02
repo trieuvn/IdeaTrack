@@ -1,193 +1,224 @@
-﻿<main class="content-scroll">
-    <div class="page-container">
-        
-        <div class="page-heading">
-            <div>
-                <h1 style="color:#1e40af">Innovation Metrics</h1>
-                <p>Track daily user innovation submissions and trends.</p>
-            </div>
-            
-        </div>
-        <div class="dashboard-grid">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Distribution</h3>
-                    <div class="select-wrapper">
-                        <select class="select-custom">
-                            <option>By Category</option>
-                            <option>By Status</option>
-                            <option>By Department</option>
-                        </select>
-                        <i class="bi bi-chevron-compact-down select-icon"></i>
-                    </div>
-                </div>
-                <div class="card-body pie-container">
-                    <div class="pie-chart-circle">
-                        <div class="pie-inner-circle">
-                            <span class="pie-total">142</span>
-                            <span class="pie-label">Total</span>
-                        </div>
-                    </div>
-                    <div class="legend">
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background-color: #137fec;"></div>
-                            <span class="legend-text">Product (45%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background-color: #60a5fa;"></div>
-                            <span class="legend-text">Process (25%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background-color: #93c5fd;"></div>
-                            <span class="legend-text">Service (15%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-dot" style="background-color: #cbd5e1;"></div>
-                            <span class="legend-text">Internal (15%)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Submission Calendar</h3>
-                    <div class="calendar-nav">
-                        <button class="calendar-nav-btn">
-                            <i class="bi bi-chevron-left"></i>
-                        </button>
+﻿@model IdeaTrack.Areas.Author.ViewModels.DailyReportViewModel
+@{
+    ViewData["Title"] = "Thống kê";
+}
 
-                        <span class="calendar-month">October 2023</span>
+<div class="container-fluid pb-5">
 
-                        <button class="calendar-nav-btn">
-                            <i class="bi bi-chevron-right"></i>
-                        </button>
+    <!-- Hero Section - Giống About.cshtml -->
+    <section class="hero-section text-white p-5 mb-5 shadow-lg" style="border-radius: 20px;">
+        <div class="row">
+            <div class="col-lg-8">
+                <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-4 p-2 px-3" style="border: 1px solid rgba(0,255,255,0.2)">
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">insights</span> THỐNG KÊ SÁNG KIẾN
+                </span>
 
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="calendar-grid-header">
-                        <div class="day-name">Mon</div>
-                        <div class="day-name">Tue</div>
-                        <div class="day-name">Wed</div>
-                        <div class="day-name">Thu</div>
-                        <div class="day-name">Fri</div>
-                        <div class="day-name">Sat</div>
-                        <div class="day-name">Sun</div>
-                    </div>
-                    <div class="calendar-days">
-                        <div class="day-cell"></div>
-                        <div class="day-cell"></div>
-                        <div class="day-cell"></div>
-                        <div class="day-cell"></div>
-                        <div class="day-cell"><button class="day-btn">1</button></div>
-                        <div class="day-cell"><button class="day-btn">2</button></div>
-                        <div class="day-cell"><button class="day-btn">3</button></div>
-                        <div class="day-cell"><button class="day-btn">4</button></div>
-                        <div class="day-cell">
-                            <button class="day-btn has-activity">
-                                5
-                                <span class="dot-indicator"></span>
-                            </button>
-                        </div>
-                        <div class="day-cell"><button class="day-btn">6</button></div>
-                        <div class="day-cell"><button class="day-btn">7</button></div>
-                        <div class="day-cell"><button class="day-btn">8</button></div>
-                        <div class="day-cell"><button class="day-btn">9</button></div>
-                        <div class="day-cell"><button class="day-btn">10</button></div>
-                        <div class="day-cell"><button class="day-btn">11</button></div>
-                        <div class="day-cell">
-                            <button class="day-btn active-day">
-                                12
-                                <span class="dot-indicator"></span>
-                            </button>
-                        </div>
-                        <div class="day-cell"><button class="day-btn">13</button></div>
-                        <div class="day-cell">
-                            <button class="day-btn has-activity">
-                                14
-                                <span class="dot-indicator"></span>
-                            </button>
-                        </div>
-                        <div class="day-cell"><button class="day-btn">15</button></div>
-                        <div class="day-cell"><button class="day-btn">16</button></div>
-                        <div class="day-cell"><button class="day-btn">17</button></div>
-                        <div class="day-cell"><button class="day-btn">18</button></div>
-                        <div class="day-cell"><button class="day-btn">19</button></div>
-                        <div class="day-cell"><button class="day-btn">20</button></div>
-                        <div class="day-cell"><button class="day-btn">21</button></div>
-                        <div class="day-cell">
-                            <button class="day-btn has-activity">
-                                22
-                                <span class="dot-indicator"></span>
-                            </button>
-                        </div>
-                        <div class="day-cell"><button class="day-btn">23</button></div>
-                        <div class="day-cell"><button class="day-btn">24</button></div>
-                        <div class="day-cell"><button class="day-btn">25</button></div>
-                        <div class="day-cell"><button class="day-btn">26</button></div>
-                        <div class="day-cell"><button class="day-btn">27</button></div>
-                        <div class="day-cell"><button class="day-btn">28</button></div>
-                        <div class="day-cell"><button class="day-btn">29</button></div>
-                        <div class="day-cell"><button class="day-btn">30</button></div>
-                        <div class="day-cell"><button class="day-btn">31</button></div>
-                    </div>
-                </div>
+                <h1 class="fw-bold display-5 mb-3">Innovation Metrics</h1>
+
+                <p class="fs-5 mb-4 opacity-75" style="max-width: 600px; line-height: 1.6;">
+                    Theo dõi và phân tích các sáng kiến của bạn. Xem phân bố theo danh mục và tiến độ xét duyệt.
+                </p>
             </div>
         </div>
-        <div class="submissions-panel">
-            <div class="submissions-header">
-                <div class="submissions-title-group">
-                    <div class="icon-box">
-                        <i class="bi bi-calendar-event"></i>
-                    </div>
-                    <div class="submissions-title">
-                        <h3 id="panel-title">Submissions for Oct 12</h3>
-                        <p>2 entries found</p>
-                    </div>
+    </section>
+
+    <!-- Stats Cards - Giống style Home -->
+    <section class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card card-custom h-100 p-4 shadow-sm" style="border-radius: 15px;">
+                <div class="icon-circle bg-light-blue mb-3">
+                    <span class="material-icons text-primary">inventory_2</span>
                 </div>
-                <button class="view-all-link">View All</button>
-            </div>
-            <div class="submissions-list">
-                <div class="submission-item">
-                    <div class="item-info">
-                        <div class="item-avatar blue">AI</div>
-                        <div class="item-details">
-                            <h4>AI Automation Workflow</h4>
-                            <p>Submitted by Sarah Jenkins • 10:42 AM</p>
-                            <span class="tag purple">Process</span>
-                        </div>
-                    </div>
-                    <div class="item-status">
-                        <span class="status-pill yellow">Under Review</span>
-                        <button class="nav-next-btn">
-                            <button class="nav-next-btn">
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
-                        </button>
-                    </div>
-                </div>
-                <div class="submission-item">
-                    <div class="item-info">
-                        <div class="item-avatar green">CF</div>
-                        <div class="item-details">
-                            <h4>Cafeteria Digital Menu</h4>
-                            <p>Submitted by Mike Ross • 02:15 PM</p>
-                            <span class="tag green">Service</span>
-                        </div>
-                    </div>
-                    <div class="item-status">
-                        <span class="status-pill green">Approved</span>
-                        <button class="nav-next-btn">
-                            <button class="nav-next-btn">
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="submissions-footer">
-                <span class="footer-text">Showing 2 of 2 submissions for this date</span>
+                <h2 class="fw-bold text-primary">@Model.TotalInitiatives</h2>
+                <p class="text-muted mb-0">Tổng sáng kiến</p>
             </div>
         </div>
-    </div>
-</main>
+        <div class="col-md-3">
+            <div class="card card-custom h-100 p-4 shadow-sm" style="border-radius: 15px;">
+                <div class="icon-circle bg-light-green mb-3">
+                    <span class="material-icons text-success">check_circle</span>
+                </div>
+                <h2 class="fw-bold text-success">@Model.MonthlyApproved</h2>
+                <p class="text-muted mb-0">Đã duyệt (tháng này)</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-custom h-100 p-4 shadow-sm" style="border-radius: 15px;">
+                <div class="icon-circle bg-light-yellow mb-3">
+                    <span class="material-icons text-warning">pending</span>
+                </div>
+                <h2 class="fw-bold text-warning">@Model.MonthlyPending</h2>
+                <p class="text-muted mb-0">Đang chờ duyệt</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-custom h-100 p-4 shadow-sm" style="border-radius: 15px;">
+                <div class="icon-circle mb-3" style="background-color: #fce7f3;">
+                    <span class="material-icons" style="color: #be123c;">calendar_month</span>
+                </div>
+                <h2 class="fw-bold" style="color: #be123c;">@Model.MonthlyTotal</h2>
+                <p class="text-muted mb-0">Tháng này</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Distribution - Card style giống Home -->
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center">
+                <span class="material-icons text-danger me-2">pie_chart</span>
+                <h4 class="fw-bold mb-0">Phân phối theo Danh mục</h4>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        @if (Model.CategoryDistributions.Any())
+                        {
+                            @foreach (var cat in Model.CategoryDistributions)
+                            {
+                                <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded-3" style="background-color: #f8fafc;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div style="width: 12px; height: 12px; border-radius: 50%; background-color: @cat.Color;"></div>
+                                        <span class="fw-medium">@cat.CategoryName</span>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="fw-bold">@cat.Count</span>
+                                        <span class="text-muted small ms-2">(@cat.Percentage%)</span>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <span class="material-icons text-muted" style="font-size: 48px;">donut_large</span>
+                                <p class="text-muted mt-2">Chưa có dữ liệu phân phối</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
+                    <div class="card-body p-4 d-flex align-items-center justify-content-center">
+                        <div class="text-center">
+                            <div class="position-relative d-inline-block">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                                     style="width: 180px; height: 180px; background: conic-gradient(
+                                         @if(Model.CategoryDistributions.Any())
+                                         {
+                                             var gradientParts = new List<string>();
+                                             decimal currentDeg = 0;
+                                             foreach(var cat in Model.CategoryDistributions)
+                                             {
+                                                 var nextDeg = currentDeg + (cat.Percentage * 3.6m);
+                                                 gradientParts.Add($"{cat.Color} {currentDeg}deg {nextDeg}deg");
+                                                 currentDeg = nextDeg;
+                                             }
+                                             @string.Join(", ", gradientParts)
+                                         }
+                                         else
+                                         {
+                                             @:#e5e7eb 0deg 360deg
+                                         }
+                                     );">
+                                    <div class="rounded-circle bg-white d-flex flex-column align-items-center justify-content-center" 
+                                         style="width: 120px; height: 120px;">
+                                        <span class="fs-2 fw-bold text-primary">@Model.TotalInitiatives</span>
+                                        <span class="text-muted small">Tổng</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Submissions - Table hover giống Index.cshtml của Home -->
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center">
+                <span class="material-icons text-danger me-2">history</span>
+                <h4 class="fw-bold mb-0">Sáng kiến gần đây (7 ngày)</h4>
+            </div>
+            <a asp-controller="Initiative" asp-action="History" class="text-danger text-decoration-none fw-bold small">
+                Xem tất cả <span class="material-icons fs-6 align-middle">arrow_forward</span>
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-sm" style="border-radius: 15px;">
+            <div class="card-body p-0">
+                @if (Model.RecentSubmissions.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="border-0 ps-4">Tiêu đề</th>
+                                    <th class="border-0">Thời gian</th>
+                                    <th class="border-0">Trạng thái</th>
+                                    <th class="border-0 pe-4 text-end">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RecentSubmissions)
+                                {
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white" 
+                                                     style="width:40px;height:40px;background:linear-gradient(135deg, #b91c1c, #991b1b);">
+                                                    @(item.Title?.Length > 0 ? item.Title.Substring(0, 1).ToUpper() : "S")
+                                                </div>
+                                                <span class="fw-medium">@item.Title</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-muted">@item.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>
+                                            @switch (item.Status)
+                                            {
+                                                case IdeaTrack.Models.InitiativeStatus.Draft:
+                                                    <span class="badge bg-secondary">Nháp</span>
+                                                    break;
+                                                case IdeaTrack.Models.InitiativeStatus.Pending:
+                                                    <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                                    break;
+                                                case IdeaTrack.Models.InitiativeStatus.Approved:
+                                                    <span class="badge bg-success">Đã duyệt</span>
+                                                    break;
+                                                default:
+                                                    <span class="badge bg-info">@item.Status</span>
+                                                    break;
+                                            }
+                                        </td>
+                                        <td class="pe-4 text-end">
+                                            <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                                <span class="material-icons" style="font-size: 16px;">visibility</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <span class="material-icons text-muted" style="font-size: 64px;">inbox</span>
+                        <p class="text-muted mt-2">Chưa có sáng kiến nào trong 7 ngày qua</p>
+                        <a asp-controller="Initiative" asp-action="Create" class="btn btn-danger rounded-pill px-4">
+                            <span class="material-icons align-middle me-1">add</span> Tạo sáng kiến mới
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+</div>

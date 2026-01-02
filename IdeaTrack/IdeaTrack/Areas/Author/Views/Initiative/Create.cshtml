@@ -96,6 +96,7 @@
                     <span asp-validation-for="Initiative.Description" class="text-danger small"></span>
                 </div>
 
+
                 <!-- File Upload Section -->
                 <div class="mb-4">
                     <label class="form-label fw-medium">
@@ -103,57 +104,13 @@
                         Tài liệu đính kèm
                     </label>
                     
-                    <div class="nav nav-pills mb-3" role="tablist">
-                        <button class="nav-link active rounded-pill me-2" id="existing-tab" data-bs-toggle="pill" data-bs-target="#existing-files" type="button" role="tab">
-                            <span class="material-icons align-middle me-1" style="font-size: 16px;">folder</span> File có sẵn
-                        </button>
-                        <button class="nav-link rounded-pill" id="upload-tab" data-bs-toggle="pill" data-bs-target="#upload-files" type="button" role="tab">
-                            <span class="material-icons align-middle me-1" style="font-size: 16px;">upload_file</span> Tải lên
-                        </button>
+                    <div class="border border-2 border-dashed rounded-3 p-5 text-center bg-light" style="cursor: pointer;" onclick="document.getElementById('fileInput').click()">
+                        <span class="material-icons text-muted mb-2" style="font-size: 48px;">cloud_upload</span>
+                        <p class="mb-1 fw-medium">Nhấp để tải lên hoặc kéo thả file</p>
+                        <p class="text-muted small mb-0">PDF, DOCX, XLSX (Tối đa 10MB)</p>
+                        <div id="fileList" class="mt-3"></div>
                     </div>
-
-                    <div class="tab-content">
-                        <!-- Existing Files -->
-                        <div class="tab-pane fade show active" id="existing-files" role="tabpanel">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="card border h-100" style="cursor: pointer;" onclick="this.classList.toggle('border-primary'); this.classList.toggle('bg-light');">
-                                        <div class="card-body d-flex align-items-center">
-                                            <span class="material-icons text-danger me-2">picture_as_pdf</span>
-                                            <span class="small">Curriculum_Draft_v2.pdf</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="card border h-100" style="cursor: pointer;" onclick="this.classList.toggle('border-primary'); this.classList.toggle('bg-light');">
-                                        <div class="card-body d-flex align-items-center">
-                                            <span class="material-icons text-primary me-2">description</span>
-                                            <span class="small">Final_Report.docx</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="card border h-100" style="cursor: pointer;" onclick="this.classList.toggle('border-primary'); this.classList.toggle('bg-light');">
-                                        <div class="card-body d-flex align-items-center">
-                                            <span class="material-icons text-success me-2">table_chart</span>
-                                            <span class="small">Budget_2025.xlsx</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Upload Files -->
-                        <div class="tab-pane fade" id="upload-files" role="tabpanel">
-                            <div class="border border-2 border-dashed rounded-3 p-5 text-center bg-light" style="cursor: pointer;" onclick="document.getElementById('fileInput').click()">
-                                <span class="material-icons text-muted mb-2" style="font-size: 48px;">cloud_upload</span>
-                                <p class="mb-1 fw-medium">Nhấp để tải lên hoặc kéo thả file</p>
-                                <p class="text-muted small mb-0">PDF, DOCX, XLSX (Tối đa 10MB)</p>
-                                <div id="fileList" class="mt-3"></div>
-                            </div>
-                            <input type="file" id="fileInput" name="UploadedFiles" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" multiple hidden>
-                        </div>
-                    </div>
+                    <input type="file" id="fileInput" name="UploadedFiles" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" multiple hidden>
                 </div>
 
                 <!-- Action Buttons -->

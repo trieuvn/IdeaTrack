@@ -1,79 +1,264 @@
-﻿<div class="settings-container">
+﻿@model IdeaTrack.Areas.Author.ViewModels.SettingViewModel
 
-    <h1 class="page-title">Settings</h1>
-    <p class="page-subtitle">Control your account and system preferences</p>
+<main class="container py-5">
 
-    <div class="settings-panel">
-        <div class="settings-item">
-            <div class="item-left">
-                <i class="bi bi-person-circle"></i>
-                <div class="item-info">
-                    <h3>Personal Information</h3>
-                    <p>View and update your personal details</p>
+    <!-- Hero Section -->
+    <section class="hero-section text-white p-5 mb-5 shadow-lg">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge rounded-pill bg-white bg-opacity-25 mb-3 p-2 px-3">
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">settings</span> CÀI ĐẶT TÀI KHOẢN
+                </span>
+                <h1 class="fw-bold display-5 mb-3">Xin chào, @Model.FullName!</h1>
+                <p class="fs-5 mb-0 opacity-75">
+                    Quản lý thông tin cá nhân và tùy chỉnh các cài đặt hệ thống của bạn.
+                </p>
+            </div>
+            <div class="col-lg-4 d-none d-lg-flex justify-content-end">
+                <div class="bg-white bg-opacity-15 rounded-circle p-4" style="backdrop-filter: blur(10px);">
+                    @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                    {
+                        <img src="@Model.AvatarUrl" class="rounded-circle" width="100" height="100" alt="Avatar">
+                    }
+                    else
+                    {
+                        <span class="material-icons text-white" style="font-size: 100px;">account_circle</span>
+                    }
                 </div>
             </div>
-            <button class="btn-action">Edit</button>
         </div>
-        <div class="settings-item">
-            <div class="item-left">
-                <i class="bi bi-lock-fill"></i>
-                <div class="item-info">
-                    <h3>Change Password</h3>
-                    <p>Update your account password</p>
+    </section>
+
+    <div class="row g-4">
+
+        <!-- Left Column: Profile Info -->
+        <div class="col-lg-4">
+            <div class="card card-custom shadow-sm h-100" style="border-radius: 15px;">
+                <div class="card-body text-center p-4">
+                    <div class="mb-4">
+                        @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                        {
+                            <img src="@Model.AvatarUrl" class="rounded-circle shadow" width="120" height="120" alt="Avatar">
+                        }
+                        else
+                        {
+                            <div class="mx-auto d-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10" style="width: 120px; height: 120px;">
+                                <span class="material-icons text-danger" style="font-size: 60px;">person</span>
+                            </div>
+                        }
+                    </div>
+                    <h4 class="fw-bold mb-1">@Model.FullName</h4>
+                    <p class="text-muted mb-3">@(Model.Position ?? "Giảng viên")</p>
+                    
+                    @if (!string.IsNullOrEmpty(Model.AcademicRank) || !string.IsNullOrEmpty(Model.Degree))
+                    {
+                        <div class="d-flex justify-content-center gap-2 mb-3">
+                            @if (!string.IsNullOrEmpty(Model.AcademicRank))
+                            {
+                                <span class="badge bg-primary rounded-pill">@Model.AcademicRank</span>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.Degree))
+                            {
+                                <span class="badge bg-success rounded-pill">@Model.Degree</span>
+                            }
+                        </div>
+                    }
+
+                    <hr>
+
+                    <div class="text-start">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="material-icons text-muted me-3">email</span>
+                            <div>
+                                <div class="small text-muted">Email</div>
+                                <div class="fw-medium">@Model.Email</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="material-icons text-muted me-3">business</span>
+                            <div>
+                                <div class="small text-muted">Khoa/Phòng ban</div>
+                                <div class="fw-medium">@(Model.Department ?? "Chưa cập nhật")</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button class="btn-action">Update</button>
         </div>
 
-        <div class="settings-item">
-            <div class="item-left">
-                <i class="bi bi-bell-fill"></i>
-                <div class="item-info">
-                    <h3>Notifications</h3>
-                    <p>Enable system notifications</p>
+        <!-- Right Column: Settings -->
+        <div class="col-lg-8">
+            
+            <!-- Account Settings Card -->
+            <div class="card card-custom shadow-sm mb-4" style="border-radius: 15px;">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0">
+                        <span class="material-icons align-middle me-2 text-primary">manage_accounts</span>
+                        Cài đặt tài khoản
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    
+                    <!-- Personal Information -->
+                    <div class="d-flex align-items-center justify-content-between p-4 border-bottom">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle bg-light-blue me-3">
+                                <span class="material-icons text-primary">person</span>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Thông tin cá nhân</h6>
+                                <small class="text-muted">Cập nhật họ tên, chức danh, học vị</small>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <span class="material-icons align-middle" style="font-size: 18px;">edit</span> Sửa
+                        </button>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="d-flex align-items-center justify-content-between p-4 border-bottom">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle bg-light-yellow me-3">
+                                <span class="material-icons text-warning">lock</span>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Đổi mật khẩu</h6>
+                                <small class="text-muted">Cập nhật mật khẩu đăng nhập</small>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-warning rounded-pill px-3">
+                            <span class="material-icons align-middle" style="font-size: 18px;">vpn_key</span> Đổi
+                        </button>
+                    </div>
+
+                    <!-- File Storage -->
+                    <a asp-action="Files" class="d-flex align-items-center justify-content-between p-4 text-decoration-none text-dark">
+                        <div class="d-flex align-items-center">
+                            <div class="icon-circle bg-light-green me-3">
+                                <span class="material-icons text-success">folder</span>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Quản lý tệp tin</h6>
+                                <small class="text-muted">Xem và quản lý các tệp đã tải lên</small>
+                            </div>
+                        </div>
+                        <span class="material-icons text-muted">chevron_right</span>
+                    </a>
+
                 </div>
             </div>
-            <label class="switch">
-                <input type="checkbox" checked>
-                <span class="slider"></span>
-            </label>
+
+            <!-- Notification Settings Card -->
+            <div class="card card-custom shadow-sm mb-4" style="border-radius: 15px;">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0">
+                        <span class="material-icons align-middle me-2 text-info">notifications</span>
+                        Thông báo
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    
+                    <!-- System Notifications -->
+                    <div class="d-flex align-items-center justify-content-between p-4 border-bottom">
+                        <div class="d-flex align-items-center">
+                            <span class="material-icons text-info me-3">notifications_active</span>
+                            <div>
+                                <h6 class="fw-bold mb-0">Thông báo hệ thống</h6>
+                                <small class="text-muted">Nhận thông báo khi có cập nhật sáng kiến</small>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="notificationSwitch" @(Model.NotificationsEnabled ? "checked" : "")>
+                        </div>
+                    </div>
+
+                    <!-- Email Alerts -->
+                    <div class="d-flex align-items-center justify-content-between p-4">
+                        <div class="d-flex align-items-center">
+                            <span class="material-icons text-danger me-3">email</span>
+                            <div>
+                                <h6 class="fw-bold mb-0">Thông báo qua Email</h6>
+                                <small class="text-muted">Nhận email khi sáng kiến được duyệt/từ chối</small>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="emailSwitch" @(Model.EmailAlertsEnabled ? "checked" : "")>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="card border-danger shadow-sm" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <span class="material-icons text-danger me-3">logout</span>
+                            <div>
+                                <h6 class="fw-bold mb-0">Đăng xuất</h6>
+                                <small class="text-muted">Thoát khỏi tài khoản hiện tại</small>
+                            </div>
+                        </div>
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post">
+                            <button type="submit" class="btn btn-danger rounded-pill px-4">
+                                <span class="material-icons align-middle me-1" style="font-size: 18px;">power_settings_new</span> Đăng xuất
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
+    </div>
 
-        <div class="settings-item">
-            <div class="item-left">
-                <i class="bi bi-envelope-fill"></i>
-                <div class="item-info">
-                    <h3>Email Alerts</h3>
-                    <p>Receive updates via email</p>
-                </div>
+</main>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">
+                    <span class="material-icons align-middle me-2 text-primary">edit</span>
+                    Chỉnh sửa thông tin
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <label class="switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-            </label>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Họ và tên</label>
+                        <input type="text" class="form-control" value="@Model.FullName">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Chức vụ</label>
+                        <input type="text" class="form-control" value="@Model.Position">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Học hàm</label>
+                            <select class="form-select" id="academicRankSelect">
+                                <option value="">-- Chọn --</option>
+                                <option value="PGS" selected="@(Model.AcademicRank == "PGS")">PGS</option>
+                                <option value="GS" selected="@(Model.AcademicRank == "GS")">GS</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Học vị</label>
+                            <select class="form-select" id="degreeSelect">
+                                <option value="">-- Chọn --</option>
+                                <option value="Thạc sĩ" selected="@(Model.Degree == "Thạc sĩ")">Thạc sĩ</option>
+                                <option value="Tiến sĩ" selected="@(Model.Degree == "Tiến sĩ")">Tiến sĩ</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4">Lưu thay đổi</button>
+            </div>
         </div>
-        <a href="/Author/HomePage/Files" class="settings-item" style="text-decoration:none;">
-            <div class="item-left">
-                <i class="bi bi-hdd-fill"></i>
-                <div class="item-info">
-                    <h3>File Storage</h3>
-                    <p>Files are stored on the system server</p>
-                </div>
-            </div>
-            <span class="badge completed">Local</span>
-        </a>
-
-
-        <div class="settings-item danger">
-            <div class="item-left">
-                <i class="bi bi-box-arrow-right"></i>
-                <div class="item-info">
-                    <h3>Logout</h3>
-                    <p>Sign out from this device</p>
-                </div>
-            </div>
-            <button class="btn-danger">Logout</button>
-        </div>
-
     </div>
 </div>
