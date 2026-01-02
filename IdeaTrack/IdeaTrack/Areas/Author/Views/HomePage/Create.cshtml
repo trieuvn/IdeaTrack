@@ -1,120 +1,182 @@
 ﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
 
-<div class="page-header">
-    <a href="/Author/HomePage" class="btn-return">← Return</a>
-    <h1>Create New Initiative</h1>
-    <p>Fill in the details below to propose a new initiative for evaluation.</p>
-</div>
+<main class="container py-5">
 
-<div class="card">
-    <form asp-action="Create" method="post">
-        @Html.AntiForgeryToken()
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-        <div class="grid">
-            <div>
-                <label>Academic Year *</label>
-                <select asp-for="Initiative.AcademicYearId" asp-items="Model.AcademicYears" class="form-control">
-                    <option value="">Select Academic Year...</option>
-                </select>
-                <span asp-validation-for="Initiative.AcademicYearId" class="text-danger"></span>
-            </div>
-            <div>
-                <label>Category *</label>
-                <select asp-for="Initiative.CategoryId" asp-items="Model.Categories" class="form-control">
-                    <option value="">Select Category...</option>
-                </select>
-                <span asp-validation-for="Initiative.CategoryId" class="text-danger"></span>
+    <!-- Hero Section -->
+    <section class="hero-section text-white p-5 mb-5 shadow-lg">
+        <div class="row">
+            <div class="col-lg-8">
+                <span class="badge rounded-pill bg-warning text-dark mb-3 p-2 px-3">
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">add_circle</span> TẠO SÁNG KIẾN MỚI
+                </span>
+                <h1 class="fw-bold display-5 mb-3">Đề xuất Sáng kiến</h1>
+                <p class="fs-5 mb-0 opacity-75" style="max-width: 600px; line-height: 1.6;">
+                    Điền thông tin bên dưới để đề xuất sáng kiến mới. Sáng kiến sẽ được gửi đến hội đồng để xét duyệt.
+                </p>
             </div>
         </div>
+    </section>
 
-        <div class="grid" style="margin-top:16px;">
-            <div>
-                <label>Department *</label>
-                <select asp-for="Initiative.DepartmentId" asp-items="Model.Departments" class="form-control">
-                    <option value="">Select Department...</option>
-                </select>
-                <span asp-validation-for="Initiative.DepartmentId" class="text-danger"></span>
-            </div>
-            <div>
-                <label>Budget (VND)</label>
-                <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Enter budget amount" class="form-control" />
-                <span asp-validation-for="Initiative.Budget" class="text-danger"></span>
-            </div>
+    <!-- Form Card -->
+    <div class="card card-custom shadow-sm" style="border-radius: 15px;">
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <h5 class="fw-bold mb-0">
+                <span class="material-icons align-middle me-2 text-danger">description</span>
+                Thông tin sáng kiến
+            </h5>
         </div>
+        <div class="card-body p-4">
+            <form asp-controller="Initiative" asp-action="Create" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-        <div style="margin-top:20px;margin-bottom:20px">
-            <label>Initiative Title *</label>
-            <input asp-for="Initiative.Title" placeholder="Enter a descriptive title for your initiative" class="form-control" />
-            <span asp-validation-for="Initiative.Title" class="text-danger"></span>
-        </div>
-
-        <div style="margin-bottom:20px">
-            <label>Description</label>
-            <textarea asp-for="Initiative.Description" placeholder="Provide full details, objectives, and expected outcomes..." rows="6" class="form-control"></textarea>
-            <span asp-validation-for="Initiative.Description" class="text-danger"></span>
-        </div>
-
-        <label>Supporting Documents</label>
-
-        <div class="file-source-toggle">
-            <button type="button" class="source-btn active" data-source="existing">
-                <i class="bi bi-folder2-open"></i> File có sẵn
-            </button>
-
-            <button type="button" class="source-btn" data-source="local">
-                <i class="bi bi-upload"></i> File từ thư mục
-            </button>
-        </div>
-
-        <!-- ===== FILE CÓ SẴN ===== -->
-        <div id="existingFiles" class="source-panel">
-            <div class="existing-file" data-file="Curriculum_Draft_v2.pdf">
-                <div class="file-icon pdf">
-                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                <!-- Row 1: Academic Year & Category -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Initiative.AcademicYearId" class="form-label fw-medium">
+                            <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">calendar_today</span>
+                            Năm học <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Initiative.AcademicYearId" asp-items="Model.AcademicYears" class="form-select">
+                            <option value="">-- Chọn năm học --</option>
+                        </select>
+                        <span asp-validation-for="Initiative.AcademicYearId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Initiative.CategoryId" class="form-label fw-medium">
+                            <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">category</span>
+                            Danh mục <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Initiative.CategoryId" asp-items="Model.Categories" class="form-select">
+                            <option value="">-- Chọn danh mục --</option>
+                        </select>
+                        <span asp-validation-for="Initiative.CategoryId" class="text-danger small"></span>
+                    </div>
                 </div>
-                <div class="file-name">Curriculum_Draft_v2.pdf</div>
-                <div class="file-toggle" onclick="toggleSelect(this)"></div>
-            </div>
 
-            <div class="existing-file" data-file="Final_Report.docx">
-                <div class="file-icon doc">
-                    <i class="bi bi-file-earmark-word-fill"></i>
+                <!-- Row 2: Department & Budget -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="Initiative.DepartmentId" class="form-label fw-medium">
+                            <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">business</span>
+                            Khoa/Phòng ban <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Initiative.DepartmentId" asp-items="Model.Departments" class="form-select">
+                            <option value="">-- Chọn khoa/phòng ban --</option>
+                        </select>
+                        <span asp-validation-for="Initiative.DepartmentId" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Initiative.Budget" class="form-label fw-medium">
+                            <span class="material-icons align-middle me-1 text-warning" style="font-size: 18px;">payments</span>
+                            Ngân sách (VND)
+                        </label>
+                        <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Nhập số tiền dự kiến" class="form-control" />
+                        <span asp-validation-for="Initiative.Budget" class="text-danger small"></span>
+                    </div>
                 </div>
-                <div class="file-name">Final_Report.docx</div>
-                <div class="file-toggle" onclick="toggleSelect(this)"></div>
-            </div>
 
-            <div class="existing-file" data-file="Budget_2025.xlsx">
-                <div class="file-icon xlsx">
-                    <i class="bi bi-file-earmark-excel-fill"></i>
+                <!-- Title -->
+                <div class="mb-4">
+                    <label asp-for="Initiative.Title" class="form-label fw-medium">
+                        <span class="material-icons align-middle me-1 text-danger" style="font-size: 18px;">title</span>
+                        Tiêu đề sáng kiến <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="Initiative.Title" placeholder="Nhập tiêu đề mô tả ngắn gọn cho sáng kiến" class="form-control form-control-lg" />
+                    <span asp-validation-for="Initiative.Title" class="text-danger small"></span>
                 </div>
-                <div class="file-name">Budget_2025.xlsx</div>
-                <div class="file-toggle" onclick="toggleSelect(this)"></div>
-            </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label asp-for="Initiative.Description" class="form-label fw-medium">
+                        <span class="material-icons align-middle me-1 text-secondary" style="font-size: 18px;">notes</span>
+                        Mô tả chi tiết
+                    </label>
+                    <textarea asp-for="Initiative.Description" placeholder="Mô tả đầy đủ về sáng kiến, mục tiêu, và kết quả mong đợi..." rows="6" class="form-control"></textarea>
+                    <span asp-validation-for="Initiative.Description" class="text-danger small"></span>
+                </div>
+
+                <!-- File Upload Section -->
+                <div class="mb-4">
+                    <label class="form-label fw-medium">
+                        <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">attach_file</span>
+                        Tài liệu đính kèm
+                    </label>
+                    
+                    <div class="nav nav-pills mb-3" role="tablist">
+                        <button class="nav-link active rounded-pill me-2" id="existing-tab" data-bs-toggle="pill" data-bs-target="#existing-files" type="button" role="tab">
+                            <span class="material-icons align-middle me-1" style="font-size: 16px;">folder</span> File có sẵn
+                        </button>
+                        <button class="nav-link rounded-pill" id="upload-tab" data-bs-toggle="pill" data-bs-target="#upload-files" type="button" role="tab">
+                            <span class="material-icons align-middle me-1" style="font-size: 16px;">upload_file</span> Tải lên
+                        </button>
+                    </div>
+
+                    <div class="tab-content">
+                        <!-- Existing Files -->
+                        <div class="tab-pane fade show active" id="existing-files" role="tabpanel">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="card border h-100" style="cursor: pointer;" onclick="this.classList.toggle('border-primary'); this.classList.toggle('bg-light');">
+                                        <div class="card-body d-flex align-items-center">
+                                            <span class="material-icons text-danger me-2">picture_as_pdf</span>
+                                            <span class="small">Curriculum_Draft_v2.pdf</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border h-100" style="cursor: pointer;" onclick="this.classList.toggle('border-primary'); this.classList.toggle('bg-light');">
+                                        <div class="card-body d-flex align-items-center">
+                                            <span class="material-icons text-primary me-2">description</span>
+                                            <span class="small">Final_Report.docx</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border h-100" style="cursor: pointer;" onclick="this.classList.toggle('border-primary'); this.classList.toggle('bg-light');">
+                                        <div class="card-body d-flex align-items-center">
+                                            <span class="material-icons text-success me-2">table_chart</span>
+                                            <span class="small">Budget_2025.xlsx</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Files -->
+                        <div class="tab-pane fade" id="upload-files" role="tabpanel">
+                            <div class="border border-2 border-dashed rounded-3 p-5 text-center bg-light" style="cursor: pointer;" onclick="document.getElementById('fileInput').click()">
+                                <span class="material-icons text-muted mb-2" style="font-size: 48px;">cloud_upload</span>
+                                <p class="mb-1 fw-medium">Nhấp để tải lên hoặc kéo thả file</p>
+                                <p class="text-muted small mb-0">PDF, DOCX, XLSX (Tối đa 10MB)</p>
+                                <div id="fileList" class="mt-3"></div>
+                            </div>
+                            <input type="file" id="fileInput" name="UploadedFiles" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" multiple hidden>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <hr class="my-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Hủy bỏ
+                    </a>
+                    <div class="d-flex gap-3">
+                        <button type="submit" name="action" value="Draft" class="btn btn-outline-primary rounded-pill px-4">
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Lưu nháp
+                        </button>
+                        <button type="submit" name="action" value="Submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow">
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> Nộp sáng kiến
+                        </button>
+                    </div>
+                </div>
+
+            </form>
         </div>
+    </div>
 
-
-        <!-- ===== FILE TỪ THƯ MỤC ===== -->
-        <div class="upload" id="uploadBox" style="display:none" onclick="fileInput.click()">
-            <div id="uploadHint">
-                <strong>Click to upload</strong> or drag and drop<br>
-                PDF, DOCX, XLSX (Max 10MB)
-            </div>
-            <div id="fileList"></div>
-        </div>
-
-        <input type="file" id="fileInput" accept=".pdf,.docx,.xlsx" multiple hidden>
-
-
-        <div class="actions" style="margin-top:24px;">
-            <a href="/Author/HomePage" class="btn btn-secondary">Cancel</a>
-            <button type="submit" name="saveAsDraft" value="true" class="btn btn-secondary">Save Draft</button>
-            <button type="submit" class="btn btn-primary">Submit for Review →</button>
-        </div>
-
-    </form>
-</div>
+</main>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

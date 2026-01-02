@@ -1,4 +1,4 @@
-@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
 
 <main class="container py-5">
 
@@ -6,12 +6,12 @@
     <section class="hero-section text-white p-5 mb-5 shadow-lg">
         <div class="row">
             <div class="col-lg-8">
-                <span class="badge rounded-pill bg-info text-white mb-3 p-2 px-3">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">edit</span> CHỈNH SỬA SÁNG KIẾN
+                <span class="badge rounded-pill bg-warning text-dark mb-3 p-2 px-3">
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">add_circle</span> TẠO SÁNG KIẾN MỚI
                 </span>
-                <h1 class="fw-bold display-5 mb-3">Cập nhật Sáng kiến</h1>
+                <h1 class="fw-bold display-5 mb-3">Đề xuất Sáng kiến</h1>
                 <p class="fs-5 mb-0 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    Chỉnh sửa thông tin sáng kiến của bạn. Mã sáng kiến: <strong>@Model.Initiative.InitiativeCode</strong>
+                    Điền thông tin bên dưới để đề xuất sáng kiến mới. Sáng kiến sẽ được gửi đến hội đồng để xét duyệt.
                 </p>
             </div>
         </div>
@@ -21,19 +21,13 @@
     <div class="card card-custom shadow-sm" style="border-radius: 15px;">
         <div class="card-header bg-white border-0 pt-4 px-4">
             <h5 class="fw-bold mb-0">
-                <span class="material-icons align-middle me-2 text-info">edit_note</span>
+                <span class="material-icons align-middle me-2 text-danger">description</span>
                 Thông tin sáng kiến
             </h5>
         </div>
         <div class="card-body p-4">
-            <form asp-controller="Initiative" asp-action="Edit" method="post" enctype="multipart/form-data">
+            <form asp-controller="Initiative" asp-action="Create" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="Initiative.Id" />
-                <input type="hidden" asp-for="Initiative.InitiativeCode" />
-                <input type="hidden" asp-for="Initiative.ProposerId" />
-                <input type="hidden" asp-for="Initiative.Status" />
-                <input type="hidden" asp-for="Initiative.CreatedAt" />
-                
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                 <!-- Row 1: Academic Year & Category -->
@@ -102,15 +96,32 @@
                     <span asp-validation-for="Initiative.Description" class="text-danger small"></span>
                 </div>
 
+
+                <!-- File Upload Section -->
+                <div class="mb-4">
+                    <label class="form-label fw-medium">
+                        <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">attach_file</span>
+                        Tài liệu đính kèm
+                    </label>
+                    
+                    <div class="border border-2 border-dashed rounded-3 p-5 text-center bg-light" style="cursor: pointer;" onclick="document.getElementById('fileInput').click()">
+                        <span class="material-icons text-muted mb-2" style="font-size: 48px;">cloud_upload</span>
+                        <p class="mb-1 fw-medium">Nhấp để tải lên hoặc kéo thả file</p>
+                        <p class="text-muted small mb-0">PDF, DOCX, XLSX (Tối đa 10MB)</p>
+                        <div id="fileList" class="mt-3"></div>
+                    </div>
+                    <input type="file" id="fileInput" name="UploadedFiles" accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" multiple hidden>
+                </div>
+
                 <!-- Action Buttons -->
                 <hr class="my-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@Model.Initiative.Id" class="btn btn-outline-secondary rounded-pill px-4">
-                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Quay lại
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Hủy bỏ
                     </a>
                     <div class="d-flex gap-3">
-                        <button type="submit" name="action" value="Save" class="btn btn-outline-primary rounded-pill px-4">
-                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Lưu thay đổi
+                        <button type="submit" name="action" value="Draft" class="btn btn-outline-primary rounded-pill px-4">
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Lưu nháp
                         </button>
                         <button type="submit" name="action" value="Submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow">
                             <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> Nộp sáng kiến

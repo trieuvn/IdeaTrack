@@ -1,29 +1,119 @@
-﻿<h2 style="color:#1e40af;margin-bottom:20px;">File Storage</h2>
+﻿@model IEnumerable<IdeaTrack.Models.InitiativeFile>
 
-<div class="files-grid">
+<main class="container py-5">
 
-    <a href="/images/AdvancedWebApplicationDevelopment_Final.pdf"
-       class="file-item"
-       onclick="previewFile(event, '/images/AdvancedWebApplicationDevelopment_Final.pdf')">
-        <i class="bi bi-file-earmark-pdf-fill"></i>
-        <span>Curriculum_Draft_v2.pdf</span>
-    </a>
+    <!-- Hero Section -->
+    <section class="hero-section text-white p-5 mb-5 shadow-lg">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge rounded-pill bg-white bg-opacity-25 mb-3 p-2 px-3">
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">folder</span> QUẢN LÝ TỆP TIN
+                </span>
+                <h1 class="fw-bold display-5 mb-3">Kho lưu trữ tệp</h1>
+                <p class="fs-5 mb-0 opacity-75">
+                    Tất cả tệp tin bạn đã tải lên cho các sáng kiến.
+                </p>
+            </div>
+            <div class="col-lg-4 d-flex align-items-center justify-content-end">
+                <div class="text-center">
+                    <div class="display-3 fw-bold">@Model.Count()</div>
+                    <div class="opacity-75">Tổng số tệp</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <a href="/uploads/Report_2025.docx"
-       class="file-item"
-       onclick="previewFile(event, '/uploads/Report_2025.docx')">
-        <i class="bi bi-file-earmark-word-fill"></i>
-        <span>Report_2025.docx</span>
-    </a>
+    <!-- Files Grid -->
+    <div class="card card-custom shadow-sm" style="border-radius: 15px;">
+        <div class="card-header bg-white border-0 pt-4 px-4">
+            <h5 class="fw-bold mb-0">
+                <span class="material-icons align-middle me-2 text-primary">inventory_2</span>
+                Danh sách tệp tin
+            </h5>
+        </div>
+        <div class="card-body p-4">
+            @if (Model.Any())
+            {
+                <div class="row g-4">
+                    @foreach (var file in Model)
+                    {
+                        <div class="col-md-4">
+                            <div class="card border h-100 hover-shadow" style="transition: all 0.2s;">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start justify-content-between mb-3">
+                                        @if (file.FileType == ".pdf")
+                                        {
+                                            <div class="rounded-3 bg-danger bg-opacity-10 p-3">
+                                                <span class="material-icons text-danger" style="font-size: 32px;">picture_as_pdf</span>
+                                            </div>
+                                        }
+                                        else if (file.FileType == ".docx" || file.FileType == ".doc")
+                                        {
+                                            <div class="rounded-3 bg-primary bg-opacity-10 p-3">
+                                                <span class="material-icons text-primary" style="font-size: 32px;">description</span>
+                                            </div>
+                                        }
+                                        else if (file.FileType == ".xlsx" || file.FileType == ".xls")
+                                        {
+                                            <div class="rounded-3 bg-success bg-opacity-10 p-3">
+                                                <span class="material-icons text-success" style="font-size: 32px;">table_chart</span>
+                                            </div>
+                                        }
+                                        else if (file.FileType == ".jpg" || file.FileType == ".jpeg" || file.FileType == ".png")
+                                        {
+                                            <div class="rounded-3 bg-info bg-opacity-10 p-3">
+                                                <span class="material-icons text-info" style="font-size: 32px;">image</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="rounded-3 bg-secondary bg-opacity-10 p-3">
+                                                <span class="material-icons text-secondary" style="font-size: 32px;">insert_drive_file</span>
+                                            </div>
+                                        }
+                                        <a href="@file.FilePath" download class="btn btn-sm btn-outline-primary rounded-pill">
+                                            <span class="material-icons" style="font-size: 16px;">download</span>
+                                        </a>
+                                    </div>
+                                    <h6 class="fw-bold text-truncate" title="@file.FileName">@file.FileName</h6>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-light text-dark">@((file.FileSize / 1024.0).ToString("F1")) KB</span>
+                                        <small class="text-muted">@file.UploadDate.ToString("dd/MM/yyyy")</small>
+                                    </div>
+                                    @if (file.Initiative != null)
+                                    {
+                                        <div class="mt-2 pt-2 border-top">
+                                            <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@file.InitiativeId" class="small text-decoration-none">
+                                                <span class="material-icons align-middle me-1" style="font-size: 14px;">link</span>
+                                                @(file.Initiative.Title.Length > 30 ? file.Initiative.Title.Substring(0, 30) + "..." : file.Initiative.Title)
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <span class="material-icons text-muted" style="font-size: 80px;">folder_off</span>
+                    <h5 class="text-muted mt-3">Chưa có tệp tin nào</h5>
+                    <p class="text-muted mb-4">Tải lên tệp khi tạo sáng kiến mới</p>
+                    <a asp-controller="Initiative" asp-action="Create" class="btn btn-danger rounded-pill px-4">
+                        <span class="material-icons align-middle me-1">add_circle</span> Tạo sáng kiến mới
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
 
-    <a href="/images/login-background.jpg"
-       class="file-item"
-       onclick="previewFile(event, '/images/login-background.jpg')">
-        <i class="bi bi-file-earmark-image-fill"></i>
-        <span>Image_Design.png</span>
-    </a>
+</main>
 
-</div>
-
-<!-- KHU VỰC PREVIEW -->
-<div id="file-preview" class="file-preview" style="display:none;margin-top:30px;"></div>
+<style>
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-2px);
+    }
+</style>
