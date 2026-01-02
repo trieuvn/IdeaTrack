@@ -1,0 +1,74 @@
+@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+
+<div class="page-header">
+    <a href="/Author/HomePage/Detail/@Model.Initiative.Id" class="btn-return">← Return</a>
+    <h1>Edit Initiative</h1>
+    <p>Update the details of your initiative.</p>
+</div>
+
+<div class="card">
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Initiative.Id" />
+        <input type="hidden" asp-for="Initiative.InitiativeCode" />
+        <input type="hidden" asp-for="Initiative.ProposerId" />
+        <input type="hidden" asp-for="Initiative.Status" />
+        <input type="hidden" asp-for="Initiative.CreatedAt" />
+        
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="grid">
+            <div>
+                <label>Academic Year *</label>
+                <select asp-for="Initiative.AcademicYearId" asp-items="Model.AcademicYears" class="form-control">
+                    <option value="">Select Academic Year...</option>
+                </select>
+                <span asp-validation-for="Initiative.AcademicYearId" class="text-danger"></span>
+            </div>
+            <div>
+                <label>Category *</label>
+                <select asp-for="Initiative.CategoryId" asp-items="Model.Categories" class="form-control">
+                    <option value="">Select Category...</option>
+                </select>
+                <span asp-validation-for="Initiative.CategoryId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="grid" style="margin-top:16px;">
+            <div>
+                <label>Department *</label>
+                <select asp-for="Initiative.DepartmentId" asp-items="Model.Departments" class="form-control">
+                    <option value="">Select Department...</option>
+                </select>
+                <span asp-validation-for="Initiative.DepartmentId" class="text-danger"></span>
+            </div>
+            <div>
+                <label>Budget (VND)</label>
+                <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Enter budget amount" class="form-control" />
+                <span asp-validation-for="Initiative.Budget" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div style="margin-top:20px;margin-bottom:20px">
+            <label>Initiative Title *</label>
+            <input asp-for="Initiative.Title" placeholder="Enter a descriptive title for your initiative" class="form-control" />
+            <span asp-validation-for="Initiative.Title" class="text-danger"></span>
+        </div>
+
+        <div style="margin-bottom:20px">
+            <label>Description</label>
+            <textarea asp-for="Initiative.Description" placeholder="Provide full details, objectives, and expected outcomes..." rows="6" class="form-control"></textarea>
+            <span asp-validation-for="Initiative.Description" class="text-danger"></span>
+        </div>
+
+        <div class="actions" style="margin-top:24px;">
+            <a href="/Author/HomePage/Detail/@Model.Initiative.Id" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

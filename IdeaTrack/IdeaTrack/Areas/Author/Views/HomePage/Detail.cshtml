@@ -1,118 +1,166 @@
-﻿
-    <nav class="breadcrumb">
-        <a href="/" class="breadcrumb-link">HomePage</a>
-        <span class="breadcrumb-separator">/</span>
-        <a href="/HomePage/History" class="breadcrumb-link">Initiatives</a>
-        <span class="breadcrumb-separator">/</span>
-        <span class="breadcrumb-current">Detail</span>
-    </nav>
+﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeDetailViewModel
 
-    <header class="initiative-header">
-        <h1>AI Integration in Undergraduate Studies</h1>
-        <button class="edit-btn">Edit Initiative</button>
-    </header>
+<nav class="breadcrumb">
+    <a href="/Author/HomePage" class="breadcrumb-link">HomePage</a>
+    <span class="breadcrumb-separator">/</span>
+    <a href="/Author/HomePage/History" class="breadcrumb-link">Initiatives</a>
+    <span class="breadcrumb-separator">/</span>
+    <span class="breadcrumb-current">Detail</span>
+</nav>
 
-    <div class="initiative-meta">
-        <span>Academic Year: 2023-2024</span>
-        <span>Category: Curriculum Development</span>
-    </div>
+<header class="initiative-header">
+    <h1>@Model.Initiative.Title</h1>
+    <a href="/Author/HomePage/Edit/@Model.Initiative.Id" class="edit-btn">Edit Initiative</a>
+</header>
 
-    <div class="initiative-body">
-        <div class="left-panel">
-            <section class="abstract">
-                <h2>Abstract</h2>
-                <p>This initiative proposes the integration of Artificial Intelligence (AI) and Machine Learning (ML) fundamentals into the core undergraduate curriculum across all engineering disciplines. The goal is to equip students with the necessary skills to navigate an AI-driven job market. This includes the development of two new mandatory courses and the revision of three existing courses to include AI-assisted problem-solving modules.</p>
-            </section>
+<div class="initiative-meta">
+    <span>Academic Year: @Model.Initiative.AcademicYear?.Name</span>
+    <span>Category: @Model.Initiative.Category?.Name</span>
+    <span>Department: @Model.Initiative.Department?.Name</span>
+    <span>Code: @Model.Initiative.InitiativeCode</span>
+</div>
 
-            <section class="detailed-proposal">
-                <h2>Detailed Proposal</h2>
-                <p>The rapid advancement of AI technologies necessitates a shift in how we approach engineering education. Currently, AI topics are relegated to elective courses, often missing a large portion of the student body. This initiative aims to democratize AI knowledge.</p>
+<div class="initiative-body">
+    <div class="left-panel">
+        <section class="abstract">
+            <h2>Description</h2>
+            <p>@(string.IsNullOrEmpty(Model.Initiative.Description) ? "No description provided." : Model.Initiative.Description)</p>
+        </section>
 
-                <h3>Key Objectives:</h3>
-                <ul>
-                    <li>Design a “Foundations of AI” course for Freshmen.</li>
-                    <li>Integrate AI tools (e.g., Python libraries, generative design) into Capstone projects.</li>
-                    <li>Train faculty members on AI ethics and application.</li>
-                </ul>
-
-                <h3>Expected Outcomes:</h3>
-                <p>We anticipate a 40% increase in student engagement in research projects involving ML and a higher employability rate for graduates in tech-forward sectors.</p>
-            </section>
+        <section class="detailed-proposal">
+            <h2>Initiative Details</h2>
+            <p><strong>Budget:</strong> @Model.Initiative.Budget.ToString("N0") VND</p>
+            <p><strong>Created:</strong> @Model.Initiative.CreatedAt.ToString("MMMM dd, yyyy 'at' HH:mm")</p>
+            @if (Model.Initiative.SubmittedDate.HasValue)
+            {
+                <p><strong>Submitted:</strong> @Model.Initiative.SubmittedDate.Value.ToString("MMMM dd, yyyy 'at' HH:mm")</p>
+            }
+        </section>
 
         <section class="supporting-documents">
             <h2>Supporting Documents</h2>
 
             <div class="documents-list">
-                <div class="document-item">
-                    <i class="bi bi-file-earmark-pdf-fill file-icon pdf"></i>
-                    <div class="file-info">
-                        <div class="file-name">Curriculum_Draft_v2.pdf</div>
-                        <div class="file-meta">2.4 MB • Uploaded Oct 10</div>
-                    </div>
-                    <i class="bi bi-download download-arrow"></i>
-                </div>
-
-                <div class="document-item">
-                    <i class="bi bi-file-earmark-excel-fill file-icon excel"></i>
-                    <div class="file-info">
-                        <div class="file-name">Budget_Est_2024.xlsx</div>
-                        <div class="file-meta">1.1 MB • Uploaded Oct 10</div>
-                    </div>
-                    <i class="bi bi-download download-arrow"></i>
-                </div>
+                @if (Model.Files.Any())
+                {
+                    @foreach (var file in Model.Files)
+                    {
+                        <div class="document-item">
+                            @if (file.FileType == ".pdf")
+                            {
+                                <i class="bi bi-file-earmark-pdf-fill file-icon pdf"></i>
+                            }
+                            else if (file.FileType == ".docx" || file.FileType == ".doc")
+                            {
+                                <i class="bi bi-file-earmark-word-fill file-icon doc"></i>
+                            }
+                            else if (file.FileType == ".xlsx" || file.FileType == ".xls")
+                            {
+                                <i class="bi bi-file-earmark-excel-fill file-icon excel"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-file-earmark-fill file-icon"></i>
+                            }
+                            <div class="file-info">
+                                <div class="file-name">@file.FileName</div>
+                                <div class="file-meta">@((file.FileSize / 1024.0 / 1024.0).ToString("F1")) MB • Uploaded @file.UploadDate.ToString("MMM dd")</div>
+                            </div>
+                            <a href="@file.FilePath" download><i class="bi bi-download download-arrow"></i></a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p style="color:#888;">No documents attached.</p>
+                }
             </div>
 
-            <a href="#" class="download-all-link">
-                <i class="bi bi-download me-1"></i> Download All
-            </a>
+            @if (Model.Files.Any())
+            {
+                <a href="#" class="download-all-link">
+                    <i class="bi bi-download me-1"></i> Download All
+                </a>
+            }
         </section>
-        </div>
-
-        <aside class="right-panel">
-            <section class="approval-status">
-                <h2>Approval Status</h2>
-                <ul class="status-steps">
-                    <li class="step completed">
-                        <span class="step-circle"></span>
-                        <div class="step-label">
-                            <strong>Submitted</strong>
-                            <small>Completed on Oct 10</small>
-                        </div>
-                    </li>
-                    <li class="step active">
-                        <span class="step-circle"></span>
-                        <div class="step-label">
-                            <strong>Dept. Manager Approval</strong>
-                            <small>In Progress</small>
-                        </div>
-                    </li>
-                    <li class="step pending">
-                        <span class="step-circle"></span>
-                        <div class="step-label">
-                            <strong>Board Review</strong>
-                            <small>Pending</small>
-                        </div>
-                    </li>
-                    <li class="step pending">
-                        <span class="step-circle"></span>
-                        <div class="step-label">
-                            <strong>Final Decision</strong>
-                            <small>Pending</small>
-                        </div>
-                    </li>
-                </ul>
-            </section>
-
-            <section class="review-feedback">
-                <h2>Review Feedback</h2>
-                <span class="pending-tag">PENDING</span>
-                <div class="feedback-placeholder">
-                    <div class="placeholder-icon"></div>
-                    <p>Evaluation in Progress<br>Scores and comments will appear here once the Department Manager completes their review.</p>
-                </div>
-            </section>
-        </aside>
     </div>
 
+    <aside class="right-panel">
+        <section class="approval-status">
+            <h2>Approval Status</h2>
+            <ul class="status-steps">
+                <li class="step @(Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Pending ? "completed" : "pending")">
+                    <span class="step-circle"></span>
+                    <div class="step-label">
+                        <strong>Submitted</strong>
+                        <small>@(Model.Initiative.SubmittedDate.HasValue ? "Completed on " + Model.Initiative.SubmittedDate.Value.ToString("MMM dd") : "Pending")</small>
+                    </div>
+                </li>
+                <li class="step @(Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Dept_Review ? "active" : (Model.Initiative.Status > IdeaTrack.Models.InitiativeStatus.Dept_Review ? "completed" : "pending"))">
+                    <span class="step-circle"></span>
+                    <div class="step-label">
+                        <strong>Dept. Manager Approval</strong>
+                        <small>@(Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Dept_Review ? "In Progress" : (Model.Initiative.Status > IdeaTrack.Models.InitiativeStatus.Dept_Review ? "Completed" : "Pending"))</small>
+                    </div>
+                </li>
+                <li class="step @(Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Reviewing ? "active" : (Model.Initiative.Status > IdeaTrack.Models.InitiativeStatus.Reviewing ? "completed" : "pending"))">
+                    <span class="step-circle"></span>
+                    <div class="step-label">
+                        <strong>Board Review</strong>
+                        <small>@(Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Reviewing ? "In Progress" : "Pending")</small>
+                    </div>
+                </li>
+                <li class="step @(Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected ? "completed" : "pending")">
+                    <span class="step-circle"></span>
+                    <div class="step-label">
+                        <strong>Final Decision</strong>
+                        <small>
+                            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved)
+                            {
+                                <span style="color:green;">Approved</span>
+                            }
+                            else if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
+                            {
+                                <span style="color:red;">Rejected</span>
+                            }
+                            else
+                            {
+                                <text>Pending</text>
+                            }
+                        </small>
+                    </div>
+                </li>
+            </ul>
+        </section>
 
-   
+        <section class="review-feedback">
+            <h2>Review Feedback</h2>
+            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved)
+            {
+                <span class="badge approved">APPROVED</span>
+            }
+            else if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
+            {
+                <span class="badge rejected">REJECTED</span>
+            }
+            else
+            {
+                <span class="pending-tag">PENDING</span>
+            }
+            <div class="feedback-placeholder">
+                <div class="placeholder-icon"></div>
+                <p>Evaluation in Progress<br>Scores and comments will appear here once the review is completed.</p>
+            </div>
+        </section>
+
+        @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Draft)
+        {
+            <section style="margin-top:24px;">
+                <form asp-action="Delete" asp-route-id="@Model.Initiative.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this initiative?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger" style="width:100%;">Delete Initiative</button>
+                </form>
+            </section>
+        }
+    </aside>
+</div>

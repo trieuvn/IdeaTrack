@@ -1,37 +1,39 @@
-﻿<div class="topbar">
+﻿@model IdeaTrack.Areas.Author.ViewModels.AuthorDashboardViewModel
+
+<div class="topbar">
     <input class="search" placeholder="Search initiatives, drafts..." />
     <a href="/Author/HomePage/Create" class="btn-primary">+ Create New Initiative</a>
 </div>
 
 <section class="welcome">
     <div class="welcome-card">
-        <h2>Welcome back, John! 👋</h2>
-        <p>You have 2 pending drafts and 1 initiative under review.</p>
+        <h2>Welcome back, @Model.UserName! 👋</h2>
+        <p>You have @Model.DraftCount pending drafts and @Model.UnderReviewCount initiative(s) under review.</p>
         <div class="actions">
-            <button class="btn-light">Continue Drafts</button>
+            <a href="/Author/HomePage/History" class="btn-light">View All Initiatives</a>
             <button class="btn-outline">View Guidelines</button>
         </div>
     </div>
     <div class="overview">
         <h4>Submission Overview</h4>
-        <div class="overview-item"><span>Drafts</span><strong>2</strong></div>
-        <div class="overview-item"><span>Submitted</span><strong>5</strong></div>
-        <div class="overview-item"><span>Approved</span><strong>12</strong></div>
+        <div class="overview-item"><span>Drafts</span><strong>@Model.DraftCount</strong></div>
+        <div class="overview-item"><span>Submitted</span><strong>@Model.SubmittedCount</strong></div>
+        <div class="overview-item"><span>Approved</span><strong>@Model.ApprovedCount</strong></div>
     </div>
 </section>
 
 <section class="metrics">
     <div class="metric blue">
         <span>Total Score</span>
-        <h3>845 pts</h3>
+        <h3>@Model.TotalScore pts</h3>
     </div>
     <div class="metric orange">
         <span>Under Review</span>
-        <h3>3 Items</h3>
+        <h3>@Model.UnderReviewCount Items</h3>
     </div>
     <div class="metric green">
         <span>Success Rate</span>
-        <h3>92%</h3>
+        <h3>@Model.SuccessRate%</h3>
     </div>
     <div class="metric purple">
         <span>Rank</span>
@@ -43,19 +45,52 @@
     <h3 style="margin-bottom:12px">Recent Initiatives</h3>
     <table>
         <thead>
-            <tr><th>Title</th><th>Date</th><th>Status</th></tr>
+            <tr><th>Title</th><th>Date</th><th>Status</th><th>Action</th></tr>
         </thead>
         <tbody>
-            <tr>
-                <td>AI in Classroom Learning</td>
-                <td>Oct 24, 2024</td>
-                <td><span class="badge review">Under Review</span></td>
-            </tr>
-            <tr>
-                <td>Student Wellbeing Program</td>
-                <td>Oct 20, 2024</td>
-                <td><span class="badge approved">Approved</span></td>
-            </tr>
+            @if (Model.RecentInitiatives.Any())
+            {
+                @foreach (var item in Model.RecentInitiatives)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.CreatedAt.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            @switch (item.Status)
+                            {
+                                case IdeaTrack.Models.InitiativeStatus.Draft:
+                                    <span class="badge pending">Draft</span>
+                                    break;
+                                case IdeaTrack.Models.InitiativeStatus.Pending:
+                                    <span class="badge review">Pending</span>
+                                    break;
+                                case IdeaTrack.Models.InitiativeStatus.Reviewing:
+                                case IdeaTrack.Models.InitiativeStatus.Dept_Review:
+                                    <span class="badge review">Under Review</span>
+                                    break;
+                                case IdeaTrack.Models.InitiativeStatus.Approved:
+                                    <span class="badge approved">Approved</span>
+                                    break;
+                                case IdeaTrack.Models.InitiativeStatus.Rejected:
+                                    <span class="badge rejected">Rejected</span>
+                                    break;
+                                default:
+                                    <span class="badge">@item.Status</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            <a href="/Author/HomePage/Detail/@item.Id" class="btn-outline" style="padding:4px 12px;font-size:12px;">View</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" style="text-align:center;color:#888;">No initiatives found. Create your first one!</td>
+                </tr>
+            }
         </tbody>
     </table>
 </section>

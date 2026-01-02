@@ -1,100 +1,121 @@
-﻿
-            <div class="page-header">
-                <a href="/Author/HomePage" class="btn-return">← Return</a>
-                <h1>Create New Initiative</h1>
-                <p>Fill in the details below to propose a new initiative for evaluation.</p>
+﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+
+<div class="page-header">
+    <a href="/Author/HomePage" class="btn-return">← Return</a>
+    <h1>Create New Initiative</h1>
+    <p>Fill in the details below to propose a new initiative for evaluation.</p>
+</div>
+
+<div class="card">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="grid">
+            <div>
+                <label>Academic Year *</label>
+                <select asp-for="Initiative.AcademicYearId" asp-items="Model.AcademicYears" class="form-control">
+                    <option value="">Select Academic Year...</option>
+                </select>
+                <span asp-validation-for="Initiative.AcademicYearId" class="text-danger"></span>
             </div>
-
-            <div class="card">
-
-                <div class="grid">
-                    <div>
-                        <label>Academic Year *</label>
-                        <select>
-                            <option>Select Academic Year...</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Category *</label>
-                        <select>
-                            <option>Select Category...</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div style="margin-bottom:20px">
-                    <label>Initiative Title *</label>
-                    <input placeholder="Enter a descriptive title for your initiative" />
-                </div>
-
-                <div style="margin-bottom:20px">
-                    <label>Abstract</label>
-                    <textarea placeholder="Brief summary of the initiative (max 200 words)..."></textarea>
-                </div>
-
-                <div style="margin-bottom:20px">
-                    <label>Detailed Description *</label>
-                    <div class="editor">
-                        <div class="editor-toolbar">B · I · U · Align · Link</div>
-                        <textarea placeholder="Provide full details, objectives, and expected outcomes..."></textarea>
-                    </div>
-                </div>
-    <label>Supporting Documents</label>
-
-    <div class="file-source-toggle">
-        <button type="button" class="source-btn active" data-source="existing">
-            <i class="bi bi-folder2-open"></i> File có sẵn
-        </button>
-
-        <button type="button" class="source-btn" data-source="local">
-            <i class="bi bi-upload"></i> File từ thư mục
-        </button>
-    </div>
-
-    <!-- ===== FILE CÓ SẴN ===== -->
-    <div id="existingFiles" class="source-panel">
-        <div class="existing-file" data-file="Curriculum_Draft_v2.pdf">
-            <div class="file-icon pdf">
-                <i class="bi bi-file-earmark-pdf-fill"></i>
+            <div>
+                <label>Category *</label>
+                <select asp-for="Initiative.CategoryId" asp-items="Model.Categories" class="form-control">
+                    <option value="">Select Category...</option>
+                </select>
+                <span asp-validation-for="Initiative.CategoryId" class="text-danger"></span>
             </div>
-            <div class="file-name">Curriculum_Draft_v2.pdf</div>
-            <div class="file-toggle" onclick="toggleSelect(this)"></div>
         </div>
 
-        <div class="existing-file" data-file="Final_Report.docx">
-            <div class="file-icon doc">
-                <i class="bi bi-file-earmark-word-fill"></i>
+        <div class="grid" style="margin-top:16px;">
+            <div>
+                <label>Department *</label>
+                <select asp-for="Initiative.DepartmentId" asp-items="Model.Departments" class="form-control">
+                    <option value="">Select Department...</option>
+                </select>
+                <span asp-validation-for="Initiative.DepartmentId" class="text-danger"></span>
             </div>
-            <div class="file-name">Final_Report.docx</div>
-            <div class="file-toggle" onclick="toggleSelect(this)"></div>
-        </div>
-
-        <div class="existing-file" data-file="Budget_2025.xlsx">
-            <div class="file-icon xlsx">
-                <i class="bi bi-file-earmark-excel-fill"></i>
+            <div>
+                <label>Budget (VND)</label>
+                <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Enter budget amount" class="form-control" />
+                <span asp-validation-for="Initiative.Budget" class="text-danger"></span>
             </div>
-            <div class="file-name">Budget_2025.xlsx</div>
-            <div class="file-toggle" onclick="toggleSelect(this)"></div>
         </div>
-    </div>
 
-
-    <!-- ===== FILE TỪ THƯ MỤC ===== -->
-    <div class="upload" id="uploadBox" style="display:none" onclick="fileInput.click()">
-        <div id="uploadHint">
-            <strong>Click to upload</strong> or drag and drop<br>
-            PDF, DOCX, XLSX (Max 10MB)
+        <div style="margin-top:20px;margin-bottom:20px">
+            <label>Initiative Title *</label>
+            <input asp-for="Initiative.Title" placeholder="Enter a descriptive title for your initiative" class="form-control" />
+            <span asp-validation-for="Initiative.Title" class="text-danger"></span>
         </div>
-        <div id="fileList"></div>
-    </div>
 
-    <input type="file" id="fileInput" accept=".pdf,.docx,.xlsx" multiple hidden>
+        <div style="margin-bottom:20px">
+            <label>Description</label>
+            <textarea asp-for="Initiative.Description" placeholder="Provide full details, objectives, and expected outcomes..." rows="6" class="form-control"></textarea>
+            <span asp-validation-for="Initiative.Description" class="text-danger"></span>
+        </div>
 
+        <label>Supporting Documents</label>
 
-                <div class="actions">
-                    <button class="btn btn-secondary">Cancel</button>
-                    <button class="btn btn-secondary">Save Draft</button>
-                    <button class="btn btn-primary">Submit for Review →</button>
+        <div class="file-source-toggle">
+            <button type="button" class="source-btn active" data-source="existing">
+                <i class="bi bi-folder2-open"></i> File có sẵn
+            </button>
+
+            <button type="button" class="source-btn" data-source="local">
+                <i class="bi bi-upload"></i> File từ thư mục
+            </button>
+        </div>
+
+        <!-- ===== FILE CÓ SẴN ===== -->
+        <div id="existingFiles" class="source-panel">
+            <div class="existing-file" data-file="Curriculum_Draft_v2.pdf">
+                <div class="file-icon pdf">
+                    <i class="bi bi-file-earmark-pdf-fill"></i>
                 </div>
-
+                <div class="file-name">Curriculum_Draft_v2.pdf</div>
+                <div class="file-toggle" onclick="toggleSelect(this)"></div>
             </div>
+
+            <div class="existing-file" data-file="Final_Report.docx">
+                <div class="file-icon doc">
+                    <i class="bi bi-file-earmark-word-fill"></i>
+                </div>
+                <div class="file-name">Final_Report.docx</div>
+                <div class="file-toggle" onclick="toggleSelect(this)"></div>
+            </div>
+
+            <div class="existing-file" data-file="Budget_2025.xlsx">
+                <div class="file-icon xlsx">
+                    <i class="bi bi-file-earmark-excel-fill"></i>
+                </div>
+                <div class="file-name">Budget_2025.xlsx</div>
+                <div class="file-toggle" onclick="toggleSelect(this)"></div>
+            </div>
+        </div>
+
+
+        <!-- ===== FILE TỪ THƯ MỤC ===== -->
+        <div class="upload" id="uploadBox" style="display:none" onclick="fileInput.click()">
+            <div id="uploadHint">
+                <strong>Click to upload</strong> or drag and drop<br>
+                PDF, DOCX, XLSX (Max 10MB)
+            </div>
+            <div id="fileList"></div>
+        </div>
+
+        <input type="file" id="fileInput" accept=".pdf,.docx,.xlsx" multiple hidden>
+
+
+        <div class="actions" style="margin-top:24px;">
+            <a href="/Author/HomePage" class="btn btn-secondary">Cancel</a>
+            <button type="submit" name="saveAsDraft" value="true" class="btn btn-secondary">Save Draft</button>
+            <button type="submit" class="btn btn-primary">Submit for Review →</button>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
