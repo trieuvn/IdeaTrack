@@ -116,6 +116,26 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    
+                    // Role-based redirect after successful login
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    if (user != null)
+                    {
+                        var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                        
+                        if (roles.Contains("Admin"))
+                            return LocalRedirect("/Admin");
+                        if (roles.Contains("SciTech") || roles.Contains("OST_Admin"))
+                            return LocalRedirect("/SciTech/Port");
+                        if (roles.Contains("FacultyLeader") || roles.Contains("Faculty_Admin"))
+                            return LocalRedirect("/Faculty/Dashboard");
+                        if (roles.Contains("CouncilMember") || roles.Contains("Council_Member"))
+                            return LocalRedirect("/Councils/Page");
+                        
+                        // Default: Author/Lecturer
+                        return LocalRedirect("/Author/Dashboard");
+                    }
+                    
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

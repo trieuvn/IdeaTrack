@@ -1,4 +1,4 @@
-﻿@using IdeaTrack.Models
+@using IdeaTrack.Models
 @model IEnumerable<IdeaTrack.Models.Initiative>
 
 @{
@@ -147,7 +147,7 @@
                     {
                         foreach (var item in Model)
                         {
-                            bool isResubmitted = (item.Status == InitiativeStatus.Reviewing);
+                            bool isResubmitted = (item.Status == InitiativeStatus.Evaluating);
                             var lastRequest = item.RevisionRequests?.OrderByDescending(r => r.RequestedDate).FirstOrDefault();
 
                             DateTime? displayDate = isResubmitted ? (item.SubmittedDate ?? item.CreatedAt) : (lastRequest?.RequestedDate ?? item.CreatedAt);
@@ -168,7 +168,7 @@
                                             <span class="badge-custom @statusBadge">@statusLabel</span>
                                         </div>
                                         <div class="small text-secondary mb-2">
-                                            <i class="bi bi-person me-1"></i> Lect: @item.Proposer?.FullName
+                                            <i class="bi bi-person me-1"></i> Lect: @item.Creator?.FullName
                                             <span class="mx-2">|</span>
                                             <i class="bi bi-clock me-1"></i> Updated: @(displayDate?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")
                                         </div>

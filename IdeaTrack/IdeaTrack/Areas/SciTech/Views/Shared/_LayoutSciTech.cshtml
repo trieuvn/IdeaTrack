@@ -1,4 +1,4 @@
-﻿@{
+@{
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
@@ -200,63 +200,63 @@
             <!-- HEADER -->
             <div class="sidebar-header px-3 py-4 border-bottom">
                 <h5 class="fw-bold text-primary mb-0">PKHCN Portal</h5>
-                <small class="text-muted">Quản lý khoa học</small>
+                <small class="text-muted">Qu?n l� khoa h?c</small>
             </div>
 
             <!-- NAV -->
             <nav class="nav flex-column px-2 mt-2 flex-grow-1">
 
-                <!-- Tổng quan -->
+                <!-- T?ng quan -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Index" ? "active" : "")"
                    href="@Url.Action("Index", "Port", new { area = "SciTech" })">
                     <i class="fas fa-tachometer-alt"></i>
-                    <span>Tổng quan</span>
+                    <span>T?ng quan</span>
                 </a>
 
                 <div class="nav-section text-uppercase text-muted small px-2 mt-3 mb-1">
-                    Quản lý đề tài
+                    Qu?n l� d? t�i
                 </div>
 
-                <!-- Đề tài đang thực hiện -->
+                <!-- �? t�i dang th?c hi?n -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Result" ? "active" : "")"
                    href="@Url.Action("Result", "Port", new { area = "SciTech" })">
                     <i class="fas fa-tasks"></i>
-                    <span>Đề tài đang thực hiện</span>
+                    <span>�? t�i dang th?c hi?n</span>
                 </a>
 
-                <!-- Theo dõi hồ sơ -->
+                <!-- Theo d�i h? so -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Follow" ? "active" : "")"
                    href="@Url.Action("Follow", "Port", new { area = "SciTech" })">
                     <i class="fas fa-eye"></i>
-                    <span>Theo dõi hồ sơ</span>
+                    <span>Theo d�i h? so</span>
                 </a>
 
-                <!-- Quy định -->
+                <!-- Quy d?nh -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Rule" ? "active" : "")"
                    href="@Url.Action("Template", "Port", new { area = "SciTech" })">
                     <i class="fas fa-gavel"></i>
-                    <span>Bộ tiêu chí</span>
+                    <span>B? ti�u ch�</span>
                 </a>
 
-                <!-- Hồ sơ cá nhân -->
+                <!-- H? so c� nh�n -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Profile" ? "active" : "")"
                    href="@Url.Action("Profile", "Port", new { area = "SciTech" })">
                     <i class="fas fa-user"></i>
-                    <span>Hồ sơ cá nhân</span>
+                    <span>H? so c� nh�n</span>
                 </a>
 
-                <!-- Người dùng -->
+                <!-- Ngu?i d�ng -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "User" ? "active" : "")"
                    href="@Url.Action("User", "Port", new { area = "SciTech" })">
                     <i class="fas fa-users"></i>
-                    <span>Người dùng</span>
+                    <span>Ngu?i d�ng</span>
                 </a>
 
-                <!-- Hội đồng -->
+                <!-- H?i d?ng -->
                 <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Councils" ? "active" : "")"
                    href="@Url.Action("Councils", "Port", new { area = "SciTech" })">
-                    <i class="fas fa-users"></i> <!-- đổi icon -->
-                    <span>Hội đồng</span>
+                    <i class="fas fa-users"></i> <!-- d?i icon -->
+                    <span>H?i d?ng</span>
                 </a>
 
 
@@ -275,8 +275,8 @@
                 <div class="d-flex align-items-center gap-3">
                     <span class="material-symbols-outlined">notifications</span>
                     <div class="text-end">
-                        <div class="fw-semibold">Nguyễn Văn Admin</div>
-                        <small class="text-muted">Chuyên viên PKHCN</small>
+                        <div class="fw-semibold">Nguy?n Van Admin</div>
+                        <small class="text-muted">Chuy�n vi�n PKHCN</small>
                     </div>
                 </div>
             </header>

@@ -1,4 +1,4 @@
-﻿@{
+@{
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
 <!DOCTYPE html>
@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- CSS giống trang Home -->
+    <!-- CSS gi?ng trang Home -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/page.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/guildline.css" asp-append-version="true" />
@@ -29,7 +29,7 @@
 
 <body>
 
-    <!-- HEADER - Giống hệt trang Home -->
+    <!-- HEADER - Gi?ng h?t trang Home -->
     <header class="app-header">
         <div class="app-title">
             <img src="/images/logo-uef.png" height="32" class="me-2" />
@@ -39,7 +39,7 @@
 
     <div class="app-layout">
 
-        <!-- SIDEBAR - Cấu trúc giống Home -->
+        <!-- SIDEBAR - C?u tr�c gi?ng Home -->
         <aside class="sidebar">
 
             <!-- LOGIN -->
@@ -59,28 +59,28 @@
 
                 <a asp-area="Author" asp-controller="Initiative" asp-action="Create"
                    class="@(currentAction == "Create" ? "active" : "")">
-                    <span class="material-icons">add_circle</span> Tạo sáng kiến
+                    <span class="material-icons">add_circle</span> T?o s�ng ki?n
                 </a>
 
                 <a asp-area="Author" asp-controller="Initiative" asp-action="History"
                    class="@(currentAction == "History" ? "active" : "")">
-                    <span class="material-icons">history</span> Lịch sử
+                    <span class="material-icons">history</span> L?ch s?
                 </a>
 
                 <a asp-area="Author" asp-controller="HomePage" asp-action="DailyReport"
                    class="@(currentAction == "DailyReport" ? "active" : "")">
-                    <span class="material-icons">insights</span> Thống kê
+                    <span class="material-icons">insights</span> Th?ng k�
                 </a>
 
                 <a asp-area="Author" asp-controller="HomePage" asp-action="Setting"
                    class="@(currentAction == "Setting" ? "active" : "")">
-                    <span class="material-icons">settings</span> Cài đặt
+                    <span class="material-icons">settings</span> C�i d?t
                 </a>
 
                 <hr class="my-2" />
 
                 <a asp-controller="Home" asp-action="Index" asp-area="">
-                    <span class="material-icons">home</span> Về trang chủ
+                    <span class="material-icons">home</span> V? trang ch?
                 </a>
 
             </div>

@@ -2,11 +2,11 @@
 
 <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
     <div>
-        <h1 class="fw-bold mb-1">Phiếu Chấm Điểm Đồ Án</h1>
-        <p class="text-muted mb-0">Hội đồng đánh giá: @Model.InitiativeTitle</p>
+        <h1 class="fw-bold mb-1">Phi?u Ch?m �i?m �? �n</h1>
+        <p class="text-muted mb-0">H?i d?ng d�nh gi�: @Model.InitiativeTitle</p>
     </div>
     <span class="badge bg-primary-subtle text-primary px-3 py-2 d-flex align-items-center">
-        <i class="fa-solid fa-pen me-1"></i> Đang chấm
+        <i class="fa-solid fa-pen me-1"></i> �ang ch?m
     </span>
 </div>
 
@@ -18,8 +18,8 @@
         <div class="col-lg-8">
             <div class="card shadow-sm mb-4 border-0 rounded-3">
                 <div class="card-header bg-light d-flex justify-content-between align-items-center border-bottom">
-                    <h6 class="fw-bold mb-0">Tiêu chí đánh giá</h6>
-                    <span class="text-muted small">Thang điểm 100</span>
+                    <h6 class="fw-bold mb-0">Ti�u ch� d�nh gi�</h6>
+                    <span class="text-muted small">Thang di?m 100</span>
                 </div>
                 <div class="card-body p-0">
                     @for (int i = 0; i < Model.CriteriaItems.Count; i++)
@@ -50,7 +50,7 @@
                             <textarea asp-for="CriteriaItems[i].Note"
                                   class="form-control form-control-sm mt-3"
                                   rows="2"
-                                  placeholder="Nhận xét (tùy chọn)"></textarea>
+                                  placeholder="Nh?n x�t (t�y ch?n)"></textarea>
                             <input type="hidden" asp-for="CriteriaItems[i].CriteriaId" />
                             <input type="hidden" asp-for="CriteriaItems[i].CriteriaName" />
                             <input type="hidden" asp-for="CriteriaItems[i].MaxScore" />
@@ -61,13 +61,13 @@
 
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-light">
-                    <h6 class="fw-bold mb-0">Nhận xét chung & Câu hỏi</h6>
+                    <h6 class="fw-bold mb-0">Nh?n x�t chung & C�u h?i</h6>
                 </div>
                 <div class="card-body">
                     <textarea asp-for="GeneralComment"
                               class="form-control"
                               rows="4"
-                              placeholder="Nhận xét chung cho sinh viên..."></textarea>
+                              placeholder="Nh?n x�t chung cho sinh vi�n..."></textarea>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
                     <h5 class="fw-bold mb-0">@Model.ProposerName</h5>
                     <p class="text-muted small mb-3">@Model.DepartmentName</p>
                     <div class="text-start small mb-3">
-                        <div class="fw-semibold">Mã Đề tài</div>
+                        <div class="fw-semibold">M� �? t�i</div>
                         <div class="text-muted">@Model.InitiativeCode</div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-light">
                     <h6 class="fw-bold mb-0">
-                        <i class="fa-solid fa-folder-open me-2"></i> Quản lý File
+                        <i class="fa-solid fa-folder-open me-2"></i> Qu?n l� File
                     </h6>
                 </div>
                 <div class="card-body">
@@ -111,7 +111,7 @@
                         }
                         else
                         {
-                            <li class="list-group-item text-muted">Không có file.</li>
+                            <li class="list-group-item text-muted">Kh�ng c� file.</li>
                         }
                     </ul>
                 </div>
@@ -119,7 +119,7 @@
 
             <div class="card shadow-sm border-primary rounded-3 mt-2">
                 <div class="card-body text-center">
-                    <div class="text-muted small mb-1">Tổng điểm tạm tính</div>
+                    <div class="text-muted small mb-1">T?ng di?m t?m t�nh</div>
                     <div class="display-5 fw-bold text-primary mb-3">
                         <span id="totalScoreDisplay">0</span>
                         <span class="fs-5 text-muted">/100</span>
@@ -129,18 +129,18 @@
                                 name="SubmitAction"
                                 value="Submit"
                                 class="btn btn-primary btn-hover"
-                                onclick="return confirm('Nộp điểm?');">
-                            <i class="fa-solid fa-save me-1"></i> Lưu kết quả
+                                onclick="return confirm('N?p di?m?');">
+                            <i class="fa-solid fa-save me-1"></i> Luu k?t qu?
                         </button>
                         @* <button type="submit"
                                 name="SubmitAction"
                                 value="SaveDraft"
                                 class="btn btn-outline-secondary">
-                            Lưu nháp
+                            Luu nh�p
                         </button> *@
                         <a href="/Councils/Page/AssignedInitiatives"
                            class="btn btn-link text-danger text-decoration-none">
-                            Hủy & Quay lại
+                            H?y & Quay l?i
                         </a>
                     </div>
                 </div>
@@ -178,3 +178,4 @@
         })();
     </script>
 }
+

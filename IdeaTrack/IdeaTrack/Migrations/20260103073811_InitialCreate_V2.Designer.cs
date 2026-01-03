@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdeaTrack.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251226062956_init")]
-    partial class init
+    [Migration("20260103073811_InitialCreate_V2")]
+    partial class InitialCreate_V2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,67 @@ namespace IdeaTrack.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ApplicationUser", b =>
+            modelBuilder.Entity("IdeaTrack.Models.AcademicYear", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCurrent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("AcademicYears");
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.ApplicationRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.ApplicationUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -118,63 +178,6 @@ namespace IdeaTrack.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("IdeaTrack.Models.AcademicYear", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsCurrent")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("AcademicYears");
-                });
-
-            modelBuilder.Entity("IdeaTrack.Models.ApplicationRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("IdeaTrack.Models.Board", b =>
@@ -393,9 +396,6 @@ namespace IdeaTrack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AcademicYearId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Budget")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -405,6 +405,12 @@ namespace IdeaTrack.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrentRound")
+                        .HasColumnType("int");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
@@ -416,7 +422,7 @@ namespace IdeaTrack.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProposerId")
+                    b.Property<int?>("PeriodId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -431,16 +437,16 @@ namespace IdeaTrack.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AcademicYearId");
-
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("CreatorId");
 
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("InitiativeCode")
                         .IsUnique();
 
-                    b.HasIndex("ProposerId");
+                    b.HasIndex("PeriodId");
 
                     b.ToTable("Initiatives");
                 });
@@ -477,6 +483,9 @@ namespace IdeaTrack.Migrations
                     b.Property<string>("ReviewComment")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RoundNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("StageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -500,6 +509,36 @@ namespace IdeaTrack.Migrations
                     b.ToTable("InitiativeAssignments");
                 });
 
+            modelBuilder.Entity("IdeaTrack.Models.InitiativeAuthorship", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InitiativeId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCreator")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("JoinedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("InitiativeId", "AuthorId")
+                        .IsUnique();
+
+                    b.ToTable("InitiativeAuthorships");
+                });
+
             modelBuilder.Entity("IdeaTrack.Models.InitiativeCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -508,6 +547,9 @@ namespace IdeaTrack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BoardId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -515,7 +557,19 @@ namespace IdeaTrack.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PeriodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TemplateId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("BoardId");
+
+                    b.HasIndex("PeriodId");
+
+                    b.HasIndex("TemplateId");
 
                     b.ToTable("InitiativeCategories");
                 });
@@ -554,6 +608,81 @@ namespace IdeaTrack.Migrations
                     b.HasIndex("InitiativeId");
 
                     b.ToTable("InitiativeFiles");
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.InitiativePeriod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AcademicYearId");
+
+                    b.ToTable("InitiativePeriods");
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.ReferenceForm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FormName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeriodId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeriodId");
+
+                    b.ToTable("ReferenceForms");
                 });
 
             modelBuilder.Entity("IdeaTrack.Models.RevisionRequest", b =>
@@ -738,7 +867,7 @@ namespace IdeaTrack.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicationUser", b =>
+            modelBuilder.Entity("IdeaTrack.Models.ApplicationUser", b =>
                 {
                     b.HasOne("IdeaTrack.Models.Department", "Department")
                         .WithMany("Users")
@@ -755,10 +884,10 @@ namespace IdeaTrack.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ApplicationUser", "User")
-                        .WithMany()
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", "User")
+                        .WithMany("BoardMemberships")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Board");
@@ -798,7 +927,7 @@ namespace IdeaTrack.Migrations
 
             modelBuilder.Entity("IdeaTrack.Models.FinalResult", b =>
                 {
-                    b.HasOne("ApplicationUser", "Chairman")
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", "Chairman")
                         .WithMany()
                         .HasForeignKey("ChairmanId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -817,16 +946,16 @@ namespace IdeaTrack.Migrations
 
             modelBuilder.Entity("IdeaTrack.Models.Initiative", b =>
                 {
-                    b.HasOne("IdeaTrack.Models.AcademicYear", "AcademicYear")
-                        .WithMany("Initiatives")
-                        .HasForeignKey("AcademicYearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("IdeaTrack.Models.InitiativeCategory", "Category")
                         .WithMany("Initiatives")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", "Creator")
+                        .WithMany("MyInitiatives")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("IdeaTrack.Models.Department", "Department")
@@ -835,26 +964,26 @@ namespace IdeaTrack.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ApplicationUser", "Proposer")
-                        .WithMany("MyInitiatives")
-                        .HasForeignKey("ProposerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AcademicYear");
+                    b.HasOne("IdeaTrack.Models.InitiativePeriod", "Period")
+                        .WithMany("Initiatives")
+                        .HasForeignKey("PeriodId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Category");
 
+                    b.Navigation("Creator");
+
                     b.Navigation("Department");
 
-                    b.Navigation("Proposer");
+                    b.Navigation("Period");
                 });
 
             modelBuilder.Entity("IdeaTrack.Models.InitiativeAssignment", b =>
                 {
-                    b.HasOne("IdeaTrack.Models.Board", null)
+                    b.HasOne("IdeaTrack.Models.Board", "Board")
                         .WithMany("Assignments")
-                        .HasForeignKey("BoardId");
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("IdeaTrack.Models.Initiative", "Initiative")
                         .WithMany("Assignments")
@@ -862,7 +991,7 @@ namespace IdeaTrack.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ApplicationUser", "Member")
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", "Member")
                         .WithMany("MyAssignments")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -871,12 +1000,58 @@ namespace IdeaTrack.Migrations
                     b.HasOne("IdeaTrack.Models.EvaluationTemplate", "Template")
                         .WithMany()
                         .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Board");
 
                     b.Navigation("Initiative");
 
                     b.Navigation("Member");
+
+                    b.Navigation("Template");
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.InitiativeAuthorship", b =>
+                {
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", "Author")
+                        .WithMany("Authorships")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("IdeaTrack.Models.Initiative", "Initiative")
+                        .WithMany("Authorships")
+                        .HasForeignKey("InitiativeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Initiative");
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.InitiativeCategory", b =>
+                {
+                    b.HasOne("IdeaTrack.Models.Board", "Board")
+                        .WithMany()
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("IdeaTrack.Models.InitiativePeriod", "Period")
+                        .WithMany("Categories")
+                        .HasForeignKey("PeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("IdeaTrack.Models.EvaluationTemplate", "Template")
+                        .WithMany()
+                        .HasForeignKey("TemplateId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Board");
+
+                    b.Navigation("Period");
 
                     b.Navigation("Template");
                 });
@@ -892,6 +1067,28 @@ namespace IdeaTrack.Migrations
                     b.Navigation("Initiative");
                 });
 
+            modelBuilder.Entity("IdeaTrack.Models.InitiativePeriod", b =>
+                {
+                    b.HasOne("IdeaTrack.Models.AcademicYear", "AcademicYear")
+                        .WithMany("Periods")
+                        .HasForeignKey("AcademicYearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AcademicYear");
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.ReferenceForm", b =>
+                {
+                    b.HasOne("IdeaTrack.Models.InitiativePeriod", "Period")
+                        .WithMany("ReferenceForms")
+                        .HasForeignKey("PeriodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Period");
+                });
+
             modelBuilder.Entity("IdeaTrack.Models.RevisionRequest", b =>
                 {
                     b.HasOne("IdeaTrack.Models.Initiative", "Initiative")
@@ -900,7 +1097,7 @@ namespace IdeaTrack.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ApplicationUser", "Requester")
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", "Requester")
                         .WithMany()
                         .HasForeignKey("RequesterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -913,7 +1110,7 @@ namespace IdeaTrack.Migrations
 
             modelBuilder.Entity("IdeaTrack.Models.SystemAuditLog", b =>
                 {
-                    b.HasOne("ApplicationUser", "User")
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -933,7 +1130,7 @@ namespace IdeaTrack.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("ApplicationUser", null)
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -942,7 +1139,7 @@ namespace IdeaTrack.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("ApplicationUser", null)
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -957,7 +1154,7 @@ namespace IdeaTrack.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ApplicationUser", null)
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -966,23 +1163,27 @@ namespace IdeaTrack.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("ApplicationUser", null)
+                    b.HasOne("IdeaTrack.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ApplicationUser", b =>
+            modelBuilder.Entity("IdeaTrack.Models.AcademicYear", b =>
                 {
+                    b.Navigation("Periods");
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Authorships");
+
+                    b.Navigation("BoardMemberships");
+
                     b.Navigation("MyAssignments");
 
                     b.Navigation("MyInitiatives");
-                });
-
-            modelBuilder.Entity("IdeaTrack.Models.AcademicYear", b =>
-                {
-                    b.Navigation("Initiatives");
                 });
 
             modelBuilder.Entity("IdeaTrack.Models.Board", b =>
@@ -1008,6 +1209,8 @@ namespace IdeaTrack.Migrations
                 {
                     b.Navigation("Assignments");
 
+                    b.Navigation("Authorships");
+
                     b.Navigation("Files");
 
                     b.Navigation("FinalResult");
@@ -1023,6 +1226,15 @@ namespace IdeaTrack.Migrations
             modelBuilder.Entity("IdeaTrack.Models.InitiativeCategory", b =>
                 {
                     b.Navigation("Initiatives");
+                });
+
+            modelBuilder.Entity("IdeaTrack.Models.InitiativePeriod", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Initiatives");
+
+                    b.Navigation("ReferenceForms");
                 });
 #pragma warning restore 612, 618
         }

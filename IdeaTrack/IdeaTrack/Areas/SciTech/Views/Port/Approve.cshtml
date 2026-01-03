@@ -7,15 +7,15 @@
     {
         InitiativeStatus.Draft => "bg-secondary text-white",
         InitiativeStatus.Pending => "bg-warning text-dark",
-        InitiativeStatus.Dept_Review => "bg-info text-white",
-        InitiativeStatus.Reviewing => "bg-primary text-white",
+        InitiativeStatus.Faculty_Approved => "bg-info text-white",
+        InitiativeStatus.Evaluating => "bg-primary text-white",
         InitiativeStatus.Revision_Required => "bg-warning-subtle text-warning",
         InitiativeStatus.Approved => "bg-success text-white",
         InitiativeStatus.Rejected => "bg-danger text-white",
         _ => "bg-secondary text-white"
     };
 
-    // Icon và màu cho Department
+    // Icon v� m�u cho Department
     string deptIcon = "fa-building";
     string deptColor = "text-secondary";
 
@@ -24,31 +24,31 @@
         case "CNTT":
             deptIcon = "fa-laptop-code"; deptColor = "text-primary";
             break;
-        case "DTVT": // Điện tử Viễn thông
+        case "DTVT": // �i?n t? Vi?n th�ng
             deptIcon = "fa-bolt"; deptColor = "text-danger";
             break;
-        case "KHCN": // Khoa học Công nghệ
+        case "KHCN": // Khoa h?c C�ng ngh?
             deptIcon = "fa-microscope"; deptColor = "text-success";
             break;
-        case "CK": // Cơ khí
+        case "CK": // Co kh�
             deptIcon = "fa-cogs"; deptColor = "text-warning";
             break;
-        case "XD": // Xây dựng
+        case "XD": // X�y d?ng
             deptIcon = "fa-hard-hat"; deptColor = "text-secondary";
             break;
-        case "MT": // Môi trường
+        case "MT": // M�i tru?ng
             deptIcon = "fa-leaf"; deptColor = "text-info";
             break;
-        case "KT": // Kinh tế
+        case "KT": // Kinh t?
             deptIcon = "fa-chart-line"; deptColor = "text-primary";
             break;
-        case "QTKD": // Quản trị Kinh doanh
+        case "QTKD": // Qu?n tr? Kinh doanh
             deptIcon = "fa-briefcase"; deptColor = "text-primary";
             break;
         case "LUAT":
             deptIcon = "fa-gavel"; deptColor = "text-warning";
             break;
-        case "NN": // Nông nghiệp
+        case "NN": // N�ng nghi?p
             deptIcon = "fa-seedling"; deptColor = "text-success";
             break;
         default:
@@ -69,7 +69,7 @@
         </h2>
 
         <p class="text-muted mb-0">
-            <i class="fas fa-fingerprint me-1 text-info"></i>Mã hồ sơ: <strong>@Model.InitiativeCode</strong>
+            <i class="fas fa-fingerprint me-1 text-info"></i>M� h? so: <strong>@Model.InitiativeCode</strong>
             <span class="mx-2">|</span>
             <i class="fas fa-calendar-alt me-1 text-secondary"></i>@Model.SubmittedDate.ToString("dd/MM/yyyy")
         </p>
@@ -84,35 +84,35 @@
         <!-- INFO CARD -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-light fw-bold">
-                <i class="fas fa-info-circle me-1 text-primary"></i>Thông tin chung
+                <i class="fas fa-info-circle me-1 text-primary"></i>Th�ng tin chung
             </div>
 
             <div class="card-body row g-4">
                 <div class="col-md-6">
-                    <small class="text-muted">Chủ nhiệm đề tài</small>
+                    <small class="text-muted">Ch? nhi?m d? t�i</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-user-tie me-1 text-primary"></i>@Model.ProposerName</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted">Đơn vị thực hiện</small>
+                    <small class="text-muted">�on v? th?c hi?n</small>
                     <p class="fw-semibold mb-0"><i class="fas @deptIcon @deptColor me-1"></i>@Model.DepartmentName</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted">Lĩnh vực</small>
+                    <small class="text-muted">Linh v?c</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-brain me-1 text-info"></i>@Model.Category</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted d-block mb-1">Thời gian thực hiện</small>
+                    <small class="text-muted d-block mb-1">Th?i gian th?c hi?n</small>
                     <p class="fw-semibold mb-0 gradient-text">
                         <i class="fas fa-clock me-1"></i>
                         @Model.SubmittedDate.ToString("dd/MM/yyyy")
                     </p>
                 </div>
                 <div class="col-md-6">
-                     <small class="text-muted">Kinh phí đề xuất</small>
-                    <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VNĐ</p>
+                     <small class="text-muted">Kinh ph� d? xu?t</small>
+                    <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VN�</p>
                 </div>
 
             </div>
@@ -123,7 +123,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-semibold" data-bs-toggle="collapse" data-bs-target="#description">
-                        <i class="fas fa-align-left me-2 text-primary"></i>Mô tả nội dung
+                        <i class="fas fa-align-left me-2 text-primary"></i>M� t? n?i dung
                     </button>
                 </h2>
                 <div id="description" class="accordion-collapse collapse show">
@@ -136,7 +136,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed fw-semibold" data-bs-toggle="collapse" data-bs-target="#files">
-                        <i class="fas fa-paperclip me-2 text-secondary"></i>Tài liệu đính kèm
+                        <i class="fas fa-paperclip me-2 text-secondary"></i>T�i li?u d�nh k�m
                     </button>
                 </h2>
                 <div id="files" class="accordion-collapse collapse">
@@ -174,7 +174,7 @@
                                 <li class="list-group-item d-flex justify-content-between">
                                     <span><i class="fas @iconClass @textColor me-2"></i>@file.FileName</span>
                                     <a href="@Url.Action("DownloadFile", "Port", new { fileName = file.FileName })" class="text-decoration-none">
-                                        <i class="fas fa-download me-1 text-primary"></i>Tải
+                                        <i class="fas fa-download me-1 text-primary"></i>T?i
                                     </a>
                                 </li>
                             }
@@ -190,27 +190,27 @@
     <div class="col-lg-4">
         <div class="card shadow border-primary">
             <div class="card-header fw-bold text-primary">
-                <i class="fas fa-pen-alt me-1"></i>Quyết định PKHCN
+                <i class="fas fa-pen-alt me-1"></i>Quy?t d?nh PKHCN
             </div>
 
             <div class="card-body">
 
-                <!-- GHI CHÚ -->
+                <!-- GHI CH� -->
                 <label class="form-label fw-semibold">
                     <i class="fas fa-sticky-note me-1 text-warning"></i>
-                    Ghi chú / Nội dung yêu cầu
+                    Ghi ch� / N?i dung y�u c?u
                 </label>
 
                 <textarea id="requestContent"
                           class="form-control mb-3"
                           rows="4"
-                          placeholder="Nhập nội dung yêu cầu chỉnh sửa hoặc kết luận..."></textarea>
+                          placeholder="Nh?p n?i dung y�u c?u ch?nh s?a ho?c k?t lu?n..."></textarea>
 
                 <!-- DEADLINE -->
                 <div id="deadlineWrapper" class="d-none">
                     <label class="form-label fw-semibold">
                         <i class="fas fa-calendar-alt me-1 text-info"></i>
-                        Hạn chỉnh sửa
+                        H?n ch?nh s?a
                     </label>
 
                     <input type="date"
@@ -218,17 +218,17 @@
                            class="form-control mb-3">
                 </div>
 
-                <!-- DUYỆT -->
+                <!-- DUY?T -->
                 <a href="/SciTech/Port/ApproveInitiative/@Model.Id" id="revisionLink2"
                    class="btn btn-success w-100 mb-2">
-                    <i class="fas fa-check-circle me-1 text-white"></i>Duyệt hồ sơ
+                    <i class="fas fa-check-circle me-1 text-white"></i>Duy?t h? so
                 </a>
 
-                <!-- YÊU CẦU CHỈNH SỬA -->
+                <!-- Y�U C?U CH?NH S?A -->
                 <a href="/SciTech/Port/RejectInitiative/@Model.Id"
                    id="revisionLink"
                    class="btn btn-outline-warning w-100 mb-2">
-                    <i class="fas fa-undo me-1"></i>Yêu cầu chỉnh sửa
+                    <i class="fas fa-undo me-1"></i>Y�u c?u ch?nh s?a
                 </a>
 
             </div>
@@ -246,7 +246,7 @@
         const content = document.getElementById("requestContent").value;
         const deadlineInput = document.getElementById("deadline");
 
-        // Nếu deadline đang ẩn → hiện lên và dừng lại
+        // N?u deadline dang ?n ? hi?n l�n v� d?ng l?i
         if (deadlineWrapper.classList.contains("d-none")) {
             deadlineWrapper.classList.remove("d-none");
             deadlineInput.focus();
@@ -256,7 +256,7 @@
         const deadline = deadlineInput.value;
 
         if (!content || !deadline) {
-            alert("Vui lòng nhập nội dung và hạn chỉnh sửa!");
+            alert("Vui l�ng nh?p n?i dung v� h?n ch?nh s?a!");
             return;
         }
 
@@ -274,7 +274,7 @@
         const content = document.getElementById("requestContent").value;
 
         if (!content) {
-            alert("Vui lòng nhập nội dung!");
+            alert("Vui l�ng nh?p n?i dung!");
             return;
         }
 
@@ -285,3 +285,4 @@
         window.location.href = url;
     });
 </script>
+

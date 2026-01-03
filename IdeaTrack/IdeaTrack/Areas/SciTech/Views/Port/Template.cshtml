@@ -1,4 +1,4 @@
-﻿@using IdeaTrack.Models
+@using IdeaTrack.Models
 @model List<IdeaTrack.Models.EvaluationTemplate>
 @Html.AntiForgeryToken()
 @functions {
@@ -77,12 +77,12 @@
                 <div class="col-12 col-lg-8 d-flex flex-wrap justify-content-lg-end gap-2">
                     <div class="dropdown">
                         <button class="btn btn-outline-light text-dark border shadow-sm dropdown-toggle" data-bs-toggle="dropdown">
-                            @(ViewBag.SelectedType == 1 ? "Chấm điểm" : ViewBag.SelectedType == 2 ? "Duyệt/Từ chối" : "All Types")
+                            @(ViewBag.SelectedType == 1 ? "Ch?m di?m" : ViewBag.SelectedType == 2 ? "Duy?t/T? ch?i" : "All Types")
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="?page=1&type=&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">All Types</a></li>
-                            <li><a class="dropdown-item" href="?page=1&type=1&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Chấm điểm</a></li>
-                            <li><a class="dropdown-item" href="?page=1&type=2&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Duyệt / Từ chối</a></li>
+                            <li><a class="dropdown-item" href="?page=1&type=1&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Ch?m di?m</a></li>
+                            <li><a class="dropdown-item" href="?page=1&type=2&isActive=@ViewBag.SelectedStatus&sortOrder=@ViewBag.SortOrder">Duy?t / T? ch?i</a></li>
                         </ul>
                     </div>
 
@@ -135,8 +135,8 @@
                         <div style="min-width:200px">
                             <span class="badge @(template.Type == TemplateType.Scoring ? "bg-primary" : "bg-warning")">
                                 @(template.Type == TemplateType.Scoring
-                                    ? "Chấm điểm (Cấp Trường)"
-                                    : "Duyệt / Từ chối (Cấp Khoa)")
+                                    ? "Ch?m di?m (C?p Tru?ng)"
+                                    : "Duy?t / T? ch?i (C?p Khoa)")
                             </span>
                         </div>
                     </div>
@@ -190,7 +190,7 @@
 </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // --- LOGIC SEARCH (Chuyển hướng về trang 1 kèm từ khóa) ---
+            // --- LOGIC SEARCH (Chuy?n hu?ng v? trang 1 k�m t? kh�a) ---
             const searchInput = document.querySelector('input[placeholder="Search templates by name..."]');
             searchInput?.addEventListener("keypress", function(e) {
                 if (e.key === "Enter") {
@@ -199,7 +199,7 @@
                 }
             });
 
-            // --- LOGIC CREATE MỚI (Giữ nguyên của bạn) ---
+            // --- LOGIC CREATE M?I (Gi? nguy�n c?a b?n) ---
             document.getElementById("btnCreateTemplate")?.addEventListener("click", function () {
                 const container = document.getElementById("templateContainer");
                 const template = document.getElementById("newTemplateCard");
@@ -235,12 +235,12 @@
             if (e.key === "Enter") {
                 const term = e.target.value.trim();
 
-                // Lấy các giá trị hiện tại từ ViewBag (thông qua C# render vào JS)
+                // L?y c�c gi� tr? hi?n t?i t? ViewBag (th�ng qua C# render v�o JS)
                 const type = "@ViewBag.SelectedType";
                 const status = "@ViewBag.SelectedStatus";
                 const sort = "@ViewBag.SortOrder";
 
-                // Chuyển hướng: Luôn reset về page 1 khi search mới
+                // Chuy?n hu?ng: Lu�n reset v? page 1 khi search m?i
                 let url = `?page=1&search=${encodeURIComponent(term)}`;
                 if (type) url += `&type=${type}`;
                 if (status) url += `&isActive=${status}`;
@@ -250,7 +250,7 @@
             }
         });
                 document.addEventListener("click", function (e) {
-            // --- 1. KHI BẤM NÚT EDIT ---
+            // --- 1. KHI B?M N�T EDIT ---
             if (e.target.closest(".btn-edit-trigger")) {
                 const btn = e.target.closest(".btn-edit-trigger");
                 const cardBody = btn.closest(".card").querySelector(".card-body");
@@ -260,7 +260,7 @@
                 const name = btn.getAttribute("data-name");
                 const desc = btn.getAttribute("data-desc");
 
-                // Thay đổi nội dung Card Body thành Input
+                // Thay d?i n?i dung Card Body th�nh Input
                 cardBody.innerHTML = `
                     <div class="mb-2">
                         <label class="small text-muted">Template Name</label>
@@ -272,21 +272,21 @@
                     </div>
                 `;
 
-                // Thay đổi nút ở Footer
+                // Thay d?i n�t ? Footer
                 cardFooter.innerHTML = `
                     <button class="btn btn-success btn-sm flex-grow-1 btn-update" data-id="${id}">
-                        <i class="fa-solid fa-check me-1"></i> Cập nhật
+                        <i class="fa-solid fa-check me-1"></i> C?p nh?t
                     </button>
                     <button class="btn btn-danger btn-sm flex-grow-1 btn-delete" data-id="${id}">
                         <i class="fa-solid fa-trash me-1"></i> Delete
                     </button>
                     <button class="btn btn-light btn-sm border btn-cancel-edit" onclick="window.location.reload()">
-                        Hủy
+                        H?y
                     </button>
                 `;
             }
 
-            // --- 2. KHI BẤM CẬP NHẬT (Update) ---
+            // --- 2. KHI B?M C?P NH?T (Update) ---
             if (e.target.closest(".btn-update")) {
                 const btn = e.target.closest(".btn-update");
                 const id = btn.getAttribute("data-id");
@@ -300,12 +300,12 @@
                     headers: { "Content-Type": "application/json", "RequestVerificationToken": token },
                     body: JSON.stringify({ Id: parseInt(id), TemplateName: newName, Description: newDesc })
                 })
-                .then(res => res.ok ? window.location.reload() : alert("Cập nhật thất bại"));
+                .then(res => res.ok ? window.location.reload() : alert("C?p nh?t th?t b?i"));
             }
 
-            // --- 3. KHI BẤM XÓA (Delete) ---
+            // --- 3. KHI B?M X�A (Delete) ---
             if (e.target.closest(".btn-delete")) {
-                if (!confirm("Bạn có chắc chắn muốn xóa template này không?")) return;
+                if (!confirm("B?n c� ch?c ch?n mu?n x�a template n�y kh�ng?")) return;
 
                 const btn = e.target.closest(".btn-delete");
                 const id = btn.getAttribute("data-id");
@@ -315,7 +315,7 @@
                     method: "POST",
                     headers: { "RequestVerificationToken": token }
                 })
-                .then(res => res.ok ? window.location.reload() : alert("Xóa thất bại"));
+                .then(res => res.ok ? window.location.reload() : alert("X�a th?t b?i"));
             }
         });
     </script>

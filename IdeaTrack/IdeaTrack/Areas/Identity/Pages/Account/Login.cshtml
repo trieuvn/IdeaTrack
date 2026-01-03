@@ -1,8 +1,8 @@
-﻿@page
+@page
 @model LoginModel
 @{
     Layout = null;
-    ViewData["Title"] = "Đăng nhập | UEF LMS";
+    ViewData["Title"] = "�ang nh?p | UEF LMS";
 }
 
 <!DOCTYPE html>
@@ -91,7 +91,7 @@
         }
 
         .btn-login {
-            background: #003087; /* Màu xanh đậm UEF */
+            background: #003087; /* M�u xanh d?m UEF */
             border: none;
             border-radius: 15px;
             padding: 15px;
@@ -143,22 +143,22 @@
     <div class="background">
         <div class="login-overlay">
             <div class="login-card text-center">
-                <!-- Logo UEF chính thức -->
+                <!-- Logo UEF ch�nh th?c -->
                 <img src="https://upload.wikimedia.org/wikipedia/en/7/77/Ho_Chi_Minh_City_University_of_Economics_and_Finance_UEF_Logo.png"
-                     alt="UEF - ĐẠI HỌC KINH TẾ TÀI CHÍNH" class="uef-logo img-fluid" />
+                     alt="UEF - �?I H?C KINH T? T�I CH�NH" class="uef-logo img-fluid" />
 
                 <p class="text-muted mb-4">Log in using your account on:</p>
 
-                <!-- Nút Đăng nhập với UEF ID -->
+                <!-- N�t �ang nh?p v?i UEF ID -->
                 <a asp-page="/Account/ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl"
                    class="btn btn-uef-id w-100 d-flex align-items-center justify-content-center mb-4">
                     <img src="~/icons/logo-uef.ico" alt="" width="50" height="40" class="me-3">
-                    Đăng nhập với UEF ID
+                    �ang nh?p v?i UEF ID
                 </a>
 
                 <hr class="my-4">
 
-                <!-- Form đăng nhập -->
+                <!-- Form dang nh?p -->
                 <form method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
@@ -211,7 +211,7 @@
                     </li>
                     <li>
                         <a class="dropdown-item" href="?lang=vi">
-                            Tiếng Việt
+                            Ti?ng Vi?t
                         </a>
                     </li>
                 </ul>

@@ -1,4 +1,4 @@
-﻿@using IdeaTrack.Models
+@using IdeaTrack.Models
 @model IdeaTrack.Models.Initiative
 
 @{
@@ -7,7 +7,7 @@
     string badgeClass = "bg-warning-subtle text-warning border border-warning";
     string statusText = "Pending Faculty Review";
 
-    if (Model.Status == InitiativeStatus.Approved || Model.Status == InitiativeStatus.Dept_Review)
+    if (Model.Status == InitiativeStatus.Approved || Model.Status == InitiativeStatus.Faculty_Approved)
     {
         badgeClass = "bg-success-subtle text-success border border-success";
         statusText = "Forwarded to R&D Dept";
@@ -40,13 +40,13 @@
                 <span class="badge rounded-pill @badgeClass px-3">@statusText</span>
             </div>
             <p class="text-secondary mb-0">
-                Submitted by <span class="text-primary fw-bold">@(Model.Proposer?.FullName ?? "N/A")</span> - @(Model.Proposer?.Department?.Name ?? "Faculty")
+                Submitted by <span class="text-primary fw-bold">@(Model.Creator?.FullName ?? "N/A")</span> - @(Model.Creator?.Department?.Name ?? "Faculty")
             </p>
             <small class="text-muted">Submitted on: @Model.CreatedAt.ToString("dd/MM/yyyy hh:mm tt")</small>
         </div>
 
         <div class="d-flex gap-2">
-            @if (Model.Status == InitiativeStatus.Pending || Model.Status == InitiativeStatus.Reviewing)
+            @if (Model.Status == InitiativeStatus.Pending || Model.Status == InitiativeStatus.Evaluating)
             {
                 <a href="javascript:void(0);"
                    class="btn btn-outline-danger px-4 rounded-3"
@@ -134,13 +134,13 @@
                 <h6 class="fw-bold mb-4">Principal Investigator</h6>
                 <div class="text-center mb-3">
                     <img src="https://via.placeholder.com/80" class="rounded-circle mb-2 border border-2 border-primary p-1" alt="Avatar">
-                    <div class="fw-bold fs-5">@(Model.Proposer?.FullName ?? "N/A")</div>
-                    <small class="text-secondary">@(Model.Proposer?.Degree ?? "Lecturer")</small>
+                    <div class="fw-bold fs-5">@(Model.Creator?.FullName ?? "N/A")</div>
+                    <small class="text-secondary">@(Model.Creator?.Degree ?? "Lecturer")</small>
                 </div>
                 <div class="vstack gap-2 small">
-                    <div class="d-flex align-items-center"><i class="bi bi-envelope me-3 text-secondary"></i>@(Model.Proposer?.Email ?? "N/A")</div>
-                    <div class="d-flex align-items-center"><i class="bi bi-phone me-3 text-secondary"></i>@(Model.Proposer?.PhoneNumber ?? "N/A")</div>
-                    <div class="d-flex align-items-center"><i class="bi bi-geo-alt me-3 text-secondary"></i>@(Model.Proposer?.Department?.Name ?? "Faculty")</div>
+                    <div class="d-flex align-items-center"><i class="bi bi-envelope me-3 text-secondary"></i>@(Model.Creator?.Email ?? "N/A")</div>
+                    <div class="d-flex align-items-center"><i class="bi bi-phone me-3 text-secondary"></i>@(Model.Creator?.PhoneNumber ?? "N/A")</div>
+                    <div class="d-flex align-items-center"><i class="bi bi-geo-alt me-3 text-secondary"></i>@(Model.Creator?.Department?.Name ?? "Faculty")</div>
                 </div>
             </div>
 
@@ -156,14 +156,14 @@
                     </div>
 
                     @{
-                        string step2Class = (Model.Status == InitiativeStatus.Pending || Model.Status == InitiativeStatus.Reviewing) ? "current" : (Model.Status == InitiativeStatus.Dept_Review ? "active" : "");
-                        string step2Bg = (Model.Status == InitiativeStatus.Dept_Review) ? "bg-success" : "bg-primary border border-4 border-white shadow-sm";
+                        string step2Class = (Model.Status == InitiativeStatus.Pending || Model.Status == InitiativeStatus.Evaluating) ? "current" : (Model.Status == InitiativeStatus.Faculty_Approved ? "active" : "");
+                        string step2Bg = (Model.Status == InitiativeStatus.Faculty_Approved) ? "bg-success" : "bg-primary border border-4 border-white shadow-sm";
                     }
                     <div class="timeline-item @step2Class pb-4">
                         <div class="timeline-point @step2Bg"></div>
                         <div class="timeline-content">
                             <div class="fw-bold text-primary small">Faculty Review</div>
-                            <small class="text-secondary">@(Model.Status == InitiativeStatus.Dept_Review ? "Completed" : "In Progress")</small>
+                            <small class="text-secondary">@(Model.Status == InitiativeStatus.Faculty_Approved ? "Completed" : "In Progress")</small>
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@
         </div>
     </div>
 
-    @if (Model.Status == InitiativeStatus.Pending || Model.Status == InitiativeStatus.Reviewing)
+    @if (Model.Status == InitiativeStatus.Pending || Model.Status == InitiativeStatus.Evaluating)
     {
         <div class="card border-0 shadow-sm p-4 mt-4 rounded-4">
             <h5 class="fw-bold mb-2">Approval Decision</h5>

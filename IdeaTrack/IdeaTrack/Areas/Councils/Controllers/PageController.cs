@@ -10,7 +10,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
 {
 
     [Area("Councils")]
-    //[Authorize]
+    [Authorize(Roles = "CouncilMember,Council_Member,Admin")]
     public class PageController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -224,7 +224,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
             var assignment = await _db.InitiativeAssignments
                 .AsNoTracking()
                 .Include(a => a.Initiative)
-                    .ThenInclude(i => i.Proposer)
+                    .ThenInclude(i => i.Creator)
                 .Include(a => a.Initiative)
                     .ThenInclude(i => i.Department)
                 .Include(a => a.Initiative)
@@ -245,7 +245,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 AssignmentId = assignment.Id,
                 InitiativeTitle = assignment.Initiative.Title,
                 InitiativeCode = assignment.Initiative.InitiativeCode,
-                ProposerName = assignment.Initiative.Proposer?.FullName ?? assignment.Initiative.Proposer?.UserName ?? string.Empty,
+                ProposerName = assignment.Initiative.Creator?.FullName ?? assignment.Initiative.Creator?.UserName ?? string.Empty,
                 DepartmentName = assignment.Initiative.Department?.Name ?? string.Empty,
                 DueDate = assignment.DueDate,
                 Files = assignment.Initiative.Files?.ToList() ?? new(),
@@ -314,7 +314,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 var hydrated = await _db.InitiativeAssignments
                     .AsNoTracking()
                     .Include(a => a.Initiative)
-                        .ThenInclude(i => i.Proposer)
+                        .ThenInclude(i => i.Creator)
                     .Include(a => a.Initiative)
                         .ThenInclude(i => i.Department)
                     .Include(a => a.Initiative)
@@ -325,8 +325,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 {
                     vm.InitiativeTitle = hydrated.Initiative.Title;
                     vm.InitiativeCode = hydrated.Initiative.InitiativeCode;
-                    vm.ProposerName = hydrated.Initiative.Proposer?.FullName
-                                      ?? hydrated.Initiative.Proposer?.UserName
+                    vm.ProposerName = hydrated.Initiative.Creator?.FullName
+                                      ?? hydrated.Initiative.Creator?.UserName
                                       ?? string.Empty;
                     vm.DepartmentName = hydrated.Initiative.Department?.Name ?? string.Empty;
                     vm.DueDate = hydrated.DueDate;

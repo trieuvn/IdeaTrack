@@ -1,6 +1,7 @@
 using IdeaTrack.Areas.Faculty.Hubs;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using IdeaTrack.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
@@ -37,10 +38,23 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// Register Business Services
+builder.Services.AddScoped<IInitiativeService, InitiativeService>();
+
 // MVC + Razor
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
+
+// Configure authentication cookie
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    options.SlidingExpiration = true;
+});
 
 builder.Services.AddAntiforgery(options =>
 {

@@ -30,24 +30,14 @@
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Initiative.Id" />
                 <input type="hidden" asp-for="Initiative.InitiativeCode" />
-                <input type="hidden" asp-for="Initiative.ProposerId" />
+                <input type="hidden" asp-for="Initiative.CreatorId" />
                 <input type="hidden" asp-for="Initiative.Status" />
                 <input type="hidden" asp-for="Initiative.CreatedAt" />
                 
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <!-- Row 1: Academic Year & Category -->
+                <!-- Row 1: Category & Department -->
                 <div class="row g-4 mb-4">
-                    <div class="col-md-6">
-                        <label asp-for="Initiative.AcademicYearId" class="form-label fw-medium">
-                            <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">calendar_today</span>
-                            Năm học <span class="text-danger">*</span>
-                        </label>
-                        <select asp-for="Initiative.AcademicYearId" asp-items="Model.AcademicYears" class="form-select">
-                            <option value="">-- Chọn năm học --</option>
-                        </select>
-                        <span asp-validation-for="Initiative.AcademicYearId" class="text-danger small"></span>
-                    </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.CategoryId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">category</span>
@@ -58,10 +48,6 @@
                         </select>
                         <span asp-validation-for="Initiative.CategoryId" class="text-danger small"></span>
                     </div>
-                </div>
-
-                <!-- Row 2: Department & Budget -->
-                <div class="row g-4 mb-4">
                     <div class="col-md-6">
                         <label asp-for="Initiative.DepartmentId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">business</span>
@@ -72,6 +58,10 @@
                         </select>
                         <span asp-validation-for="Initiative.DepartmentId" class="text-danger small"></span>
                     </div>
+                </div>
+
+                <!-- Row 2: Budget -->
+                <div class="row g-4 mb-4">
                     <div class="col-md-6">
                         <label asp-for="Initiative.Budget" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-warning" style="font-size: 18px;">payments</span>
@@ -80,6 +70,19 @@
                         <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Nhập số tiền dự kiến" class="form-control" />
                         <span asp-validation-for="Initiative.Budget" class="text-danger small"></span>
                     </div>
+                    @if (Model.ActivePeriodId.HasValue)
+                    {
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">
+                                <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">event</span>
+                                Đợt sáng kiến
+                            </label>
+                            <div class="form-control bg-light">
+                                <span class="badge bg-success me-2">Đang mở</span> Đợt hiện tại
+                            </div>
+                            <small class="text-muted">Sáng kiến sẽ được nộp vào đợt đang mở khi bạn nhấn "Nộp sáng kiến"</small>
+                        </div>
+                    }
                 </div>
 
                 <!-- Title -->

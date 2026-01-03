@@ -1,4 +1,4 @@
-﻿@using IdeaTrack.Models
+@using IdeaTrack.Models
 @model IEnumerable<IdeaTrack.Models.Initiative>
 
 @{
@@ -195,7 +195,7 @@
                                     iconClass = "bg-yellow-light text-warning"; iconHtml = "<i class='bi bi-broadcast-pin'></i>";
                                     break;
                                 case InitiativeStatus.Approved:
-                                case InitiativeStatus.Dept_Review:
+                                case InitiativeStatus.Faculty_Approved:
                                     badgeClass = "bg-green-light text-success"; statusText = "Forwarded to R&D";
                                     iconClass = "bg-green-light text-success"; iconHtml = "<i class='bi bi-shield-check'></i>";
                                     break;
@@ -212,8 +212,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="fw-bold text-dark">@item.Proposer?.FullName</div>
-                                    <small class="text-secondary">@(item.Proposer?.Degree ?? "Lecturer")</small>
+                                    <div class="fw-bold text-dark">@item.Creator?.FullName</div>
+                                    <small class="text-secondary">@(item.Creator?.Degree ?? "Lecturer")</small>
                                 </td>
                                 <td class="text-secondary">@item.CreatedAt.ToString("dd/MM/yyyy")</td>
                                 <td><span class="badge-custom @badgeClass">@statusText</span></td>

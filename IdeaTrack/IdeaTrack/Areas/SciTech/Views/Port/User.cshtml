@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IdeaTrack.Areas.SciTech.Models.UserViewModel>
+@model IEnumerable<IdeaTrack.Areas.SciTech.Models.UserViewModel>
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -16,9 +16,9 @@
     }
     <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
         <div>
-            <h1 class="fw-bold mb-1">Quản lý Người dùng & Truy cập</h1>
+            <h1 class="fw-bold mb-1">Qu?n l� Ngu?i d�ng & Truy c?p</h1>
             <p class="text-muted mb-0">
-                Quản lý tài khoản, phân quyền và theo dõi hoạt động truy cập hệ thống.
+                Qu?n l� t�i kho?n, ph�n quy?n v� theo d�i ho?t d?ng truy c?p h? th?ng.
             </p>
         </div>
         <a class="btn btn-outline-primary custom-btn" style="height:70px;padding-top:20px;"
@@ -27,7 +27,7 @@
                 role = ViewBag.Role,
                 status = ViewBag.Status
            })">
-    <i class="fa-solid fa-file-export me-1"></i>Xuất báo cáo
+    <i class="fa-solid fa-file-export me-1"></i>Xu?t b�o c�o
 </a>
 
     </div>
@@ -35,55 +35,55 @@
     <!-- STATS -->
     <div class="row g-4 mb-4">
 
-        <!-- Tổng người dùng -->
+        <!-- T?ng ngu?i d�ng -->
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <i class="fa-solid fa-users text-primary fs-4"></i>
-                    <p class="text-muted small mb-1">Tổng người dùng</p>
+                    <p class="text-muted small mb-1">T?ng ngu?i d�ng</p>
                     <h3 class="fw-bold mb-0">@ViewBag.TotalUsers</h3>
                     <small class="text-success">
                         <i class="fa-solid fa-arrow-up"></i>
-                        Hoạt động hệ thống
+                        Ho?t d?ng h? th?ng
                     </small>
                 </div>
             </div>
         </div>
 
-        <!-- Đang hoạt động -->
+        <!-- �ang ho?t d?ng -->
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <i class="fa-solid fa-circle-check text-success fs-4"></i>
-                    <p class="text-muted small mb-1">Đang hoạt động</p>
+                    <p class="text-muted small mb-1">�ang ho?t d?ng</p>
                     <h3 class="fw-bold mb-0">@ViewBag.ActivePercent%</h3>
                     <small class="text-muted">
-                        @ViewBag.ActiveUsers tài khoản
+                        @ViewBag.ActiveUsers t�i kho?n
                     </small>
                 </div>
             </div>
         </div>
 
-        <!-- Đăng nhập gần đây -->
+        <!-- �ang nh?p g?n d�y -->
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <i class="fa-solid fa-right-to-bracket text-info fs-4"></i>
-                    <p class="text-muted small mb-1">Đăng nhập gần đây</p>
+                    <p class="text-muted small mb-1">�ang nh?p g?n d�y</p>
                     <h3 class="fw-bold mb-0">@ViewBag.RecentLogins</h3>
-                    <small class="text-muted">24 giờ qua</small>
+                    <small class="text-muted">24 gi? qua</small>
                 </div>
             </div>
         </div>
 
-        <!-- Chờ duyệt -->
+        <!-- Ch? duy?t -->
         <div class="col-md-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <i class="fa-solid fa-clock text-warning fs-4"></i>
-                    <p class="text-muted small mb-1">Chờ duyệt</p>
+                    <p class="text-muted small mb-1">Ch? duy?t</p>
                     <h3 class="fw-bold mb-0">@ViewBag.PendingUsers</h3>
-                    <small class="text-muted">Tài khoản</small>
+                    <small class="text-muted">T�i kho?n</small>
                 </div>
             </div>
         </div>
@@ -103,14 +103,14 @@
                     <input class="form-control"
                            name="keyword"
                            value="@ViewBag.Keyword"
-                           placeholder="Tìm theo tên hoặc email">
+                           placeholder="T�m theo t�n ho?c email">
                 </div>
             </div>
 
             <!-- Role select -->
             <div style="min-width: 150px;">
                 <select class="form-select" name="role">
-                    <option value="">Tất cả vai trò</option>
+                    <option value="">T?t c? vai tr�</option>
                     @foreach (var r in ViewBag.Roles as List<string>)
                     {
                         <option value="@r" selected="@(ViewBag.Role == r)">
@@ -123,21 +123,21 @@
             <!-- Status select -->
             <div style="min-width: 150px;">
                 <select class="form-select" name="status">
-                    <option value="">Tất cả trạng thái</option>
-                    <option value="active" selected="@(ViewBag.Status == "active")">Hoạt động</option>
-                    <option value="locked" selected="@(ViewBag.Status == "locked")">Đã khóa</option>
-                    <option value="pending" selected="@(ViewBag.Status == "pending")">Chờ duyệt</option>
+                    <option value="">T?t c? tr?ng th�i</option>
+                    <option value="active" selected="@(ViewBag.Status == "active")">Ho?t d?ng</option>
+                    <option value="locked" selected="@(ViewBag.Status == "locked")">�� kh�a</option>
+                    <option value="pending" selected="@(ViewBag.Status == "pending")">Ch? duy?t</option>
                 </select>
             </div>
 
             <!-- Filter button -->
             <button type="submit" class="btn btn-outline-primary d-flex align-items-center">
-                <i class="fa-solid fa-filter me-1"></i>Lọc
+                <i class="fa-solid fa-filter me-1"></i>L?c
             </button>
 
             <!-- Add user -->
             <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createUserModal">
-    <i class="fa-solid fa-user-plus me-1"></i> Thêm người dùng
+    <i class="fa-solid fa-user-plus me-1"></i> Th�m ngu?i d�ng
 </a>
 
         </div>
@@ -151,12 +151,12 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Người dùng</th>
-                        <th>Vai trò</th>
-                        <th>Trạng thái</th>
-                        <th>Đăng nhập cuối</th>
-                        <th class="text-center">Lượt truy cập</th>
-                        <th class="text-end">Hành động</th>
+                        <th>Ngu?i d�ng</th>
+                        <th>Vai tr�</th>
+                        <th>Tr?ng th�i</th>
+                        <th>�ang nh?p cu?i</th>
+                        <th class="text-center">Lu?t truy c?p</th>
+                        <th class="text-end">H�nh d?ng</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -177,16 +177,16 @@
                             <td>
                                 @if (user.IsActive)
                                 {
-                                    <span class="badge bg-success">Hoạt động</span>
+                                    <span class="badge bg-success">Ho?t d?ng</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-danger">Đã khóa</span>
+                                    <span class="badge bg-danger">�� kh�a</span>
                                 }
                             </td>
 
                             <td>
-                                @(user.LastActive?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")
+                                @(user.LastActive?.ToString("dd/MM/yyyy HH:mm") ?? "Chua dang nh?p")
                             </td>
 
                             <td class="text-center fw-semibold">
@@ -202,7 +202,7 @@
                                 {
                                    <a href="@Url.Action("LockUser", "Port", new { area = "SciTech", id = user.Id })"
                                        class="btn btn-sm btn-outline-danger"
-                                       onclick="return confirm('Bạn có chắc chắn muốn khóa tài khoản này?');">
+                                       onclick="return confirm('B?n c� ch?c ch?n mu?n kh�a t�i kho?n n�y?');">
                                         <i class="fa-solid fa-user-slash"></i>
                                     </a>
                                 }
@@ -224,7 +224,7 @@
         <div class="card-footer d-flex justify-content-between align-items-center">
 
             <small class="text-muted">
-                Hiển thị @ViewBag.From–@ViewBag.To / @ViewBag.TotalUsers người dùng
+                Hi?n th? @ViewBag.From�@ViewBag.To / @ViewBag.TotalUsers ngu?i d�ng
             </small>
 
             <nav>
@@ -234,7 +234,7 @@
                     <li class="page-item @(ViewBag.Page == 1 ? "disabled" : "")">
                         <a class="page-link"
                            href="?page=@(ViewBag.Page - 1)&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
-                            ‹
+                            �
                         </a>
                     </li>
 
@@ -253,7 +253,7 @@
                     <li class="page-item @(ViewBag.Page == ViewBag.TotalPages ? "disabled" : "")">
                         <a class="page-link"
                            href="?page=@(ViewBag.Page + 1)&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
-                            ›
+                            �
                         </a>
                     </li>
 
@@ -268,36 +268,36 @@
             <form action="@Url.Action("CreateUser", "Port", new { area = "SciTech" })" method="post">
                 @Html.AntiForgeryToken()
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="createUserModalLabel">Thêm người dùng mới</h5>
+                    <h5 class="modal-title" id="createUserModalLabel">Th�m ngu?i d�ng m?i</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Tên đăng nhập</label>
-                                <input name="UserName" class="form-control" placeholder="Nhập tên đăng nhập..." required />
+                                <label class="form-label fw-bold">T�n dang nh?p</label>
+                                <input name="UserName" class="form-control" placeholder="Nh?p t�n dang nh?p..." required />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Địa chỉ Email</label>
+                                <label class="form-label fw-bold">�?a ch? Email</label>
                                 <input name="Email" class="form-control" type="email" placeholder="vi-du@email.com" required />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Họ và tên</label>
-                                <input name="FullName" class="form-control" placeholder="Nhập họ tên đầy đủ..." required />
+                                <label class="form-label fw-bold">H? v� t�n</label>
+                                <input name="FullName" class="form-control" placeholder="Nh?p h? t�n d?y d?..." required />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Mật khẩu hệ thống</label>
-                                <input name="Password" class="form-control" type="password" placeholder="Mật khẩu (VD: Abc@123)" required />
-                                <small class="text-muted small">Tối thiểu 6 ký tự, có chữ hoa, số và ký tự đặc biệt.</small>
+                                <label class="form-label fw-bold">M?t kh?u h? th?ng</label>
+                                <input name="Password" class="form-control" type="password" placeholder="M?t kh?u (VD: Abc@123)" required />
+                                <small class="text-muted small">T?i thi?u 6 k� t?, c� ch? hoa, s? v� k� t? d?c bi?t.</small>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Thuộc Khoa/Phòng</label>
+                                <label class="form-label fw-bold">Thu?c Khoa/Ph�ng</label>
                                 <select name="DepartmentId" id="DepartmentId" class="form-select" required>
-                                    <option value="">-- Chọn khoa/phòng --</option>
+                                    <option value="">-- Ch?n khoa/ph�ng --</option>
                                     @if (ViewBag.Departments != null)
                                     {
                                         foreach (var item in (SelectList)ViewBag.Departments)
@@ -308,35 +308,35 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Học hàm</label>
+                                <label class="form-label fw-bold">H?c h�m</label>
                                 <select name="AcademicRank" class="form-select">
-                                    <option value="">-- Chọn học hàm --</option>
-                                    <option value="Giáo sư">Giáo sư</option>
-                                    <option value="Phó giáo sư">Phó giáo sư</option>
-                                    <option value="Không">Không</option>
+                                    <option value="">-- Ch?n h?c h�m --</option>
+                                    <option value="Gi�o su">Gi�o su</option>
+                                    <option value="Ph� gi�o su">Ph� gi�o su</option>
+                                    <option value="Kh�ng">Kh�ng</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Học vị</label>
+                                <label class="form-label fw-bold">H?c v?</label>
                                 <select name="Degree" class="form-select">
-                                    <option value="">-- Chọn học vị --</option>
-                                    <option value="Tiến sĩ">Tiến sĩ</option>
-                                    <option value="Thạc sĩ">Thạc sĩ</option>
-                                    <option value="Cử nhân">Cử nhân</option>
-                                    <option value="Kỹ sư">Kỹ sư</option>
+                                    <option value="">-- Ch?n h?c v? --</option>
+                                    <option value="Ti?n si">Ti?n si</option>
+                                    <option value="Th?c si">Th?c si</option>
+                                    <option value="C? nh�n">C? nh�n</option>
+                                    <option value="K? su">K? su</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Chức vụ</label>
-                                <input name="Position" class="form-control" placeholder="Ví dụ: Trưởng phòng, Giảng viên..." />
+                                <label class="form-label fw-bold">Ch?c v?</label>
+                                <input name="Position" class="form-control" placeholder="V� d?: Tru?ng ph�ng, Gi?ng vi�n..." />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">H?y</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa-solid fa-user-plus me-1"></i> Xác nhận thêm
+                        <i class="fa-solid fa-user-plus me-1"></i> X�c nh?n th�m
                     </button>
                 </div>
             </form>
@@ -349,7 +349,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Thông tin chi tiết</h5>
+        <h5 class="modal-title">Th�ng tin chi ti?t</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -359,25 +359,25 @@
      onerror="this.src='/images/default-avatar.png';" 
      class="rounded-circle img-thumbnail" 
      style="width: 120px; height: 120px; object-fit: cover;">
-          <h4 id="displayFullName" class="mt-2 mb-0">Họ và tên</h4>
-          <span id="displayIsActive" class="badge rounded-pill mt-1">Trạng thái</span>
+          <h4 id="displayFullName" class="mt-2 mb-0">H? v� t�n</h4>
+          <span id="displayIsActive" class="badge rounded-pill mt-1">Tr?ng th�i</span>
         </div>
 
         <div class="row g-3">
           <div class="col-6">
-            <label class="text-muted mb-0">Học hàm</label>
+            <label class="text-muted mb-0">H?c h�m</label>
             <p id="displayAcademicRank" class="fw-bold text-primary">-</p>
           </div>
           <div class="col-6">
-            <label class="text-muted mb-0">Học vị</label>
+            <label class="text-muted mb-0">H?c v?</label>
             <p id="displayDegree" class="fw-bold text-primary">-</p>
           </div>
           <div class="col-12">
-            <label class="text-muted mb-0">Phòng ban / Khoa</label>
+            <label class="text-muted mb-0">Ph�ng ban / Khoa</label>
             <p id="displayDepartment" class="fw-bold">-</p>
           </div>
           <div class="col-12">
-            <label class="text-muted mb-0">Chức vụ</label>
+            <label class="text-muted mb-0">Ch?c v?</label>
             <p id="displayPosition" class="fw-bold">-</p>
           </div>
         </div>
@@ -387,25 +387,25 @@
 </div>
 <script>
     function openUserModal(userId) {
-    // Đường dẫn trỏ tới Action 'GetUserDetail' trong cùng Controller
-    // ASP.NET Core sẽ hiểu đây là: /TenController/GetUserDetail?id=...
+    // �u?ng d?n tr? t?i Action 'GetUserDetail' trong c�ng Controller
+    // ASP.NET Core s? hi?u d�y l�: /TenController/GetUserDetail?id=...
     fetch(`./GetUserDetail?id=${userId}`) 
         .then(response => {
-            if (!response.ok) throw new Error("Lỗi mạng hoặc không tìm thấy User");
+            if (!response.ok) throw new Error("L?i m?ng ho?c kh�ng t�m th?y User");
             return response.json();
         })
         .then(data => {
-            // Đổ dữ liệu vào Modal
+            // �? d? li?u v�o Modal
             document.getElementById('displayFullName').innerText = data.fullName;
             document.getElementById('displayAcademicRank').innerText = data.academicRank || "-";
             document.getElementById('displayDegree').innerText = data.degree || "-";
             document.getElementById('displayDepartment').innerText = data.departmentName;
             document.getElementById('displayPosition').innerText = data.position || "-";
 
-            // Xử lý ảnh Base64
+            // X? l� ?nh Base64
             const imgElement = document.getElementById('displayAvatar');
             if (data.avatarUrl) {
-                // Nếu chuỗi base64 trong DB chưa có tiền tố thì cộng thêm vào
+                // N?u chu?i base64 trong DB chua c� ti?n t? th� c?ng th�m v�o
                 imgElement.src = data.avatarUrl.includes('base64,') 
                                  ? data.avatarUrl 
                                  : 'data:image/png;base64,' + data.avatarUrl;
@@ -413,15 +413,15 @@
                 imgElement.src = '/images/default-avatar.png';
             }
 
-            // Trạng thái
+            // Tr?ng th�i
             const badge = document.getElementById('displayIsActive');
-            badge.innerText = data.isActive ? "Đang hoạt động" : "Ngừng hoạt động";
+            badge.innerText = data.isActive ? "�ang ho?t d?ng" : "Ng?ng ho?t d?ng";
             badge.className = `badge rounded-pill mt-1 ${data.isActive ? 'bg-success' : 'bg-danger'}`;
 
-            // Hiển thị Modal
+            // Hi?n th? Modal
             var myModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
             myModal.show();
         })
-        .catch(error => console.error('Lỗi:', error));
+        .catch(error => console.error('L?i:', error));
 }
 </script>

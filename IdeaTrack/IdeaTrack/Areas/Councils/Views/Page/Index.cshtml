@@ -1,4 +1,4 @@
-﻿@model IdeaTrack.Areas.Councils.Models.DashboardVM
+@model IdeaTrack.Areas.Councils.Models.DashboardVM
 
 <div class="dashboard-container">
     <header class="main-header">
@@ -76,7 +76,7 @@
                 </div>
                     <div class="item-info">
                     <h4>Initiative @item.InitiativeCode - @item.Title</h4>
-                    <span class="tag infra">@item.CategoryName</span> •
+                    <span class="tag infra">@item.CategoryName</span> �
                     <span class="time">Assigned @item.TimeAgo</span>
                     </div>
                 <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-start">Start Review</a>
@@ -105,7 +105,7 @@
                     <div class="activity-info">
                     <p class="title">@item.InitiativeCode - @item.Title</p>
                     <p class="score">Scored: @(item.Score?.ToString("0.#") ?? "0")/100</p>
-                    <span class="status done">✓ Completed</span>
+                    <span class="status done">? Completed</span>
                     </div>
                 <span class="timestamp">@item.TimeAgo</span>
                 </div>

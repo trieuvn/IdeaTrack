@@ -1,12 +1,14 @@
 ﻿using IdeaTrack.Areas.Author.ViewModels;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdeaTrack.Areas.Author.Controllers
 {
     [Area("Author")]
+    [Authorize(Roles = "Author,Lecturer,Admin")]
     public class HomePage : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -120,7 +122,7 @@ namespace IdeaTrack.Areas.Author.Controllers
             {
                 var allInitiatives = await _context.Initiatives
                     .Include(i => i.Category)
-                    .Include(i => i.Proposer)
+                    .Include(i => i.Creator)
                     .ToListAsync();
 
                 var totalCount = allInitiatives.Count;
@@ -167,7 +169,7 @@ namespace IdeaTrack.Areas.Author.Controllers
                     SelectedDate = today,
                     MonthlyTotal = monthlyInitiatives.Count,
                     MonthlyApproved = monthlyInitiatives.Count(i => i.Status == InitiativeStatus.Approved),
-                    MonthlyPending = monthlyInitiatives.Count(i => i.Status == InitiativeStatus.Pending || i.Status == InitiativeStatus.Reviewing)
+                    MonthlyPending = monthlyInitiatives.Count(i => i.Status == InitiativeStatus.Pending || i.Status == InitiativeStatus.Evaluating)
                 };
 
                 return View(viewModel);

@@ -1,6 +1,8 @@
 using IdeaTrack.Areas.Author.ViewModels;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using IdeaTrack.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,17 +11,24 @@ using Microsoft.EntityFrameworkCore;
 namespace IdeaTrack.Areas.Author.Controllers
 {
     [Area("Author")]
+    [Authorize(Roles = "Author,Lecturer,Admin")]
     public class InitiativeController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<InitiativeController> _logger;
+        private readonly IInitiativeService _initiativeService;
 
-        public InitiativeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<InitiativeController> logger)
+        public InitiativeController(
+            ApplicationDbContext context, 
+            UserManager<ApplicationUser> userManager, 
+            ILogger<InitiativeController> logger,
+            IInitiativeService initiativeService)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
+            _initiativeService = initiativeService;
         }
 
         // GET: /Author/Initiative/Detail/5
@@ -35,9 +44,12 @@ namespace IdeaTrack.Areas.Author.Controllers
             {
                 var initiative = await _context.Initiatives
                     .Include(i => i.Category)
-                    .Include(i => i.AcademicYear)
+                    .Include(i => i.Period)
+                        .ThenInclude(p => p != null ? p.AcademicYear : null)
                     .Include(i => i.Department)
                     .Include(i => i.Files)
+                    .Include(i => i.Authorships)
+                        .ThenInclude(a => a.Author)
                     .FirstOrDefaultAsync(i => i.Id == id);
 
                 if (initiative == null)
@@ -67,12 +79,21 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             try
             {
+                // Get active period's categories
+                var activePeriod = await _context.InitiativePeriods
+                    .Where(p => p.IsActive)
+                    .FirstOrDefaultAsync();
+
+                var categories = activePeriod != null
+                    ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
+                    : await _context.InitiativeCategories.ToListAsync();
+
                 var viewModel = new InitiativeCreateViewModel
                 {
                     Initiative = new Initiative(),
-                    AcademicYears = new SelectList(await _context.AcademicYears.ToListAsync(), "Id", "Name"),
-                    Categories = new SelectList(await _context.InitiativeCategories.ToListAsync(), "Id", "Name"),
-                    Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name")
+                    Categories = new SelectList(categories, "Id", "Name"),
+                    Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name"),
+                    ActivePeriodId = activePeriod?.Id
                 };
 
                 return View(viewModel);
@@ -91,9 +112,9 @@ namespace IdeaTrack.Areas.Author.Controllers
         public async Task<IActionResult> Create(InitiativeCreateViewModel viewModel, string action)
         {
             // Remove navigation properties and auto-generated fields from validation
-            ModelState.Remove("Initiative.Proposer");
+            ModelState.Remove("Initiative.Creator");
             ModelState.Remove("Initiative.Category");
-            ModelState.Remove("Initiative.AcademicYear");
+            ModelState.Remove("Initiative.Period");
             ModelState.Remove("Initiative.Department");
             ModelState.Remove("Initiative.InitiativeCode");
             ModelState.Remove("Initiative.Status");
@@ -113,12 +134,12 @@ namespace IdeaTrack.Areas.Author.Controllers
                     var currentUser = await _userManager.GetUserAsync(User);
                     if (currentUser != null)
                     {
-                        initiative.ProposerId = currentUser.Id;
+                        initiative.CreatorId = currentUser.Id;
                     }
                     else
                     {
                         var firstUser = await _context.Users.FirstOrDefaultAsync();
-                        initiative.ProposerId = firstUser?.Id ?? 1; // Fallback to 1 if no users (should catch DB empty)
+                        initiative.CreatorId = firstUser?.Id ?? 1;
                     }
 
                     initiative.CreatedAt = DateTime.Now;
@@ -128,6 +149,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                     {
                         initiative.Status = InitiativeStatus.Pending;
                         initiative.SubmittedDate = DateTime.Now;
+                        
+                        // Get active period
+                        var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                        initiative.PeriodId = activePeriod?.Id;
                     }
                     else
                     {
@@ -137,7 +162,18 @@ namespace IdeaTrack.Areas.Author.Controllers
                     _context.Initiatives.Add(initiative);
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation("Sáng kiến {InitiativeCode} được tạo thành công bởi user {UserId}", initiative.InitiativeCode, initiative.ProposerId);
+                    // Add creator as primary author
+                    var authorship = new InitiativeAuthorship
+                    {
+                        InitiativeId = initiative.Id,
+                        AuthorId = initiative.CreatorId,
+                        IsCreator = true,
+                        JoinedAt = DateTime.Now
+                    };
+                    _context.InitiativeAuthorships.Add(authorship);
+                    await _context.SaveChangesAsync();
+
+                    _logger.LogInformation("Sáng kiến {InitiativeCode} được tạo thành công bởi user {UserId}", initiative.InitiativeCode, initiative.CreatorId);
 
                     // Handle file uploads
                     if (viewModel.UploadedFiles != null && viewModel.UploadedFiles.Count > 0)
@@ -181,7 +217,6 @@ namespace IdeaTrack.Areas.Author.Controllers
                                     catch (Exception fileEx)
                                     {
                                         _logger.LogError(fileEx, "Lỗi khi lưu file {FileName} cho sáng kiến {InitiativeId}", file.FileName, initiative.Id);
-                                        // Continue with other files even if one fails
                                     }
                                 }
                             }
@@ -221,9 +256,14 @@ namespace IdeaTrack.Areas.Author.Controllers
             // If validation fails or error occurred, reload dropdowns
             try
             {
-                viewModel.AcademicYears = new SelectList(await _context.AcademicYears.ToListAsync(), "Id", "Name", viewModel.Initiative.AcademicYearId);
-                viewModel.Categories = new SelectList(await _context.InitiativeCategories.ToListAsync(), "Id", "Name", viewModel.Initiative.CategoryId);
+                var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                var categories = activePeriod != null
+                    ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
+                    : await _context.InitiativeCategories.ToListAsync();
+
+                viewModel.Categories = new SelectList(categories, "Id", "Name", viewModel.Initiative.CategoryId);
                 viewModel.Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", viewModel.Initiative.DepartmentId);
+                viewModel.ActivePeriodId = activePeriod?.Id;
             }
             catch (Exception ex)
             {
@@ -252,12 +292,17 @@ namespace IdeaTrack.Areas.Author.Controllers
                     return NotFound();
                 }
 
+                var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                var categories = activePeriod != null
+                    ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
+                    : await _context.InitiativeCategories.ToListAsync();
+
                 var viewModel = new InitiativeCreateViewModel
                 {
                     Initiative = initiative,
-                    AcademicYears = new SelectList(await _context.AcademicYears.ToListAsync(), "Id", "Name", initiative.AcademicYearId),
-                    Categories = new SelectList(await _context.InitiativeCategories.ToListAsync(), "Id", "Name", initiative.CategoryId),
-                    Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", initiative.DepartmentId)
+                    Categories = new SelectList(categories, "Id", "Name", initiative.CategoryId),
+                    Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", initiative.DepartmentId),
+                    ActivePeriodId = activePeriod?.Id
                 };
 
                 return View(viewModel);
@@ -282,9 +327,9 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
 
             // Remove navigation properties and auto-generated fields from validation
-            ModelState.Remove("Initiative.Proposer");
+            ModelState.Remove("Initiative.Creator");
             ModelState.Remove("Initiative.Category");
-            ModelState.Remove("Initiative.AcademicYear");
+            ModelState.Remove("Initiative.Period");
             ModelState.Remove("Initiative.Department");
             ModelState.Remove("Initiative.InitiativeCode");
             ModelState.Remove("Initiative.Status");
@@ -302,18 +347,21 @@ namespace IdeaTrack.Areas.Author.Controllers
                         return RedirectToAction(nameof(History));
                     }
 
-                    // Cập nhật các field
+                    // Update fields
                     existingInitiative.Title = viewModel.Initiative.Title;
                     existingInitiative.Description = viewModel.Initiative.Description;
                     existingInitiative.Budget = viewModel.Initiative.Budget;
                     existingInitiative.CategoryId = viewModel.Initiative.CategoryId;
-                    existingInitiative.AcademicYearId = viewModel.Initiative.AcademicYearId;
                     existingInitiative.DepartmentId = viewModel.Initiative.DepartmentId;
 
                     if (action == "Submit")
                     {
                         existingInitiative.Status = InitiativeStatus.Pending;
                         existingInitiative.SubmittedDate = DateTime.Now;
+                        
+                        // Set period when submitting
+                        var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                        existingInitiative.PeriodId = activePeriod?.Id;
                     }
 
                     // Handle file uploads
@@ -358,7 +406,6 @@ namespace IdeaTrack.Areas.Author.Controllers
                                     catch (Exception fileEx)
                                     {
                                         _logger.LogError(fileEx, "Lỗi khi lưu file {FileName} cho sáng kiến {InitiativeId}", file.FileName, existingInitiative.Id);
-                                        // Continue with other files even if one fails
                                     }
                                 }
                             }
@@ -402,9 +449,14 @@ namespace IdeaTrack.Areas.Author.Controllers
             // If validation fails or error occurred, reload dropdowns
             try
             {
-                viewModel.AcademicYears = new SelectList(await _context.AcademicYears.ToListAsync(), "Id", "Name", viewModel.Initiative.AcademicYearId);
-                viewModel.Categories = new SelectList(await _context.InitiativeCategories.ToListAsync(), "Id", "Name", viewModel.Initiative.CategoryId);
+                var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                var categories = activePeriod != null
+                    ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
+                    : await _context.InitiativeCategories.ToListAsync();
+
+                viewModel.Categories = new SelectList(categories, "Id", "Name", viewModel.Initiative.CategoryId);
                 viewModel.Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", viewModel.Initiative.DepartmentId);
+                viewModel.ActivePeriodId = activePeriod?.Id;
             }
             catch (Exception ex)
             {
@@ -434,6 +486,11 @@ namespace IdeaTrack.Areas.Author.Controllers
                 {
                     initiative.Status = InitiativeStatus.Pending;
                     initiative.SubmittedDate = DateTime.Now;
+                    
+                    // Set period when submitting
+                    var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                    initiative.PeriodId = activePeriod?.Id;
+                    
                     await _context.SaveChangesAsync();
                     
                     _logger.LogInformation("Sáng kiến {InitiativeId} được nộp thành công", id);
@@ -504,8 +561,14 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             try
             {
+                var currentUser = await _userManager.GetUserAsync(User);
+                var userId = currentUser?.Id ?? 0;
+
+                // Get initiatives where user is creator or co-author
                 var initiatives = await _context.Initiatives
                     .Include(i => i.Category)
+                    .Include(i => i.Authorships)
+                    .Where(i => i.CreatorId == userId || i.Authorships.Any(a => a.AuthorId == userId))
                     .OrderByDescending(i => i.CreatedAt)
                     .ToListAsync();
 
@@ -518,5 +581,45 @@ namespace IdeaTrack.Areas.Author.Controllers
                 return View(new List<Initiative>());
             }
         }
+
+        // POST: /Author/Initiative/CopyToDraft/5
+        // Copy a rejected/completed initiative to a new draft for resubmission
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CopyToDraft(int id)
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                var userId = currentUser?.Id ?? 0;
+
+                if (userId == 0)
+                {
+                    TempData["ErrorMessage"] = "Vui lòng đăng nhập để thực hiện chức năng này.";
+                    return RedirectToAction(nameof(History));
+                }
+
+                var newDraft = await _initiativeService.CopyToDraftAsync(id, userId);
+
+                if (newDraft == null)
+                {
+                    TempData["ErrorMessage"] = "Không thể tạo bản sao. Vui lòng thử lại sau.";
+                    return RedirectToAction(nameof(Detail), new { id });
+                }
+
+                _logger.LogInformation("User {UserId} copied Initiative {OriginalId} to new draft {NewId}", 
+                    userId, id, newDraft.Id);
+                
+                TempData["SuccessMessage"] = $"Đã tạo bản sao sáng kiến thành công! Mã mới: {newDraft.InitiativeCode}";
+                return RedirectToAction(nameof(Edit), new { id = newDraft.Id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Lỗi khi sao chép sáng kiến {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Lỗi khi tạo bản sao. Vui lòng thử lại sau.";
+                return RedirectToAction(nameof(Detail), new { id });
+            }
+        }
     }
 }
+

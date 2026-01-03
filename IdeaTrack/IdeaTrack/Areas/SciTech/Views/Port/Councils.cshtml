@@ -1,20 +1,20 @@
-﻿@model BoardManagementVM
+@model BoardManagementVM
 @using IdeaTrack.Areas.SciTech.Controllers
 @using IdeaTrack.Models
 
 
     <div class="mb-4">
-        <h1 class="fw-bold mb-1">Quản lý Hội đồng</h1>
-        <p class="text-muted mb-0">Thiết lập và quản lý thành viên các hội đồng đánh giá.</p>
+        <h1 class="fw-bold mb-1">Qu?n l� H?i d?ng</h1>
+        <p class="text-muted mb-0">Thi?t l?p v� qu?n l� th�nh vi�n c�c h?i d?ng d�nh gi�.</p>
     </div>
 
     <div class="row g-4">
         <div class="col-lg-4">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
-                    <h6 class="fw-bold mb-0 text-uppercase small">Danh sách Hội đồng</h6>
+                    <h6 class="fw-bold mb-0 text-uppercase small">Danh s�ch H?i d?ng</h6>
                     <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="openBoardModal()" style="width: 120px;">
-                        <i class="fa-solid fa-plus me-1"></i> Tạo mới
+                        <i class="fa-solid fa-plus me-1"></i> T?o m?i
                     </button>
                 </div>
 
@@ -22,7 +22,7 @@
                     <div class="px-2 mb-2">
                         <div class="input-group input-group-sm">
                             <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
-                            <input class="form-control border-start-0 bg-light shadow-none" id="searchBoard" placeholder="Tìm tên hội đồng...">
+                            <input class="form-control border-start-0 bg-light shadow-none" id="searchBoard" placeholder="T�m t�n h?i d?ng...">
                         </div>
                     </div>
 
@@ -38,7 +38,7 @@
                                             <i class="fa-solid fa-users-rectangle me-2"></i>@board.BoardName
                                         </div>
                                         <span class="badge @(board.IsActive ? "bg-success-subtle text-success" : "bg-light text-muted") border">
-                                            @(board.IsActive ? "Hoạt động" : "Kết thúc")
+                                            @(board.IsActive ? "Ho?t d?ng" : "K?t th�c")
                                         </span>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center small text-muted">
@@ -64,17 +64,17 @@
                                 <p class="text-muted mb-0 small">@Model.SelectedBoard.Description</p>
                                 <div class="mt-2">
                                     <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2">
-                                        Năm tài khóa: @Model.SelectedBoard.FiscalYear
+                                        Nam t�i kh�a: @Model.SelectedBoard.FiscalYear
                                     </span>
                                 </div>
                             </div>
                             <div class="d-flex gap-2">
                                 
                                 <button class="btn btn-outline-danger btn-sm rounded-pill" style=" width: 100px; "  onclick="deleteBoard(@Model.SelectedBoard.Id)">
-                                    <i class="fa-solid fa-trash me-1"></i> Xóa HĐ
+                                    <i class="fa-solid fa-trash me-1"></i> X�a H�
                                 </button>
                                 <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="openAddMemberModal(@Model.SelectedBoard.Id)" style="width: 120px;">
-                                    <i class="fa-solid fa-user-plus me-1"></i> Thêm TV
+                                    <i class="fa-solid fa-user-plus me-1"></i> Th�m TV
                                 </button>
                             </div>
                         </div>
@@ -84,10 +84,10 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="ps-4 py-3 border-0 small text-uppercase fw-bold text-muted">Thành viên</th>
-                                    <th class="py-3 border-0 small text-uppercase fw-bold text-muted">Chuyên môn</th>
-                                    <th class="py-3 border-0 small text-uppercase fw-bold text-muted" style="width: 180px;">Vai trò</th>
-                                    <th class="text-end pe-4 py-3 border-0 small text-uppercase fw-bold text-muted">Thao tác</th>
+                                    <th class="ps-4 py-3 border-0 small text-uppercase fw-bold text-muted">Th�nh vi�n</th>
+                                    <th class="py-3 border-0 small text-uppercase fw-bold text-muted">Chuy�n m�n</th>
+                                    <th class="py-3 border-0 small text-uppercase fw-bold text-muted" style="width: 180px;">Vai tr�</th>
+                                    <th class="text-end pe-4 py-3 border-0 small text-uppercase fw-bold text-muted">Thao t�c</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -114,7 +114,7 @@
                                                 @foreach (BoardRole r in Enum.GetValues(typeof(BoardRole)))
                                                 {
                                                     <option value="@((int)r)" selected="@(member.Role == r)">
-                                                        @(r == BoardRole.Chairman ? "Chủ tịch" : r == BoardRole.Secretary ? "Thư ký" : "Ủy viên")
+                                                        @(r == BoardRole.Chairman ? "Ch? t?ch" : r == BoardRole.Secretary ? "Thu k�" : "?y vi�n")
                                                     </option>
                                                 }
                                             </select>
@@ -134,8 +134,8 @@
                 {
                     <div class="card-body d-flex flex-column align-items-center justify-content-center text-muted py-5">
                         <i class="fa-solid fa-users-viewfinder fa-3x opacity-25 mb-3"></i>
-                        <h5 class="fw-bold">Chưa chọn hội đồng</h5>
-                        <p class="small">Chọn một hội đồng từ danh sách bên trái để quản lý.</p>
+                        <h5 class="fw-bold">Chua ch?n h?i d?ng</h5>
+                        <p class="small">Ch?n m?t h?i d?ng t? danh s�ch b�n tr�i d? qu?n l�.</p>
                     </div>
                 }
             </div>
@@ -146,28 +146,28 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header border-bottom-0">
-                <h5 class="fw-bold mb-0" id="modalTitle">Thông tin Hội đồng</h5>
+                <h5 class="fw-bold mb-0" id="modalTitle">Th�ng tin H?i d?ng</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="boardForm">
                 <div class="modal-body">
                     <input type="hidden" id="boardId" name="Id" value="0" />
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Tên Hội đồng</label>
-                        <input type="text" class="form-control shadow-none" id="boardName" name="BoardName" required placeholder="Ví dụ: Hội đồng Khoa học 2024">
+                        <label class="form-label small fw-bold">T�n H?i d?ng</label>
+                        <input type="text" class="form-control shadow-none" id="boardName" name="BoardName" required placeholder="V� d?: H?i d?ng Khoa h?c 2024">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Năm tài khóa</label>
+                        <label class="form-label small fw-bold">Nam t�i kh�a</label>
                         <input type="number" class="form-control shadow-none" id="fiscalYear" name="FiscalYear" value="@DateTime.Now.Year" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Mô tả</label>
+                        <label class="form-label small fw-bold">M� t?</label>
                         <textarea class="form-control shadow-none" id="description" name="Description" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-top-0">
-                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4">Lưu dữ liệu</button>
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">H?y</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Luu d? li?u</button>
                 </div>
             </form>
         </div>
@@ -177,26 +177,26 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header border-bottom-0">
-                <h5 class="fw-bold mb-0">Thêm Thành viên vào Hội đồng</h5>
+                <h5 class="fw-bold mb-0">Th�m Th�nh vi�n v�o H?i d?ng</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="input-group mb-4 shadow-sm">
                     <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
                     <input type="text" class="form-control border-start-0 shadow-none" id="searchUserInput"
-                           placeholder="Tìm theo tên, email hoặc mã nhân viên...">
+                           placeholder="T�m theo t�n, email ho?c m� nh�n vi�n...">
                 </div>
 
                 <div id="userSearchResult" class="list-group list-group-flush border rounded-3"
                      style="max-height: 400px; overflow-y: auto;">
                     <div class="text-center py-5 text-muted">
                         <i class="fa-solid fa-search fa-2x mb-2 opacity-25"></i>
-                        <p>Nhập từ khóa để tìm kiếm nhân sự</p>
+                        <p>Nh?p t? kh�a d? t�m ki?m nh�n s?</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">��ng</button>
             </div>
         </div>
     </div>
@@ -205,7 +205,7 @@
 
 <script>
     // ===============================
-    // 0. API ROUTES (CHUẨN AREA)
+    // 0. API ROUTES (CHU?N AREA)
     // ===============================
     const API = {
         deleteBoard: '@Url.Action("DeleteBoard", "Port", new { area = "SciTech" })',
@@ -217,13 +217,13 @@
     };
 
     // ===============================
-    // 1. BIẾN TOÀN CỤC
+    // 1. BI?N TO�N C?C
     // ===============================
     let currentBoardId = 0;
     let searchTimeout = null;
 
     // ===============================
-    // 2. HÀM ĐỘC LẬP
+    // 2. H�M �?C L?P
     // ===============================
     function openBoardModal(id = 0, name = '', year = new Date().getFullYear(), desc = '') {
         $('#boardId').val(id);
@@ -231,29 +231,29 @@
         $('#fiscalYear').val(year);
         $('#description').val(desc);
 
-        $('#modalTitle').text(id === 0 ? 'Tạo Hội đồng mới' : 'Cập nhật Hội đồng');
+        $('#modalTitle').text(id === 0 ? 'T?o H?i d?ng m?i' : 'C?p nh?t H?i d?ng');
 
         new bootstrap.Modal(document.getElementById('saveBoardModal')).show();
     }
 
     function deleteBoard(id) {
-        if (!confirm('CẢNH BÁO: Xóa hội đồng sẽ xóa tất cả thành viên liên quan. Bạn chắc chắn chứ?')) return;
+        if (!confirm('C?NH B�O: X�a h?i d?ng s? x�a t?t c? th�nh vi�n li�n quan. B?n ch?c ch?n ch??')) return;
 
         $.post(API.deleteBoard, { id })
             .done(res => {
                 if (res.success) {
                     location.href = '@Url.Action("Councils", "Port", new { area = "SciTech" })';
                 } else {
-                    alert(res.message || 'Không thể xóa hội đồng');
+                    alert(res.message || 'Kh�ng th? x�a h?i d?ng');
                 }
             });
     }
 
         function openAddMemberModal(boardId) {
         currentBoardId = boardId;
-        $('#searchUserInput').val(''); // Reset ô nhập liệu
+        $('#searchUserInput').val(''); // Reset � nh?p li?u
 
-        // GỌI HÀM NÀY ĐỂ HIỂN THỊ DỮ LIỆU NGAY LẬP TỨC
+        // G?I H�M N�Y �? HI?N TH? D? LI?U NGAY L?P T?C
         fetchUsers("");
 
         new bootstrap.Modal(document.getElementById('addMemberModal')).show();
@@ -264,7 +264,7 @@
             userId: userId
         }).done(res => {
             if (res.success) location.reload();
-            else alert(res.message || 'Không thể thêm thành viên');
+            else alert(res.message || 'Kh�ng th? th�m th�nh vi�n');
         });
     }
 
@@ -273,7 +273,7 @@
     // ===============================
     $(function () {
 
-        // 🔍 Tìm kiếm hội đồng
+        // ?? T�m ki?m h?i d?ng
         $('#searchBoard').on('keyup', function () {
             const value = $(this).val().toLowerCase();
             $('.board-item-link').each(function () {
@@ -282,7 +282,7 @@
             });
         });
 
-        // 🔁 Cập nhật vai trò thành viên
+        // ?? C?p nh?t vai tr� th�nh vi�n
         $('.role-select').on('change', function () {
             $.post(API.updateRole, {
                 memberId: $(this).data('id'),
@@ -290,10 +290,10 @@
             });
         });
 
-        // ❌ Xóa thành viên
+        // ? X�a th�nh vi�n
         $('.btn-remove-member').on('click', function () {
             const memberId = $(this).data('id');
-            if (!confirm('Gỡ thành viên này khỏi hội đồng?')) return;
+            if (!confirm('G? th�nh vi�n n�y kh?i h?i d?ng?')) return;
 
             $.post(API.removeMember, { memberId })
                 .done(res => {
@@ -303,7 +303,7 @@
                 });
         });
 
-        // 👤 Tìm kiếm nhân sự
+        // ?? T�m ki?m nh�n s?
         $('#searchUserInput').on('keyup', function () {
             const term = $(this).val();
             clearTimeout(searchTimeout);
@@ -324,7 +324,7 @@
                         let html = '';
 
                         if (!data || data.length === 0) {
-                            html = '<div class="text-center py-5 text-muted">Không tìm thấy nhân sự</div>';
+                            html = '<div class="text-center py-5 text-muted">Kh�ng t�m th?y nh�n s?</div>';
                         } else {
                             data.forEach(user => {
                                 html += `
@@ -335,7 +335,7 @@
                                         </div>
                                         <button class="btn btn-sm btn-primary rounded-pill px-3"
                                                 onclick="addMember(${user.id})">
-                                            Chọn
+                                            Ch?n
                                         </button>
                                     </div>`;
                             });
@@ -346,19 +346,19 @@
             }, 400);
         });
 
-        // 💾 Submit form tạo / cập nhật hội đồng
+        // ?? Submit form t?o / c?p nh?t h?i d?ng
         $('#boardForm').on('submit', function (e) {
             e.preventDefault();
 
             $.post(API.saveBoard, $(this).serialize())
                 .done(res => {
                     if (res.success) location.reload();
-                    else alert('Lỗi: ' + res.message);
+                    else alert('L?i: ' + res.message);
                 });
         });
     });
         function fetchUsers(term = "") {
-        // Hiển thị loading trong khi chờ
+        // Hi?n th? loading trong khi ch?
         $('#userSearchResult').html(
             '<div class="text-center py-5"><div class="spinner-border text-primary spinner-border-sm"></div></div>'
         );
@@ -367,7 +367,7 @@
             .done(data => {
                 let html = '';
                 if (!data || data.length === 0) {
-                    html = '<div class="text-center py-5 text-muted">Không tìm thấy nhân sự</div>';
+                    html = '<div class="text-center py-5 text-muted">Kh�ng t�m th?y nh�n s?</div>';
                 } else {
                     data.forEach(user => {
                         html += `
@@ -377,7 +377,7 @@
                                     <div class="small text-muted">${user.email} - ${user.departmentName || ''}</div>
                                 </div>
                                 <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="addMember(${user.id})">
-                                    Chọn
+                                    Ch?n
                                 </button>
                             </div>`;
                     });

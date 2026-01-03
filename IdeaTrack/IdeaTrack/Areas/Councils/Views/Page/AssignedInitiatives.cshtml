@@ -1,7 +1,7 @@
-﻿@model IdeaTrack.Areas.Councils.Models.AssignedListVM
+@model IdeaTrack.Areas.Councils.Models.AssignedListVM
 
     <div class="dashboard-container">
-        <nav class="breadcrumb">Dashboard &nbsp; <span>›</span> &nbsp; Assigned Initiatives</nav>
+        <nav class="breadcrumb">Dashboard &nbsp; <span>�</span> &nbsp; Assigned Initiatives</nav>
         <div class="header-main">
             <div>
                 <h1 class="page-title">Assigned Initiatives</h1>
@@ -87,11 +87,11 @@
                         <td>
                             @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
                             {
-                                <span class="badge badge-completed">✓ Completed</span>
+                                <span class="badge badge-completed">? Completed</span>
                             }
                             else
                             {
-                                <span class="badge badge-assigned">● Assigned</span>
+                                <span class="badge badge-assigned">? Assigned</span>
                             }
                         </td>
                         <td>

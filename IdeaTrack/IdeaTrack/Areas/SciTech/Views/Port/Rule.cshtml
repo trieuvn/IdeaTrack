@@ -1,12 +1,12 @@
-﻿@using IdeaTrack.Models
+@using IdeaTrack.Models
 @model List<EvaluationCriteria>
 
 <div class="card shadow-sm mb-4">
     <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
         <div>
-            <h2 class="fw-bold mb-1">Quản lý Tiêu chí & Trọng số</h2>
+            <h2 class="fw-bold mb-1">Qu?n l� Ti�u ch� & Tr?ng s?</h2>
             <p class="text-muted mb-0">
-                Tổng trọng số của tất cả tiêu chí phải bằng <strong>100%</strong> để kích hoạt chấm điểm.
+                T?ng tr?ng s? c?a t?t c? ti�u ch� ph?i b?ng <strong>100%</strong> d? k�ch ho?t ch?m di?m.
             </p>
         </div>
         
@@ -18,7 +18,7 @@
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
-                <small class="text-muted">Tổng số tiêu chí</small>
+                <small class="text-muted">T?ng s? ti�u ch�</small>
                 <h3 class="fw-bold mb-0" id="totalCriteria">0</h3>
             </div>
         </div>
@@ -28,8 +28,8 @@
         <div class="card shadow-sm border-success">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <small class="text-muted">Tổng trọng số</small>
-                    <span class="badge bg-success" id="weightStatus">Hợp lệ</span>
+                    <small class="text-muted">T?ng tr?ng s?</small>
+                    <span class="badge bg-success" id="weightStatus">H?p l?</span>
                 </div>
                 <h3 class="fw-bold text-success mb-0">
                     <span id="totalWeight">0</span>%
@@ -44,9 +44,9 @@
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
-                <small class="text-muted">Cập nhật lần cuối</small>
-                <h6 class="fw-bold mb-0">@DateTime.Now.ToString("HH:mm – dd/MM/yyyy")</h6>
-                <small class="text-muted">bởi Admin</small>
+                <small class="text-muted">C?p nh?t l?n cu?i</small>
+                <h6 class="fw-bold mb-0">@DateTime.Now.ToString("HH:mm � dd/MM/yyyy")</h6>
+                <small class="text-muted">b?i Admin</small>
             </div>
         </div>
     </div>
@@ -54,9 +54,9 @@
 
 <!-- ACTION -->
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="fw-bold mb-0">Danh sách tiêu chí</h5>
+    <h5 class="fw-bold mb-0">Danh s�ch ti�u ch�</h5>
     <button type="button" class="btn btn-primary" onclick="addCriteriaRow()">
-        <i class="fa-solid fa-circle-plus me-1"></i>Thêm tiêu chí
+        <i class="fa-solid fa-circle-plus me-1"></i>Th�m ti�u ch�
     </button>
 </div>
 <form asp-controller="SciTech"
@@ -69,10 +69,10 @@
         <table class="table align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Tên tiêu chí</th>
-                    <th>Mô tả</th>
-                    <th style="width:30%">Trọng số (%)</th>
-                    <th class="text-end">Thao tác</th>
+                    <th>T�n ti�u ch�</th>
+                    <th>M� t?</th>
+                    <th style="width:30%">Tr?ng s? (%)</th>
+                    <th class="text-end">Thao t�c</th>
                 </tr>
             </thead>
 
@@ -81,7 +81,7 @@
                     {
                         <tr>
                             <td>
-                                @* Dùng name với ID để Controller Dictionary nhận diện được *@
+                                @* D�ng name v?i ID d? Controller Dictionary nh?n di?n du?c *@
                                 <input class="form-control form-control-sm"
                                        name="criteria[@item.Id].CriteriaName"
                                        value="@item.CriteriaName" />
@@ -129,24 +129,24 @@
 
     <div class="card-footer d-flex justify-content-between">
         <small class="text-muted">
-            Hiển thị <span id="countRow">0</span> tiêu chí
+            Hi?n th? <span id="countRow">0</span> ti�u ch�
         </small>
-        <a href="#" class="fw-semibold text-decoration-none">Khôi phục mặc định</a>
+        <a href="#" class="fw-semibold text-decoration-none">Kh�i ph?c m?c d?nh</a>
     </div>
 </div>
 
 <!-- PREVIEW -->
 <div class="alert alert-secondary">
     <i class="fa-solid fa-eye me-1"></i>
-    <strong>Cách tính điểm:</strong>
+    <strong>C�ch t�nh di?m:</strong>
     <span id="previewFormula"></span>
 </div>
 
 <!-- FOOTER ACTION -->
 <div class="d-flex justify-content-end gap-3">
-    <button class="btn btn-outline-secondary">Hủy</button>
+    <button class="btn btn-outline-secondary">H?y</button>
         <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-floppy-disk me-1"></i>Lưu thay đổi
+            <i class="fa-solid fa-floppy-disk me-1"></i>Luu thay d?i
         </button>
 
 </div>
@@ -161,7 +161,7 @@
         value = Number(value || 0);
         if (value < 0) return 0;
         if (value > 100) return 100;
-        return Number(value.toFixed(2)); // ép 2 chữ số thập phân
+        return Number(value.toFixed(2)); // �p 2 ch? s? th?p ph�n
     }
 
     /* =========================
@@ -172,11 +172,11 @@
         const range = td.querySelector(".weight-range");
         const label = td.querySelector(".weight-label");
 
-        // Nếu người dùng xóa trống ô thì coi như là 0
+        // N?u ngu?i d�ng x�a tr?ng � th� coi nhu l� 0
         let val = input.value.replace(',', '.');
         let value = Number(val || 0);
 
-        // Chặn ngay lập tức nếu gõ quá 100
+        // Ch?n ngay l?p t?c n?u g� qu� 100
         if (value > 100) {
             value = 100;
             input.value = 100;
@@ -205,19 +205,19 @@
     ========================== */
         function addCriteriaRow() {
         const table = document.getElementById("criteriaTable");
-        const nextId = getMaxId() + 1; // Sử dụng Max ID + 1 thay vì index
+        const nextId = getMaxId() + 1; // S? d?ng Max ID + 1 thay v� index
 
         table.insertAdjacentHTML("beforeend", `
         <tr>
             <td>
                 <input class="form-control form-control-sm"
                        name="criteria[${nextId}].CriteriaName"
-                       placeholder="Tên tiêu chí" />
+                       placeholder="T�n ti�u ch�" />
             </td>
             <td>
                 <input class="form-control form-control-sm"
                        name="criteria[${nextId}].Description"
-                       placeholder="Mô tả" />
+                       placeholder="M� t?" />
             </td>
             <td>
                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -276,7 +276,7 @@
 
         let sum = 0;
         inputs.forEach(x => {
-            // Thay thế dấu phẩy thành dấu chấm để JS tính toán đúng
+            // Thay th? d?u ph?y th�nh d?u ch?m d? JS t�nh to�n d�ng
             let val = x.value.replace(',', '.');
             sum += clamp(val);
         });
@@ -287,21 +287,21 @@
         document.getElementById("countRow").innerText = count;
         document.getElementById("totalWeight").innerText = totalWeight.toFixed(2);
 
-        // Cập nhật Progress Bar
+        // C?p nh?t Progress Bar
         const progress = document.getElementById("weightProgress");
         const percent = Math.min(totalWeight, 100);
         progress.style.width = percent + "%";
 
-        // Đổi màu progress bar nếu vượt quá 100
+        // �?i m�u progress bar n?u vu?t qu� 100
         if (totalWeight > 100) {
             progress.className = "progress-bar bg-danger";
         } else {
             progress.className = "progress-bar bg-success";
         }
 
-        const valid = Math.abs(totalWeight - 100) < 0.01; // So sánh số thực
+        const valid = Math.abs(totalWeight - 100) < 0.01; // So s�nh s? th?c
         const weightStatus = document.getElementById("weightStatus");
-        weightStatus.innerText = valid ? "Hợp lệ" : "Chưa hợp lệ";
+        weightStatus.innerText = valid ? "H?p l?" : "Chua h?p l?";
         weightStatus.className = "badge " + (valid ? "bg-success" : "bg-danger");
 
         document.getElementById("previewFormula").innerText =
@@ -323,7 +323,7 @@
         document.querySelectorAll("#criteriaTable tr").forEach(row => {
             const input = row.querySelector("input");
             if (input) {
-                const name = input.getAttribute("name"); // Ví dụ: criteria[5].CriteriaName
+                const name = input.getAttribute("name"); // V� d?: criteria[5].CriteriaName
                 const match = name.match(/\[(\d+)\]/);
                 if (match) {
                     const id = parseInt(match[1]);
