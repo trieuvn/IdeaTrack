@@ -42,6 +42,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
 builder.Services.AddScoped<ISupabaseStorageService, SupabaseStorageService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<DataSeederService>();
 builder.Services.AddHttpContextAccessor();
 
 // MVC + Razor

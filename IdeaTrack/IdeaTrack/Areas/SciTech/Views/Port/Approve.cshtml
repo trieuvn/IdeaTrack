@@ -15,7 +15,7 @@
         _ => "bg-secondary text-white"
     };
 
-    // Icon v� m�u cho Department
+    // Icon và màu cho Department
     string deptIcon = "fa-building";
     string deptColor = "text-secondary";
 
@@ -24,31 +24,31 @@
         case "CNTT":
             deptIcon = "fa-laptop-code"; deptColor = "text-primary";
             break;
-        case "DTVT": // �i?n t? Vi?n th�ng
+        case "DTVT": // Điện tử Viễn thông
             deptIcon = "fa-bolt"; deptColor = "text-danger";
             break;
-        case "KHCN": // Khoa h?c C�ng ngh?
+        case "KHCN": // Khoa học Công nghệ
             deptIcon = "fa-microscope"; deptColor = "text-success";
             break;
-        case "CK": // Co kh�
+        case "CK": // Cơ khí
             deptIcon = "fa-cogs"; deptColor = "text-warning";
             break;
-        case "XD": // X�y d?ng
+        case "XD": // Xây dựng
             deptIcon = "fa-hard-hat"; deptColor = "text-secondary";
             break;
-        case "MT": // M�i tru?ng
+        case "MT": // Môi trường
             deptIcon = "fa-leaf"; deptColor = "text-info";
             break;
-        case "KT": // Kinh t?
+        case "KT": // Kinh tế
             deptIcon = "fa-chart-line"; deptColor = "text-primary";
             break;
-        case "QTKD": // Qu?n tr? Kinh doanh
+        case "QTKD": // Quản trị Kinh doanh
             deptIcon = "fa-briefcase"; deptColor = "text-primary";
             break;
         case "LUAT":
             deptIcon = "fa-gavel"; deptColor = "text-warning";
             break;
-        case "NN": // N�ng nghi?p
+        case "NN": // Nông nghiệp
             deptIcon = "fa-seedling"; deptColor = "text-success";
             break;
         default:
@@ -69,7 +69,7 @@
         </h2>
 
         <p class="text-muted mb-0">
-            <i class="fas fa-fingerprint me-1 text-info"></i>M� h? so: <strong>@Model.InitiativeCode</strong>
+            <i class="fas fa-fingerprint me-1 text-info"></i>Mã hồ sơ: <strong>@Model.InitiativeCode</strong>
             <span class="mx-2">|</span>
             <i class="fas fa-calendar-alt me-1 text-secondary"></i>@Model.SubmittedDate.ToString("dd/MM/yyyy")
         </p>
@@ -84,35 +84,35 @@
         <!-- INFO CARD -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-light fw-bold">
-                <i class="fas fa-info-circle me-1 text-primary"></i>Th�ng tin chung
+                <i class="fas fa-info-circle me-1 text-primary"></i>Thông tin chung
             </div>
 
             <div class="card-body row g-4">
                 <div class="col-md-6">
-                    <small class="text-muted">Ch? nhi?m d? t�i</small>
+                    <small class="text-muted">Chủ nhiệm đề tài</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-user-tie me-1 text-primary"></i>@Model.ProposerName</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted">�on v? th?c hi?n</small>
+                    <small class="text-muted">Đơn vị thực hiện</small>
                     <p class="fw-semibold mb-0"><i class="fas @deptIcon @deptColor me-1"></i>@Model.DepartmentName</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted">Linh v?c</small>
+                    <small class="text-muted">Lĩnh vực</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-brain me-1 text-info"></i>@Model.Category</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted d-block mb-1">Th?i gian th?c hi?n</small>
+                    <small class="text-muted d-block mb-1">Thời gian thực hiện</small>
                     <p class="fw-semibold mb-0 gradient-text">
                         <i class="fas fa-clock me-1"></i>
                         @Model.SubmittedDate.ToString("dd/MM/yyyy")
                     </p>
                 </div>
                 <div class="col-md-6">
-                     <small class="text-muted">Kinh ph� d? xu?t</small>
-                    <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VN�</p>
+                     <small class="text-muted">Kinh phí đề xuất</small>
+                    <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VNĐ</p>
                 </div>
 
             </div>
@@ -123,7 +123,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-semibold" data-bs-toggle="collapse" data-bs-target="#description">
-                        <i class="fas fa-align-left me-2 text-primary"></i>M� t? n?i dung
+                        <i class="fas fa-align-left me-2 text-primary"></i>Mô tả nội dung
                     </button>
                 </h2>
                 <div id="description" class="accordion-collapse collapse show">
@@ -136,7 +136,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed fw-semibold" data-bs-toggle="collapse" data-bs-target="#files">
-                        <i class="fas fa-paperclip me-2 text-secondary"></i>T�i li?u d�nh k�m
+                        <i class="fas fa-paperclip me-2 text-secondary"></i>Tài liệu đính kèm
                     </button>
                 </h2>
                 <div id="files" class="accordion-collapse collapse">
@@ -174,7 +174,7 @@
                                 <li class="list-group-item d-flex justify-content-between">
                                     <span><i class="fas @iconClass @textColor me-2"></i>@file.FileName</span>
                                     <a href="@Url.Action("DownloadFile", "Port", new { fileName = file.FileName })" class="text-decoration-none">
-                                        <i class="fas fa-download me-1 text-primary"></i>T?i
+                                        <i class="fas fa-download me-1 text-primary"></i>Tải
                                     </a>
                                 </li>
                             }
@@ -190,99 +190,99 @@
     <div class="col-lg-4">
         <div class="card shadow border-primary">
             <div class="card-header fw-bold text-primary">
-                <i class="fas fa-pen-alt me-1"></i>Quy?t d?nh PKHCN
+                <i class="fas fa-pen-alt me-1"></i>Quyết định PKHCN
             </div>
 
             <div class="card-body">
-
-                <!-- GHI CH� -->
-                <label class="form-label fw-semibold">
-                    <i class="fas fa-sticky-note me-1 text-warning"></i>
-                    Ghi ch� / N?i dung y�u c?u
-                </label>
-
-                <textarea id="requestContent"
-                          class="form-control mb-3"
-                          rows="4"
-                          placeholder="Nh?p n?i dung y�u c?u ch?nh s?a ho?c k?t lu?n..."></textarea>
-
-                <!-- DEADLINE -->
-                <div id="deadlineWrapper" class="d-none">
+                <form method="post" id="decisionForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    
+                    <!-- GHI CHÚ -->
                     <label class="form-label fw-semibold">
-                        <i class="fas fa-calendar-alt me-1 text-info"></i>
-                        H?n ch?nh s?a
+                        <i class="fas fa-sticky-note me-1 text-warning"></i>
+                        Ghi chú / Nội dung yêu cầu
                     </label>
 
-                    <input type="date"
-                           id="deadline"
-                           class="form-control mb-3">
-                </div>
+                    <textarea name="requestContent" id="requestContent"
+                              class="form-control mb-3"
+                              rows="4"
+                              placeholder="Nhập nội dung yêu cầu chỉnh sửa, lý do đánh giá lại, hoặc kết luận..."></textarea>
 
-                <!-- DUY?T -->
-                <a href="/SciTech/Port/ApproveInitiative/@Model.Id" id="revisionLink2"
-                   class="btn btn-success w-100 mb-2">
-                    <i class="fas fa-check-circle me-1 text-white"></i>Duy?t h? so
-                </a>
+                    <!-- DEADLINE (Js toggle) -->
+                    <div id="deadlineWrapper" class="d-none mb-3">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-calendar-alt me-1 text-info"></i>
+                            Hạn chỉnh sửa
+                        </label>
+                        <input type="date" name="deadline" id="deadline" class="form-control">
+                    </div>
 
-                <!-- Y�U C?U CH?NH S?A -->
-                <a href="/SciTech/Port/RejectInitiative/@Model.Id"
-                   id="revisionLink"
-                   class="btn btn-outline-warning w-100 mb-2">
-                    <i class="fas fa-undo me-1"></i>Y�u c?u ch?nh s?a
-                </a>
+                    <!-- ACTIONS -->
+                    <div class="d-grid gap-2">
+                        <!-- DUYỆT -->
+                        <button type="submit" asp-action="ApproveInitiative" asp-controller="Port" asp-area="SciTech"
+                                class="btn btn-success" onclick="return confirm('Xác nhận duyệt hồ sơ này?');">
+                            <i class="fas fa-check-circle me-1"></i>Duyệt hồ sơ / Phân công
+                        </button>
+                        
+                        <!-- YÊU CẦU CHẤM LẠI (New) -->
+                        <button type="submit" asp-action="RequestReEvaluation" asp-controller="Port" asp-area="SciTech"
+                                class="btn btn-warning text-white" onclick="return confirm('Xác nhận yêu cầu Hội đồng chấm lại vòng tiếp theo?');">
+                            <i class="fas fa-sync-alt me-1"></i>Yêu cầu chấm lại
+                        </button>
 
+                         <!-- QUYẾT ĐỊNH CUỐI CÙNG (Approve/Reject) -->
+                        <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Approve"
+                                class="btn btn-outline-success fw-bold" onclick="return confirm('Xác nhận PHÊ DUYỆT chính thức sáng kiến này?');">
+                            <i class="fas fa-award me-1"></i>Phê duyệt (Quyết định cuối)
+                        </button>
+
+                        <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Reject"
+                                class="btn btn-outline-danger fw-bold" onclick="return confirm('Xác nhận TỪ CHỐI chính thức sáng kiến này?');">
+                            <i class="fas fa-times-circle me-1"></i>Từ chối (Quyết định cuối)
+                        </button>
+
+                        <!-- YÊU CẦU CHỈNH SỬA (Reject) -->
+                        <button type="button" id="btnShowDeadline" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo me-1"></i>Yêu cầu chỉnh sửa
+                        </button>
+                        
+                        <button type="submit" asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech"
+                                id="btnReject" class="btn btn-danger d-none" onclick="return validateReject();">
+                            <i class="fas fa-paper-plane me-1"></i>Gửi yêu cầu chỉnh sửa
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
-
-
 </div>
+
 <script>
-    document.getElementById("revisionLink").addEventListener("click", function (e) {
-        e.preventDefault();
-
-        const deadlineWrapper = document.getElementById("deadlineWrapper");
-        const content = document.getElementById("requestContent").value;
-        const deadlineInput = document.getElementById("deadline");
-
-        // N?u deadline dang ?n ? hi?n l�n v� d?ng l?i
-        if (deadlineWrapper.classList.contains("d-none")) {
-            deadlineWrapper.classList.remove("d-none");
-            deadlineInput.focus();
-            return;
+    document.getElementById("btnShowDeadline").addEventListener("click", function() {
+        var wrapper = document.getElementById("deadlineWrapper");
+        var btnReject = document.getElementById("btnReject");
+        
+        if (wrapper.classList.contains("d-none")) {
+            wrapper.classList.remove("d-none");
+            btnReject.classList.remove("d-none");
+            this.classList.add("d-none"); // Hide "Show" button
         }
-
-        const deadline = deadlineInput.value;
-
-        if (!content || !deadline) {
-            alert("Vui l�ng nh?p n?i dung v� h?n ch?nh s?a!");
-            return;
-        }
-
-        const baseUrl = this.getAttribute("href");
-        const url = baseUrl
-            + "?requestContent=" + encodeURIComponent(content)
-            + "&deadline=" + deadline;
-
-        window.location.href = url;
     });
 
-    document.getElementById("revisionLink2").addEventListener("click", function (e) {
-        e.preventDefault();
-
-        const content = document.getElementById("requestContent").value;
-
-        if (!content) {
-            alert("Vui l�ng nh?p n?i dung!");
-            return;
+    function validateReject() {
+        var content = document.getElementById("requestContent").value;
+        var deadline = document.getElementById("deadline").value;
+        
+        if (!content || !content.trim()) {
+            alert("Vui lòng nhập nội dung yêu cầu chỉnh sửa!");
+            return false;
         }
-
-        const baseUrl = this.getAttribute("href");
-        const url = baseUrl
-            + "?requestContent=" + encodeURIComponent(content);
-
-        window.location.href = url;
-    });
+        if (!deadline) {
+            alert("Vui lòng chọn hạn chỉnh sửa!");
+            return false;
+        }
+        return confirm('Xác nhận gửi yêu cầu chỉnh sửa cho tác giả?');
+    }
 </script>
-

@@ -292,6 +292,18 @@ namespace IdeaTrack.Areas.Author.Controllers
                     return NotFound();
                 }
 
+                var currentUser = await _userManager.GetUserAsync(User);
+                var userId = currentUser?.Id ?? 0;
+                var isAuthorized = initiative.CreatorId == userId || 
+                                 (initiative.Authorships != null && initiative.Authorships.Any(a => a.AuthorId == userId)) ||
+                                 User.IsInRole("Admin");
+
+                if (!isAuthorized)
+                {
+                    _logger.LogWarning("Unauthorized access attempt by user {UserId} to edit initiative {InitiativeId}", userId, id);
+                    return Forbid();
+                }
+
                 var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
                 var categories = activePeriod != null
                     ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
@@ -345,6 +357,26 @@ namespace IdeaTrack.Areas.Author.Controllers
                         _logger.LogWarning("Initiative with id {InitiativeId} not found for update", id);
                         TempData["ErrorMessage"] = "Không tìm thấy sáng kiến để cập nhật.";
                         return RedirectToAction(nameof(History));
+                    }
+
+                    // Security Check
+                    var currentUser = await _userManager.GetUserAsync(User);
+                    var userId = currentUser?.Id ?? 0;
+                    
+                    // Need to load authorships to check permission if not creator
+                    // For massive optimization, we could assume CreatorId check is enough for Edit POST as Co-authors should be loaded, 
+                    // but safer to strictly check. Since we didn't Include Authorships in FindAsync, we need to verify.
+                    // However, for update, usually checking Creator is the bare minimum, or we load it.
+                    // Let's load it properly.
+                    var authCheck = await _context.InitiativeAuthorships
+                        .AnyAsync(a => a.InitiativeId == id && a.AuthorId == userId);
+                    
+                    var isAuthorized = existingInitiative.CreatorId == userId || authCheck || User.IsInRole("Admin");
+
+                    if (!isAuthorized)
+                    {
+                         _logger.LogWarning("Unauthorized update attempt by user {UserId} to initiative {InitiativeId}", userId, id);
+                         return Forbid();
                     }
 
                     // Update fields
@@ -482,6 +514,20 @@ namespace IdeaTrack.Areas.Author.Controllers
                     return RedirectToAction(nameof(History));
                 }
 
+                // Security Check
+                var currentUser = await _userManager.GetUserAsync(User);
+                var userId = currentUser?.Id ?? 0;
+                // Check authorization (Creator or Co-author)
+                // Note: FindAsync doesn't include navigation props, need explicit check
+                var isAuthorized = initiative.CreatorId == userId || 
+                                 await _context.InitiativeAuthorships.AnyAsync(a => a.InitiativeId == id && a.AuthorId == userId) ||
+                                 User.IsInRole("Admin");
+
+                if (!isAuthorized)
+                {
+                     return Forbid();
+                }
+
                 if (initiative.Status == InitiativeStatus.Draft)
                 {
                     initiative.Status = InitiativeStatus.Pending;
@@ -531,6 +577,17 @@ namespace IdeaTrack.Areas.Author.Controllers
                     _logger.LogWarning("Initiative with id {InitiativeId} not found for deletion", id);
                     TempData["ErrorMessage"] = "Không tìm thấy sáng kiến để xóa.";
                     return RedirectToAction(nameof(History));
+                }
+
+                // Security Check
+                var currentUser = await _userManager.GetUserAsync(User);
+                var userId = currentUser?.Id ?? 0;
+                var isAuthorized = initiative.CreatorId == userId || User.IsInRole("Admin"); // Only Creator or Admin can delete
+
+                if (!isAuthorized)
+                {
+                     _logger.LogWarning("Unauthorized delete attempt by user {UserId} on initiative {InitiativeId}", userId, id);
+                     return Forbid();
                 }
 
                 _context.Initiatives.Remove(initiative);

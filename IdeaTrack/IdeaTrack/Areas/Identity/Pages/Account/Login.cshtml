@@ -1,8 +1,8 @@
-@page
+Ôªø@page
 @model LoginModel
 @{
     Layout = null;
-    ViewData["Title"] = "–ang nh?p | UEF LMS";
+    ViewData["Title"] = "√êang nh?p | UEF LMS";
 }
 
 <!DOCTYPE html>
@@ -91,7 +91,7 @@
         }
 
         .btn-login {
-            background: #003087; /* M‡u xanh d?m UEF */
+            background: #003087; /* M√†u xanh d?m UEF */
             border: none;
             border-radius: 15px;
             padding: 15px;
@@ -143,17 +143,17 @@
     <div class="background">
         <div class="login-overlay">
             <div class="login-card text-center">
-                <!-- Logo UEF chÌnh th?c -->
+                <!-- Logo UEF ch√≠nh th?c -->
                 <img src="https://upload.wikimedia.org/wikipedia/en/7/77/Ho_Chi_Minh_City_University_of_Economics_and_Finance_UEF_Logo.png"
-                     alt="UEF - –?I H?C KINH T? T¿I CHÕNH" class="uef-logo img-fluid" />
+                     alt="UEF - √ê?I H?C KINH T? T√ÄI CH√çNH" class="uef-logo img-fluid" />
 
                 <p class="text-muted mb-4">Log in using your account on:</p>
 
-                <!-- N˙t –ang nh?p v?i UEF ID -->
+                <!-- N√∫t √êang nh?p v?i UEF ID -->
                 <a asp-page="/Account/ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl"
                    class="btn btn-uef-id w-100 d-flex align-items-center justify-content-center mb-4">
                     <img src="~/icons/logo-uef.ico" alt="" width="50" height="40" class="me-3">
-                    –ang nh?p v?i UEF ID
+                    √êang nh?p v?i UEF ID
                 </a>
 
                 <hr class="my-4">
@@ -164,8 +164,8 @@
 
                     <div class="mb-4 position-relative">
                         <span class="input-group-text"><i class="fas fa-user fa-lg"></i></span>
-                        <input asp-for="Input.Email" class="form-control form-control-custom" placeholder="Username" autocomplete="username" required />
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        <input asp-for="Input.UsernameOrEmail" class="form-control form-control-custom" placeholder="Username ho·∫∑c Email" autocomplete="username" required />
+                        <span asp-validation-for="Input.UsernameOrEmail" class="text-danger"></span>
                     </div>
 
                     <div class="mb-4 position-relative">
@@ -241,3 +241,4 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 </body>
 </html>
+
