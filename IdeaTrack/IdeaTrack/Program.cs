@@ -40,6 +40,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 
 // Register Business Services
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
+builder.Services.AddScoped<ISupabaseStorageService, SupabaseStorageService>();
 
 // MVC + Razor
 builder.Services.AddControllersWithViews();

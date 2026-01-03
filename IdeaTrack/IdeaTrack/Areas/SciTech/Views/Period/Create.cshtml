@@ -1,0 +1,97 @@
+@model IdeaTrack.Areas.SciTech.Models.PeriodCreateEditVM
+
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">
+                    <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Quay lại
+                </a>
+            </div>
+
+            <div class="card card-custom shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <span class="material-icons align-middle me-2">add_circle</span>
+                        Tạo Đợt Sáng kiến Mới
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-8">
+                                <label asp-for="Name" class="form-label fw-medium">
+                                    Tên đợt <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Name" class="form-control" placeholder="VD: Đợt 1 - 2024-2025" />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="AcademicYearId" class="form-label fw-medium">
+                                    Năm học <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="AcademicYearId" asp-items="Model.AcademicYears" class="form-select">
+                                    <option value="">-- Chọn --</option>
+                                </select>
+                                <span asp-validation-for="AcademicYearId" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="StartDate" class="form-label fw-medium">
+                                    Ngày bắt đầu <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="StartDate" type="date" class="form-control" />
+                                <span asp-validation-for="StartDate" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="EndDate" class="form-label fw-medium">
+                                    Ngày kết thúc <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="EndDate" type="date" class="form-control" />
+                                <span asp-validation-for="EndDate" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                                <label asp-for="IsActive" class="form-check-label fw-medium">
+                                    Mở đợt ngay (đóng các đợt khác)
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-muted">
+                                <span class="material-icons align-middle me-1" style="font-size: 18px;">content_copy</span>
+                                Sao chép danh mục từ đợt trước (tùy chọn)
+                            </h6>
+                            <p class="text-muted small">Chọn đợt để sao chép danh mục và cấu hình Hội đồng/Tiêu chí</p>
+                            <select asp-for="CloneFromPeriodId" asp-items="Model.ExistingPeriods" class="form-select">
+                                <option value="">-- Không sao chép --</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Tạo đợt
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

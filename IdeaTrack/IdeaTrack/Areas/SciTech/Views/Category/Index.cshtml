@@ -1,0 +1,152 @@
+@model IdeaTrack.Areas.SciTech.Models.CategoryListVM
+
+<main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <span class="material-icons align-middle me-2 text-success">category</span>
+                Quản lý Danh mục Sáng kiến
+            </h2>
+            <p class="text-muted mb-0">Cấu hình Danh mục - Hội đồng - Bộ tiêu chí (cơ chế 1-1-1)</p>
+        </div>
+        <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-success rounded-pill px-4">
+            <span class="material-icons align-middle me-1" style="font-size: 18px;">add</span> Thêm danh mục
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Period Filter -->
+    <div class="card card-custom shadow-sm mb-4">
+        <div class="card-body py-3">
+            <form method="get" class="row align-items-center">
+                <div class="col-auto">
+                    <label class="form-label fw-medium mb-0">Lọc theo đợt:</label>
+                </div>
+                <div class="col-md-4">
+                    <select name="periodId" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Tất cả đợt --</option>
+                        @foreach (var period in Model.Periods)
+                        {
+                            <option value="@period.Value" selected="@(period.Value == Model.SelectedPeriodId.ToString())">@period.Text</option>
+                        }
+                    </select>
+                </div>
+                @if (Model.SelectedPeriodName != null)
+                {
+                    <div class="col-auto">
+                        <span class="badge bg-primary fs-6">@Model.SelectedPeriodName</span>
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+
+    <div class="card card-custom shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Tên danh mục</th>
+                            <th>Đợt</th>
+                            <th>Hội đồng chấm</th>
+                            <th>Bộ tiêu chí</th>
+                            <th class="text-center">Sáng kiến</th>
+                            <th class="text-end pe-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Items.Any())
+                        {
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <strong>@item.Name</strong>
+                                        @if (!string.IsNullOrEmpty(item.Description))
+                                        {
+                                            <br /><small class="text-muted">@item.Description</small>
+                                        }
+                                    </td>
+                                    <td><span class="badge bg-light text-dark">@item.PeriodName</span></td>
+                                    <td>
+                                        @if (item.BoardName != null)
+                                        {
+                                            <span class="badge bg-info">@item.BoardName</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa cấu hình</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.TemplateName != null)
+                                        {
+                                            <span class="badge bg-warning text-dark">@item.TemplateName</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa cấu hình</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-secondary">@item.InitiativeCount</span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <div class="btn-group">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                                <span class="material-icons" style="font-size: 16px;">edit</span>
+                                            </a>
+                                            @if (item.InitiativeCount == 0)
+                                            {
+                                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                                      onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này?');">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <span class="material-icons" style="font-size: 16px;">delete</span>
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <span class="material-icons mb-2" style="font-size: 48px;">folder_off</span>
+                                    <p class="mb-0">Chưa có danh mục nào trong đợt này.</p>
+                                    <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-sm btn-outline-success mt-2">
+                                        <span class="material-icons align-middle" style="font-size: 16px;">add</span> Thêm danh mục
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="Period" asp-action="Index" class="btn btn-outline-secondary">
+            <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Quay lại Quản lý Đợt
+        </a>
+    </div>
+</main>
