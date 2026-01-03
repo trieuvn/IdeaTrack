@@ -1,4 +1,3 @@
-appsettings.json
 # --- Build Results ---
 bin/
 obj/
@@ -48,4 +47,3 @@ TestResults/
 
 # Windows
 Thumbs.db
-Desktop.iniIdeaTrack/IdeaTrack/appsettings.json
