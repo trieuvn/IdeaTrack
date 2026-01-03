@@ -239,6 +239,11 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             var detailsLookup = assignment.EvaluationDetails
                 .ToDictionary(d => d.CriteriaId, d => d);
+            
+            // Check if there are previous rounds for this initiative
+            var hasPreviousRounds = await _db.InitiativeAssignments
+                .AnyAsync(a => a.InitiativeId == assignment.InitiativeId && 
+                              a.RoundNumber < assignment.RoundNumber);
 
             var vm = new GradingVM
             {
@@ -250,7 +255,10 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 DueDate = assignment.DueDate,
                 Files = assignment.Initiative.Files?.ToList() ?? new(),
                 GeneralComment = assignment.ReviewComment,
-                SubmitAction = "SaveDraft"
+                SubmitAction = "SaveDraft",
+                RoundNumber = assignment.RoundNumber,
+                IsLocked = assignment.Status == AssignmentStatus.Completed,
+                HasPreviousRounds = hasPreviousRounds
             };
 
             vm.CriteriaItems = assignment.Template.CriteriaList
@@ -287,6 +295,13 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             if (assignment == null)
                 return NotFound();
+            
+            // Check if assignment is locked (already submitted)
+            if (assignment.Status == AssignmentStatus.Completed)
+            {
+                TempData["ErrorMessage"] = "Bạn không thể chỉnh sửa vì kết quả đã được nộp và khóa.";
+                return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
+            }
 
             var templateCriteria = assignment.Template.CriteriaList
                 .ToDictionary(c => c.Id, c => c);
@@ -373,6 +388,10 @@ namespace IdeaTrack.Areas.Councils.Controllers
             }
 
             await _db.SaveChangesAsync();
+            
+            TempData["SuccessMessage"] = string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase)
+                ? "Đã nộp kết quả chấm điểm thành công! Điểm số đã được khóa."
+                : "Đã lưu bản nháp thành công!";
 
             if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
             {
@@ -388,7 +407,128 @@ namespace IdeaTrack.Areas.Councils.Controllers
         {
             return View();
         }
+        
+        // ============ PHASE 5: ROUND HISTORY ============
+        
+        /// <summary>
+        /// View all rounds for a specific initiative (for council members)
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> RoundHistory(int initiativeId)
+        {
+            var userId = GetCurrentUserIdForTest();
+            
+            var initiative = await _db.Initiatives
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.Id == initiativeId);
+                
+            if (initiative == null)
+                return NotFound();
+            
+            // Get all assignments for this initiative across all rounds
+            var assignments = await _db.InitiativeAssignments
+                .AsNoTracking()
+                .Include(a => a.Member)
+                .Include(a => a.EvaluationDetails)
+                    .ThenInclude(d => d.Criteria)
+                .Where(a => a.InitiativeId == initiativeId)
+                .OrderBy(a => a.RoundNumber)
+                .ThenBy(a => a.MemberId)
+                .ToListAsync();
+            
+            var vm = new RoundHistoryVM
+            {
+                InitiativeId = initiative.Id,
+                InitiativeTitle = initiative.Title,
+                InitiativeCode = initiative.InitiativeCode,
+                CurrentRound = initiative.CurrentRound,
+                Rounds = assignments.Select(a => new RoundHistoryItem
+                {
+                    RoundNumber = a.RoundNumber,
+                    AssignmentId = a.Id,
+                    MemberName = a.Member?.FullName ?? "N/A",
+                    AssignedDate = a.AssignedDate,
+                    CompletedDate = a.DecisionDate,
+                    TotalScore = a.EvaluationDetails.Sum(d => d.ScoreGiven),
+                    Status = a.Status,
+                    Comment = a.ReviewComment,
+                    Details = a.EvaluationDetails.Select(d => new GradingItem
+                    {
+                        CriteriaId = d.CriteriaId,
+                        CriteriaName = d.Criteria?.CriteriaName ?? "",
+                        Description = d.Criteria?.Description ?? "",
+                        MaxScore = d.Criteria?.MaxScore ?? 0,
+                        ScoreGiven = d.ScoreGiven,
+                        Note = d.Note
+                    }).ToList()
+                }).ToList()
+            };
+            
+            return View(vm);
+        }
+        
+        /// <summary>
+        /// View a specific past assignment in read-only mode
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> ViewPastAssignment(int id)
+        {
+            var assignment = await _db.InitiativeAssignments
+                .AsNoTracking()
+                .Include(a => a.Initiative)
+                    .ThenInclude(i => i.Creator)
+                .Include(a => a.Initiative)
+                    .ThenInclude(i => i.Department)
+                .Include(a => a.Initiative)
+                    .ThenInclude(i => i.Files)
+                .Include(a => a.Template)
+                    .ThenInclude(t => t.CriteriaList)
+                .Include(a => a.EvaluationDetails)
+                .Include(a => a.Member)
+                .FirstOrDefaultAsync(a => a.Id == id);
 
+            if (assignment == null)
+                return NotFound();
 
+            var detailsLookup = assignment.EvaluationDetails
+                .ToDictionary(d => d.CriteriaId, d => d);
+
+            var vm = new GradingVM
+            {
+                AssignmentId = assignment.Id,
+                InitiativeTitle = assignment.Initiative.Title,
+                InitiativeCode = assignment.Initiative.InitiativeCode,
+                ProposerName = assignment.Initiative.Creator?.FullName ?? assignment.Initiative.Creator?.UserName ?? string.Empty,
+                DepartmentName = assignment.Initiative.Department?.Name ?? string.Empty,
+                DueDate = assignment.DueDate,
+                Files = assignment.Initiative.Files?.ToList() ?? new(),
+                GeneralComment = assignment.ReviewComment,
+                RoundNumber = assignment.RoundNumber,
+                IsLocked = true, // Always locked in view mode
+                HasPreviousRounds = false
+            };
+
+            vm.CriteriaItems = assignment.Template.CriteriaList
+                .OrderBy(c => c.SortOrder)
+                .Select(c =>
+                {
+                    detailsLookup.TryGetValue(c.Id, out var existing);
+                    return new GradingItem
+                    {
+                        CriteriaId = c.Id,
+                        CriteriaName = c.CriteriaName,
+                        Description = c.Description,
+                        MaxScore = c.MaxScore,
+                        ScoreGiven = existing?.ScoreGiven ?? 0,
+                        Note = existing?.Note
+                    };
+                })
+                .ToList();
+            
+            ViewData["ViewOnlyMode"] = true;
+            ViewData["MemberName"] = assignment.Member?.FullName ?? "N/A";
+            
+            return View("Details", vm);
+        }
     }
 }
