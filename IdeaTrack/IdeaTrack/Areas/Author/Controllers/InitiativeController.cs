@@ -620,6 +620,408 @@ namespace IdeaTrack.Areas.Author.Controllers
                 return RedirectToAction(nameof(Detail), new { id });
             }
         }
+
+        // ============ PHASE 4: CO-AUTHOR MANAGEMENT ============
+
+        // GET: /Author/Initiative/CoAuthors/5
+        public async Task<IActionResult> CoAuthors(int id)
+        {
+            try
+            {
+                var initiative = await _context.Initiatives
+                    .Include(i => i.Authorships)
+                        .ThenInclude(a => a.Author)
+                            .ThenInclude(u => u.Department)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+
+                if (initiative == null)
+                {
+                    return NotFound();
+                }
+
+                var currentUser = await _userManager.GetUserAsync(User);
+                var isAuthorOrCreator = initiative.CreatorId == currentUser?.Id ||
+                    initiative.Authorships.Any(a => a.AuthorId == currentUser?.Id);
+
+                if (!isAuthorOrCreator)
+                {
+                    TempData["ErrorMessage"] = "Bạn không có quyền quản lý đồng tác giả của sáng kiến này.";
+                    return RedirectToAction(nameof(History));
+                }
+
+                // Get existing author IDs
+                var existingAuthorIds = initiative.Authorships.Select(a => a.AuthorId).ToList();
+
+                // Get available users (lecturers/authors not already co-authors)
+                var availableUsers = await _context.Users
+                    .Include(u => u.Department)
+                    .Where(u => !existingAuthorIds.Contains(u.Id))
+                    .OrderBy(u => u.FullName)
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id.ToString(),
+                        Text = $"{u.FullName} ({u.Email}){(u.Department != null ? " - " + u.Department.Name : "")}"
+                    })
+                    .ToListAsync();
+
+                var vm = new CoAuthorManageViewModel
+                {
+                    InitiativeId = initiative.Id,
+                    InitiativeTitle = initiative.Title,
+                    InitiativeCode = initiative.InitiativeCode,
+                    CanEdit = initiative.Status == InitiativeStatus.Draft || initiative.Status == InitiativeStatus.Pending,
+                    CoAuthors = initiative.Authorships.Select(a => new CoAuthorViewModel
+                    {
+                        AuthorshipId = a.Id,
+                        AuthorId = a.AuthorId,
+                        AuthorName = a.Author.FullName,
+                        Email = a.Author.Email ?? "",
+                        Department = a.Author.Department?.Name,
+                        IsCreator = a.IsCreator,
+                        JoinedAt = a.JoinedAt
+                    }).ToList(),
+                    AvailableUsers = availableUsers
+                };
+
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading co-authors for initiative {Id}", id);
+                TempData["ErrorMessage"] = "Lỗi khi tải danh sách đồng tác giả.";
+                return RedirectToAction(nameof(Detail), new { id });
+            }
+        }
+
+        // POST: /Author/Initiative/AddCoAuthor
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCoAuthor(int initiativeId, int newCoAuthorId)
+        {
+            try
+            {
+                var initiative = await _context.Initiatives
+                    .Include(i => i.Authorships)
+                    .FirstOrDefaultAsync(i => i.Id == initiativeId);
+
+                if (initiative == null)
+                {
+                    return NotFound();
+                }
+
+                // Check if already a co-author
+                if (initiative.Authorships.Any(a => a.AuthorId == newCoAuthorId))
+                {
+                    TempData["WarningMessage"] = "Người dùng này đã là đồng tác giả.";
+                    return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
+                }
+
+                // Add new co-author
+                var authorship = new InitiativeAuthorship
+                {
+                    InitiativeId = initiativeId,
+                    AuthorId = newCoAuthorId,
+                    IsCreator = false,
+                    JoinedAt = DateTime.Now
+                };
+
+                _context.InitiativeAuthorships.Add(authorship);
+                await _context.SaveChangesAsync();
+
+                var user = await _context.Users.FindAsync(newCoAuthorId);
+                _logger.LogInformation("Added co-author {UserId} to initiative {InitiativeId}", newCoAuthorId, initiativeId);
+                TempData["SuccessMessage"] = $"Đã thêm {user?.FullName} làm đồng tác giả!";
+
+                return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding co-author to initiative {Id}", initiativeId);
+                TempData["ErrorMessage"] = "Lỗi khi thêm đồng tác giả.";
+                return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
+            }
+        }
+
+        // POST: /Author/Initiative/RemoveCoAuthor
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveCoAuthor(int authorshipId)
+        {
+            try
+            {
+                var authorship = await _context.InitiativeAuthorships
+                    .Include(a => a.Author)
+                    .FirstOrDefaultAsync(a => a.Id == authorshipId);
+
+                if (authorship == null)
+                {
+                    return NotFound();
+                }
+
+                if (authorship.IsCreator)
+                {
+                    TempData["ErrorMessage"] = "Không thể xóa tác giả chính của sáng kiến.";
+                    return RedirectToAction(nameof(CoAuthors), new { id = authorship.InitiativeId });
+                }
+
+                var authorName = authorship.Author.FullName;
+                var initiativeId = authorship.InitiativeId;
+
+                _context.InitiativeAuthorships.Remove(authorship);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Removed co-author {AuthorshipId} from initiative {InitiativeId}", authorshipId, initiativeId);
+                TempData["SuccessMessage"] = $"Đã xóa {authorName} khỏi danh sách đồng tác giả!";
+
+                return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error removing co-author {AuthorshipId}", authorshipId);
+                TempData["ErrorMessage"] = "Lỗi khi xóa đồng tác giả.";
+                return RedirectToAction(nameof(History));
+            }
+        }
+
+        // ============ PHASE 4: PROGRESS TIMELINE ============
+
+        // GET: /Author/Initiative/Progress/5
+        public async Task<IActionResult> Progress(int id)
+        {
+            try
+            {
+                var initiative = await _context.Initiatives
+                    .Include(i => i.Assignments)
+                    .Include(i => i.FinalResult)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+
+                if (initiative == null)
+                {
+                    return NotFound();
+                }
+
+                var steps = new List<ProgressStepViewModel>
+                {
+                    new ProgressStepViewModel
+                    {
+                        StepName = "Tạo sáng kiến",
+                        Description = "Sáng kiến được tạo và lưu nháp",
+                        CompletedAt = initiative.CreatedAt,
+                        IsCompleted = true,
+                        IconClass = "fas fa-file-alt"
+                    },
+                    new ProgressStepViewModel
+                    {
+                        StepName = "Nộp sáng kiến",
+                        Description = "Gửi sáng kiến để chờ phê duyệt",
+                        CompletedAt = initiative.SubmittedDate,
+                        IsCompleted = initiative.SubmittedDate.HasValue,
+                        IsCurrent = initiative.Status == InitiativeStatus.Pending,
+                        IconClass = "fas fa-paper-plane"
+                    },
+                    new ProgressStepViewModel
+                    {
+                        StepName = "Phê duyệt OST",
+                        Description = "Phòng KHCN xem xét và phê duyệt sáng kiến",
+                        IsCompleted = initiative.Status == InitiativeStatus.Faculty_Approved || 
+                                      initiative.Status == InitiativeStatus.Evaluating ||
+                                      initiative.Status == InitiativeStatus.Approved ||
+                                      initiative.Status == InitiativeStatus.Rejected,
+                        IsCurrent = initiative.Status == InitiativeStatus.Pending,
+                        IconClass = "fas fa-check-circle"
+                    },
+                    new ProgressStepViewModel
+                    {
+                        StepName = "Chấm điểm Hội đồng",
+                        Description = $"Các thành viên hội đồng đánh giá (Đã có {initiative.Assignments?.Count(a => a.Status == AssignmentStatus.Completed)} đánh giá)",
+                        IsCompleted = initiative.Status == InitiativeStatus.Approved || initiative.Status == InitiativeStatus.Rejected,
+                        IsCurrent = initiative.Status == InitiativeStatus.Evaluating || initiative.Status == InitiativeStatus.Faculty_Approved,
+                        IconClass = "fas fa-users"
+                    },
+                    new ProgressStepViewModel
+                    {
+                        StepName = "Kết quả cuối cùng",
+                        Description = initiative.FinalResult != null 
+                            ? $"Điểm: {initiative.FinalResult.AverageScore:F2} - {initiative.FinalResult.ChairmanDecision}"
+                            : "Chờ quyết định của Chủ tịch Hội đồng",
+                        IsCompleted = initiative.Status == InitiativeStatus.Approved || initiative.Status == InitiativeStatus.Rejected,
+                        IsCurrent = false,
+                        IconClass = initiative.Status == InitiativeStatus.Approved ? "fas fa-trophy" : 
+                                   initiative.Status == InitiativeStatus.Rejected ? "fas fa-times-circle" : "fas fa-hourglass-half"
+                    }
+                };
+
+                var vm = new ProgressTimelineViewModel
+                {
+                    InitiativeId = initiative.Id,
+                    InitiativeTitle = initiative.Title,
+                    InitiativeCode = initiative.InitiativeCode,
+                    CurrentStatus = GetStatusDisplay(initiative.Status),
+                    Steps = steps
+                };
+
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading progress for initiative {Id}", id);
+                TempData["ErrorMessage"] = "Lỗi khi tải tiến trình sáng kiến.";
+                return RedirectToAction(nameof(Detail), new { id });
+            }
+        }
+
+        private string GetStatusDisplay(InitiativeStatus status)
+        {
+            return status switch
+            {
+                InitiativeStatus.Draft => "Bản nháp",
+                InitiativeStatus.Pending => "Chờ duyệt",
+                InitiativeStatus.Faculty_Approved => "Đã duyệt (Khoa)",
+                InitiativeStatus.Evaluating => "Đang chấm điểm",
+                InitiativeStatus.Re_Evaluating => "Đang chấm lại",
+                InitiativeStatus.Revision_Required => "Yêu cầu chỉnh sửa",
+                InitiativeStatus.Pending_Final => "Chờ quyết định",
+                InitiativeStatus.Approved => "Đã phê duyệt",
+                InitiativeStatus.Rejected => "Từ chối",
+                _ => status.ToString()
+            };
+        }
+
+        // ============ PHASE 4: SUBMIT WITH PERIOD/CATEGORY SELECTION ============
+
+        // GET: /Author/Initiative/SubmitWithSelection/5
+        public async Task<IActionResult> SubmitWithSelection(int id)
+        {
+            try
+            {
+                var initiative = await _context.Initiatives.FindAsync(id);
+                if (initiative == null)
+                {
+                    return NotFound();
+                }
+
+                if (initiative.Status != InitiativeStatus.Draft)
+                {
+                    TempData["ErrorMessage"] = "Chỉ có thể nộp sáng kiến ở trạng thái nháp.";
+                    return RedirectToAction(nameof(Detail), new { id });
+                }
+
+                // Get active periods
+                var periods = await _context.InitiativePeriods
+                    .Where(p => p.IsActive)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.Id.ToString(),
+                        Text = p.Name
+                    })
+                    .ToListAsync();
+
+                if (!periods.Any())
+                {
+                    TempData["ErrorMessage"] = "Không có đợt sáng kiến nào đang mở. Vui lòng liên hệ quản trị viên.";
+                    return RedirectToAction(nameof(Detail), new { id });
+                }
+
+                var vm = new SubmitInitiativeViewModel
+                {
+                    InitiativeId = initiative.Id,
+                    InitiativeTitle = initiative.Title,
+                    InitiativeCode = initiative.InitiativeCode,
+                    CategoryId = initiative.CategoryId,
+                    Periods = periods,
+                    Categories = new List<SelectListItem>() // Will be loaded via AJAX
+                };
+
+                // If there's only one period, pre-load its categories
+                if (periods.Count == 1)
+                {
+                    var periodId = int.Parse(periods.First().Value);
+                    vm.PeriodId = periodId;
+                    vm.Categories = await GetCategoriesForPeriod(periodId);
+                }
+
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading submit form for initiative {Id}", id);
+                TempData["ErrorMessage"] = "Lỗi khi tải form nộp sáng kiến.";
+                return RedirectToAction(nameof(Detail), new { id });
+            }
+        }
+
+        // POST: /Author/Initiative/SubmitWithSelection
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitWithSelection(SubmitInitiativeViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                vm.Periods = await _context.InitiativePeriods
+                    .Where(p => p.IsActive)
+                    .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Name })
+                    .ToListAsync();
+                vm.Categories = await GetCategoriesForPeriod(vm.PeriodId);
+                return View(vm);
+            }
+
+            try
+            {
+                var initiative = await _context.Initiatives.FindAsync(vm.InitiativeId);
+                if (initiative == null)
+                {
+                    return NotFound();
+                }
+
+                if (initiative.Status != InitiativeStatus.Draft)
+                {
+                    TempData["ErrorMessage"] = "Sáng kiến này đã được nộp trước đó.";
+                    return RedirectToAction(nameof(History));
+                }
+
+                // Update initiative with selected period and category
+                initiative.PeriodId = vm.PeriodId;
+                initiative.CategoryId = vm.CategoryId;
+                initiative.Status = InitiativeStatus.Pending;
+                initiative.SubmittedDate = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Initiative {Id} submitted with Period {PeriodId} and Category {CategoryId}",
+                    initiative.Id, vm.PeriodId, vm.CategoryId);
+
+                TempData["SuccessMessage"] = "Sáng kiến đã được nộp thành công và đang chờ duyệt!";
+                return RedirectToAction(nameof(History));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error submitting initiative {Id}", vm.InitiativeId);
+                TempData["ErrorMessage"] = "Lỗi khi nộp sáng kiến. Vui lòng thử lại.";
+                return RedirectToAction(nameof(Detail), new { id = vm.InitiativeId });
+            }
+        }
+
+        // API: Get categories for a specific period (for AJAX)
+        [HttpGet]
+        public async Task<IActionResult> GetCategories(int periodId)
+        {
+            var categories = await GetCategoriesForPeriod(periodId);
+            return Json(categories.Select(c => new { value = c.Value, text = c.Text }));
+        }
+
+        private async Task<List<SelectListItem>> GetCategoriesForPeriod(int periodId)
+        {
+            return await _context.InitiativeCategories
+                .Where(c => c.PeriodId == periodId)
+                .OrderBy(c => c.Name)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                })
+                .ToListAsync();
+        }
     }
 }
 

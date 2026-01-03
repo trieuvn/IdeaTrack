@@ -1,0 +1,180 @@
+@model IdeaTrack.Areas.Author.ViewModels.ProgressTimelineViewModel
+@{
+    ViewData["Title"] = "Tiến trình sáng kiến";
+    Layout = "~/Areas/Author/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 24px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(to bottom, #e9ecef 50%, transparent);
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-left: 60px;
+        padding-bottom: 30px;
+    }
+    
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+    
+    .timeline-icon {
+        position: absolute;
+        left: 10px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+    }
+    
+    .timeline-icon.completed {
+        background: #198754;
+        color: white;
+    }
+    
+    .timeline-icon.current {
+        background: #0d6efd;
+        color: white;
+        animation: pulse 2s infinite;
+    }
+    
+    .timeline-icon.pending {
+        background: #e9ecef;
+        color: #6c757d;
+    }
+    
+    @@keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+    }
+    
+    .timeline-content {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .timeline-item.completed .timeline-content {
+        border-left: 3px solid #198754;
+    }
+    
+    .timeline-item.current .timeline-content {
+        border-left: 3px solid #0d6efd;
+        background: #f0f7ff;
+    }
+    
+    .timeline-item.pending .timeline-content {
+        border-left: 3px solid #e9ecef;
+        opacity: 0.7;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-road me-2"></i>Tiến trình sáng kiến
+                    </h4>
+                    <a asp-action="Detail" asp-route-id="@Model.InitiativeId" class="btn btn-light btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i>Quay lại
+                    </a>
+                </div>
+                
+                <div class="card-body">
+                    <div class="mb-4 text-center">
+                        <h5>
+                            <span class="badge bg-secondary">@Model.InitiativeCode</span>
+                        </h5>
+                        <h6 class="text-muted">@Model.InitiativeTitle</h6>
+                        <div class="mt-2">
+                            <span class="badge bg-info fs-6">@Model.CurrentStatus</span>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="timeline">
+                        @foreach (var step in Model.Steps)
+                        {
+                            var statusClass = step.IsCompleted ? "completed" : (step.IsCurrent ? "current" : "pending");
+                            <div class="timeline-item @statusClass">
+                                <div class="timeline-icon @statusClass">
+                                    @if (step.IsCompleted)
+                                    {
+                                        <i class="fas fa-check"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="@step.IconClass"></i>
+                                    }
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <h6 class="mb-0 fw-bold">@step.StepName</h6>
+                                        @if (step.CompletedAt.HasValue)
+                                        {
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock me-1"></i>@step.CompletedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                            </small>
+                                        }
+                                        else if (step.IsCurrent)
+                                        {
+                                            <span class="badge bg-primary">Đang thực hiện</span>
+                                        }
+                                    </div>
+                                    <p class="mb-0 text-muted small">@step.Description</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="card shadow-sm border-0 mt-3">
+                <div class="card-body">
+                    <h6 class="mb-3">Chú thích</h6>
+                    <div class="row text-center">
+                        <div class="col">
+                            <span class="badge bg-success px-3 py-2 mb-1">
+                                <i class="fas fa-check"></i>
+                            </span>
+                            <div class="small text-muted">Hoàn thành</div>
+                        </div>
+                        <div class="col">
+                            <span class="badge bg-primary px-3 py-2 mb-1">
+                                <i class="fas fa-spinner"></i>
+                            </span>
+                            <div class="small text-muted">Đang thực hiện</div>
+                        </div>
+                        <div class="col">
+                            <span class="badge bg-secondary px-3 py-2 mb-1">
+                                <i class="fas fa-hourglass-half"></i>
+                            </span>
+                            <div class="small text-muted">Chờ đến lượt</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
