@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace IdeaTrack.Areas.SciTech.Models
 {
     /// <summary>
@@ -24,14 +26,24 @@ namespace IdeaTrack.Areas.SciTech.Models
     {
         public int Id { get; set; }
         
+        [Required(ErrorMessage = "Tên đợt sáng kiến là bắt buộc")]
+        [Display(Name = "Tên đợt")]
         public string Name { get; set; } = "";
         
+        [Required(ErrorMessage = "Vui lòng chọn năm học")]
+        [Range(1, int.MaxValue, ErrorMessage = "Vui lòng chọn năm học hợp lệ")]
+        [Display(Name = "Năm học")]
         public int AcademicYearId { get; set; }
         
+        [Required(ErrorMessage = "Ngày bắt đầu là bắt buộc")]
+        [Display(Name = "Ngày bắt đầu")]
         public DateTime StartDate { get; set; } = DateTime.Today;
         
+        [Required(ErrorMessage = "Ngày kết thúc là bắt buộc")]
+        [Display(Name = "Ngày kết thúc")]
         public DateTime EndDate { get; set; } = DateTime.Today.AddMonths(3);
         
+        [Display(Name = "Trạng thái (Mở/Đóng)")]
         public bool IsActive { get; set; }
         
         /// <summary>

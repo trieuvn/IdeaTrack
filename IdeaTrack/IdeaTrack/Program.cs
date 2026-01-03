@@ -40,9 +40,26 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 
 // Register Business Services
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
-builder.Services.AddScoped<ISupabaseStorageService, SupabaseStorageService>();
+// Register Business Services
+builder.Services.AddScoped<IInitiativeService, InitiativeService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<DataSeederService>();
+builder.Services.AddHttpContextAccessor();
+
+// Storage Service Registration
+var storageProvider = builder.Configuration["Storage:Provider"];
+if (string.Equals(storageProvider, "Supabase", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddScoped<IStorageService, SupabaseStorageService>();
+}
+else
+{
+    // Default to Local
+    builder.Services.AddScoped<IStorageService, LocalStorageService>();
+}
+
+// File Service (Business Logic) relies on IStorageService
+builder.Services.AddScoped<IFileService, InitiativeFileService>();
 builder.Services.AddHttpContextAccessor();
 
 // MVC + Razor
@@ -171,5 +188,23 @@ app.MapControllerRoute(
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+app.MapRazorPages();
+
+// Seed Data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var seeder = services.GetRequiredService<DataSeederService>();
+        await seeder.SeedAllAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
 
 app.Run();

@@ -14,7 +14,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
     public class ReferenceFormController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ISupabaseStorageService _storageService;
+        private readonly IStorageService _storageService;
         private readonly ILogger<ReferenceFormController> _logger;
 
         // Allowed file extensions
@@ -23,7 +23,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
         public ReferenceFormController(
             ApplicationDbContext context,
-            ISupabaseStorageService storageService,
+            IStorageService storageService,
             ILogger<ReferenceFormController> logger)
         {
             _context = context;

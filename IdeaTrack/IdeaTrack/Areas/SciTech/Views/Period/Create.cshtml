@@ -17,7 +17,7 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Create" method="post" id="createPeriodForm">
                         @Html.AntiForgeryToken()
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
@@ -81,7 +81,7 @@
 
                         <div class="d-flex justify-content-end gap-2">
                             <a asp-action="Index" class="btn btn-outline-secondary">Hủy</a>
-                            <button type="submit" class="btn btn-primary px-4">
+                            <button type="submit" class="btn btn-primary px-4" id="btnSubmit">
                                 <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Tạo đợt
                             </button>
                         </div>
@@ -94,4 +94,21 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            $('#createPeriodForm').on('submit', function(e) {
+                if ($(this).valid()) {
+                    var btn = $('#btnSubmit');
+                    // Prevent double clicks
+                    if (btn.prop('disabled')) return false;
+
+                    btn.prop('disabled', true);
+                    btn.html('<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...');
+                    
+                    // Allow form submission to proceed
+                    return true;
+                }
+            });
+        });
+    </script>
 }

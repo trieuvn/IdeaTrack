@@ -9,7 +9,7 @@
             </h2>
             <p class="text-muted mb-0">Mở/đóng đợt tiếp nhận và quản lý cấu hình theo đợt</p>
         </div>
-        <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+        <a asp-action="Create" asp-controller="Period" asp-area="SciTech" class="btn btn-primary rounded-pill px-4">
             <span class="material-icons align-middle me-1" style="font-size: 18px;">add</span> Tạo đợt mới
         </a>
     </div>
@@ -92,7 +92,7 @@
                                                     </button>
                                                 }
                                             </form>
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                            <a asp-action="Edit" asp-controller="Period" asp-area="SciTech" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
                                                 <span class="material-icons" style="font-size: 16px;">edit</span>
                                             </a>
                                             @if (item.InitiativeCount == 0)

@@ -8,13 +8,15 @@ namespace IdeaTrack.Services
     /// Implementation of Supabase Storage operations
     /// Uses Supabase REST API for file uploads
     /// </summary>
-    public class SupabaseStorageService : ISupabaseStorageService
+    public class SupabaseStorageService : IStorageService
     {
         private readonly string _supabaseUrl;
         private readonly string _serviceKey;
         private readonly string _bucketName;
         private readonly HttpClient _httpClient;
         private readonly ILogger<SupabaseStorageService> _logger;
+
+        public string ProviderName => "Supabase";
 
         public SupabaseStorageService(
             IConfiguration configuration,
@@ -37,7 +39,9 @@ namespace IdeaTrack.Services
                 // Generate unique file name to avoid conflicts
                 var extension = Path.GetExtension(fileName);
                 var uniqueFileName = $"{Guid.NewGuid():N}{extension}";
-                var filePath = $"{folderPath}/{uniqueFileName}";
+                // Ensure folderPath doesn't double slash
+                folderPath = folderPath.Trim('/');
+                var filePath = string.IsNullOrEmpty(folderPath) ? uniqueFileName : $"{folderPath}/{uniqueFileName}";
 
                 // Prepare the upload URL
                 var uploadUrl = $"{_supabaseUrl}/storage/v1/object/{_bucketName}/{filePath}";
@@ -105,17 +109,24 @@ namespace IdeaTrack.Services
             }
         }
 
-        public string GetFilePathFromUrl(string fileUrl)
+        private string GetFilePathFromUrl(string fileUrl)
         {
             // URL format: {supabaseUrl}/storage/v1/object/public/{bucketName}/{filePath}
             var publicPrefix = $"/storage/v1/object/public/{_bucketName}/";
-            var uri = new Uri(fileUrl);
-            var path = uri.AbsolutePath;
-            
-            if (path.Contains(publicPrefix))
+            if (fileUrl.Contains(publicPrefix))
             {
-                return path.Substring(path.IndexOf(publicPrefix) + publicPrefix.Length);
+                return fileUrl.Substring(fileUrl.IndexOf(publicPrefix) + publicPrefix.Length);
             }
+            
+            // Try fallback parsing if URL works differently
+            try {
+                var uri = new Uri(fileUrl);
+                var path = uri.AbsolutePath;
+                 if (path.Contains(publicPrefix))
+                {
+                    return path.Substring(path.IndexOf(publicPrefix) + publicPrefix.Length);
+                }
+            } catch {}
 
             return string.Empty;
         }

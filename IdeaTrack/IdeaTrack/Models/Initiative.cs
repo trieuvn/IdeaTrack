@@ -19,6 +19,7 @@ namespace IdeaTrack.Models
         public string? Description { get; set; }
         
         [Column(TypeName = "decimal(18,2)")]
+        [Range(0, 100000000000, ErrorMessage = "Kinh phí phải là số dương và hợp lệ")]
         public decimal Budget { get; set; }
         
         public InitiativeStatus Status { get; set; } = InitiativeStatus.Draft;

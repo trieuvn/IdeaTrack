@@ -18,17 +18,20 @@ namespace IdeaTrack.Areas.Author.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<InitiativeController> _logger;
         private readonly IInitiativeService _initiativeService;
+        private readonly IFileService _fileService;
 
         public InitiativeController(
             ApplicationDbContext context, 
             UserManager<ApplicationUser> userManager, 
             ILogger<InitiativeController> logger,
-            IInitiativeService initiativeService)
+            IInitiativeService initiativeService,
+            IFileService fileService)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
             _initiativeService = initiativeService;
+            _fileService = fileService;
         }
 
         // GET: /Author/Initiative/Detail/5
@@ -126,20 +129,16 @@ namespace IdeaTrack.Areas.Author.Controllers
                 {
                     var initiative = viewModel.Initiative;
                     
-                    // Auto-generate initiative code
-                    var count = await _context.Initiatives.CountAsync() + 1;
-                    initiative.InitiativeCode = $"SK-{DateTime.Now.Year}-{count:D4}";
-                    
                     // Assign to current user or default to first user
                     var currentUser = await _userManager.GetUserAsync(User);
                     if (currentUser != null)
                     {
-                        initiative.CreatorId = currentUser.Id;
+                         initiative.CreatorId = currentUser.Id;
                     }
                     else
                     {
-                        var firstUser = await _context.Users.FirstOrDefaultAsync();
-                        initiative.CreatorId = firstUser?.Id ?? 1;
+                         var firstUser = await _context.Users.FirstOrDefaultAsync();
+                         initiative.CreatorId = firstUser?.Id ?? 1;
                     }
 
                     initiative.CreatedAt = DateTime.Now;
@@ -159,7 +158,16 @@ namespace IdeaTrack.Areas.Author.Controllers
                         initiative.Status = InitiativeStatus.Draft;
                     }
 
+                    // Save first to get the Id
                     _context.Initiatives.Add(initiative);
+                    await _context.SaveChangesAsync();
+
+                    // Generate Code using proper Id to prevent race conditions
+                    // Format: SK-{Year}-{Id} (e.g. SK-2025-0042)
+                    initiative.InitiativeCode = $"SK-{DateTime.Now.Year}-{initiative.Id:D4}";
+                    
+                    // Update the code
+                    _context.Update(initiative);
                     await _context.SaveChangesAsync();
 
                     // Add creator as primary author
@@ -175,53 +183,12 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                     _logger.LogInformation("Sáng kiến {InitiativeCode} được tạo thành công bởi user {UserId}", initiative.InitiativeCode, initiative.CreatorId);
 
-                    // Handle file uploads
+                    // Handle file uploads using Service
                     if (viewModel.UploadedFiles != null && viewModel.UploadedFiles.Count > 0)
                     {
-                        try
+                        try 
                         {
-                            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "initiatives");
-                            
-                            if (!Directory.Exists(uploadsFolder))
-                            {
-                                Directory.CreateDirectory(uploadsFolder);
-                            }
-
-                            foreach (var file in viewModel.UploadedFiles)
-                            {
-                                if (file.Length > 0)
-                                {
-                                    try
-                                    {
-                                        var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
-                                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                                        using (var stream = new FileStream(filePath, FileMode.Create))
-                                        {
-                                            await file.CopyToAsync(stream);
-                                        }
-
-                                        var initiativeFile = new InitiativeFile
-                                        {
-                                            FileName = file.FileName,
-                                            FilePath = $"/uploads/initiatives/{uniqueFileName}",
-                                            FileType = Path.GetExtension(file.FileName).ToLower(),
-                                            FileSize = file.Length,
-                                            UploadDate = DateTime.Now,
-                                            InitiativeId = initiative.Id
-                                        };
-
-                                        _context.InitiativeFiles.Add(initiativeFile);
-                                        _logger.LogInformation("File {FileName} uploaded cho sáng kiến {InitiativeId}", file.FileName, initiative.Id);
-                                    }
-                                    catch (Exception fileEx)
-                                    {
-                                        _logger.LogError(fileEx, "Lỗi khi lưu file {FileName} cho sáng kiến {InitiativeId}", file.FileName, initiative.Id);
-                                    }
-                                }
-                            }
-
-                            await _context.SaveChangesAsync();
+                            await _fileService.UploadFilesAsync(viewModel.UploadedFiles, initiative.Id);
                         }
                         catch (Exception uploadEx)
                         {
@@ -396,51 +363,12 @@ namespace IdeaTrack.Areas.Author.Controllers
                         existingInitiative.PeriodId = activePeriod?.Id;
                     }
 
-                    // Handle file uploads
+                    // Handle file uploads using Service
                     if (viewModel.UploadedFiles != null && viewModel.UploadedFiles.Count > 0)
                     {
                         try
                         {
-                            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "initiatives");
-                            
-                            if (!Directory.Exists(uploadsFolder))
-                            {
-                                Directory.CreateDirectory(uploadsFolder);
-                            }
-
-                            foreach (var file in viewModel.UploadedFiles)
-                            {
-                                if (file.Length > 0)
-                                {
-                                    try
-                                    {
-                                        var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
-                                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                                        using (var stream = new FileStream(filePath, FileMode.Create))
-                                        {
-                                            await file.CopyToAsync(stream);
-                                        }
-
-                                        var initiativeFile = new InitiativeFile
-                                        {
-                                            FileName = file.FileName,
-                                            FilePath = $"/uploads/initiatives/{uniqueFileName}",
-                                            FileType = Path.GetExtension(file.FileName).ToLower(),
-                                            FileSize = file.Length,
-                                            UploadDate = DateTime.Now,
-                                            InitiativeId = existingInitiative.Id
-                                        };
-
-                                        _context.InitiativeFiles.Add(initiativeFile);
-                                        _logger.LogInformation("File {FileName} uploaded cho sáng kiến {InitiativeId}", file.FileName, existingInitiative.Id);
-                                    }
-                                    catch (Exception fileEx)
-                                    {
-                                        _logger.LogError(fileEx, "Lỗi khi lưu file {FileName} cho sáng kiến {InitiativeId}", file.FileName, existingInitiative.Id);
-                                    }
-                                }
-                            }
+                             await _fileService.UploadFilesAsync(viewModel.UploadedFiles, existingInitiative.Id);
                         }
                         catch (Exception uploadEx)
                         {
