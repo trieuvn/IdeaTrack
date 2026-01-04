@@ -1,6 +1,6 @@
-@model IdeaTrack.Areas.Author.ViewModels.DailyReportViewModel
+Ôªø@model IdeaTrack.Areas.Author.ViewModels.DailyReportViewModel
 @{
-    ViewData["Title"] = "Th?ng kÍ";
+    ViewData["Title"] = "Th?ng k√™";
 }
 
 <div class="container-fluid pb-5">
@@ -10,13 +10,13 @@
         <div class="row">
             <div class="col-lg-8">
                 <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-4 p-2 px-3" style="border: 1px solid rgba(0,255,255,0.2)">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">insights</span> TH?NG K  S¡NG KI?N
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">insights</span> TH?NG K√ä S√ÅNG KI?N
                 </span>
 
                 <h1 class="fw-bold display-5 mb-3">Innovation Metrics</h1>
 
                 <p class="fs-5 mb-4 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    Theo dıi v‡ ph‚n tÌch c·c s·ng ki?n c?a b?n. Xem ph‚n b? theo danh m?c v‡ ti?n d? xÈt duy?t.
+                    Theo d√µi v√† ph√¢n t√≠ch c√°c s√°ng ki?n c?a b?n. Xem ph√¢n b? theo danh m?c v√† ti?n d? x√©t duy?t.
                 </p>
             </div>
         </div>
@@ -30,7 +30,7 @@
                     <span class="material-icons text-primary">inventory_2</span>
                 </div>
                 <h2 class="fw-bold text-primary">@Model.TotalInitiatives</h2>
-                <p class="text-muted mb-0">T?ng s·ng ki?n</p>
+                <p class="text-muted mb-0">T?ng s√°ng ki?n</p>
             </div>
         </div>
         <div class="col-md-3">
@@ -39,7 +39,7 @@
                     <span class="material-icons text-success">check_circle</span>
                 </div>
                 <h2 class="fw-bold text-success">@Model.MonthlyApproved</h2>
-                <p class="text-muted mb-0">–„ duy?t (th·ng n‡y)</p>
+                <p class="text-muted mb-0">√ê√£ duy?t (th√°ng n√†y)</p>
             </div>
         </div>
         <div class="col-md-3">
@@ -48,7 +48,7 @@
                     <span class="material-icons text-warning">pending</span>
                 </div>
                 <h2 class="fw-bold text-warning">@Model.MonthlyPending</h2>
-                <p class="text-muted mb-0">–ang ch? duy?t</p>
+                <p class="text-muted mb-0">√êang ch? duy?t</p>
             </div>
         </div>
         <div class="col-md-3">
@@ -57,7 +57,7 @@
                     <span class="material-icons" style="color: #be123c;">calendar_month</span>
                 </div>
                 <h2 class="fw-bold" style="color: #be123c;">@Model.MonthlyTotal</h2>
-                <p class="text-muted mb-0">Th·ng n‡y</p>
+                <p class="text-muted mb-0">Th√°ng n√†y</p>
             </div>
         </div>
     </section>
@@ -67,7 +67,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <span class="material-icons text-danger me-2">pie_chart</span>
-                <h4 class="fw-bold mb-0">Ph‚n ph?i theo Danh m?c</h4>
+                <h4 class="fw-bold mb-0">Ph√¢n ph?i theo Danh m?c</h4>
             </div>
         </div>
 
@@ -95,7 +95,7 @@
                         {
                             <div class="text-center py-5">
                                 <span class="material-icons text-muted" style="font-size: 48px;">donut_large</span>
-                                <p class="text-muted mt-2">Chua cÛ d? li?u ph‚n ph?i</p>
+                                <p class="text-muted mt-2">Chua c√≥ d? li?u ph√¢n ph?i</p>
                             </div>
                         }
                     </div>
@@ -144,7 +144,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <span class="material-icons text-danger me-2">history</span>
-                <h4 class="fw-bold mb-0">S·ng ki?n g?n d‚y (7 ng‡y)</h4>
+                <h4 class="fw-bold mb-0">S√°ng ki?n g?n d√¢y (7 ng√†y)</h4>
             </div>
             <a asp-controller="Initiative" asp-action="History" class="text-danger text-decoration-none fw-bold small">
                 Xem t?t c? <span class="material-icons fs-6 align-middle">arrow_forward</span>
@@ -159,10 +159,10 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="border-0 ps-4">TiÍu d?</th>
+                                    <th class="border-0 ps-4">Ti√™u d?</th>
                                     <th class="border-0">Th?i gian</th>
-                                    <th class="border-0">Tr?ng th·i</th>
-                                    <th class="border-0 pe-4 text-end">Thao t·c</th>
+                                    <th class="border-0">Tr?ng th√°i</th>
+                                    <th class="border-0 pe-4 text-end">Thao t√°c</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -183,13 +183,13 @@
                                             @switch (item.Status)
                                             {
                                                 case IdeaTrack.Models.InitiativeStatus.Draft:
-                                                    <span class="badge bg-secondary">Nh·p</span>
+                                                    <span class="badge bg-secondary">Nh√°p</span>
                                                     break;
                                                 case IdeaTrack.Models.InitiativeStatus.Pending:
                                                     <span class="badge bg-warning text-dark">Ch? duy?t</span>
                                                     break;
                                                 case IdeaTrack.Models.InitiativeStatus.Approved:
-                                                    <span class="badge bg-success">–„ duy?t</span>
+                                                    <span class="badge bg-success">√ê√£ duy?t</span>
                                                     break;
                                                 default:
                                                     <span class="badge bg-info">@item.Status</span>
@@ -211,9 +211,9 @@
                 {
                     <div class="text-center py-5">
                         <span class="material-icons text-muted" style="font-size: 64px;">inbox</span>
-                        <p class="text-muted mt-2">Chua cÛ s·ng ki?n n‡o trong 7 ng‡y qua</p>
+                        <p class="text-muted mt-2">Chua c√≥ s√°ng ki?n n√†o trong 7 ng√†y qua</p>
                         <a asp-controller="Initiative" asp-action="Create" class="btn btn-danger rounded-pill px-4">
-                            <span class="material-icons align-middle me-1">add</span> T?o s·ng ki?n m?i
+                            <span class="material-icons align-middle me-1">add</span> T?o s√°ng ki?n m?i
                         </a>
                     </div>
                 }

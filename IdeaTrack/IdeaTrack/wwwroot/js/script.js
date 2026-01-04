@@ -1,4 +1,4 @@
-﻿const buttons = document.querySelectorAll(".source-btn");
+﻿﻿ï»¿A¯A»A¿AA¯AA»AA¿const buttons = document.querySelectorAll(".source-btn");
 const existingFiles = document.getElementById("existingFiles");
 const localUploadBox = document.getElementById("uploadBox");
 const localFileInput = document.getElementById("fileInput");

@@ -1,4 +1,4 @@
-using IdeaTrack.Data;
+﻿using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,7 +70,7 @@ namespace IdeaTrack.Services
                         MemberId = member.UserId,
                         TemplateId = category.TemplateId.Value,
                         RoundNumber = initiative.CurrentRound,
-                        StageName = $"Vòng {initiative.CurrentRound}",
+                        StageName = $"Round {initiative.CurrentRound}",
                         AssignedDate = DateTime.Now,
                         DueDate = DateTime.Now.AddDays(14), // Default 2 weeks deadline
                         Status = AssignmentStatus.Assigned
@@ -147,7 +147,7 @@ namespace IdeaTrack.Services
                             MemberId = member.UserId,
                             TemplateId = category.TemplateId.Value,
                             RoundNumber = initiative.CurrentRound,
-                            StageName = $"Vòng {initiative.CurrentRound}",
+                            StageName = $"Round {initiative.CurrentRound}",
                             AssignedDate = DateTime.Now,
                             DueDate = DateTime.Now.AddDays(14),
                             Status = AssignmentStatus.Assigned
@@ -211,7 +211,7 @@ namespace IdeaTrack.Services
                 var newInitiative = new Initiative
                 {
                     InitiativeCode = $"{codePrefix}{nextNumber:D4}",
-                    Title = $"[Bản sao] {source.Title}",
+                    Title = $"[Copy] {source.Title}",
                     Description = source.Description,
                     Budget = source.Budget,
                     Status = InitiativeStatus.Draft,
@@ -359,11 +359,11 @@ namespace IdeaTrack.Services
                 // Determine rank based on score (simplified logic)
                 string rank = averageScore switch
                 {
-                    >= 90 => "Xuất sắc",
-                    >= 80 => "Giỏi",
-                    >= 70 => "Khá",
-                    >= 60 => "Đạt",
-                    _ => "Không đạt"
+                    >= 90 => "Excellent",
+                    >= 80 => "Good",
+                    >= 70 => "Average",
+                    >= 60 => "Pass",
+                    _ => "Fail"
                 };
 
                 // Create or update FinalResult
@@ -374,7 +374,7 @@ namespace IdeaTrack.Services
                         InitiativeId = initiativeId,
                         AverageScore = averageScore,
                         Rank = rank,
-                        ChairmanDecision = decision == InitiativeStatus.Approved ? "Phê duyệt" : "Từ chối",
+                        ChairmanDecision = decision == InitiativeStatus.Approved ? "Approved" : "Rejected",
                         ChairmanId = decidedByUserId,
                         DecisionDate = DateTime.Now
                     };
@@ -384,7 +384,7 @@ namespace IdeaTrack.Services
                 {
                     initiative.FinalResult.AverageScore = averageScore;
                     initiative.FinalResult.Rank = rank;
-                    initiative.FinalResult.ChairmanDecision = decision == InitiativeStatus.Approved ? "Phê duyệt" : "Từ chối";
+                    initiative.FinalResult.ChairmanDecision = decision == InitiativeStatus.Approved ? "Approved" : "Rejected";
                     initiative.FinalResult.ChairmanId = decidedByUserId;
                     initiative.FinalResult.DecisionDate = DateTime.Now;
                 }

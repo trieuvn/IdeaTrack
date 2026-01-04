@@ -4,10 +4,10 @@ namespace IdeaTrack.Areas.Faculty.Hubs
 {
     public class NotificationHub : Hub
     {
-        // Client hoặc Controller sẽ gọi hàm này khi nộp hồ sơ thành công
+        // Client hoac Controller se goi ham nay khi nop ho so thanh cong
         public async Task SendSubmissionNotification(string userName, string initiativeTitle)
         {
-            // Gửi thông báo cho TẤT CẢ client đang mở trang Dashboard
+            // Gui thong bao cho TAT CA client dang mo trang Dashboard
             await Clients.All.SendAsync("ReceiveSubmission", userName, initiativeTitle);
         }
     }

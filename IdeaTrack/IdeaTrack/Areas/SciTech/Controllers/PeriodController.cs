@@ -1,4 +1,4 @@
-using IdeaTrack.Areas.SciTech.Models;
+﻿using IdeaTrack.Areas.SciTech.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Services;
@@ -125,11 +125,11 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 if (vm.CloneFromPeriodId.HasValue && vm.CloneFromPeriodId.Value > 0)
                 {
                     await _initiativeService.ClonePeriodDataAsync(vm.CloneFromPeriodId.Value, period.Id);
-                    TempData["SuccessMessage"] = $"Đã tạo đợt \"{period.Name}\" và sao chép danh mục thành công!";
+                    TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ tAAAAAAAA¡AAAAAAAAºAAAAAAAA¡o AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t \"{period.Name}\" vAAAAAAAAAAAAAAAA  sao chAAAAAAAAAAAAAAAA©p danh mAAAAAAAA¡AAAAAAAA»AAAAAAAA¥c thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
                 }
                 else
                 {
-                    TempData["SuccessMessage"] = $"Đã tạo đợt \"{period.Name}\" thành công!";
+                    TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ tAAAAAAAA¡AAAAAAAAºAAAAAAAA¡o AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t \"{period.Name}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
                 }
 
                 _logger.LogInformation("Created InitiativePeriod {Id}: {Name}", period.Id, period.Name);
@@ -139,7 +139,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating InitiativePeriod");
-                TempData["ErrorMessage"] = "Lỗi khi tạo đợt sáng kiến. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi tAAAAAAAA¡AAAAAAAAºAAAAAAAA¡o AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t sAAAAAAAAAAAAAAAA¡ng kiAAAAAAAA¡AAAAAAAAºAAAAAAAA¿n. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                 vm.AcademicYears = await GetAcademicYearSelectList();
                 vm.ExistingPeriods = await GetPeriodSelectList();
                 return View(vm);
@@ -212,14 +212,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Updated InitiativePeriod {Id}: {Name}", period.Id, period.Name);
-                TempData["SuccessMessage"] = $"Đã cập nhật đợt \"{period.Name}\" thành công!";
+                TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ cAAAAAAAA¡AAAAAAAAºAAAAAAAA­p nhAAAAAAAA¡AAAAAAAAºAAAAAAAA­t AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t \"{period.Name}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating InitiativePeriod {Id}", vm.Id);
-                TempData["ErrorMessage"] = "Lỗi khi cập nhật đợt sáng kiến. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi cAAAAAAAA¡AAAAAAAAºAAAAAAAA­p nhAAAAAAAA¡AAAAAAAAºAAAAAAAA­t AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t sAAAAAAAAAAAAAAAA¡ng kiAAAAAAAA¡AAAAAAAAºAAAAAAAA¿n. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                 vm.AcademicYears = await GetAcademicYearSelectList();
                 vm.ExistingPeriods = await GetPeriodSelectList();
                 return View(vm);
@@ -252,13 +252,13 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     }
 
                     period.IsActive = true;
-                    TempData["SuccessMessage"] = $"Đã mở đợt \"{period.Name}\"!";
+                    TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ mAAAAAAAA¡AAAAAAAA»AAAAAAAA AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t \"{period.Name}\"!";
                 }
                 else
                 {
                     // Deactivating
                     period.IsActive = false;
-                    TempData["SuccessMessage"] = $"Đã đóng đợt \"{period.Name}\"!";
+                    TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA³ng AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t \"{period.Name}\"!";
                 }
 
                 await _context.SaveChangesAsync();
@@ -270,7 +270,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error toggling InitiativePeriod {Id}", id);
-                TempData["ErrorMessage"] = "Lỗi khi thay đổi trạng thái đợt. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi thay AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAAi trAAAAAAAA¡AAAAAAAAºAAAAAAAA¡ng thAAAAAAAAAAAAAAAA¡i AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -293,7 +293,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
                 if (period.Initiatives.Any())
                 {
-                    TempData["ErrorMessage"] = $"Không thể xóa đợt \"{period.Name}\" vì có sáng kiến liên quan.";
+                    TempData["ErrorMessage"] = $"KhAAAAAAAAAAAAAAAA´ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA xAAAAAAAAAAAAAAAA³a AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t \"{period.Name}\" vAAAAAAAAAAAAAAAA¬ cAAAAAAAAAAAAAAAA³ sAAAAAAAAAAAAAAAA¡ng kiAAAAAAAA¡AAAAAAAAºAAAAAAAA¿n liAAAAAAAAAAAAAAAAªn quan.";
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -301,14 +301,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Deleted InitiativePeriod {Id}: {Name}", period.Id, period.Name);
-                TempData["SuccessMessage"] = $"Đã xóa đợt \"{period.Name}\" thành công!";
+                TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ xAAAAAAAAAAAAAAAA³a AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t \"{period.Name}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting InitiativePeriod {Id}", id);
-                TempData["ErrorMessage"] = "Lỗi khi xóa đợt sáng kiến. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi xAAAAAAAAAAAAAAAA³a AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t sAAAAAAAAAAAAAAAA¡ng kiAAAAAAAA¡AAAAAAAAºAAAAAAAA¿n. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                 return RedirectToAction(nameof(Index));
             }
         }

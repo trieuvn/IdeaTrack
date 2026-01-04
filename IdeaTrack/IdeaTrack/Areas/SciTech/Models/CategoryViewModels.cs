@@ -1,4 +1,4 @@
-namespace IdeaTrack.Areas.SciTech.Models
+﻿namespace IdeaTrack.Areas.SciTech.Models
 {
     /// <summary>
     /// ViewModel for displaying category with Board/Template links

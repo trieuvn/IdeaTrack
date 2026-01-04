@@ -1,15 +1,15 @@
-@model IdeaTrack.Models.ViewModels.LeaderboardViewModel
+﻿@model IdeaTrack.Models.ViewModels.LeaderboardViewModel
 @{
-    ViewData["Title"] = "Bảng xếp hạng";
+    ViewData["Title"] = "Leaderboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container py-5">
     <div class="text-center mb-5">
         <h1 class="display-4 fw-bold text-primary">
-            <i class="fas fa-trophy me-2"></i>Bảng Xếp Hạng
+            <i class="fas fa-trophy me-2"></i>Leaderboard
         </h1>
-        <p class="lead text-muted">Vinh danh các sáng kiến và tác giả xuất sắc</p>
+        <p class="lead text-muted">Honoring outstanding initiatives and authors</p>
     </div>
 
     <!-- Period Filter -->
@@ -20,7 +20,7 @@
                     @foreach (var period in Model.Periods)
                     {
                         <option value="@period.Id" selected="@(period.Id == Model.SelectedPeriodId)">
-                            @period.Name @(period.IsActive ? "(Hiện tại)" : "")
+                            @period.Name @(period.IsActive ? "(Current)" : "")
                         </option>
                     }
                 </select>
@@ -34,10 +34,10 @@
             <div class="card shadow-sm h-100 border-0">
                 <div class="card-header bg-gradient bg-primary text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-lightbulb me-2"></i>Top Sáng Kiến
+                        <i class="fas fa-lightbulb me-2"></i>Top Initiatives
                     </h5>
                     <a asp-action="TopInitiatives" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-light btn-sm">
-                        Xem tất cả
+                        View All
                     </a>
                 </div>
                 <div class="card-body p-0">
@@ -48,8 +48,8 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th style="width: 50px">#</th>
-                                        <th>Sáng kiến</th>
-                                        <th style="width: 100px" class="text-end">Điểm</th>
+                                        <th>Initiative</th>
+                                        <th style="width: 100px" class="text-end">Score</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -84,7 +84,7 @@
                     {
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-clipboard-list fa-3x mb-3"></i>
-                            <p>Chưa có dữ liệu xếp hạng</p>
+                            <p>No ranking data available</p>
                         </div>
                     }
                 </div>
@@ -96,10 +96,10 @@
             <div class="card shadow-sm h-100 border-0">
                 <div class="card-header bg-gradient bg-success text-white d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-user-graduate me-2"></i>Top Tác Giả
+                        <i class="fas fa-user-graduate me-2"></i>Top Authors
                     </h5>
                     <a asp-action="TopAuthors" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-light btn-sm">
-                        Xem tất cả
+                        View All
                     </a>
                 </div>
                 <div class="card-body p-0">
@@ -110,9 +110,9 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th style="width: 50px">#</th>
-                                        <th>Tác giả</th>
-                                        <th style="width: 80px" class="text-center">SL</th>
-                                        <th style="width: 100px" class="text-end">Tổng điểm</th>
+                                        <th>Author</th>
+                                        <th style="width: 80px" class="text-center">Count</th>
+                                        <th style="width: 100px" class="text-end">Total Score</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -150,7 +150,7 @@
                     {
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-users fa-3x mb-3"></i>
-                            <p>Chưa có dữ liệu xếp hạng</p>
+                            <p>No ranking data available</p>
                         </div>
                     }
                 </div>
@@ -162,10 +162,10 @@
     <div class="row mt-5">
         <div class="col-12 text-center">
             <a asp-action="ReferenceForms" class="btn btn-outline-primary btn-lg me-3">
-                <i class="fas fa-download me-2"></i>Tải biểu mẫu tham khảo
+                <i class="fas fa-download me-2"></i>Download Reference Forms
             </a>
             <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
-                <i class="fas fa-home me-2"></i>Về trang chủ
+                <i class="fas fa-home me-2"></i>Back to Home
             </a>
         </div>
     </div>

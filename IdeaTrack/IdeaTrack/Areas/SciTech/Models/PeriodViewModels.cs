@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IdeaTrack.Areas.SciTech.Models
 {
@@ -26,24 +26,24 @@ namespace IdeaTrack.Areas.SciTech.Models
     {
         public int Id { get; set; }
         
-        [Required(ErrorMessage = "Tên đợt sáng kiến là bắt buộc")]
-        [Display(Name = "Tên đợt")]
+        [Required(ErrorMessage = "Initiative period name is required")]
+        [Display(Name = "Name dot")]
         public string Name { get; set; } = "";
         
-        [Required(ErrorMessage = "Vui lòng chọn năm học")]
-        [Range(1, int.MaxValue, ErrorMessage = "Vui lòng chọn năm học hợp lệ")]
-        [Display(Name = "Năm học")]
+        [Required(ErrorMessage = "Please select academic year")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid academic year")]
+        [Display(Name = "Nam hoc")]
         public int AcademicYearId { get; set; }
         
-        [Required(ErrorMessage = "Ngày bắt đầu là bắt buộc")]
-        [Display(Name = "Ngày bắt đầu")]
+        [Required(ErrorMessage = "Start date is required")]
+        [Display(Name = "Ngay bat dau")]
         public DateTime StartDate { get; set; } = DateTime.Today;
         
-        [Required(ErrorMessage = "Ngày kết thúc là bắt buộc")]
-        [Display(Name = "Ngày kết thúc")]
+        [Required(ErrorMessage = "End date is required")]
+        [Display(Name = "Ngay ket thuc")]
         public DateTime EndDate { get; set; } = DateTime.Today.AddMonths(3);
         
-        [Display(Name = "Trạng thái (Mở/Đóng)")]
+        [Display(Name = "Status (Mo/Close)")]
         public bool IsActive { get; set; }
         
         /// <summary>

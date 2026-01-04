@@ -1,4 +1,4 @@
-using IdeaTrack.Data;
+﻿using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -64,16 +64,16 @@ namespace IdeaTrack.Services
 
             var departments = new[]
             {
-                new Department { Name = "Khoa Công nghệ Thông tin", Code = "CNTT" },
-                new Department { Name = "Khoa Điện - Điện tử", Code = "DT" },
-                new Department { Name = "Khoa Cơ khí", Code = "CK" },
-                new Department { Name = "Khoa Kinh tế", Code = "KT" },
-                new Department { Name = "Khoa Ngoại ngữ", Code = "NN" },
-                new Department { Name = "Khoa Khoa học Cơ bản", Code = "KHCB" },
-                new Department { Name = "Phòng KHCN", Code = "KHCN" },
-                new Department { Name = "Khoa Xây dựng", Code = "XD" },
-                new Department { Name = "Khoa Môi trường", Code = "MT" },
-                new Department { Name = "Ban Giám hiệu", Code = "BGH" }
+                new Department { Name = "Department of Information Technology", Code = "CNTT" },
+                new Department { Name = "Department of Electrical & Electronics", Code = "DT" },
+                new Department { Name = "Department of Mechanical Engineering", Code = "CK" },
+                new Department { Name = "Department of Economics", Code = "KT" },
+                new Department { Name = "Department of Foreign Languages", Code = "NN" },
+                new Department { Name = "Department of Basic Sciences", Code = "KHCB" },
+                new Department { Name = "Office of Science & Technology", Code = "KHCN" },
+                new Department { Name = "Department of Construction", Code = "XD" },
+                new Department { Name = "Department of Environment", Code = "MT" },
+                new Department { Name = "Board of Directors", Code = "BGH" }
             };
             _context.Departments.AddRange(departments);
             await _context.SaveChangesAsync();
@@ -86,19 +86,19 @@ namespace IdeaTrack.Services
             
             var users = new (string Username, string FullName, string Email, string DeptCode, string[] Roles)[]
             {
-                ("admin", "Quản trị viên", "admin@uni.edu.vn", "KHCN", new[] { "Admin" }),
-                ("scitech1", "Nguyễn Văn KHCN", "scitech1@uni.edu.vn", "KHCN", new[] { "SciTech" }),
-                ("scitech2", "Trần Thị KHCN", "scitech2@uni.edu.vn", "KHCN", new[] { "SciTech" }),
-                ("leader_cntt", "PGS.TS Lê Văn An", "leader.cntt@uni.edu.vn", "CNTT", new[] { "FacultyLeader" }),
-                ("leader_dt", "TS. Phạm Văn Bình", "leader.dt@uni.edu.vn", "DT", new[] { "FacultyLeader" }),
-                ("council1", "GS.TS Nguyễn Hữu Đức", "council1@uni.edu.vn", "BGH", new[] { "CouncilMember" }),
-                ("council2", "PGS.TS Trần Mai Hoa", "council2@uni.edu.vn", "CNTT", new[] { "CouncilMember" }),
-                ("council3", "TS. Lê Minh Giang", "council3@uni.edu.vn", "DT", new[] { "CouncilMember" }),
-                ("author1", "ThS. Nguyễn Văn Linh", "author1@uni.edu.vn", "CNTT", new[] { "Lecturer", "Author" }),
-                ("author2", "ThS. Trần Thị Mai", "author2@uni.edu.vn", "CNTT", new[] { "Lecturer", "Author" }),
-                ("author3", "TS. Lê Hoàng Nam", "author3@uni.edu.vn", "DT", new[] { "Lecturer", "Author" }),
-                ("author4", "ThS. Phạm Văn Oanh", "author4@uni.edu.vn", "DT", new[] { "Lecturer", "Author" }),
-                ("author5", "ThS. Hoàng Thị Phương", "author5@uni.edu.vn", "CK", new[] { "Lecturer", "Author" })
+                ("admin", "Administrator", "admin@uni.edu.vn", "KHCN", new[] { "Admin" }),
+                ("scitech1", "John Smith", "scitech1@uni.edu.vn", "KHCN", new[] { "SciTech" }),
+                ("scitech2", "Jane Doe", "scitech2@uni.edu.vn", "KHCN", new[] { "SciTech" }),
+                ("leader_cntt", "Prof. Michael Brown", "leader.cntt@uni.edu.vn", "CNTT", new[] { "FacultyLeader" }),
+                ("leader_dt", "Dr. David Wilson", "leader.dt@uni.edu.vn", "DT", new[] { "FacultyLeader" }),
+                ("council1", "Prof. Robert Johnson", "council1@uni.edu.vn", "BGH", new[] { "CouncilMember" }),
+                ("council2", "Assoc. Prof. Emily Davis", "council2@uni.edu.vn", "CNTT", new[] { "CouncilMember" }),
+                ("council3", "Dr. Sarah Miller", "council3@uni.edu.vn", "DT", new[] { "CouncilMember" }),
+                ("author1", "MSc. Peter Lee", "author1@uni.edu.vn", "CNTT", new[] { "Lecturer", "Author" }),
+                ("author2", "MSc. Mary Chen", "author2@uni.edu.vn", "CNTT", new[] { "Lecturer", "Author" }),
+                ("author3", "Dr. James Wang", "author3@uni.edu.vn", "DT", new[] { "Lecturer", "Author" }),
+                ("author4", "MSc. Kevin Nguyen", "author4@uni.edu.vn", "DT", new[] { "Lecturer", "Author" }),
+                ("author5", "MSc. Linda Tran", "author5@uni.edu.vn", "CK", new[] { "Lecturer", "Author" })
             };
 
             foreach (var u in users)
@@ -127,9 +127,9 @@ namespace IdeaTrack.Services
             if (await _context.AcademicYears.AnyAsync()) return;
 
             _context.AcademicYears.AddRange(
-                new AcademicYear { Name = "Năm học 2024-2025", IsCurrent = false },
-                new AcademicYear { Name = "Năm học 2025-2026", IsCurrent = true },
-                new AcademicYear { Name = "Năm học 2026-2027", IsCurrent = false }
+                new AcademicYear { Name = "Academic Year 2024-2025", IsCurrent = false },
+                new AcademicYear { Name = "Academic Year 2025-2026", IsCurrent = true },
+                new AcademicYear { Name = "Academic Year 2026-2027", IsCurrent = false }
             );
             await _context.SaveChangesAsync();
         }
@@ -141,9 +141,9 @@ namespace IdeaTrack.Services
             var years = await _context.AcademicYears.ToDictionaryAsync(y => y.Name, y => y.Id);
 
             _context.InitiativePeriods.AddRange(
-                new InitiativePeriod { Name = "Đợt Sáng kiến HK1 2024-2025", Description = "Đợt 1", StartDate = new DateTime(2024, 9, 1), EndDate = new DateTime(2024, 12, 31), IsActive = false, AcademicYearId = years["Năm học 2024-2025"] },
-                new InitiativePeriod { Name = "Đợt Sáng kiến HK2 2024-2025", Description = "Đợt 2", StartDate = new DateTime(2025, 1, 1), EndDate = new DateTime(2025, 6, 30), IsActive = false, AcademicYearId = years["Năm học 2024-2025"] },
-                new InitiativePeriod { Name = "Đợt Sáng kiến HK1 2025-2026", Description = "Đợt 1 (Đang mở)", StartDate = new DateTime(2025, 9, 1), EndDate = new DateTime(2025, 12, 31), IsActive = true, AcademicYearId = years["Năm học 2025-2026"] }
+                new InitiativePeriod { Name = "Initiative Period S1 2024-2025", Description = "Period 1", StartDate = new DateTime(2024, 9, 1), EndDate = new DateTime(2024, 12, 31), IsActive = false, AcademicYearId = years["Academic Year 2024-2025"] },
+                new InitiativePeriod { Name = "Initiative Period S2 2024-2025", Description = "Period 2", StartDate = new DateTime(2025, 1, 1), EndDate = new DateTime(2025, 6, 30), IsActive = false, AcademicYearId = years["Academic Year 2024-2025"] },
+                new InitiativePeriod { Name = "Initiative Period S1 2025-2026", Description = "Period 1 (Active)", StartDate = new DateTime(2025, 9, 1), EndDate = new DateTime(2025, 12, 31), IsActive = true, AcademicYearId = years["Academic Year 2025-2026"] }
             );
             await _context.SaveChangesAsync();
         }
@@ -152,28 +152,28 @@ namespace IdeaTrack.Services
         {
             if (await _context.EvaluationTemplates.AnyAsync()) return;
 
-            var t1 = new EvaluationTemplate { TemplateName = "Mẫu chấm Sáng kiến Kỹ thuật", Description = "Dùng cho sáng kiến kỹ thuật", Type = TemplateType.Scoring, IsActive = true };
-            var t2 = new EvaluationTemplate { TemplateName = "Mẫu chấm Sáng kiến Quản lý", Description = "Dùng cho sáng kiến quản lý", Type = TemplateType.Scoring, IsActive = true };
+            var t1 = new EvaluationTemplate { TemplateName = "Technical Initiative Evaluation Template", Description = "For technical initiatives", Type = TemplateType.Scoring, IsActive = true };
+            var t2 = new EvaluationTemplate { TemplateName = "Management Initiative Evaluation Template", Description = "For management initiatives", Type = TemplateType.Scoring, IsActive = true };
 
             _context.EvaluationTemplates.AddRange(t1, t2);
             await _context.SaveChangesAsync();
 
             // Criteria for t1
             _context.EvaluationCriteria.AddRange(
-                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Tính mới", Description = "Mức độ mới mẻ", MaxScore = 25, SortOrder = 1 },
-                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Tính khả thi", Description = "Khả năng áp dụng", MaxScore = 20, SortOrder = 2 },
-                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Hiệu quả kinh tế", Description = "Lợi ích kinh tế", MaxScore = 25, SortOrder = 3 },
-                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Khả năng nhân rộng", Description = "Áp dụng nhiều nơi", MaxScore = 15, SortOrder = 4 },
-                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Chất lượng hồ sơ", Description = "Tính đầy đủ", MaxScore = 15, SortOrder = 5 }
+                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Novelty", Description = "Level of innovation", MaxScore = 25, SortOrder = 1 },
+                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Feasibility", Description = "Implementation capability", MaxScore = 20, SortOrder = 2 },
+                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Economic Impact", Description = "Economic benefits", MaxScore = 25, SortOrder = 3 },
+                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Scalability", Description = "Applicability to multiple areas", MaxScore = 15, SortOrder = 4 },
+                new EvaluationCriteria { TemplateId = t1.Id, CriteriaName = "Documentation Quality", Description = "Completeness of submission", MaxScore = 15, SortOrder = 5 }
             );
 
             // Criteria for t2
             _context.EvaluationCriteria.AddRange(
-                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Tính mới", Description = "Đổi mới quy trình", MaxScore = 20, SortOrder = 1 },
-                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Tính hiệu quả", Description = "Cải thiện hiệu suất", MaxScore = 25, SortOrder = 2 },
-                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Tiết kiệm chi phí", Description = "Giảm chi phí", MaxScore = 20, SortOrder = 3 },
-                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Dễ triển khai", Description = "Dễ áp dụng", MaxScore = 20, SortOrder = 4 },
-                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Chất lượng hồ sơ", Description = "Tính đầy đủ", MaxScore = 15, SortOrder = 5 }
+                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Novelty", Description = "Process innovation", MaxScore = 20, SortOrder = 1 },
+                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Effectiveness", Description = "Performance improvement", MaxScore = 25, SortOrder = 2 },
+                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Cost Savings", Description = "Cost reduction", MaxScore = 20, SortOrder = 3 },
+                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Ease of Implementation", Description = "Easy to apply", MaxScore = 20, SortOrder = 4 },
+                new EvaluationCriteria { TemplateId = t2.Id, CriteriaName = "Documentation Quality", Description = "Completeness of submission", MaxScore = 15, SortOrder = 5 }
             );
 
             await _context.SaveChangesAsync();
@@ -183,8 +183,8 @@ namespace IdeaTrack.Services
         {
             if (await _context.Boards.AnyAsync()) return;
 
-            var b1 = new Board { BoardName = "Hội đồng Sáng kiến CNTT", Description = "Chấm sáng kiến CNTT", IsActive = true };
-            var b2 = new Board { BoardName = "Hội đồng Sáng kiến Kỹ thuật", Description = "Chấm sáng kiến Kỹ thuật", IsActive = true };
+            var b1 = new Board { BoardName = "IT Initiative Evaluation Board", Description = "Evaluates IT initiatives", IsActive = true };
+            var b2 = new Board { BoardName = "Technical Initiative Evaluation Board", Description = "Evaluates technical initiatives", IsActive = true };
 
             _context.Boards.AddRange(b1, b2);
             await _context.SaveChangesAsync();
@@ -217,9 +217,9 @@ namespace IdeaTrack.Services
             var templates = await _context.EvaluationTemplates.ToDictionaryAsync(t => t.TemplateName, t => t.Id);
 
             _context.InitiativeCategories.AddRange(
-                new InitiativeCategory { PeriodId = period.Id, Name = "Sáng kiến Phần mềm", BoardId = boards.GetValueOrDefault("Hội đồng Sáng kiến CNTT"), TemplateId = templates.GetValueOrDefault("Mẫu chấm Sáng kiến Kỹ thuật") },
-                new InitiativeCategory { PeriodId = period.Id, Name = "Sáng kiến Phần cứng/IoT", BoardId = boards.GetValueOrDefault("Hội đồng Sáng kiến Kỹ thuật"), TemplateId = templates.GetValueOrDefault("Mẫu chấm Sáng kiến Kỹ thuật") },
-                new InitiativeCategory { PeriodId = period.Id, Name = "Sáng kiến Quản lý", BoardId = boards.GetValueOrDefault("Hội đồng Sáng kiến CNTT"), TemplateId = templates.GetValueOrDefault("Mẫu chấm Sáng kiến Quản lý") }
+                new InitiativeCategory { PeriodId = period.Id, Name = "Software Initiative", BoardId = boards.GetValueOrDefault("IT Initiative Evaluation Board"), TemplateId = templates.GetValueOrDefault("Technical Initiative Evaluation Template") },
+                new InitiativeCategory { PeriodId = period.Id, Name = "Hardware/IoT Initiative", BoardId = boards.GetValueOrDefault("Technical Initiative Evaluation Board"), TemplateId = templates.GetValueOrDefault("Technical Initiative Evaluation Template") },
+                new InitiativeCategory { PeriodId = period.Id, Name = "Management Initiative", BoardId = boards.GetValueOrDefault("IT Initiative Evaluation Board"), TemplateId = templates.GetValueOrDefault("Management Initiative Evaluation Template") }
             );
             await _context.SaveChangesAsync();
         }
@@ -240,12 +240,12 @@ namespace IdeaTrack.Services
 
             var initiatives = new[]
             {
-                new Initiative { InitiativeCode = "SK2025-001", Title = "Hệ thống quản lý thư viện thông minh", Description = "Xây dựng hệ thống thư viện AI sử dụng ML để recommend sách", Budget = 50000000, Status = InitiativeStatus.Draft, CreatorId = author1.Id, DepartmentId = depts["CNTT"], CategoryId = category.Id, PeriodId = period.Id },
-                new Initiative { InitiativeCode = "SK2025-002", Title = "Ứng dụng điểm danh QR", Description = "Điểm danh sinh viên bằng QR code", Budget = 10000000, Status = InitiativeStatus.Pending, CreatorId = author2.Id, DepartmentId = depts["CNTT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-5) },
-                new Initiative { InitiativeCode = "SK2025-003", Title = "Chatbot hỗ trợ sinh viên", Description = "Chatbot tư vấn tuyển sinh sử dụng NLP", Budget = 30000000, Status = InitiativeStatus.Faculty_Approved, CreatorId = author3.Id, DepartmentId = depts["DT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-10) },
-                new Initiative { InitiativeCode = "SK2025-004", Title = "Phần mềm chấm bài tự động", Description = "Chấm trắc nghiệm OMR sử dụng OpenCV", Budget = 20000000, Status = InitiativeStatus.Evaluating, CreatorId = author1.Id, DepartmentId = depts["CNTT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-15) },
-                new Initiative { InitiativeCode = "SK2024-001", Title = "Phần mềm quản lý điểm", Description = "Quản lý điểm online với .NET + SQL", Budget = 40000000, Status = InitiativeStatus.Approved, CreatorId = author1.Id, DepartmentId = depts["CNTT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-60) },
-                new Initiative { InitiativeCode = "SK2024-002", Title = "Máy bay không người lái", Description = "Drone nông nghiệp phun thuốc", Budget = 500000000, Status = InitiativeStatus.Rejected, CreatorId = author3.Id, DepartmentId = depts["DT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-45) }
+                new Initiative { InitiativeCode = "SK2025-001", Title = "Smart Library Management System", Description = "Build an AI-powered library system using ML for book recommendations", Budget = 50000000, Status = InitiativeStatus.Draft, CreatorId = author1.Id, DepartmentId = depts["CNTT"], CategoryId = category.Id, PeriodId = period.Id },
+                new Initiative { InitiativeCode = "SK2025-002", Title = "QR Attendance Application", Description = "Student attendance using QR codes", Budget = 10000000, Status = InitiativeStatus.Pending, CreatorId = author2.Id, DepartmentId = depts["CNTT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-5) },
+                new Initiative { InitiativeCode = "SK2025-003", Title = "Student Support Chatbot", Description = "Admission counseling chatbot using NLP", Budget = 30000000, Status = InitiativeStatus.Faculty_Approved, CreatorId = author3.Id, DepartmentId = depts["DT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-10) },
+                new Initiative { InitiativeCode = "SK2025-004", Title = "Automatic Grading Software", Description = "OMR multiple-choice grading using OpenCV", Budget = 20000000, Status = InitiativeStatus.Evaluating, CreatorId = author1.Id, DepartmentId = depts["CNTT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-15) },
+                new Initiative { InitiativeCode = "SK2024-001", Title = "Grade Management Software", Description = "Online grade management with .NET + SQL", Budget = 40000000, Status = InitiativeStatus.Approved, CreatorId = author1.Id, DepartmentId = depts["CNTT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-60) },
+                new Initiative { InitiativeCode = "SK2024-002", Title = "Agricultural Drone", Description = "Agricultural drone for pesticide spraying", Budget = 500000000, Status = InitiativeStatus.Rejected, CreatorId = author3.Id, DepartmentId = depts["DT"], CategoryId = category.Id, PeriodId = period.Id, SubmittedDate = DateTime.Now.AddDays(-45) }
             };
 
             _context.Initiatives.AddRange(initiatives);
@@ -274,8 +274,8 @@ namespace IdeaTrack.Services
             if (council1 == null || council2 == null || template == null || board == null) return;
 
             _context.InitiativeAssignments.AddRange(
-                new InitiativeAssignment { InitiativeId = evaluating.Id, BoardId = board.Id, MemberId = council1.Id, TemplateId = template.Id, RoundNumber = 1, StageName = "Vòng 1", Status = AssignmentStatus.Assigned },
-                new InitiativeAssignment { InitiativeId = evaluating.Id, BoardId = board.Id, MemberId = council2.Id, TemplateId = template.Id, RoundNumber = 1, StageName = "Vòng 1", Status = AssignmentStatus.Assigned }
+                new InitiativeAssignment { InitiativeId = evaluating.Id, BoardId = board.Id, MemberId = council1.Id, TemplateId = template.Id, RoundNumber = 1, StageName = "Round 1", Status = AssignmentStatus.Assigned },
+                new InitiativeAssignment { InitiativeId = evaluating.Id, BoardId = board.Id, MemberId = council2.Id, TemplateId = template.Id, RoundNumber = 1, StageName = "Round 1", Status = AssignmentStatus.Assigned }
             );
             await _context.SaveChangesAsync();
         }
@@ -288,9 +288,9 @@ namespace IdeaTrack.Services
             if (period == null) return;
 
             _context.ReferenceForms.AddRange(
-                new ReferenceForm { PeriodId = period.Id, FileName = "Mẫu đơn đăng ký.docx", Description = "Mẫu đơn chính thức", FileUrl = "https://example.com/form1.docx" },
-                new ReferenceForm { PeriodId = period.Id, FileName = "Hướng dẫn viết thuyết minh.pdf", Description = "Hướng dẫn chi tiết", FileUrl = "https://example.com/guide.pdf" },
-                new ReferenceForm { PeriodId = period.Id, FileName = "Tiêu chí đánh giá.pdf", Description = "Tiêu chí chấm điểm", FileUrl = "https://example.com/criteria.pdf" }
+                new ReferenceForm { PeriodId = period.Id, FileName = "Application Form.docx", Description = "Official application form", FileUrl = "https://example.com/form1.docx" },
+                new ReferenceForm { PeriodId = period.Id, FileName = "Proposal Writing Guide.pdf", Description = "Detailed guidelines", FileUrl = "https://example.com/guide.pdf" },
+                new ReferenceForm { PeriodId = period.Id, FileName = "Evaluation Criteria.pdf", Description = "Scoring criteria", FileUrl = "https://example.com/criteria.pdf" }
             );
             await _context.SaveChangesAsync();
         }

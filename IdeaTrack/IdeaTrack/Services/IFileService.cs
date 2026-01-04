@@ -1,4 +1,4 @@
-using IdeaTrack.Models;
+﻿using IdeaTrack.Models;
 
 namespace IdeaTrack.Services
 {

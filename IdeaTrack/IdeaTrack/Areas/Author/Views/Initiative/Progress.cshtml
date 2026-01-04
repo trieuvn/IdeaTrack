@@ -1,6 +1,6 @@
-@model IdeaTrack.Areas.Author.ViewModels.ProgressTimelineViewModel
+﻿@model IdeaTrack.Areas.Author.ViewModels.ProgressTimelineViewModel
 @{
-    ViewData["Title"] = "Tiến trình sáng kiến";
+    ViewData["Title"] = "Initiative Progress";
     Layout = "~/Areas/Author/Views/Shared/_Layout.cshtml";
 }
 
@@ -92,10 +92,10 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">
-                        <i class="fas fa-road me-2"></i>Tiến trình sáng kiến
+                        <i class="fas fa-road me-2"></i>Initiative Progress
                     </h4>
                     <a asp-action="Detail" asp-route-id="@Model.InitiativeId" class="btn btn-light btn-sm">
-                        <i class="fas fa-arrow-left me-1"></i>Quay lại
+                        <i class="fas fa-arrow-left me-1"></i>Back
                     </a>
                 </div>
                 
@@ -138,7 +138,7 @@
                                         }
                                         else if (step.IsCurrent)
                                         {
-                                            <span class="badge bg-primary">Đang thực hiện</span>
+                                            <span class="badge bg-primary">In Progress</span>
                                         }
                                     </div>
                                     <p class="mb-0 text-muted small">@step.Description</p>
@@ -152,25 +152,25 @@
             <!-- Legend -->
             <div class="card shadow-sm border-0 mt-3">
                 <div class="card-body">
-                    <h6 class="mb-3">Chú thích</h6>
+                    <h6 class="mb-3">Legend</h6>
                     <div class="row text-center">
                         <div class="col">
                             <span class="badge bg-success px-3 py-2 mb-1">
                                 <i class="fas fa-check"></i>
                             </span>
-                            <div class="small text-muted">Hoàn thành</div>
+                            <div class="small text-muted">Completed</div>
                         </div>
                         <div class="col">
                             <span class="badge bg-primary px-3 py-2 mb-1">
                                 <i class="fas fa-spinner"></i>
                             </span>
-                            <div class="small text-muted">Đang thực hiện</div>
+                            <div class="small text-muted">In Progress</div>
                         </div>
                         <div class="col">
                             <span class="badge bg-secondary px-3 py-2 mb-1">
                                 <i class="fas fa-hourglass-half"></i>
                             </span>
-                            <div class="small text-muted">Chờ đến lượt</div>
+                            <div class="small text-muted">Pending</div>
                         </div>
                     </div>
                 </div>

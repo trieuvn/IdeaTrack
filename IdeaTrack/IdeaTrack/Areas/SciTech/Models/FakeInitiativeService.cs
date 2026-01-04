@@ -15,9 +15,9 @@ public static class FakeInitiativeService
         if (!context.Departments.Any())
         {
             context.Departments.AddRange(
-                new Department { Code = "CNTT", Name = "Công nghệ thông tin" },
-                new Department { Code = "NN", Name = "Nông nghiệp" },
-                new Department { Code = "MT", Name = "Môi trường" }
+                new Department { Code = "CNTT", Name = "Cong nghe thong tin" },
+                new Department { Code = "NN", Name = "Nong nghiep" },
+                new Department { Code = "MT", Name = "Moi truong" }
             );
             await context.SaveChangesAsync();
         }
@@ -44,7 +44,7 @@ public static class FakeInitiativeService
             {
                 context.InitiativePeriods.Add(new InitiativePeriod
                 {
-                    Name = "Đợt 1 - 2024-2025",
+                    Name = "Dot 1 - 2024-2025",
                     AcademicYearId = currentYear.Id,
                     StartDate = new DateTime(2024, 9, 1),
                     EndDate = new DateTime(2025, 6, 30),
@@ -60,9 +60,9 @@ public static class FakeInitiativeService
         if (!context.EvaluationTemplates.Any())
         {
             context.EvaluationTemplates.AddRange(
-                new EvaluationTemplate { TemplateName = "Bộ tiêu chí AI", Type = TemplateType.Scoring, IsActive = true },
-                new EvaluationTemplate { TemplateName = "Bộ tiêu chí Nông nghiệp", Type = TemplateType.Scoring, IsActive = true },
-                new EvaluationTemplate { TemplateName = "Bộ tiêu chí Môi trường", Type = TemplateType.Scoring, IsActive = true }
+                new EvaluationTemplate { TemplateName = "Evaluation Templates AI", Type = TemplateType.Scoring, IsActive = true },
+                new EvaluationTemplate { TemplateName = "Evaluation Templates Nong nghiep", Type = TemplateType.Scoring, IsActive = true },
+                new EvaluationTemplate { TemplateName = "Evaluation Templates Moi truong", Type = TemplateType.Scoring, IsActive = true }
             );
             await context.SaveChangesAsync();
         }
@@ -73,9 +73,9 @@ public static class FakeInitiativeService
         if (!context.Boards.Any())
         {
             context.Boards.AddRange(
-                new Board { BoardName = "Hội đồng Kỹ thuật", FiscalYear = 2024, IsActive = true },
-                new Board { BoardName = "Hội đồng Nông nghiệp", FiscalYear = 2024, IsActive = true },
-                new Board { BoardName = "Hội đồng Môi trường", FiscalYear = 2024, IsActive = true }
+                new Board { BoardName = "Hoi dong Ky thuat", FiscalYear = 2024, IsActive = true },
+                new Board { BoardName = "Hoi dong Nong nghiep", FiscalYear = 2024, IsActive = true },
+                new Board { BoardName = "Hoi dong Moi truong", FiscalYear = 2024, IsActive = true }
             );
             await context.SaveChangesAsync();
         }
@@ -94,21 +94,21 @@ public static class FakeInitiativeService
                 context.InitiativeCategories.AddRange(
                     new InitiativeCategory
                     {
-                        Name = "Trí tuệ nhân tạo",
+                        Name = "Tri tue nhan tao",
                         PeriodId = period.Id,
                         BoardId = boards[0].Id,
                         TemplateId = templates[0].Id
                     },
                     new InitiativeCategory
                     {
-                        Name = "Nông nghiệp",
+                        Name = "Nong nghiep",
                         PeriodId = period.Id,
                         BoardId = boards[1].Id,
                         TemplateId = templates[1].Id
                     },
                     new InitiativeCategory
                     {
-                        Name = "Môi trường",
+                        Name = "Moi truong",
                         PeriodId = period.Id,
                         BoardId = boards[2].Id,
                         TemplateId = templates[2].Id
@@ -136,7 +136,7 @@ public static class FakeInitiativeService
                 {
                     UserName = email,
                     Email = email,
-                    FullName = $"Giảng viên {i}",
+                    FullName = $"Giang vien {i}",
                     DepartmentId = departments[i - 1].Id,
                     EmailConfirmed = true,
                     IsActive = true
@@ -165,7 +165,7 @@ public static class FakeInitiativeService
             new Initiative
             {
                 InitiativeCode = "SK-2024-0001",
-                Title = "Nghiên cứu AI trong chẩn đoán y tế",
+                Title = "Nghien cuu AI trong chan doan y te",
                 CreatedAt = DateTime.Now.AddDays(-30),
                 SubmittedDate = DateTime.Now.AddDays(-30),
                 Status = InitiativeStatus.Approved,
@@ -178,7 +178,7 @@ public static class FakeInitiativeService
             new Initiative
             {
                 InitiativeCode = "SK-2024-0002",
-                Title = "Nông nghiệp xanh bền vững",
+                Title = "Nong nghiep xanh ben vung",
                 CreatedAt = DateTime.Now.AddDays(-25),
                 SubmittedDate = DateTime.Now.AddDays(-25),
                 Status = InitiativeStatus.Pending,
@@ -191,7 +191,7 @@ public static class FakeInitiativeService
             new Initiative
             {
                 InitiativeCode = "SK-2024-0003",
-                Title = "Hệ thống IoT giám sát môi trường",
+                Title = "He thong IoT giam sat moi truong",
                 CreatedAt = DateTime.Now.AddDays(-20),
                 SubmittedDate = DateTime.Now.AddDays(-20),
                 Status = InitiativeStatus.Rejected,

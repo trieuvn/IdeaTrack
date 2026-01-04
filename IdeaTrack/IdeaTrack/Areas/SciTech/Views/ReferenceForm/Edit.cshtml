@@ -1,6 +1,6 @@
-@model IdeaTrack.Areas.SciTech.Models.ReferenceFormEditVM
+﻿@model IdeaTrack.Areas.SciTech.Models.ReferenceFormEditVM
 @{
-    ViewData["Title"] = "Sửa biểu mẫu";
+    ViewData["Title"] = "Edit Form";
     Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,7 +10,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">
-                        <i class="fas fa-edit me-2"></i>Sửa biểu mẫu
+                        <i class="fas fa-edit me-2"></i>Edit Form
                     </h4>
                 </div>
                 
@@ -32,55 +32,55 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                         <div class="mb-3">
-                            <label asp-for="PeriodId" class="form-label">Đợt sáng kiến <span class="text-danger">*</span></label>
+                            <label asp-for="PeriodId" class="form-label">Initiative Period <span class="text-danger">*</span></label>
                             <select asp-for="PeriodId" asp-items="Model.Periods" class="form-select">
-                                <option value="">-- Chọn đợt --</option>
+                                <option value="">-- Select period --</option>
                             </select>
                             <span asp-validation-for="PeriodId" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="FormName" class="form-label">Tên biểu mẫu <span class="text-danger">*</span></label>
+                            <label asp-for="FormName" class="form-label">Form Name <span class="text-danger">*</span></label>
                             <input asp-for="FormName" class="form-control" />
                             <span asp-validation-for="FormName" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Description" class="form-label">Mô tả</label>
+                            <label asp-for="Description" class="form-label">Description</label>
                             <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                         </div>
 
                         <!-- Current File Info -->
                         <div class="mb-3">
-                            <label class="form-label">File hiện tại</label>
+                            <label class="form-label">Current File</label>
                             <div class="d-flex align-items-center p-3 bg-light rounded">
                                 <i class="fas fa-file-alt fa-2x text-primary me-3"></i>
                                 <div>
-                                    <div class="fw-semibold">@(Model.FileName ?? "Không có thông tin")</div>
+                                    <div class="fw-semibold">@(Model.FileName ?? "No information")</div>
                                     <a href="@Model.FileUrl" target="_blank" class="text-decoration-none small">
-                                        <i class="fas fa-external-link-alt me-1"></i>Xem file
+                                        <i class="fas fa-external-link-alt me-1"></i>View file
                                     </a>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="NewFile" class="form-label">Thay đổi file (tuỳ chọn)</label>
+                            <label asp-for="NewFile" class="form-label">Replace File (optional)</label>
                             <input asp-for="NewFile" type="file" class="form-control" 
                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
                             <span asp-validation-for="NewFile" class="text-danger"></span>
                             <div class="form-text">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Để trống nếu không muốn thay đổi file. Định dạng hỗ trợ: PDF, Word, Excel, PowerPoint. Dung lượng tối đa: 10MB
+                                Leave empty to keep current file. Supported formats: PDF, Word, Excel, PowerPoint. Max size: 10MB
                             </div>
                         </div>
 
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>Lưu thay đổi
+                                <i class="fas fa-save me-1"></i>Save Changes
                             </button>
                             <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-secondary">
-                                <i class="fas fa-times me-1"></i>Hủy
+                                <i class="fas fa-times me-1"></i>Cancel
                             </a>
                         </div>
                     </form>

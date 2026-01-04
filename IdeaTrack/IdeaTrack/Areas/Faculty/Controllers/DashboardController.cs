@@ -1,5 +1,6 @@
 ﻿using IdeaTrack.Data;
 using IdeaTrack.Models;
+using IdeaTrack.Areas.Faculty.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -82,11 +83,29 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Include(i => i.Category)
                 .Include(i => i.Files)
                 .Include(i => i.RevisionRequests)
-                .Include(i => i.Authorships).ThenInclude(a => a.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (initiative == null) return NotFound();
-            return View(initiative);
+
+            var viewModel = new FacultyInitiativeDetailVM
+            {
+                Id = initiative.Id,
+                Title = initiative.Title,
+                InitiativeCode = initiative.InitiativeCode,
+                Description = initiative.Description ?? "",
+                ProposerName = initiative.Creator?.FullName ?? "Unknown",
+                Budget = initiative.Budget,
+                SubmittedDate = initiative.SubmittedDate ?? DateTime.MinValue,
+                Status = initiative.Status.ToString(),
+                Category = initiative.Category,
+                Files = initiative.Files?.Select(f => new InitiativeFileVM 
+                { 
+                    FileName = f.FileName, 
+                    FileUrl = f.FilePath // Assuming FilePath or similar exists, might need adjustment
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         // ==========================================

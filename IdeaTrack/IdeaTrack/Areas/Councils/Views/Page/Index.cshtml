@@ -1,127 +1,94 @@
-@model IdeaTrack.Areas.Councils.Models.DashboardVM
+ï»¿@model IdeaTrack.Areas.Councils.Models.DashboardVM
 
-<div class="dashboard-container">
-    <header class="main-header">
-        <div class="user-greeting">
-            <h1>Welcome back, Alex</h1>
-            <p class="date-text">Today is @DateTime.Now.ToString("dddd, MMMM dd")</p>
-        </div>
-        <div class="search-box">
-            <span class="material-icons">search</span>
-            <input type="text" placeholder="Search initiatives...">
-        </div>
-    </header>
+@{
+    ViewData["Title"] = "Council Workspace";
+}
 
-    <div class="stats-row">
-        <div class="stat-card blue-card">
-        <div class="icon-box blue">
-            <span class="material-icons">inventory_2</span>
-        </div>
-        <h3>@Model.TotalAssigned</h3>
-        <p>Total Assigned</p>
-        <span class="sub-label">Initiatives for review</span>
-    </div>
-
-        <div class="stat-card green-card">
-        <div class="icon-box green">
-            <span class="material-icons">check_circle</span>
-        </div>
-        <h3>@Model.CompletedCount</h3>
-        <p>Completed</p>
-        <span class="sub-label">Successfully scored</span>
-    </div>
-
-        <div class="stat-card orange-card orange-bg">
-        <div class="icon-box orange">
-            <span class="material-icons">pending_actions</span>
-        </div>
-        <h3>@Model.PendingCount</h3>
-        <p>Pending Scoring</p>
-        <span class="sub-label">Requires attention</span>
-    </div>
-</div>
-
-    <div class="progress-section card">
-        <div class="progress-header">
-            <h4>Overall Progress</h4>
-            <span class="percentage">@Model.ProgressPercentage%</span>
-        </div>
-        <p class="progress-desc">You are on track to complete all reviews by Friday.</p>
-        <div class="bar-container">
-            <div class="bar-fill" style="width: @(Model.ProgressPercentage)%"></div>
-        </div>
-        <div class="bar-labels">
-            <span>0% Started</span>
-            <span>@Model.CompletedCount of @Model.TotalAssigned initiatives reviewed</span>
-            <span>100% Goal</span>
-    </div>
-    </div>
-
-    <div class="content-grid">
-        <section class="up-next">
-            <div class="section-header">
-                <h3>Up Next</h3>
-                <div class="view-all-wrapper">
-                    <a href="/Councils/Page/AssignedInitiatives?status=Assigned" class="view-all">View All Pending</a>
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar/Stats -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 mb-4 text-white bg-dark">
+                <div class="card-body p-4">
+                     <h4 class="fw-bold mb-1">Council Workspace</h4>
+                     <p class="opacity-75 small">Review assigned initiatives</p>
+                     
+                     <hr class="border-secondary" />
+                     
+                     <div class="d-flex justify-content-between mb-2">
+                         <span>Pending</span>
+                         <span class="badge bg-warning text-dark">@Model.PendingCount</span>
+                     </div>
+                     <div class="d-flex justify-content-between">
+                         <span>Completed</span>
+                         <span class="badge bg-success">@Model.CompletedCount</span>
+                     </div>
+                </div>
             </div>
+            
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white border-0 fw-bold py-3">
+                    Recent Activity
+                </div>
+                <div class="list-group list-group-flush">
+                    @if (Model.RecentActivityList != null && Model.RecentActivityList.Any())
+                    {
+                        @foreach (var act in Model.RecentActivityList)
+                        {
+                            <div class="list-group-item">
+                                <small class="text-muted d-block">@act.Timestamp.ToString("dd/MM HH:mm")</small>
+                                <span>@act.Description</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="p-3 text-muted small">No recent activity</div>
+                    }
+                </div>
             </div>
+        </div>
 
-            @if (Model.UpNextList != null && Model.UpNextList.Any())
-            {
-                foreach (var item in Model.UpNextList)
-                {
-                <div class="list-item card">
-                <div class="item-icon">
-                    <span class="material-icons">description</span>
-                </div>
-                    <div class="item-info">
-                    <h4>Initiative @item.InitiativeCode - @item.Title</h4>
-                    <span class="tag infra">@item.CategoryName</span> •
-                    <span class="time">Assigned @item.TimeAgo</span>
-                    </div>
-                <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-start">Start Review</a>
-                </div>
-                }
-            }
-            else
-            {
-                <div class="list-item card">
-                    <div class="item-info">
-                        <h4>No pending initiatives</h4>
-                        <span class="time">You're all caught up.</span>
-                    </div>
-                </div>
-            }
-        </section>
-
-
-        <aside class="recent-activity card">
-            <h3>Recent Activity</h3>
-            @if (Model.RecentActivityList != null && Model.RecentActivityList.Any())
-            {
-                foreach (var item in Model.RecentActivityList)
-                {
-                <div class="activity-item">
-                    <div class="activity-info">
-                    <p class="title">@item.InitiativeCode - @item.Title</p>
-                    <p class="score">Scored: @(item.Score?.ToString("0.#") ?? "0")/100</p>
-                    <span class="status done">? Completed</span>
-                    </div>
-                <span class="timestamp">@item.TimeAgo</span>
-                </div>
-                }
-            }
-            else
-            {
-                <div class="activity-item">
-                    <div class="activity-info">
-                        <p class="title">No recent activity</p>
-                        <p class="score">Complete an evaluation to see it here.</p>
-                    </div>
-                    <span class="timestamp">-</span>
-                </div>
-            }
-            <a href="/Councils/Page/History" class="view-history-btn">View History</a>
-        </aside>
+        <!-- Main List -->
+        <div class="col-md-9">
+             <h4 class="fw-bold mb-4">Assigned Initiatives</h4>
+             
+             @if (Model.Assignments != null && Model.Assignments.Any())
+             {
+                 <div class="row g-4">
+                     @foreach (var item in Model.Assignments)
+                     {
+                         <div class="col-md-6 col-lg-4">
+                             <div class="card h-100 border-0 shadow-sm rounded-4 initiative-card">
+                                 <div class="card-body p-4 d-flex flex-column">
+                                     <div class="mb-3">
+                                         <span class="badge bg-light text-primary border border-primary mb-2">@item.CategoryName</span>
+                                         <h5 class="fw-bold line-clamp-2">@item.Title</h5>
+                                         <small class="text-muted">Code: @item.InitiativeCode</small>
+                                     </div>
+                                     
+                                     <div class="mt-auto pt-3 border-top">
+                                         <div class="d-flex justify-content-between align-items-center mb-3">
+                                             <small class="text-muted">Assigned @item.TimeAgo</small>
+                                         </div>
+                                         <a href="/Councils/Page/Details/@item.AssignmentId" class="btn btn-primary w-100 rounded-pill">
+                                             Start Review
+                                         </a>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     }
+                 </div>
+             }
+             else
+             {
+                 <div class="text-center py-5">
+                     <img src="/images/empty_state.svg" style="height: 150px; opacity: 0.5" class="mb-3" />
+                     <h5 class="text-muted">You're all caught up!</h5>
+                     <p class="text-muted small">No pending initiatives assigned to you.</p>
+                 </div>
+             }
+        </div>
     </div>
 </div>

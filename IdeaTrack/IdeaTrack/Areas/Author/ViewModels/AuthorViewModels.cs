@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace IdeaTrack.Areas.Author.ViewModels
@@ -31,7 +31,7 @@ namespace IdeaTrack.Areas.Author.ViewModels
         public List<CoAuthorViewModel> CoAuthors { get; set; } = new();
 
         // Add new co-author
-        [Display(Name = "Thêm đồng tác giả")]
+        [Display(Name = "Add dong tac gia")]
         public int? NewCoAuthorId { get; set; }
 
         // Available users to add as co-authors
@@ -47,12 +47,12 @@ namespace IdeaTrack.Areas.Author.ViewModels
         public string InitiativeTitle { get; set; } = "";
         public string InitiativeCode { get; set; } = "";
 
-        [Required(ErrorMessage = "Vui lòng chọn đợt sáng kiến")]
-        [Display(Name = "Đợt sáng kiến")]
+        [Required(ErrorMessage = "Please select initiative period")]
+        [Display(Name = "Dot sang kien")]
         public int PeriodId { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn danh mục")]
-        [Display(Name = "Danh mục")]
+        [Required(ErrorMessage = "Please select category")]
+        [Display(Name = "Categories")]
         public int CategoryId { get; set; }
 
         // Dropdowns

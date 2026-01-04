@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @license
  * Unobtrusive validation support library for jQuery and jQuery Validate
  * Copyright (c) .NET Foundation. All rights reserved.

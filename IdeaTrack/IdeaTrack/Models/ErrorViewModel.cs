@@ -1,4 +1,4 @@
-namespace IdeaTrack.Models
+﻿namespace IdeaTrack.Models
 {
     public class ErrorViewModel
     {

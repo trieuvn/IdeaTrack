@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace IdeaTrack.Areas.SciTech.Models
@@ -24,20 +24,20 @@ namespace IdeaTrack.Areas.SciTech.Models
     /// </summary>
     public class ReferenceFormCreateVM
     {
-        [Required(ErrorMessage = "Vui lòng nhập tên biểu mẫu")]
-        [MaxLength(200, ErrorMessage = "Tên biểu mẫu không quá 200 ký tự")]
-        [Display(Name = "Tên biểu mẫu")]
+        [Required(ErrorMessage = "Please enter form name")]
+        [MaxLength(200, ErrorMessage = "Form name cannot exceed 200 characters")]
+        [Display(Name = "Name bieu mau")]
         public string FormName { get; set; } = "";
 
-        [Display(Name = "Mô tả")]
+        [Display(Name = "Description")]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn đợt sáng kiến")]
-        [Display(Name = "Đợt sáng kiến")]
+        [Required(ErrorMessage = "Please select initiative period")]
+        [Display(Name = "Dot sang kien")]
         public int PeriodId { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn file")]
-        [Display(Name = "File biểu mẫu")]
+        [Required(ErrorMessage = "Please select file")]
+        [Display(Name = "File bieu mau")]
         public IFormFile? File { get; set; }
 
         // Dropdowns
@@ -51,16 +51,16 @@ namespace IdeaTrack.Areas.SciTech.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập tên biểu mẫu")]
-        [MaxLength(200, ErrorMessage = "Tên biểu mẫu không quá 200 ký tự")]
-        [Display(Name = "Tên biểu mẫu")]
+        [Required(ErrorMessage = "Please enter form name")]
+        [MaxLength(200, ErrorMessage = "Form name cannot exceed 200 characters")]
+        [Display(Name = "Name bieu mau")]
         public string FormName { get; set; } = "";
 
-        [Display(Name = "Mô tả")]
+        [Display(Name = "Description")]
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng chọn đợt sáng kiến")]
-        [Display(Name = "Đợt sáng kiến")]
+        [Required(ErrorMessage = "Please select initiative period")]
+        [Display(Name = "Dot sang kien")]
         public int PeriodId { get; set; }
 
         // Display only
@@ -68,7 +68,7 @@ namespace IdeaTrack.Areas.SciTech.Models
         public string? FileName { get; set; }
 
         // Optional: New file to replace the old one
-        [Display(Name = "File mới (để trống nếu không đổi)")]
+        [Display(Name = "File moi (de trong neu khong doi)")]
         public IFormFile? NewFile { get; set; }
 
         // Dropdowns

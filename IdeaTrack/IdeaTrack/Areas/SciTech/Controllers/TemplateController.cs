@@ -1,4 +1,4 @@
-using IdeaTrack.Data;
+﻿using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -77,7 +77,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             if (string.IsNullOrEmpty(model.TemplateName))
             {
-                ModelState.AddModelError("TemplateName", "Tên template không được để trống");
+                ModelState.AddModelError("TemplateName", "Template name cannot be empty");
             }
 
             if (!ModelState.IsValid)

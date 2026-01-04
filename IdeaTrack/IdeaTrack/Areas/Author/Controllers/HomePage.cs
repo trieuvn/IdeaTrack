@@ -35,8 +35,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải danh sách files");
-                TempData["ErrorMessage"] = "Không thể tải danh sách files. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai danh sach files");
+                TempData["ErrorMessage"] = "Khong the tai danh sach files. Vui long thu lai sau.";
                 return View(new List<InitiativeFile>());
             }
         }
@@ -66,8 +66,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang attachments cho sáng kiến {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Không thể tải trang attachments. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang attachments cho sang kien {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Khong the tai trang attachments. Vui long thu lai sau.";
                 return RedirectToAction("Index", "Dashboard");
             }
         }
@@ -99,8 +99,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang cài đặt");
-                TempData["ErrorMessage"] = "Không thể tải trang cài đặt. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang cai dat");
+                TempData["ErrorMessage"] = "Khong the tai trang cai dat. Vui long thu lai sau.";
                 
                 // Return empty view model to prevent crash
                 var emptyViewModel = new SettingViewModel
@@ -176,8 +176,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải báo cáo hàng ngày");
-                TempData["ErrorMessage"] = "Không thể tải báo cáo. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai bao cao hang ngay");
+                TempData["ErrorMessage"] = "Khong the tai bao cao. Vui long thu lai sau.";
                 
                 // Return empty view model
                 var emptyViewModel = new DailyReportViewModel

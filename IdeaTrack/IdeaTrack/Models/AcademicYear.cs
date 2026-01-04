@@ -3,7 +3,7 @@
 namespace IdeaTrack.Models
 {
     /// <summary>
-    /// Năm học - Khung thời gian lớn nhất trong hệ thống
+    /// Nam hoc - Khung thoi gian lon nhat trong he thong
     /// </summary>
     public class AcademicYear
     {
@@ -13,13 +13,13 @@ namespace IdeaTrack.Models
         public string Name { get; set; } = ""; // VD: "2024-2025"
         
         /// <summary>
-        /// Đánh dấu năm học hiện tại
+        /// Danh dau nam hoc hien tai
         /// </summary>
         public bool IsCurrent { get; set; }
         
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         
-        // Navigation - Một năm học có nhiều đợt sáng kiến
+        // Navigation - Mot nam hoc co nhieu dot sang kien
         public virtual ICollection<InitiativePeriod> Periods { get; set; } = new List<InitiativePeriod>();
     }
 }

@@ -1,94 +1,44 @@
 ﻿@model IdeaTrack.Areas.Councils.Models.GradingVM
+@{
+    ViewData["Title"] = "Grading";
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
 
-<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-    <div>
-        <h1 class="fw-bold mb-1">Phi?u Ch?m �i?m �? �n</h1>
-        <p class="text-muted mb-0">H?i d?ng d�nh gi�: @Model.InitiativeTitle</p>
-    </div>
-    <span class="badge bg-primary-subtle text-primary px-3 py-2 d-flex align-items-center">
-        <i class="fa-solid fa-pen me-1"></i> �ang ch?m
-    </span>
-</div>
-
-<form method="post" asp-action="SubmitGrading" id="gradingForm">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="AssignmentId" />
-
-    <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="card shadow-sm mb-4 border-0 rounded-3">
-                <div class="card-header bg-light d-flex justify-content-between align-items-center border-bottom">
-                    <h6 class="fw-bold mb-0">Ti�u ch� d�nh gi�</h6>
-                    <span class="text-muted small">Thang di?m 100</span>
-                </div>
-                <div class="card-body p-0">
-                    @for (int i = 0; i < Model.CriteriaItems.Count; i++)
-                    {
-                        <div class="p-4 border-bottom criterion">
-                            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
-                                <div>
-                                    <h6 class="fw-bold mb-1">
-                                        @(i + 1). @Model.CriteriaItems[i].CriteriaName
-                                        <span class="badge bg-secondary-subtle text-secondary ms-2">
-                                            Max @Model.CriteriaItems[i].MaxScore
-                                        </span>
-                                    </h6>
-                                    <p class="text-muted small mb-0">
-                                        @Model.CriteriaItems[i].Description
-                                    </p>
-                                </div>
-                                <div class="input-group input-group-sm w-auto">
-                                    <input type="number"
-                                           asp-for="CriteriaItems[i].ScoreGiven"
-                                           class="form-control text-end fw-bold score-input"
-                                           max="@Model.CriteriaItems[i].MaxScore"
-                                           min="0"
-                                           data-max="@Model.CriteriaItems[i].MaxScore" />
-                                    <span class="input-group-text">/@Model.CriteriaItems[i].MaxScore</span>
-                                </div>
-                            </div>
-                            <textarea asp-for="CriteriaItems[i].Note"
-                                  class="form-control form-control-sm mt-3"
-                                  rows="2"
-                                  placeholder="Nh?n x�t (t�y ch?n)"></textarea>
-                            <input type="hidden" asp-for="CriteriaItems[i].CriteriaId" />
-                            <input type="hidden" asp-for="CriteriaItems[i].CriteriaName" />
-                            <input type="hidden" asp-for="CriteriaItems[i].MaxScore" />
-                        </div>
-                    }
-                </div>
-            </div>
-
-            <div class="card shadow-sm border-0 rounded-3">
-                <div class="card-header bg-light">
-                    <h6 class="fw-bold mb-0">Nh?n x�t chung & C�u h?i</h6>
-                </div>
-                <div class="card-body">
-                    <textarea asp-for="GeneralComment"
-                              class="form-control"
-                              rows="4"
-                              placeholder="Nh?n x�t chung cho sinh vi�n..."></textarea>
-                </div>
+<div class="container-fluid h-100 p-0 d-flex flex-column">
+    <!-- Header -->
+    <div class="bg-white border-bottom p-3 d-flex justify-content-between align-items-center shadow-sm" style="z-index: 10;">
+        <div class="d-flex align-items-center">
+            <a asp-action="Index" class="btn btn-outline-secondary rounded-circle me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div>
+                <h5 class="fw-bold mb-0">@Model.InitiativeTitle</h5>
+                <small class="text-muted">Code: @Model.InitiativeCode | Author: @Model.ProposerName</small>
             </div>
         </div>
+        <div>
+             <span class="badge bg-primary px-3 py-2">Round @Model.RoundNumber</span>
+        </div>
+    </div>
 
-        <div class="col-lg-4 d-flex flex-column gap-3">
-            <div class="card shadow-sm border-0 rounded-3 text-center">
+    <!-- Split View -->
+    <div class="row g-0 flex-grow-1 overflow-hidden" style="height: calc(100vh - 70px);">
+        
+        <!-- Left: Initiative Content (Scrollable) -->
+        <div class="col-lg-6 h-100 border-end bg-light overflow-auto p-4 custom-scrollbar">
+            <div class="card shadow-sm border-0 mb-4 rounded-3">
                 <div class="card-body">
-                    <img src="https://i.pravatar.cc/120" class="rounded-circle mb-3" width="96" height="96" />
-                    <h5 class="fw-bold mb-0">@Model.ProposerName</h5>
-                    <p class="text-muted small mb-3">@Model.DepartmentName</p>
-                    <div class="text-start small mb-3">
-                        <div class="fw-semibold">M� �? t�i</div>
-                        <div class="text-muted">@Model.InitiativeCode</div>
-                    </div>
+                    <h6 class="fw-bold text-uppercase text-secondary mb-3 small">Description</h6>
+                    <p class="text-dark" style="text-align: justify; line-height: 1.7;">
+                        @Model.Description
+                    </p>
                 </div>
             </div>
 
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-light">
                     <h6 class="fw-bold mb-0">
-                        <i class="fa-solid fa-folder-open me-2"></i> Qu?n l� File
+                        <i class="fa-solid fa-folder-open me-2"></i> Attachments
                     </h6>
                 </div>
                 <div class="card-body">
@@ -98,84 +48,108 @@
                             foreach (var f in Model.Files)
                             {
                                 <li class="list-group-item d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center text-truncate" style="max-width:calc(100% - 50px);">
-                                        <i class="fa-solid fa-file text-primary fs-5 me-2"></i>
-                                        <span class="text-truncate">@f.FileName</span>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-text fs-4 text-primary me-3"></i>
+                                        <span>@f.FileName</span>
                                     </div>
-                                    <a href="@f.FilePath" target="_blank"
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="fa-solid fa-download"></i>
-                                    </a>
+                                    <a href="@f.FilePath" target="_blank" class="btn btn-sm btn-outline-primary">View</a>
                                 </li>
                             }
                         }
-                        else
+                        else 
                         {
-                            <li class="list-group-item text-muted">Kh�ng c� file.</li>
+                            <li class="list-group-item text-muted">No attachments</li>
                         }
                     </ul>
                 </div>
             </div>
+        </div>
 
-            <div class="card shadow-sm border-primary rounded-3 mt-2">
-                <div class="card-body text-center">
-                    <div class="text-muted small mb-1">T?ng di?m t?m t�nh</div>
-                    <div class="display-5 fw-bold text-primary mb-3">
-                        <span id="totalScoreDisplay">0</span>
-                        <span class="fs-5 text-muted">/100</span>
+        <!-- Right: Grading Form (Scrollable) -->
+        <div class="col-lg-6 h-100 overflow-auto p-4 custom-scrollbar bg-white">
+            <form asp-action="SubmitGrading" method="post" id="gradingForm">
+                <input type="hidden" name="AssignmentId" value="@Model.AssignmentId" />
+                
+                <h5 class="fw-bold mb-4">Evaluation Criteria</h5>
+                
+                @if (Model.CriteriaItems != null)
+                {
+                    <div class="accordion mb-4" id="criteriaAccordion">
+                        @for (int i = 0; i < Model.CriteriaItems.Count; i++)
+                        {
+                            var criterion = Model.CriteriaItems[i];
+                            <input type="hidden" name="Grades[@i].CriteriaId" value="@criterion.CriteriaId" />
+                            
+                            <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button @(i==0?"":"collapsed") fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#c-@i">
+                                        @criterion.CriteriaName <span class="badge bg-secondary ms-auto">Max: @criterion.MaxScore</span>
+                                    </button>
+                                </h2>
+                                <div id="c-@i" class="accordion-collapse collapse @(i==0?"show":"")">
+                                    <div class="accordion-body bg-light">
+                                        <p class="small text-muted mb-2">@criterion.Description</p>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label fw-medium">Score (0-@criterion.MaxScore)</label>
+                                            <input type="number" name="Grades[@i].Score" class="form-control score-input" 
+                                                   min="0" max="@criterion.MaxScore" required placeholder="0" />
+                                        </div>
+                                        <div>
+                                            <label class="form-label fw-medium">Comment</label>
+                                            <textarea name="Grades[@i].Comment" class="form-control" rows="2" placeholder="Specific feedback..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit"
-                                name="SubmitAction"
-                                value="Submit"
-                                class="btn btn-primary btn-hover"
-                                onclick="return confirm('N?p di?m?');">
-                            <i class="fa-solid fa-save me-1"></i> Luu k?t qu?
-                        </button>
-                        @* <button type="submit"
-                                name="SubmitAction"
-                                value="SaveDraft"
-                                class="btn btn-outline-secondary">
-                            Luu nh�p
-                        </button> *@
-                        <a href="/Councils/Page/AssignedInitiatives"
-                           class="btn btn-link text-danger text-decoration-none">
-                            H?y & Quay l?i
-                        </a>
+                }
+
+                <div class="card bg-light border-0 p-3 mb-4 rounded-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">Total Score</span>
+                        <span class="fs-4 fw-bold text-primary" id="totalScore">0 / @Model.MaxTotalScore</span>
                     </div>
                 </div>
-            </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary flex-grow-1 py-2">Save Draft</button>
+                    <button type="submit" class="btn btn-primary flex-grow-1 py-2 fw-bold" onclick="return confirm('Submit evaluation? You cannot edit after submitting.');">
+                        Submit Evaluation
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</form>
+</div>
 
-@section Scripts {
-    <script>
-        (function () {
-            function recalcTotal() {
-                var inputs = document.querySelectorAll('.score-input');
-                var total = 0;
-                inputs.forEach(function (el) {
-                    var val = parseFloat(el.value);
-                    if (!isNaN(val)) {
-                        var max = parseFloat(el.getAttribute('data-max')) || 100;
-                        if (val > max) { el.value = max; val = max; }
-                        if (val < 0) { el.value = 0; val = 0; }
-                        total += val;
-                    }
-                });
-                var display = document.getElementById('totalScoreDisplay');
-                if (display) display.textContent = total.toFixed(0);
-            }
+<script>
+    // Simple Total Score Calculator
+    document.addEventListener('input', function (e) {
+        if (e.target.classList.contains('score-input')) {
+            calculateTotal();
+        }
+    });
 
-            document.addEventListener('input', function (e) {
-                if (e.target && e.target.classList.contains('score-input')) {
-                    recalcTotal();
-                }
-            });
+    function calculateTotal() {
+        let total = 0;
+        document.querySelectorAll('.score-input').forEach(input => {
+            total += Number(input.value) || 0;
+        });
+        document.getElementById('totalScore').innerText = total + " / @Model.MaxTotalScore";
+    }
+</script>
 
-            recalcTotal();
-        })();
-    </script>
-}
-
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+</style>

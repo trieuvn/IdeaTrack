@@ -1,4 +1,4 @@
-namespace IdeaTrack.Services
+﻿namespace IdeaTrack.Services
 {
     /// <summary>
     /// Interface for audit logging service

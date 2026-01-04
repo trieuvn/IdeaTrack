@@ -36,7 +36,7 @@ namespace IdeaTrack.Areas.SciTech.Models
 
                 // ===== HEADER =====
                 page.Header()
-                    .Height(80) // Giới hạn chiều cao header
+                    .Height(80) // Gioi han chieu cao header
                     .Padding(10)
                     .Background(lightBlue)
                     .Row(row =>
@@ -45,12 +45,12 @@ namespace IdeaTrack.Areas.SciTech.Models
                         row.RelativeColumn(0.8f)
                             .Stack(stack =>
                             {
-                                stack.Item().Text("ĐẠI HỌC KINH TẾ VÀ TÀI CHÍNH THÀNH PHỐ HỒ CHÍ MINH")
+                                stack.Item().Text("DAI HOC KINH TE VA TAI CHINH THANH PHO HO CHI MINH")
                                     .FontSize(12)
                                     .SemiBold()
                                     .FontColor(darkBlue);
 
-                                stack.Item().Text("BÁO CÁO HỒ SƠ SÁNG KIẾN")
+                                stack.Item().Text("BAO CAO HO SO SANG KIEN")
                                     .FontSize(18)
                                     .Bold()
                                     .FontColor(darkBlue);
@@ -58,32 +58,32 @@ namespace IdeaTrack.Areas.SciTech.Models
                             });
 
                         // Right: logo
-                        row.ConstantColumn(60) // cố định chiều rộng
+                        row.ConstantColumn(60) // co dinh chieu rong
                             .AlignRight()
-                            .Height(60) // cố định chiều cao
-                            .Image("wwwroot/images/logo-uef.png", ImageScaling.FitArea); // FitArea vừa đủ
+                            .Height(60) // co dinh chieu cao
+                            .Image("wwwroot/images/logo-uef.png", ImageScaling.FitArea); // FitArea vua du
                     });
 
-                // ===== NỘI DUNG BẢNG =====
+                // ===== NOI DUNG BANG =====
                 page.Content().Table(table =>
                 {
                     table.ColumnsDefinition(c =>
                     {
-                        c.RelativeColumn(2); // Mã
-                        c.RelativeColumn(4); // Tiêu đề
-                        c.RelativeColumn(3); // Người đề xuất
-                        c.RelativeColumn(3); // Đơn vị
-                        c.RelativeColumn(2); // Trạng thái
+                        c.RelativeColumn(2); // Ma
+                        c.RelativeColumn(4); // Tieu de
+                        c.RelativeColumn(3); // Nguoi de xuat
+                        c.RelativeColumn(3); // Don vi
+                        c.RelativeColumn(2); // Status
                     });
 
                     // Header
                     table.Header(header =>
                     {
-                        header.Cell().Background(headerGray).Padding(5).Text("Mã").Bold();
-                        header.Cell().Background(headerGray).Padding(5).Text("Tiêu đề").Bold();
-                        header.Cell().Background(headerGray).Padding(5).Text("Người đề xuất").Bold();
-                        header.Cell().Background(headerGray).Padding(5).Text("Đơn vị").Bold();
-                        header.Cell().Background(headerGray).Padding(5).Text("Trạng thái").Bold();
+                        header.Cell().Background(headerGray).Padding(5).Text("Ma").Bold();
+                        header.Cell().Background(headerGray).Padding(5).Text("Tieu de").Bold();
+                        header.Cell().Background(headerGray).Padding(5).Text("Nguoi de xuat").Bold();
+                        header.Cell().Background(headerGray).Padding(5).Text("Don vi").Bold();
+                        header.Cell().Background(headerGray).Padding(5).Text("Status").Bold();
                     });
 
                     // Rows
@@ -121,7 +121,7 @@ namespace IdeaTrack.Areas.SciTech.Models
                 page.Footer()
                     .Padding(5)
                     .AlignRight()
-                    .Text($"In ngày: {System.DateTime.Now:dd/MM/yyyy HH:mm}")
+                    .Text($"In ngay: {System.DateTime.Now:dd/MM/yyyy HH:mm}")
                     .FontSize(9)
                     .Italic()
                     .FontColor(gray);

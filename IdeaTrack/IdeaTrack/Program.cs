@@ -1,4 +1,4 @@
-using IdeaTrack.Areas.Faculty.Hubs;
+﻿using IdeaTrack.Areas.Faculty.Hubs;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Services;

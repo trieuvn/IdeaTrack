@@ -1,4 +1,4 @@
-@model IEnumerable<IdeaTrack.Models.Initiative>
+Ôªø@model IEnumerable<IdeaTrack.Models.Initiative>
 
 <main class="container py-5">
 
@@ -7,17 +7,17 @@
         <div class="row">
             <div class="col-lg-8">
                 <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-3 p-2 px-3" style="border: 1px solid rgba(0,255,255,0.2)">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">history</span> L?CH S? S¡NG KI?N
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">history</span> L?CH S? S√ÅNG KI?N
                 </span>
                 <h1 class="fw-bold display-5 mb-3">L?ch s? ho?t d?ng</h1>
                 <p class="fs-5 mb-0 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    Theo dıi v‡ qu?n l˝ t?t c? c·c s·ng ki?n b?n d„ d? xu?t, t? nh·p d?n d„ duy?t.
+                    Theo d√µi v√† qu?n l√Ω t?t c? c√°c s√°ng ki?n b?n d√£ d? xu?t, t? nh√°p d?n d√£ duy?t.
                 </p>
             </div>
             <div class="col-lg-4 d-flex align-items-center justify-content-end">
                 <div class="text-center">
                     <div class="display-3 fw-bold">@Model.Count()</div>
-                    <div class="opacity-75">T?ng s·ng ki?n</div>
+                    <div class="opacity-75">T?ng s√°ng ki?n</div>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="approved" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">check_circle</span>
-                        –„ duy?t <span class="badge bg-success ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Approved)</span>
+                        √ê√£ duy?t <span class="badge bg-success ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Approved)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -48,7 +48,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="draft" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">edit_note</span>
-                        Nh·p <span class="badge bg-secondary ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Draft)</span>
+                        Nh√°p <span class="badge bg-secondary ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Draft)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -70,11 +70,11 @@
                     <table class="table table-hover table-borderless align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="ps-4 py-3">TiÍu d?</th>
+                                <th class="ps-4 py-3">Ti√™u d?</th>
                                 <th class="py-3">Danh m?c</th>
-                                <th class="py-3">Ng‡y t?o</th>
-                                <th class="py-3">Tr?ng th·i</th>
-                                <th class="pe-4 py-3 text-end">Thao t·c</th>
+                                <th class="py-3">Ng√†y t?o</th>
+                                <th class="py-3">Tr?ng th√°i</th>
+                                <th class="pe-4 py-3 text-end">Thao t√°c</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -93,12 +93,12 @@
                                     <td class="ps-4">
                                         <div class="fw-medium">@item.Title</div>
                                         <div class="text-muted small text-truncate" style="max-width: 300px;">
-                                            @(string.IsNullOrEmpty(item.Description) ? "Chua cÛ mÙ t?" : (item.Description.Length > 60 ? item.Description.Substring(0, 60) + "..." : item.Description))
+                                            @(string.IsNullOrEmpty(item.Description) ? "Chua c√≥ m√¥ t?" : (item.Description.Length > 60 ? item.Description.Substring(0, 60) + "..." : item.Description))
                                         </div>
                                     </td>
                                     <td>
                                         <span class="badge bg-light text-dark rounded-pill">
-                                            @(item.Category?.Name ?? "Chua ph‚n lo?i")
+                                            @(item.Category?.Name ?? "Chua ph√¢n lo?i")
                                         </span>
                                     </td>
                                     <td>
@@ -112,7 +112,7 @@
                                         {
                                             case IdeaTrack.Models.InitiativeStatus.Approved:
                                                 <span class="badge bg-success rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">check</span> –„ duy?t
+                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">check</span> √ê√£ duy?t
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Rejected:
@@ -122,7 +122,7 @@
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Draft:
                                                 <span class="badge bg-secondary rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> Nh·p
+                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> Nh√°p
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Pending:
@@ -159,10 +159,10 @@
             {
                 <div class="text-center py-5">
                     <span class="material-icons text-muted" style="font-size: 80px;">inbox</span>
-                    <h5 class="text-muted mt-3">Chua cÛ s·ng ki?n n‡o</h5>
-                    <p class="text-muted mb-4">B?t d?u b?ng vi?c t?o s·ng ki?n d?u tiÍn c?a b?n</p>
+                    <h5 class="text-muted mt-3">Chua c√≥ s√°ng ki?n n√†o</h5>
+                    <p class="text-muted mb-4">B?t d?u b?ng vi?c t?o s√°ng ki?n d?u ti√™n c?a b?n</p>
                     <a asp-controller="Initiative" asp-action="Create" class="btn btn-danger rounded-pill px-4">
-                        <span class="material-icons align-middle me-1">add_circle</span> T?o s·ng ki?n m?i
+                        <span class="material-icons align-middle me-1">add_circle</span> T?o s√°ng ki?n m?i
                     </a>
                 </div>
             }

@@ -15,40 +15,40 @@
         _ => "bg-secondary text-white"
     };
 
-    // Icon và màu cho Department
+    // Department Icons
     string deptIcon = "fa-building";
     string deptColor = "text-secondary";
 
     switch (Model.Code)
     {
-        case "CNTT":
+        case "IT":
             deptIcon = "fa-laptop-code"; deptColor = "text-primary";
             break;
-        case "DTVT": // Điện tử Viễn thông
+        case "DTVT":
             deptIcon = "fa-bolt"; deptColor = "text-danger";
             break;
-        case "KHCN": // Khoa học Công nghệ
+        case "KHCN":
             deptIcon = "fa-microscope"; deptColor = "text-success";
             break;
-        case "CK": // Cơ khí
+        case "CK":
             deptIcon = "fa-cogs"; deptColor = "text-warning";
             break;
-        case "XD": // Xây dựng
+        case "XD":
             deptIcon = "fa-hard-hat"; deptColor = "text-secondary";
             break;
-        case "MT": // Môi trường
+        case "MT":
             deptIcon = "fa-leaf"; deptColor = "text-info";
             break;
-        case "KT": // Kinh tế
+        case "KT":
             deptIcon = "fa-chart-line"; deptColor = "text-primary";
             break;
-        case "QTKD": // Quản trị Kinh doanh
+        case "QTKD":
             deptIcon = "fa-briefcase"; deptColor = "text-primary";
             break;
         case "LUAT":
             deptIcon = "fa-gavel"; deptColor = "text-warning";
             break;
-        case "NN": // Nông nghiệp
+        case "NN":
             deptIcon = "fa-seedling"; deptColor = "text-success";
             break;
         default:
@@ -69,7 +69,7 @@
         </h2>
 
         <p class="text-muted mb-0">
-            <i class="fas fa-fingerprint me-1 text-info"></i>Mã hồ sơ: <strong>@Model.InitiativeCode</strong>
+            <i class="fas fa-fingerprint me-1 text-info"></i>Code: <sof>@Model.InitiativeCode</sof>
             <span class="mx-2">|</span>
             <i class="fas fa-calendar-alt me-1 text-secondary"></i>@Model.SubmittedDate.ToString("dd/MM/yyyy")
         </p>
@@ -84,35 +84,35 @@
         <!-- INFO CARD -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-light fw-bold">
-                <i class="fas fa-info-circle me-1 text-primary"></i>Thông tin chung
+                <i class="fas fa-info-circle me-1 text-primary"></i>General Information
             </div>
 
             <div class="card-body row g-4">
                 <div class="col-md-6">
-                    <small class="text-muted">Chủ nhiệm đề tài</small>
+                    <small class="text-muted">Proposer</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-user-tie me-1 text-primary"></i>@Model.ProposerName</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted">Đơn vị thực hiện</small>
+                    <small class="text-muted">Department</small>
                     <p class="fw-semibold mb-0"><i class="fas @deptIcon @deptColor me-1"></i>@Model.DepartmentName</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted">Lĩnh vực</small>
+                    <small class="text-muted">Category</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-brain me-1 text-info"></i>@Model.Category</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted d-block mb-1">Thời gian thực hiện</small>
+                    <small class="text-muted d-block mb-1">Submitted Date</small>
                     <p class="fw-semibold mb-0 gradient-text">
                         <i class="fas fa-clock me-1"></i>
                         @Model.SubmittedDate.ToString("dd/MM/yyyy")
                     </p>
                 </div>
                 <div class="col-md-6">
-                     <small class="text-muted">Kinh phí đề xuất</small>
-                    <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VNĐ</p>
+                    <small class="text-muted">Proposed Budget</small>
+                    <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VND</p>
                 </div>
 
             </div>
@@ -123,7 +123,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-semibold" data-bs-toggle="collapse" data-bs-target="#description">
-                        <i class="fas fa-align-left me-2 text-primary"></i>Mô tả nội dung
+                        <i class="fas fa-align-left me-2 text-primary"></i>Description
                     </button>
                 </h2>
                 <div id="description" class="accordion-collapse collapse show">
@@ -136,7 +136,7 @@
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed fw-semibold" data-bs-toggle="collapse" data-bs-target="#files">
-                        <i class="fas fa-paperclip me-2 text-secondary"></i>Tài liệu đính kèm
+                        <i class="fas fa-paperclip me-2 text-secondary"></i>Attachments
                     </button>
                 </h2>
                 <div id="files" class="accordion-collapse collapse">
@@ -174,7 +174,7 @@
                                 <li class="list-group-item d-flex justify-content-between">
                                     <span><i class="fas @iconClass @textColor me-2"></i>@file.FileName</span>
                                     <a href="@Url.Action("DownloadFile", "Port", new { fileName = file.FileName })" class="text-decoration-none">
-                                        <i class="fas fa-download me-1 text-primary"></i>Tải
+                                        <i class="fas fa-download me-1 text-primary"></i>Download
                                     </a>
                                 </li>
                             }
@@ -190,7 +190,7 @@
     <div class="col-lg-4">
         <div class="card shadow border-primary">
             <div class="card-header fw-bold text-primary">
-                <i class="fas fa-pen-alt me-1"></i>Quyết định PKHCN
+                <i class="fas fa-pen-alt me-1"></i>Decision Panel
             </div>
 
             <div class="card-body">
@@ -198,59 +198,59 @@
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="id" value="@Model.Id" />
                     
-                    <!-- GHI CHÚ -->
+                    <!-- NOTES -->
                     <label class="form-label fw-semibold">
                         <i class="fas fa-sticky-note me-1 text-warning"></i>
-                        Ghi chú / Nội dung yêu cầu
+                        Notes / Request Content
                     </label>
 
                     <textarea name="requestContent" id="requestContent"
                               class="form-control mb-3"
                               rows="4"
-                              placeholder="Nhập nội dung yêu cầu chỉnh sửa, lý do đánh giá lại, hoặc kết luận..."></textarea>
+                              placeholder="Enter content for revision, reason for re-evaluation, or conclusion..."></textarea>
 
                     <!-- DEADLINE (Js toggle) -->
                     <div id="deadlineWrapper" class="d-none mb-3">
                         <label class="form-label fw-semibold">
                             <i class="fas fa-calendar-alt me-1 text-info"></i>
-                            Hạn chỉnh sửa
+                            Deadline
                         </label>
                         <input type="date" name="deadline" id="deadline" class="form-control">
                     </div>
 
                     <!-- ACTIONS -->
                     <div class="d-grid gap-2">
-                        <!-- DUYỆT -->
+                        <!-- APPROVE / ASSIGN -->
                         <button type="submit" asp-action="ApproveInitiative" asp-controller="Port" asp-area="SciTech"
-                                class="btn btn-success" onclick="return confirm('Xác nhận duyệt hồ sơ này?');">
-                            <i class="fas fa-check-circle me-1"></i>Duyệt hồ sơ / Phân công
+                                class="btn btn-success" onclick="return confirm('Confirm approve this initiative?');">
+                            <i class="fas fa-check-circle me-1"></i>Approve / Assign
                         </button>
                         
-                        <!-- YÊU CẦU CHẤM LẠI (New) -->
+                        <!-- RE-EVALUATE -->
                         <button type="submit" asp-action="RequestReEvaluation" asp-controller="Port" asp-area="SciTech"
-                                class="btn btn-warning text-white" onclick="return confirm('Xác nhận yêu cầu Hội đồng chấm lại vòng tiếp theo?');">
-                            <i class="fas fa-sync-alt me-1"></i>Yêu cầu chấm lại
+                                class="btn btn-warning text-white" onclick="return confirm('Confirm request next round re-evaluation?');">
+                            <i class="fas fa-sync-alt me-1"></i>Request Re-evaluation
                         </button>
 
-                         <!-- QUYẾT ĐỊNH CUỐI CÙNG (Approve/Reject) -->
+                         <!-- FINAL DECISION (Approve/Reject) -->
                         <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Approve"
-                                class="btn btn-outline-success fw-bold" onclick="return confirm('Xác nhận PHÊ DUYỆT chính thức sáng kiến này?');">
-                            <i class="fas fa-award me-1"></i>Phê duyệt (Quyết định cuối)
+                                class="btn btn-outline-success fw-bold" onclick="return confirm('Confirm FINAL APPROVAL?');">
+                            <i class="fas fa-award me-1"></i>Final Approve
                         </button>
 
                         <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Reject"
-                                class="btn btn-outline-danger fw-bold" onclick="return confirm('Xác nhận TỪ CHỐI chính thức sáng kiến này?');">
-                            <i class="fas fa-times-circle me-1"></i>Từ chối (Quyết định cuối)
+                                class="btn btn-outline-danger fw-bold" onclick="return confirm('Confirm FINAL REJECTION?');">
+                            <i class="fas fa-times-circle me-1"></i>Final Reject
                         </button>
 
-                        <!-- YÊU CẦU CHỈNH SỬA (Reject) -->
+                        <!-- REVISION REQUEST -->
                         <button type="button" id="btnShowDeadline" class="btn btn-outline-secondary">
-                            <i class="fas fa-undo me-1"></i>Yêu cầu chỉnh sửa
+                            <i class="fas fa-undo me-1"></i>Request Revision
                         </button>
                         
                         <button type="submit" asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech"
                                 id="btnReject" class="btn btn-danger d-none" onclick="return validateReject();">
-                            <i class="fas fa-paper-plane me-1"></i>Gửi yêu cầu chỉnh sửa
+                            <i class="fas fa-paper-plane me-1"></i>Send Revision Request
                         </button>
                     </div>
                 </form>
@@ -276,13 +276,13 @@
         var deadline = document.getElementById("deadline").value;
         
         if (!content || !content.trim()) {
-            alert("Vui lòng nhập nội dung yêu cầu chỉnh sửa!");
+            alert("Please enter revision request content!");
             return false;
         }
         if (!deadline) {
-            alert("Vui lòng chọn hạn chỉnh sửa!");
+            alert("Please select a deadline!");
             return false;
         }
-        return confirm('Xác nhận gửi yêu cầu chỉnh sửa cho tác giả?');
+        return confirm('Confirm send revision request to author?');
     }
 </script>

@@ -1,4 +1,4 @@
-@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
 
 <main class="container py-5">
 
@@ -7,11 +7,11 @@
         <div class="row">
             <div class="col-lg-8">
                 <span class="badge rounded-pill bg-info text-white mb-3 p-2 px-3">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">edit</span> CHỈNH SỬA SÁNG KIẾN
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">edit</span> EDIT INITIATIVE
                 </span>
-                <h1 class="fw-bold display-5 mb-3">Cập nhật Sáng kiến</h1>
+                <h1 class="fw-bold display-5 mb-3">Update Initiative</h1>
                 <p class="fs-5 mb-0 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    Chỉnh sửa thông tin sáng kiến của bạn. Mã sáng kiến: <strong>@Model.Initiative.InitiativeCode</strong>
+                    Edit your initiative information. Initiative Code: <strong>@Model.Initiative.InitiativeCode</strong>
                 </p>
             </div>
         </div>
@@ -22,7 +22,7 @@
         <div class="card-header bg-white border-0 pt-4 px-4">
             <h5 class="fw-bold mb-0">
                 <span class="material-icons align-middle me-2 text-info">edit_note</span>
-                Thông tin sáng kiến
+                Initiative Information
             </h5>
         </div>
         <div class="card-body p-4">
@@ -41,20 +41,20 @@
                     <div class="col-md-6">
                         <label asp-for="Initiative.CategoryId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">category</span>
-                            Danh mục <span class="text-danger">*</span>
+                            Category <span class="text-danger">*</span>
                         </label>
                         <select asp-for="Initiative.CategoryId" asp-items="Model.Categories" class="form-select">
-                            <option value="">-- Chọn danh mục --</option>
+                            <option value="">-- Select category --</option>
                         </select>
                         <span asp-validation-for="Initiative.CategoryId" class="text-danger small"></span>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.DepartmentId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">business</span>
-                            Khoa/Phòng ban <span class="text-danger">*</span>
+                            Department <span class="text-danger">*</span>
                         </label>
                         <select asp-for="Initiative.DepartmentId" asp-items="Model.Departments" class="form-select">
-                            <option value="">-- Chọn khoa/phòng ban --</option>
+                            <option value="">-- Select department --</option>
                         </select>
                         <span asp-validation-for="Initiative.DepartmentId" class="text-danger small"></span>
                     </div>
@@ -65,9 +65,9 @@
                     <div class="col-md-6">
                         <label asp-for="Initiative.Budget" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-warning" style="font-size: 18px;">payments</span>
-                            Ngân sách (VND)
+                            Budget (VND)
                         </label>
-                        <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Nhập số tiền dự kiến" class="form-control" />
+                        <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Enter estimated budget" class="form-control" />
                         <span asp-validation-for="Initiative.Budget" class="text-danger small"></span>
                     </div>
                     @if (Model.ActivePeriodId.HasValue)
@@ -75,12 +75,12 @@
                         <div class="col-md-6">
                             <label class="form-label fw-medium">
                                 <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">event</span>
-                                Đợt sáng kiến
+                                Initiative Period
                             </label>
                             <div class="form-control bg-light">
-                                <span class="badge bg-success me-2">Đang mở</span> Đợt hiện tại
+                                <span class="badge bg-success me-2">Active</span> Current Period
                             </div>
-                            <small class="text-muted">Sáng kiến sẽ được nộp vào đợt đang mở khi bạn nhấn "Nộp sáng kiến"</small>
+                            <small class="text-muted">Initiative will be submitted to the active period when you click "Submit Initiative"</small>
                         </div>
                     }
                 </div>
@@ -89,9 +89,9 @@
                 <div class="mb-4">
                     <label asp-for="Initiative.Title" class="form-label fw-medium">
                         <span class="material-icons align-middle me-1 text-danger" style="font-size: 18px;">title</span>
-                        Tiêu đề sáng kiến <span class="text-danger">*</span>
+                        Initiative Title <span class="text-danger">*</span>
                     </label>
-                    <input asp-for="Initiative.Title" placeholder="Nhập tiêu đề mô tả ngắn gọn cho sáng kiến" class="form-control form-control-lg" />
+                    <input asp-for="Initiative.Title" placeholder="Enter a brief title for the initiative" class="form-control form-control-lg" />
                     <span asp-validation-for="Initiative.Title" class="text-danger small"></span>
                 </div>
 
@@ -99,9 +99,9 @@
                 <div class="mb-4">
                     <label asp-for="Initiative.Description" class="form-label fw-medium">
                         <span class="material-icons align-middle me-1 text-secondary" style="font-size: 18px;">notes</span>
-                        Mô tả chi tiết
+                        Detailed Description
                     </label>
-                    <textarea asp-for="Initiative.Description" placeholder="Mô tả đầy đủ về sáng kiến, mục tiêu, và kết quả mong đợi..." rows="6" class="form-control"></textarea>
+                    <textarea asp-for="Initiative.Description" placeholder="Describe the initiative, objectives, and expected outcomes..." rows="6" class="form-control"></textarea>
                     <span asp-validation-for="Initiative.Description" class="text-danger small"></span>
                 </div>
 
@@ -109,14 +109,14 @@
                 <hr class="my-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@Model.Initiative.Id" class="btn btn-outline-secondary rounded-pill px-4">
-                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Quay lại
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Back
                     </a>
                     <div class="d-flex gap-3">
                         <button type="submit" name="action" value="Save" class="btn btn-outline-primary rounded-pill px-4">
-                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Lưu thay đổi
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Save Changes
                         </button>
                         <button type="submit" name="action" value="Submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow">
-                            <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> Nộp sáng kiến
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> Submit Initiative
                         </button>
                     </div>
                 </div>

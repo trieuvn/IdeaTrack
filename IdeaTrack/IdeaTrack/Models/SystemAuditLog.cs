@@ -9,7 +9,7 @@ namespace IdeaTrack.Models
         public string Action { get; set; } // VD: "Approve", "Update Score"
         public string TargetTable { get; set; }
         public int TargetId { get; set; }
-        public string? Details { get; set; } // Lưu JSON các thay đổi
+        public string? Details { get; set; } // Save JSON cac thay doi
         public DateTime Timestamp { get; set; } = DateTime.Now;
         public string IpAddress { get; set; }
 

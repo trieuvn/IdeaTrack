@@ -3,8 +3,8 @@
 namespace IdeaTrack.Models
 {
     /// <summary>
-    /// Phân công chấm điểm - Liên kết giữa Sáng kiến và Thành viên Hội đồng
-    /// Hỗ trợ cơ chế chấm đa vòng (Multi-round)
+    /// Phan cong cham diem - Lien ket giua Sang kien va Member Hoi dong
+    /// Ho tro co che cham da vong (Multi-round)
     /// </summary>
     public class InitiativeAssignment
     {
@@ -26,10 +26,10 @@ namespace IdeaTrack.Models
         [ForeignKey("TemplateId")]
         public virtual EvaluationTemplate Template { get; set; } = null!;
         
-        // ===== HỖ TRỢ CHẤM ĐIỂM ĐA VÒNG =====
+        // ===== HO TRO CHAM DIEM DA VONG =====
         /// <summary>
-        /// Số thứ tự vòng chấm của bản ghi này
-        /// Vòng 1, 2, 3... - Mỗi vòng tạo một bộ Assignment mới
+        /// So thu tu vong cham cua ban ghi nay
+        /// Vong 1, 2, 3... - Moi vong tao mot bo Assignment moi
         /// </summary>
         public int RoundNumber { get; set; } = 1;
         
@@ -37,15 +37,15 @@ namespace IdeaTrack.Models
         public DateTime? DueDate { get; set; }
         
         /// <summary>
-        /// Tên giai đoạn: "Vòng sơ loại Khoa", "Vòng chung khảo", v.v.
+        /// Name giai doan: "Vong so loai Khoa", "Vong chung khao", v.v.
         /// </summary>
         public string StageName { get; set; } = "";
         
         public AssignmentStatus Status { get; set; } = AssignmentStatus.Assigned;
         
-        // ===== LOGIC CHO CẤP KHOA (TemplateType = Screening) =====
+        // ===== LOGIC CHO CAP KHOA (TemplateType = Screening) =====
         /// <summary>
-        /// Quyết định: True = Approved, False = Rejected, null = Chưa quyết định
+        /// Quyet dinh: True = Approved, False = Rejected, null = Chua quyet dinh
         /// </summary>
         public bool? Decision { get; set; }
         public string? ReviewComment { get; set; }

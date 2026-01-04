@@ -2,11 +2,11 @@
 @model LoginModel
 @{
     Layout = null;
-    ViewData["Title"] = "Ðang nh?p | UEF LMS";
+    ViewData["Title"] = "Login | UEF LMS";
 }
 
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,7 +16,7 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Font Awesome cho icon -->
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Favicon -->
@@ -91,7 +91,7 @@
         }
 
         .btn-login {
-            background: #003087; /* Màu xanh d?m UEF */
+            background: #003087; /* UEF dark blue */
             border: none;
             border-radius: 15px;
             padding: 15px;
@@ -143,28 +143,28 @@
     <div class="background">
         <div class="login-overlay">
             <div class="login-card text-center">
-                <!-- Logo UEF chính th?c -->
+                <!-- UEF Official Logo -->
                 <img src="https://upload.wikimedia.org/wikipedia/en/7/77/Ho_Chi_Minh_City_University_of_Economics_and_Finance_UEF_Logo.png"
-                     alt="UEF - Ð?I H?C KINH T? TÀI CHÍNH" class="uef-logo img-fluid" />
+                     alt="UEF - University of Economics and Finance" class="uef-logo img-fluid" />
 
                 <p class="text-muted mb-4">Log in using your account on:</p>
 
-                <!-- Nút Ðang nh?p v?i UEF ID -->
+                <!-- Login with UEF ID Button -->
                 <a asp-page="/Account/ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl"
                    class="btn btn-uef-id w-100 d-flex align-items-center justify-content-center mb-4">
                     <img src="~/icons/logo-uef.ico" alt="" width="50" height="40" class="me-3">
-                    Ðang nh?p v?i UEF ID
+                    Login with UEF ID
                 </a>
 
                 <hr class="my-4">
 
-                <!-- Form dang nh?p -->
+                <!-- Login Form -->
                 <form method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                     <div class="mb-4 position-relative">
                         <span class="input-group-text"><i class="fas fa-user fa-lg"></i></span>
-                        <input asp-for="Input.UsernameOrEmail" class="form-control form-control-custom" placeholder="Username hoặc Email" autocomplete="username" required />
+                        <input asp-for="Input.UsernameOrEmail" class="form-control form-control-custom" placeholder="Username or Email" autocomplete="username" required />
                         <span asp-validation-for="Input.UsernameOrEmail" class="text-danger"></span>
                     </div>
 
@@ -211,7 +211,7 @@
                     </li>
                     <li>
                         <a class="dropdown-item" href="?lang=vi">
-                            Ti?ng Vi?t
+                            Vietnamese
                         </a>
                     </li>
                 </ul>
@@ -241,4 +241,3 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
 </body>
 </html>
-

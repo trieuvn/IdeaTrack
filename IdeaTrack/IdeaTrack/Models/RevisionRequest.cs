@@ -6,9 +6,9 @@ namespace IdeaTrack.Models
     {
         public int Id { get; set; }
         public int InitiativeId { get; set; }
-        public int RequesterId { get; set; } // Admin hoặc Chuyên viên KHCN
+        public int RequesterId { get; set; } // Admin hoac Chuyen vien KHCN
 
-        public string RequestContent { get; set; } // Nội dung cần sửa
+        public string RequestContent { get; set; } // Noi dung can sua
         public DateTime RequestedDate { get; set; } = DateTime.Now;
         public DateTime? Deadline { get; set; }
         public bool IsResolved { get; set; } = false;

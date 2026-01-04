@@ -1,6 +1,6 @@
-@model IdeaTrack.Areas.SciTech.Models.ReferenceFormListVM
+﻿@model IdeaTrack.Areas.SciTech.Models.ReferenceFormListVM
 @{
-    ViewData["Title"] = "Biểu mẫu hướng dẫn";
+    ViewData["Title"] = "Reference Forms";
     Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
 }
 
@@ -8,10 +8,10 @@
     <div class="card shadow-sm border-0">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">
-                <i class="fas fa-file-alt me-2"></i>Biểu mẫu hướng dẫn
+                <i class="fas fa-file-alt me-2"></i>Reference Forms
             </h4>
             <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-light btn-sm">
-                <i class="fas fa-plus me-1"></i>Thêm biểu mẫu
+                <i class="fas fa-plus me-1"></i>Add Form
             </a>
         </div>
         
@@ -34,9 +34,9 @@
             <!-- Period Filter -->
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <label class="form-label">Lọc theo đợt sáng kiến:</label>
+                    <label class="form-label">Filter by initiative period:</label>
                     <select id="periodFilter" class="form-select">
-                        <option value="">-- Tất cả đợt --</option>
+                        <option value="">-- All periods --</option>
                         @foreach (var period in Model.Periods)
                         {
                             <option value="@period.Value" selected="@(Model.SelectedPeriodId?.ToString() == period.Value)">
@@ -51,7 +51,7 @@
             {
                 <div class="alert alert-info mb-3">
                     <i class="fas fa-info-circle me-1"></i>
-                    Đang hiển thị biểu mẫu của đợt: <strong>@Model.SelectedPeriodName</strong>
+                    Showing forms for period: <strong>@Model.SelectedPeriodName</strong>
                 </div>
             }
 
@@ -62,11 +62,11 @@
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 5%">#</th>
-                                <th style="width: 25%">Tên biểu mẫu</th>
-                                <th style="width: 20%">Đợt sáng kiến</th>
-                                <th style="width: 10%">Loại file</th>
-                                <th style="width: 15%">Ngày tải lên</th>
-                                <th style="width: 15%">Thao tác</th>
+                                <th style="width: 25%">Form Name</th>
+                                <th style="width: 20%">Initiative Period</th>
+                                <th style="width: 10%">File Type</th>
+                                <th style="width: 15%">Upload Date</th>
+                                <th style="width: 15%">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -93,16 +93,16 @@
                                     </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
-                                            <a href="@item.FileUrl" target="_blank" class="btn btn-outline-success" title="Tải xuống">
+                                            <a href="@item.FileUrl" target="_blank" class="btn btn-outline-success" title="Download">
                                                 <i class="fas fa-download"></i>
                                             </a>
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary" title="Sửa">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
-                                                  onsubmit="return confirm('Bạn có chắc muốn xóa biểu mẫu này?');">
+                                                  onsubmit="return confirm('Are you sure you want to delete this form?');">
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-outline-danger" title="Xóa">
+                                                <button type="submit" class="btn btn-outline-danger" title="Delete">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
@@ -118,9 +118,9 @@
             {
                 <div class="text-center py-5">
                     <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
-                    <p class="text-muted">Chưa có biểu mẫu nào</p>
+                    <p class="text-muted">No forms available</p>
                     <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i>Thêm biểu mẫu đầu tiên
+                        <i class="fas fa-plus me-1"></i>Add First Form
                     </a>
                 </div>
             }

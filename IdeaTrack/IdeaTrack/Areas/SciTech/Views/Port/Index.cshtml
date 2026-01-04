@@ -3,9 +3,9 @@
 <!-- HEADER -->
 <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
     <div>
-        <h1 class="fw-bold mb-1">B�o c�o v� Th?ng k�</h1>
+        <h1 class="fw-bold mb-1">Reports & Statistics</h1>
         <p class="text-muted mb-0">
-            T?o b�o c�o chi ti?t, l?c d? li?u v� xu?t th?ng k� h? so khoa h?c.
+            Generate detailed reports, filter data, and export statistics.
         </p>
     </div>
     <div class="d-flex gap-2">
@@ -18,7 +18,7 @@
             <input type="hidden" name="keyword" value="@Model.Keyword" />
 
             <button type="submit" class="btn btn-outline-secondary">
-                <i class="fa-solid fa-print me-1"></i>In b�o c�o (PDF)
+                <i class="fa-solid fa-print me-1"></i>Print Report (PDF)
             </button>
         </form>
 
@@ -34,7 +34,7 @@
             <input type="hidden" name="keyword" value="@Model.Keyword" />
 
             <button type="submit" class="btn btn-primary">
-                <i class="fa-solid fa-download me-1"></i> Xu?t d? li?u
+                <i class="fa-solid fa-download me-1"></i> Export Data
             </button>
         </form>
 
@@ -57,7 +57,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <i class="fa-solid fa-folder-open text-primary fs-4"></i>
-                <p class="text-muted small mb-1">T?ng s? h? so</p>
+                <p class="text-muted small mb-1">Total Initiatives</p>
                 <h3 class="fw-bold mb-0">@Model.TotalItems</h3>
             </div>
         </div>
@@ -67,7 +67,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <i class="fa-solid fa-clock text-warning fs-4"></i>
-                <p class="text-muted small mb-1">�ang x? l�</p>
+                <p class="text-muted small mb-1">Pending</p>
                 <h3 class="fw-bold mb-0">
                     @Model.Items.Count(x => x.Status == "Pending")
                 </h3>
@@ -79,7 +79,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <i class="fa-solid fa-circle-check text-success fs-4"></i>
-                <p class="text-muted small mb-1">�� duy?t</p>
+                <p class="text-muted small mb-1">Approved</p>
                 <h3 class="fw-bold mb-0">
                     @Model.Items.Count(x => x.Status == "Approved")
                 </h3>
@@ -97,7 +97,7 @@
         <div class="card bg-primary text-white shadow-sm">
             <div class="card-body">
                 <i class="fa-solid fa-chart-pie fs-4"></i>
-                <p class="small mb-1">T? l? duy?t</p>
+                <p class="small mb-1">Approval Rate</p>
                 <h3 class="fw-bold mb-0">@rate%</h3>
             </div>
         </div>
@@ -109,38 +109,38 @@
     <input type="hidden" name="page" value="1" />
 
     <div class="col-md-3">
-        <label class="form-label">T? ng�y</label>
+        <label class="form-label">From Date</label>
         <input type="date" name="fromDate" class="form-control"
                value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
     </div>
 
     <div class="col-md-3">
-        <label class="form-label">�?n ng�y</label>
+        <label class="form-label">To Date</label>
         <input type="date" name="toDate" class="form-control"
                value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
     </div>
 
     <div class="col-md-3">
-        <label class="form-label">Tr?ng th�i</label>
+        <label class="form-label">Status</label>
         <select name="status" class="form-select">
-            <option value="">T?t c?</option>
-            <option value="Approved" selected="@(Model.Status == "Approved")">�� duy?t</option>
-            <option value="Rejected" selected="@(Model.Status == "Rejected")">T? ch?i</option>
-            <option value="Pending" selected="@(Model.Status == "Pending")">�ang x? l�</option>
+            <option value="">All</option>
+            <option value="Approved" selected="@(Model.Status == "Approved")">Approved</option>
+            <option value="Rejected" selected="@(Model.Status == "Rejected")">Rejected</option>
+            <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
         </select>
     </div>
 
     <div class="col-md-3">
-        <label class="form-label">T? kh�a</label>
+        <label class="form-label">Keyword</label>
         <input name="keyword"
                class="form-control"
                value="@Model.Keyword"
-               placeholder="M� / T�n h? so" />
+               placeholder="Code / Title" />
     </div>
 
     <div class="col-12 text-end">
         <button class="btn btn-primary">
-            <i class="fa-solid fa-filter me-1"></i>�p d?ng
+            <i class="fa-solid fa-filter me-1"></i>Apply
         </button>
     </div>
 </form>
@@ -151,13 +151,13 @@
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>M� HS</th>
-                    <th>T�n h? so</th>
-                    <th>Ngu?i g?i</th>
-                    <th>Ng�y n?p</th>
-                    <th>�on v?</th>
-                    <th>Tr?ng th�i</th>
-                    <th class="text-end">Thao t�c</th>
+                    <th>Code</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Date</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -165,7 +165,7 @@
                 {
                     <tr>
                         <td colspan="7" class="text-center text-muted py-4">
-                            Kh�ng c� d? li?u
+                            No data available
                         </td>
                     </tr>
                 }
@@ -182,19 +182,19 @@
                             <td>
                                 @if (item.Status == "Approved")
                                 {
-                                    <span class="badge bg-success">�� duy?t</span>
+                                    <span class="badge bg-success">Approved</span>
                                 }
                                 else if (item.Status == "Rejected")
                                 {
-                                    <span class="badge bg-danger">T? ch?i</span>
+                                    <span class="badge bg-danger">Rejected</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-warning text-dark">�ang x? l�</span>
+                                    <span class="badge bg-warning text-dark">Pending</span>
                                 }
                             </td>
                             <td class="text-end">
-                                <a href="/SciTech/Port/Approve/@item.Id" class="btn btn-sm btn-outline-primary" title="Xem chi ti?t">
+                                <a href="/SciTech/Port/Approve/@item.Id" class="btn btn-sm btn-outline-primary" title="View Details">
                                     <i class="fas fa-eye"></i>
                                 </a>
                             </td>
@@ -212,7 +212,7 @@
             var end = Math.Min(Model.CurrentPage * 5, Model.TotalItems);
         }
         <small class="text-muted">
-            Hi?n th? @start�@end / @Model.TotalItems h? so
+            Showing @start-@end / @Model.TotalItems initiatives
         </small>
 
         <nav>
@@ -242,4 +242,3 @@
         </nav>
     </div>
 </div>
-

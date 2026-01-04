@@ -1,16 +1,16 @@
-@model IdeaTrack.Areas.SciTech.Controllers.AuditStatistics
+﻿@model IdeaTrack.Areas.SciTech.Controllers.AuditStatistics
 @{
-    ViewData["Title"] = "Thống kê nhật ký";
+    ViewData["Title"] = "Audit Log Statistics";
     Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">
-            <i class="fas fa-chart-bar text-primary me-2"></i>Thống Kê Nhật Ký
+            <i class="fas fa-chart-bar text-primary me-2"></i>Audit Log Statistics
         </h2>
         <a asp-action="Index" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Quay lại
+            <i class="fas fa-arrow-left me-1"></i>Back
         </a>
     </div>
 
@@ -20,7 +20,7 @@
             <div class="card border-0 shadow-sm bg-primary text-white">
                 <div class="card-body text-center">
                     <h3 class="display-4 fw-bold">@Model.TotalLogs.ToString("N0")</h3>
-                    <p class="mb-0">Tổng bản ghi</p>
+                    <p class="mb-0">Total Records</p>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
             <div class="card border-0 shadow-sm bg-success text-white">
                 <div class="card-body text-center">
                     <h3 class="display-4 fw-bold">@Model.LogsToday.ToString("N0")</h3>
-                    <p class="mb-0">Hôm nay</p>
+                    <p class="mb-0">Today</p>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
             <div class="card border-0 shadow-sm bg-info text-white">
                 <div class="card-body text-center">
                     <h3 class="display-4 fw-bold">@Model.LogsThisWeek.ToString("N0")</h3>
-                    <p class="mb-0">Tuần này</p>
+                    <p class="mb-0">This Week</p>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
         <div class="col-md-4">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-light">
-                    <h6 class="mb-0"><i class="fas fa-bolt me-1"></i>Top Hành động</h6>
+                    <h6 class="mb-0"><i class="fas fa-bolt me-1"></i>Top Actions</h6>
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
@@ -67,7 +67,7 @@
         <div class="col-md-4">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-light">
-                    <h6 class="mb-0"><i class="fas fa-database me-1"></i>Top Bảng dữ liệu</h6>
+                    <h6 class="mb-0"><i class="fas fa-database me-1"></i>Top Tables</h6>
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">
@@ -87,7 +87,7 @@
         <div class="col-md-4">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-light">
-                    <h6 class="mb-0"><i class="fas fa-users me-1"></i>Người dùng tích cực</h6>
+                    <h6 class="mb-0"><i class="fas fa-users me-1"></i>Active Users</h6>
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush">

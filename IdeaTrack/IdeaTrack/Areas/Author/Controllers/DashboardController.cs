@@ -1,4 +1,4 @@
-using IdeaTrack.Areas.Author.ViewModels;
+﻿using IdeaTrack.Areas.Author.ViewModels;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -48,7 +48,7 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 var viewModel = new AuthorDashboardViewModel
                 {
-                    UserName = currentUser?.FullName ?? "Giảng viên",
+                    UserName = currentUser?.FullName ?? "Giang vien",
                     RecentInitiatives = recentInitiatives,
                     DraftCount = allInitiatives.Count(i => i.Status == InitiativeStatus.Draft),
                     SubmittedCount = allInitiatives.Count(i => i.Status == InitiativeStatus.Pending),
@@ -62,8 +62,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang Dashboard");
-                TempData["ErrorMessage"] = "Không thể tải dữ liệu Dashboard. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang Dashboard");
+                TempData["ErrorMessage"] = "Khong the tai du lieu Dashboard. Vui long thu lai sau.";
                 
                 // Return empty view model to prevent crash
                 var emptyViewModel = new AuthorDashboardViewModel

@@ -1,4 +1,4 @@
-using IdeaTrack.Areas.SciTech.Models;
+﻿using IdeaTrack.Areas.SciTech.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -85,7 +85,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 {
                     // Update
                     var boardInDb = await _context.Boards.FindAsync(model.Id);
-                    if (boardInDb == null) return Json(new { success = false, message = "Không tìm thấy hội đồng" });
+                    if (boardInDb == null) return Json(new { success = false, message = "Council not found" });
 
                     boardInDb.BoardName = model.BoardName;
                     boardInDb.FiscalYear = model.FiscalYear;
@@ -109,7 +109,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Include(b => b.Members)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
-            if (board == null) return Json(new { success = false, message = "Hội đồng không tồn tại" });
+            if (board == null) return Json(new { success = false, message = "Council does not exist" });
 
             // Remove members first to avoid DB constraint errors
             if (board.Members != null && board.Members.Any())
@@ -127,7 +127,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         public async Task<IActionResult> RemoveMember(int memberId)
         {
             var member = await _context.BoardMembers.FindAsync(memberId);
-            if (member == null) return Json(new { success = false, message = "Không tìm thấy thành viên" });
+            if (member == null) return Json(new { success = false, message = "Member not found" });
 
             _context.BoardMembers.Remove(member);
             await _context.SaveChangesAsync();
@@ -142,7 +142,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             var exists = await _context.BoardMembers
                 .AnyAsync(m => m.BoardId == boardId && m.UserId == userId);
 
-            if (exists) return Json(new { success = false, message = "Nhân sự này đã có trong hội đồng." });
+            if (exists) return Json(new { success = false, message = "This personnel is already in the council." });
 
             var member = new BoardMember
             {
@@ -166,7 +166,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
                 if (member == null)
                 {
-                    return Json(new { success = false, message = "Không tìm thấy thành viên" });
+                    return Json(new { success = false, message = "Member not found" });
                 }
 
                 member.Role = (BoardRole)role;

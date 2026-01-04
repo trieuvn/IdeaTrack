@@ -1,4 +1,4 @@
-namespace IdeaTrack.Areas.Author.ViewModels
+﻿namespace IdeaTrack.Areas.Author.ViewModels
 {
     using IdeaTrack.Models;
     using Microsoft.AspNetCore.Http;

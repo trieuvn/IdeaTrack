@@ -1,6 +1,6 @@
-@model List<IdeaTrack.Models.ViewModels.TopAuthorItem>
+﻿@model List<IdeaTrack.Models.ViewModels.TopAuthorItem>
 @{
-    ViewData["Title"] = "Top Tác Giả";
+    ViewData["Title"] = "Top Authors";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var periods = ViewBag.Periods as List<IdeaTrack.Models.ViewModels.PeriodSelectItem>;
     var selectedPeriodId = ViewBag.SelectedPeriodId as int?;
@@ -9,7 +9,7 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-success mb-0">
-            <i class="fas fa-user-graduate me-2"></i>Top Tác Giả
+            <i class="fas fa-user-graduate me-2"></i>Top Authors
         </h2>
         <form method="get" class="d-flex gap-2">
             <select name="periodId" class="form-select" style="width: 250px" onchange="this.form.submit()">
@@ -18,7 +18,7 @@
                     @foreach (var period in periods)
                     {
                         <option value="@period.Id" selected="@(period.Id == selectedPeriodId)">
-                            @period.Name @(period.IsActive ? "(Hiện tại)" : "")
+                            @period.Name @(period.IsActive ? "(Current)" : "")
                         </option>
                     }
                 }
@@ -34,13 +34,13 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th style="width: 60px">Hạng</th>
-                                <th>Tác giả</th>
-                                <th>Đơn vị</th>
-                                <th class="text-center">Tổng SK</th>
-                                <th class="text-center">Được duyệt</th>
-                                <th class="text-end">Tổng điểm</th>
-                                <th class="text-end">Điểm TB</th>
+                                <th style="width: 60px">Rank</th>
+                                <th>Author</th>
+                                <th>Department</th>
+                                <th class="text-center">Total</th>
+                                <th class="text-center">Approved</th>
+                                <th class="text-end">Total Score</th>
+                                <th class="text-end">Avg Score</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,7 +89,7 @@
             {
                 <div class="text-center py-5 text-muted">
                     <i class="fas fa-users fa-4x mb-3"></i>
-                    <p>Chưa có dữ liệu xếp hạng</p>
+                    <p>No ranking data available</p>
                 </div>
             }
         </div>
@@ -97,7 +97,7 @@
 
     <div class="mt-4 text-center">
         <a asp-action="Index" class="btn btn-outline-primary">
-            <i class="fas fa-arrow-left me-2"></i>Quay lại
+            <i class="fas fa-arrow-left me-2"></i>Back
         </a>
     </div>
 </div>

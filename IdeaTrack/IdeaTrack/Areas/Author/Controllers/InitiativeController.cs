@@ -1,4 +1,4 @@
-using IdeaTrack.Areas.Author.ViewModels;
+﻿using IdeaTrack.Areas.Author.ViewModels;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Services;
@@ -71,8 +71,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải chi tiết sáng kiến id {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Không thể tải chi tiết sáng kiến. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai chi tiet sang kien id {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Khong the tai chi tiet sang kien. Vui long thu lai sau.";
                 return RedirectToAction(nameof(History));
             }
         }
@@ -103,8 +103,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang tạo sáng kiến");
-                TempData["ErrorMessage"] = "Không thể tải form tạo sáng kiến. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang tao sang kien");
+                TempData["ErrorMessage"] = "Khong the tai form tao sang kien. Vui long thu lai sau.";
                 return RedirectToAction(nameof(History));
             }
         }
@@ -181,7 +181,7 @@ namespace IdeaTrack.Areas.Author.Controllers
                     _context.InitiativeAuthorships.Add(authorship);
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation("Sáng kiến {InitiativeCode} được tạo thành công bởi user {UserId}", initiative.InitiativeCode, initiative.CreatorId);
+                    _logger.LogInformation("Sang kien {InitiativeCode} duoc tao thanh cong boi user {UserId}", initiative.InitiativeCode, initiative.CreatorId);
 
                     // Handle file uploads using Service
                     if (viewModel.UploadedFiles != null && viewModel.UploadedFiles.Count > 0)
@@ -192,31 +192,31 @@ namespace IdeaTrack.Areas.Author.Controllers
                         }
                         catch (Exception uploadEx)
                         {
-                            _logger.LogError(uploadEx, "Lỗi khi xử lý file uploads cho sáng kiến {InitiativeId}", initiative.Id);
-                            TempData["WarningMessage"] = "Sáng kiến đã được tạo nhưng có lỗi khi tải lên một số file.";
+                            _logger.LogError(uploadEx, "Error khi xu ly file uploads cho sang kien {InitiativeId}", initiative.Id);
+                            TempData["WarningMessage"] = "Sang kien da duoc tao nhung co loi khi tai len mot so file.";
                         }
                     }
 
                     if (action == "Submit")
                     {
-                        TempData["SuccessMessage"] = "Sáng kiến đã được nộp thành công và đang chờ duyệt!";
+                        TempData["SuccessMessage"] = "Sang kien da duoc nop thanh cong va dang cho duyet!";
                         return RedirectToAction(nameof(History));
                     }
                     else
                     {
-                        TempData["SuccessMessage"] = "Sáng kiến đã được lưu nháp!";
+                        TempData["SuccessMessage"] = "Sang kien da duoc luu nhap!";
                         return RedirectToAction(nameof(Detail), new { id = initiative.Id });
                     }
                 }
                 catch (DbUpdateException dbEx)
                 {
-                    _logger.LogError(dbEx, "Lỗi database khi tạo sáng kiến");
-                    ModelState.AddModelError("", "Lỗi khi lưu sáng kiến vào cơ sở dữ liệu. Vui lòng kiểm tra lại thông tin và thử lại.");
+                    _logger.LogError(dbEx, "Error database khi tao sang kien");
+                    ModelState.AddModelError("", "Error khi luu sang kien vao co so du lieu. Vui long kiem tra lai thong tin va thu lai.");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Lỗi không xác định khi tạo sáng kiến");
-                    ModelState.AddModelError("", $"Lỗi khi lưu sáng kiến: {ex.Message}");
+                    _logger.LogError(ex, "Error khong xac dinh khi tao sang kien");
+                    ModelState.AddModelError("", $"Error khi luu sang kien: {ex.Message}");
                 }
             }
 
@@ -234,8 +234,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải lại dropdowns");
-                ModelState.AddModelError("", "Lỗi khi tải dữ liệu form. Vui lòng tải lại trang.");
+                _logger.LogError(ex, "Error khi tai lai dropdowns");
+                ModelState.AddModelError("", "Error khi tai du lieu form. Vui long tai lai trang.");
             }
 
             return View(viewModel);
@@ -288,8 +288,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang chỉnh sửa sáng kiến {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Không thể tải form chỉnh sửa. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang chinh sua sang kien {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Khong the tai form chinh sua. Vui long thu lai sau.";
                 return RedirectToAction(nameof(History));
             }
         }
@@ -322,7 +322,7 @@ namespace IdeaTrack.Areas.Author.Controllers
                     if (existingInitiative == null)
                     {
                         _logger.LogWarning("Initiative with id {InitiativeId} not found for update", id);
-                        TempData["ErrorMessage"] = "Không tìm thấy sáng kiến để cập nhật.";
+                        TempData["ErrorMessage"] = "Khong tim thay sang kien de cap nhat.";
                         return RedirectToAction(nameof(History));
                     }
 
@@ -372,37 +372,37 @@ namespace IdeaTrack.Areas.Author.Controllers
                         }
                         catch (Exception uploadEx)
                         {
-                            _logger.LogError(uploadEx, "Lỗi khi xử lý file uploads cho sáng kiến {InitiativeId}", existingInitiative.Id);
-                            TempData["WarningMessage"] = "Sáng kiến đã được cập nhật nhưng có lỗi khi tải lên một số file.";
+                            _logger.LogError(uploadEx, "Error khi xu ly file uploads cho sang kien {InitiativeId}", existingInitiative.Id);
+                            TempData["WarningMessage"] = "Sang kien da duoc cap nhat nhung co loi khi tai len mot so file.";
                         }
                     }
 
                     await _context.SaveChangesAsync();
-                    _logger.LogInformation("Sáng kiến {InitiativeId} được cập nhật thành công", id);
+                    _logger.LogInformation("Sang kien {InitiativeId} duoc cap nhat thanh cong", id);
 
                     if (action == "Submit")
                     {
-                        TempData["SuccessMessage"] = "Sáng kiến đã được nộp thành công và đang chờ duyệt!";
+                        TempData["SuccessMessage"] = "Sang kien da duoc nop thanh cong va dang cho duyet!";
                         return RedirectToAction(nameof(History));
                     }
 
-                    TempData["SuccessMessage"] = "Sáng kiến đã được cập nhật thành công!";
+                    TempData["SuccessMessage"] = "Sang kien da duoc cap nhat thanh cong!";
                     return RedirectToAction(nameof(Detail), new { id = existingInitiative.Id });
                 }
                 catch (DbUpdateConcurrencyException concurrencyEx)
                 {
-                    _logger.LogError(concurrencyEx, "Lỗi concurrency khi cập nhật sáng kiến {InitiativeId}", id);
-                    ModelState.AddModelError("", "Sáng kiến đã được thay đổi bởi người dùng khác. Vui lòng tải lại trang và thử lại.");
+                    _logger.LogError(concurrencyEx, "Error concurrency khi cap nhat sang kien {InitiativeId}", id);
+                    ModelState.AddModelError("", "Sang kien da duoc thay doi boi nguoi dung khac. Vui long tai lai trang va thu lai.");
                 }
                 catch (DbUpdateException dbEx)
                 {
-                    _logger.LogError(dbEx, "Lỗi database khi cập nhật sáng kiến {InitiativeId}", id);
-                    ModelState.AddModelError("", "Lỗi khi cập nhật sáng kiến vào cơ sở dữ liệu. Vui lòng kiểm tra lại thông tin và thử lại.");
+                    _logger.LogError(dbEx, "Error database khi cap nhat sang kien {InitiativeId}", id);
+                    ModelState.AddModelError("", "Error khi cap nhat sang kien vao co so du lieu. Vui long kiem tra lai thong tin va thu lai.");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Lỗi không xác định khi cập nhật sáng kiến {InitiativeId}", id);
-                    ModelState.AddModelError("", $"Lỗi khi lưu sáng kiến: {ex.Message}");
+                    _logger.LogError(ex, "Error khong xac dinh khi cap nhat sang kien {InitiativeId}", id);
+                    ModelState.AddModelError("", $"Error khi luu sang kien: {ex.Message}");
                 }
             }
 
@@ -420,8 +420,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải lại dropdowns");
-                ModelState.AddModelError("", "Lỗi khi tải dữ liệu form. Vui lòng tải lại trang.");
+                _logger.LogError(ex, "Error khi tai lai dropdowns");
+                ModelState.AddModelError("", "Error khi tai du lieu form. Vui long tai lai trang.");
             }
 
             return View(viewModel);
@@ -438,7 +438,7 @@ namespace IdeaTrack.Areas.Author.Controllers
                 if (initiative == null)
                 {
                     _logger.LogWarning("Initiative with id {InitiativeId} not found for submission", id);
-                    TempData["ErrorMessage"] = "Không tìm thấy sáng kiến để nộp.";
+                    TempData["ErrorMessage"] = "Khong tim thay sang kien de nop.";
                     return RedirectToAction(nameof(History));
                 }
 
@@ -467,27 +467,27 @@ namespace IdeaTrack.Areas.Author.Controllers
                     
                     await _context.SaveChangesAsync();
                     
-                    _logger.LogInformation("Sáng kiến {InitiativeId} được nộp thành công", id);
-                    TempData["SuccessMessage"] = "Sáng kiến đã được nộp thành công và đang chờ duyệt!";
+                    _logger.LogInformation("Sang kien {InitiativeId} duoc nop thanh cong", id);
+                    TempData["SuccessMessage"] = "Sang kien da duoc nop thanh cong va dang cho duyet!";
                 }
                 else
                 {
                     _logger.LogWarning("Attempt to submit non-draft initiative {InitiativeId} with status {Status}", id, initiative.Status);
-                    TempData["WarningMessage"] = "Sáng kiến này đã được nộp trước đó.";
+                    TempData["WarningMessage"] = "Sang kien nay da duoc nop truoc do.";
                 }
 
                 return RedirectToAction(nameof(History));
             }
             catch (DbUpdateException dbEx)
             {
-                _logger.LogError(dbEx, "Lỗi database khi nộp sáng kiến {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Lỗi khi nộp sáng kiến. Vui lòng thử lại sau.";
+                _logger.LogError(dbEx, "Error database khi nop sang kien {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Error khi nop sang kien. Vui long thu lai sau.";
                 return RedirectToAction(nameof(Detail), new { id });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi không xác định khi nộp sáng kiến {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Lỗi khi nộp sáng kiến. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khong xac dinh khi nop sang kien {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Error khi nop sang kien. Vui long thu lai sau.";
                 return RedirectToAction(nameof(Detail), new { id });
             }
         }
@@ -503,7 +503,7 @@ namespace IdeaTrack.Areas.Author.Controllers
                 if (initiative == null)
                 {
                     _logger.LogWarning("Initiative with id {InitiativeId} not found for deletion", id);
-                    TempData["ErrorMessage"] = "Không tìm thấy sáng kiến để xóa.";
+                    TempData["ErrorMessage"] = "Khong tim thay sang kien de xoa.";
                     return RedirectToAction(nameof(History));
                 }
 
@@ -521,21 +521,21 @@ namespace IdeaTrack.Areas.Author.Controllers
                 _context.Initiatives.Remove(initiative);
                 await _context.SaveChangesAsync();
                 
-                _logger.LogInformation("Sáng kiến {InitiativeId} ({InitiativeCode}) đã được xóa", id, initiative.InitiativeCode);
-                TempData["SuccessMessage"] = "Sáng kiến đã được xóa thành công.";
+                _logger.LogInformation("Sang kien {InitiativeId} ({InitiativeCode}) da duoc xoa", id, initiative.InitiativeCode);
+                TempData["SuccessMessage"] = "Sang kien da duoc xoa thanh cong.";
 
                 return RedirectToAction(nameof(History));
             }
             catch (DbUpdateException dbEx)
             {
-                _logger.LogError(dbEx, "Lỗi database khi xóa sáng kiến {InitiativeId} (có thể do ràng buộc khóa ngoại)", id);
-                TempData["ErrorMessage"] = "Không thể xóa sáng kiến này vì có dữ liệu liên quan. Vui lòng liên hệ quản trị viên.";
+                _logger.LogError(dbEx, "Error database khi xoa sang kien {InitiativeId} (co the do rang buoc khoa ngoai)", id);
+                TempData["ErrorMessage"] = "Khong the xoa sang kien nay vi co du lieu lien quan. Vui long lien he quan tri vien.";
                 return RedirectToAction(nameof(Detail), new { id });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi không xác định khi xóa sáng kiến {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Lỗi khi xóa sáng kiến. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khong xac dinh khi xoa sang kien {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Error khi xoa sang kien. Vui long thu lai sau.";
                 return RedirectToAction(nameof(Detail), new { id });
             }
         }
@@ -561,8 +561,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang lịch sử sáng kiến");
-                TempData["ErrorMessage"] = "Không thể tải danh sách sáng kiến. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang lich su sang kien");
+                TempData["ErrorMessage"] = "Khong the tai danh sach sang kien. Vui long thu lai sau.";
                 return View(new List<Initiative>());
             }
         }
@@ -580,7 +580,7 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 if (userId == 0)
                 {
-                    TempData["ErrorMessage"] = "Vui lòng đăng nhập để thực hiện chức năng này.";
+                    TempData["ErrorMessage"] = "Vui long dang nhap de thuc hien chuc nang nay.";
                     return RedirectToAction(nameof(History));
                 }
 
@@ -588,20 +588,20 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 if (newDraft == null)
                 {
-                    TempData["ErrorMessage"] = "Không thể tạo bản sao. Vui lòng thử lại sau.";
+                    TempData["ErrorMessage"] = "Khong the tao ban sao. Vui long thu lai sau.";
                     return RedirectToAction(nameof(Detail), new { id });
                 }
 
                 _logger.LogInformation("User {UserId} copied Initiative {OriginalId} to new draft {NewId}", 
                     userId, id, newDraft.Id);
                 
-                TempData["SuccessMessage"] = $"Đã tạo bản sao sáng kiến thành công! Mã mới: {newDraft.InitiativeCode}";
+                TempData["SuccessMessage"] = $"Da tao ban sao sang kien thanh cong! Ma moi: {newDraft.InitiativeCode}";
                 return RedirectToAction(nameof(Edit), new { id = newDraft.Id });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi sao chép sáng kiến {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Lỗi khi tạo bản sao. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi sao chep sang kien {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Error khi tao ban sao. Vui long thu lai sau.";
                 return RedirectToAction(nameof(Detail), new { id });
             }
         }
@@ -630,7 +630,7 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 if (!isAuthorOrCreator)
                 {
-                    TempData["ErrorMessage"] = "Bạn không có quyền quản lý đồng tác giả của sáng kiến này.";
+                    TempData["ErrorMessage"] = "Ban khong co quyen quan ly dong tac gia cua sang kien nay.";
                     return RedirectToAction(nameof(History));
                 }
 
@@ -673,7 +673,7 @@ namespace IdeaTrack.Areas.Author.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error loading co-authors for initiative {Id}", id);
-                TempData["ErrorMessage"] = "Lỗi khi tải danh sách đồng tác giả.";
+                TempData["ErrorMessage"] = "Error khi tai danh sach dong tac gia.";
                 return RedirectToAction(nameof(Detail), new { id });
             }
         }
@@ -697,7 +697,7 @@ namespace IdeaTrack.Areas.Author.Controllers
                 // Check if already a co-author
                 if (initiative.Authorships.Any(a => a.AuthorId == newCoAuthorId))
                 {
-                    TempData["WarningMessage"] = "Người dùng này đã là đồng tác giả.";
+                    TempData["WarningMessage"] = "Nguoi dung nay da la dong tac gia.";
                     return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
                 }
 
@@ -715,14 +715,14 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 var user = await _context.Users.FindAsync(newCoAuthorId);
                 _logger.LogInformation("Added co-author {UserId} to initiative {InitiativeId}", newCoAuthorId, initiativeId);
-                TempData["SuccessMessage"] = $"Đã thêm {user?.FullName} làm đồng tác giả!";
+                TempData["SuccessMessage"] = $"Da them {user?.FullName} lam dong tac gia!";
 
                 return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding co-author to initiative {Id}", initiativeId);
-                TempData["ErrorMessage"] = "Lỗi khi thêm đồng tác giả.";
+                TempData["ErrorMessage"] = "Error khi them dong tac gia.";
                 return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
             }
         }
@@ -745,7 +745,7 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 if (authorship.IsCreator)
                 {
-                    TempData["ErrorMessage"] = "Không thể xóa tác giả chính của sáng kiến.";
+                    TempData["ErrorMessage"] = "Khong the xoa tac gia chinh cua sang kien.";
                     return RedirectToAction(nameof(CoAuthors), new { id = authorship.InitiativeId });
                 }
 
@@ -756,14 +756,14 @@ namespace IdeaTrack.Areas.Author.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Removed co-author {AuthorshipId} from initiative {InitiativeId}", authorshipId, initiativeId);
-                TempData["SuccessMessage"] = $"Đã xóa {authorName} khỏi danh sách đồng tác giả!";
+                TempData["SuccessMessage"] = $"Da xoa {authorName} khoi danh sach dong tac gia!";
 
                 return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error removing co-author {AuthorshipId}", authorshipId);
-                TempData["ErrorMessage"] = "Lỗi khi xóa đồng tác giả.";
+                TempData["ErrorMessage"] = "Error khi xoa dong tac gia.";
                 return RedirectToAction(nameof(History));
             }
         }
@@ -789,16 +789,16 @@ namespace IdeaTrack.Areas.Author.Controllers
                 {
                     new ProgressStepViewModel
                     {
-                        StepName = "Tạo sáng kiến",
-                        Description = "Sáng kiến được tạo và lưu nháp",
+                        StepName = "Tao sang kien",
+                        Description = "Sang kien duoc tao va luu nhap",
                         CompletedAt = initiative.CreatedAt,
                         IsCompleted = true,
                         IconClass = "fas fa-file-alt"
                     },
                     new ProgressStepViewModel
                     {
-                        StepName = "Nộp sáng kiến",
-                        Description = "Gửi sáng kiến để chờ phê duyệt",
+                        StepName = "Nop sang kien",
+                        Description = "Gui sang kien de cho phe duyet",
                         CompletedAt = initiative.SubmittedDate,
                         IsCompleted = initiative.SubmittedDate.HasValue,
                         IsCurrent = initiative.Status == InitiativeStatus.Pending,
@@ -806,8 +806,8 @@ namespace IdeaTrack.Areas.Author.Controllers
                     },
                     new ProgressStepViewModel
                     {
-                        StepName = "Phê duyệt OST",
-                        Description = "Phòng KHCN xem xét và phê duyệt sáng kiến",
+                        StepName = "Approve OST",
+                        Description = "Phong KHCN xem xet va phe duyet sang kien",
                         IsCompleted = initiative.Status == InitiativeStatus.Faculty_Approved || 
                                       initiative.Status == InitiativeStatus.Evaluating ||
                                       initiative.Status == InitiativeStatus.Approved ||
@@ -817,18 +817,18 @@ namespace IdeaTrack.Areas.Author.Controllers
                     },
                     new ProgressStepViewModel
                     {
-                        StepName = "Chấm điểm Hội đồng",
-                        Description = $"Các thành viên hội đồng đánh giá (Đã có {initiative.Assignments?.Count(a => a.Status == AssignmentStatus.Completed)} đánh giá)",
+                        StepName = "Cham diem Hoi dong",
+                        Description = $"Cac thanh vien hoi dong danh gia (Da co {initiative.Assignments?.Count(a => a.Status == AssignmentStatus.Completed)} danh gia)",
                         IsCompleted = initiative.Status == InitiativeStatus.Approved || initiative.Status == InitiativeStatus.Rejected,
                         IsCurrent = initiative.Status == InitiativeStatus.Evaluating || initiative.Status == InitiativeStatus.Faculty_Approved,
                         IconClass = "fas fa-users"
                     },
                     new ProgressStepViewModel
                     {
-                        StepName = "Kết quả cuối cùng",
+                        StepName = "Ket qua cuoi cung",
                         Description = initiative.FinalResult != null 
-                            ? $"Điểm: {initiative.FinalResult.AverageScore:F2} - {initiative.FinalResult.ChairmanDecision}"
-                            : "Chờ quyết định của Chủ tịch Hội đồng",
+                            ? $"Diem: {initiative.FinalResult.AverageScore:F2} - {initiative.FinalResult.ChairmanDecision}"
+                            : "Cho quyet dinh cua Chu tich Hoi dong",
                         IsCompleted = initiative.Status == InitiativeStatus.Approved || initiative.Status == InitiativeStatus.Rejected,
                         IsCurrent = false,
                         IconClass = initiative.Status == InitiativeStatus.Approved ? "fas fa-trophy" : 
@@ -850,7 +850,7 @@ namespace IdeaTrack.Areas.Author.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error loading progress for initiative {Id}", id);
-                TempData["ErrorMessage"] = "Lỗi khi tải tiến trình sáng kiến.";
+                TempData["ErrorMessage"] = "Error khi tai tien trinh sang kien.";
                 return RedirectToAction(nameof(Detail), new { id });
             }
         }
@@ -859,15 +859,15 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             return status switch
             {
-                InitiativeStatus.Draft => "Bản nháp",
-                InitiativeStatus.Pending => "Chờ duyệt",
-                InitiativeStatus.Faculty_Approved => "Đã duyệt (Khoa)",
-                InitiativeStatus.Evaluating => "Đang chấm điểm",
-                InitiativeStatus.Re_Evaluating => "Đang chấm lại",
-                InitiativeStatus.Revision_Required => "Yêu cầu chỉnh sửa",
-                InitiativeStatus.Pending_Final => "Chờ quyết định",
-                InitiativeStatus.Approved => "Đã phê duyệt",
-                InitiativeStatus.Rejected => "Từ chối",
+                InitiativeStatus.Draft => "Ban nhap",
+                InitiativeStatus.Pending => "Cho duyet",
+                InitiativeStatus.Faculty_Approved => "Da duyet (Khoa)",
+                InitiativeStatus.Evaluating => "Dang cham diem",
+                InitiativeStatus.Re_Evaluating => "Dang cham lai",
+                InitiativeStatus.Revision_Required => "Request Revision",
+                InitiativeStatus.Pending_Final => "Cho quyet dinh",
+                InitiativeStatus.Approved => "Da phe duyet",
+                InitiativeStatus.Rejected => "Reject",
                 _ => status.ToString()
             };
         }
@@ -887,7 +887,7 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 if (initiative.Status != InitiativeStatus.Draft)
                 {
-                    TempData["ErrorMessage"] = "Chỉ có thể nộp sáng kiến ở trạng thái nháp.";
+                    TempData["ErrorMessage"] = "Chi co the nop sang kien o trang thai nhap.";
                     return RedirectToAction(nameof(Detail), new { id });
                 }
 
@@ -904,7 +904,7 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 if (!periods.Any())
                 {
-                    TempData["ErrorMessage"] = "Không có đợt sáng kiến nào đang mở. Vui lòng liên hệ quản trị viên.";
+                    TempData["ErrorMessage"] = "Khong co dot sang kien nao dang mo. Vui long lien he quan tri vien.";
                     return RedirectToAction(nameof(Detail), new { id });
                 }
 
@@ -931,7 +931,7 @@ namespace IdeaTrack.Areas.Author.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error loading submit form for initiative {Id}", id);
-                TempData["ErrorMessage"] = "Lỗi khi tải form nộp sáng kiến.";
+                TempData["ErrorMessage"] = "Error khi tai form nop sang kien.";
                 return RedirectToAction(nameof(Detail), new { id });
             }
         }
@@ -961,7 +961,7 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 if (initiative.Status != InitiativeStatus.Draft)
                 {
-                    TempData["ErrorMessage"] = "Sáng kiến này đã được nộp trước đó.";
+                    TempData["ErrorMessage"] = "Sang kien nay da duoc nop truoc do.";
                     return RedirectToAction(nameof(History));
                 }
 
@@ -976,13 +976,13 @@ namespace IdeaTrack.Areas.Author.Controllers
                 _logger.LogInformation("Initiative {Id} submitted with Period {PeriodId} and Category {CategoryId}",
                     initiative.Id, vm.PeriodId, vm.CategoryId);
 
-                TempData["SuccessMessage"] = "Sáng kiến đã được nộp thành công và đang chờ duyệt!";
+                TempData["SuccessMessage"] = "Sang kien da duoc nop thanh cong va dang cho duyet!";
                 return RedirectToAction(nameof(History));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error submitting initiative {Id}", vm.InitiativeId);
-                TempData["ErrorMessage"] = "Lỗi khi nộp sáng kiến. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "Error khi nop sang kien. Vui long thu lai.";
                 return RedirectToAction(nameof(Detail), new { id = vm.InitiativeId });
             }
         }

@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace IdeaTrack.Models
 {
     /// <summary>
-    /// Sáng kiến - Thực thể trung tâm của hệ thống
+    /// Sang kien - Thuc the trung tam cua he thong
     /// </summary>
     public class Initiative
     {
         public int Id { get; set; }
         
         [Required]
-        public string InitiativeCode { get; set; } = ""; // Mã sáng kiến duy nhất
+        public string InitiativeCode { get; set; } = ""; // Ma sang kien duy nhat
         
         [Required]
         public string Title { get; set; } = "";
@@ -19,7 +19,7 @@ namespace IdeaTrack.Models
         public string? Description { get; set; }
         
         [Column(TypeName = "decimal(18,2)")]
-        [Range(0, 100000000000, ErrorMessage = "Kinh phí phải là số dương và hợp lệ")]
+        [Range(0, 100000000000, ErrorMessage = "Budget must be a valid positive number")]
         public decimal Budget { get; set; }
         
         public InitiativeStatus Status { get; set; } = InitiativeStatus.Draft;
@@ -27,48 +27,48 @@ namespace IdeaTrack.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? SubmittedDate { get; set; }
         
-        // ===== HỖ TRỢ CHẤM ĐIỂM ĐA VÒNG =====
+        // ===== HO TRO CHAM DIEM DA VONG =====
         /// <summary>
-        /// Vòng chấm hiện tại (mặc định là 1)
-        /// Tăng lên khi PKHCN yêu cầu chấm lại
+        /// Vong cham hien tai (mac dinh la 1)
+        /// Tang len khi PKHCN yeu cau cham lai
         /// </summary>
         public int CurrentRound { get; set; } = 1;
         
-        // ===== QUAN HỆ VỚI NGƯỜI TẠO (Creator) =====
+        // ===== QUAN HE VOI NGUOI TAO (Creator) =====
         /// <summary>
-        /// Người tạo bản đầu tiên (primary author)
-        /// Được giữ lại để tương thích ngược
+        /// Nguoi tao ban dau tien (primary author)
+        /// Duoc giu lai de tuong thich nguoc
         /// </summary>
         public int CreatorId { get; set; }
         [ForeignKey("CreatorId")]
         public virtual ApplicationUser Creator { get; set; } = null!;
         
-        // ===== QUAN HỆ VỚI PHÒNG BAN/KHOA =====
+        // ===== QUAN HE VOI PHONG BAN/KHOA =====
         public int DepartmentId { get; set; }
         [ForeignKey("DepartmentId")]
         public virtual Department Department { get; set; } = null!;
         
-        // ===== QUAN HỆ VỚI DANH MỤC =====
+        // ===== QUAN HE VOI DANH MUC =====
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public virtual InitiativeCategory Category { get; set; } = null!;
         
-        // ===== QUAN HỆ VỚI ĐỢT SÁNG KIẾN =====
+        // ===== QUAN HE VOI DOT SANG KIEN =====
         /// <summary>
-        /// Đợt sáng kiến mà bài này được nộp vào
-        /// Null khi còn ở trạng thái Draft
+        /// Dot sang kien ma bai nay duoc nop vao
+        /// Null khi con o trang thai Draft
         /// </summary>
         public int? PeriodId { get; set; }
         [ForeignKey("PeriodId")]
         public virtual InitiativePeriod? Period { get; set; }
         
-        // ===== KẾT QUẢ CUỐI CÙNG =====
+        // ===== KET QUA CUOI CUNG =====
         public virtual FinalResult? FinalResult { get; set; }
         
         // ===== NAVIGATION COLLECTIONS =====
         
         /// <summary>
-        /// Danh sách đồng tác giả (N-N relationship)
+        /// Danh sach dong tac gia (N-N relationship)
         /// </summary>
         public virtual ICollection<InitiativeAuthorship> Authorships { get; set; } = new List<InitiativeAuthorship>();
         

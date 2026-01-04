@@ -1,213 +1,197 @@
+ï»¿@{
+    ViewData["Title"] = "Track Revisions";
+}
 
+<!-- PAGE HEADER -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Request & Track Revisions</h2>
+        <p class="text-muted mb-0">
+            Manage revision requests and track resubmission progress from Lecturers.
+        </p>
+    </div>
+    <button class="btn btn-primary mt-3 mt-md-0">
+        <i class="fa-solid fa-plus me-1"></i> New Request
+    </button>
+</div>
 
-    <!-- PAGE HEADER -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">Yêu c?u & Theo dõi Ch?nh s?a</h2>
-            <p class="text-muted mb-0">
-                Qu?n lý các yêu c?u tr? v? cho Gi?ng viên và theo dõi ti?n d? n?p l?i.
-            </p>
+<div class="row g-4">
+    <!-- LEFT COLUMN: SEND REQUEST -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm sticky-top" style="top:90px">
+            <div class="card-header fw-bold bg-white py-3">
+                <i class="fa-solid fa-pen-to-square me-1"></i> Send Revision Request
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Select Initiative</label>
+                        <select class="form-select shadow-none">
+                            <option>-- Select Initiative --</option>
+                            <option>AI Application in Medicine â€“ Lecturer Nguyen Van A</option>
+                            <option>NLP Application â€“ Lecturer Tran Thi B</option>
+                            <option>Blockchain in Edu â€“ Lecturer Le Van C</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Recipient</label>
+                        <div class="d-flex align-items-center bg-light rounded p-2">
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2"
+                                 style="width:32px;height:32px">
+                                GV
+                            </div>
+                            <span class="text-muted fst-italic">
+                                Select an initiative to view lecturer
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Request Content
+                        </label>
+                        <textarea class="form-control shadow-none" rows="4"
+                                  placeholder="Enter detailed revision requirements..."></textarea>
+                        <small class="text-muted">
+                            Required before approval.
+                        </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Resubmission Deadline</label>
+                        <input type="date" class="form-control shadow-none">
+                    </div>
+
+                    <button class="btn btn-primary w-100">
+                        <i class="fa-solid fa-paper-plane me-1"></i> Send Request
+                    </button>
+                </form>
+            </div>
         </div>
-        <button class="btn btn-primary mt-3 mt-md-0">
-            <i class="fa-solid fa-plus me-1"></i>T?o yêu c?u m?i
-        </button>
     </div>
 
-    <div class="row g-4">
-
-        <!-- LEFT COLUMN: SEND REQUEST -->
-        <div class="col-lg-4">
-
-            <div class="card shadow-sm sticky-top" style="top:90px">
-                <div class="card-header fw-bold">
-                    <i class="fa-solid fa-pen-to-square me-1"></i>
-                    G?i yêu c?u ch?nh s?a
+    <!-- RIGHT COLUMN -->
+    <div class="col-lg-8">
+        <!-- STATS -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <small class="text-muted text-uppercase fw-bold">Editing</small>
+                        <h3 class="fw-bold text-warning mb-0 mt-2">4</h3>
+                    </div>
                 </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <small class="text-muted text-uppercase fw-bold">Resubmitted</small>
+                        <h3 class="fw-bold text-primary mb-0 mt-2">2</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body">
+                        <small class="text-muted text-uppercase fw-bold">Completed</small>
+                        <h3 class="fw-bold text-success mb-0 mt-2">12</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <div class="card-body">
-                    <form>
+        <!-- PROGRESS LIST -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center py-3">
+                <span>Request History</span>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-secondary active">All</button>
+                    <button class="btn btn-outline-secondary">Pending</button>
+                    <button class="btn btn-outline-secondary">Resubmitted</button>
+                </div>
+            </div>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Ch?n h? so</label>
-                            <select class="form-select">
-                                <option>-- Ch?n h? so --</option>
-                                <option>AI trong Y t? – GV. Nguy?n Van A</option>
-                                <option>NLP ?ng d?ng – GV. Tr?n Th? B</option>
-                                <option>Blockchain – GV. Lê Van C</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Gi?ng viên nh?n</label>
-                            <div class="d-flex align-items-center bg-light rounded p-2">
-                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-2"
-                                     style="width:32px;height:32px">
-                                    GV
-                                </div>
-                                <span class="text-muted fst-italic">
-                                    Ch?n h? so d? hi?n th?
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                N?i dung yêu c?u ch?nh s?a
-                            </label>
-                            <textarea class="form-control" rows="4"
-                                      placeholder="Nh?p chi ti?t các m?c c?n ch?nh s?a..."></textarea>
+            <ul class="list-group list-group-flush">
+                <!-- ITEM 1 -->
+                <li class="list-group-item p-3">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p class="fw-semibold text-dark mb-1">
+                                Topic: Optimization of Renewable Energy
+                            </p>
                             <small class="text-muted">
-                                B?t bu?c tru?c khi chuy?n h? so lên PKHCN
+                                <i class="fa-solid fa-user me-1"></i>Lecturer: Tran Minh Tuan
+                                <span class="mx-2">|</span>
+                                <i class="fa-regular fa-clock me-1"></i>2 hours ago
                             </small>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">H?n n?p l?i</label>
-                            <input type="date" class="form-control">
+                        <div class="text-end">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                Resubmitted
+                            </span><br>
+                            <a href="#" class="small text-decoration-none mt-1 d-inline-block">
+                                View Details
+                            </a>
                         </div>
+                    </div>
+                    <div class="alert alert-primary mt-3 mb-0 py-2 small border-0 bg-primary-subtle text-dark">
+                        <span class="fw-bold text-primary">Note from Lecturer:</span>
+                        Added section 3.2 as requested by the Faculty Council.
+                    </div>
+                </li>
 
-                        <button class="btn btn-primary w-100">
-                            <i class="fa-solid fa-paper-plane me-1"></i>
-                            G?i yêu c?u ch?nh s?a
-                        </button>
+                <!-- ITEM 2 -->
+                <li class="list-group-item p-3">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <p class="fw-semibold mb-1">
+                                Topic: Faculty Innovation Registration
+                            </p>
+                            <small class="text-muted">
+                                <i class="fa-solid fa-user me-1"></i>Lecturer: Nguyen Thi Lan
+                                <span class="mx-2">|</span>
+                                <i class="fa-regular fa-clock me-1"></i>1 day ago
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle">
+                                Editing
+                            </span><br>
+                            <button class="btn btn-link btn-sm px-0 text-muted text-decoration-none">
+                                <i class="fa-regular fa-bell me-1"></i>Remind
+                            </button>
+                        </div>
+                    </div>
+                    <div class="alert alert-light border mt-3 mb-0 py-2 small text-muted">
+                        <span class="fw-bold text-dark">Your Request:</span>
+                        Missing evidence for 2023 impact assessment.
+                    </div>
+                </li>
+            </ul>
 
-                    </form>
-                </div>
+            <!-- PAGINATION -->
+            <div class="card-footer bg-white d-flex justify-content-between align-items-center py-3">
+                <small class="text-muted">
+                    Showing 1â€“2 of 6 files
+                </small>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#"><i class="fa-solid fa-chevron-left"></i></a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#"><i class="fa-solid fa-chevron-right"></i></a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-
         </div>
-
-        <!-- RIGHT COLUMN -->
-        <div class="col-lg-8">
-
-            <!-- STATS -->
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <small class="text-muted">Ðang ch?nh s?a</small>
-                            <h3 class="fw-bold text-warning mb-0">4</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <small class="text-muted">Ðã n?p l?i</small>
-                            <h3 class="fw-bold text-primary mb-0">2</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <small class="text-muted">Hoàn thành tháng này</small>
-                            <h3 class="fw-bold text-success mb-0">12</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PROGRESS LIST -->
-            <div class="card shadow-sm">
-                <div class="card-header fw-bold d-flex justify-content-between align-items-center">
-                    <span>Ti?n d? h? so</span>
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-secondary active">T?t c?</button>
-                        <button class="btn btn-outline-secondary">Ch?nh s?a</button>
-                        <button class="btn btn-outline-secondary">N?p l?i</button>
-                    </div>
-                </div>
-
-                <ul class="list-group list-group-flush">
-
-                    <!-- ITEM 1 -->
-                    <li class="list-group-item">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="fw-semibold text-primary mb-1">
-                                    Ð? tài: T?i uu hóa nang lu?ng tái t?o
-                                </p>
-                                <small class="text-muted">
-                                    <i class="fa-solid fa-user me-1"></i>GV: Tr?n Minh Tu?n
-                                    <span class="mx-2">|</span>
-                                    <i class="fa-regular fa-clock me-1"></i>2 gi? tru?c
-                                </small>
-                            </div>
-                            <div class="text-end">
-                                <span class="badge bg-primary-subtle text-primary">
-                                    Ðã n?p l?i
-                                </span><br>
-                                <a href="#" class="small text-decoration-none">
-                                    Xem chi ti?t
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-primary mt-3 mb-0 py-2 small">
-                            <strong>Ghi chú t? GV:</strong>
-                            Ðã b? sung m?c 3.2 theo yêu c?u c?a Khoa.
-                        </div>
-                    </li>
-
-                    <!-- ITEM 2 -->
-                    <li class="list-group-item">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <p class="fw-semibold mb-1">
-                                    H? so: Ðang ký sáng ki?n c?p Khoa
-                                </p>
-                                <small class="text-muted">
-                                    <i class="fa-solid fa-user me-1"></i>GV: Nguy?n Th? Lan
-                                    <span class="mx-2">|</span>
-                                    <i class="fa-regular fa-clock me-1"></i>1 ngày tru?c
-                                </small>
-                            </div>
-                            <div class="text-end">
-                                <span class="badge bg-warning-subtle text-warning">
-                                    Ðang ch?nh s?a
-                                </span><br>
-                                <button class="btn btn-link btn-sm px-0">
-                                    Nh?c nh?
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-warning mt-3 mb-0 py-2 small">
-                            <strong>Yêu c?u:</strong>
-                            Thi?u minh ch?ng ?nh hu?ng c?a sáng ki?n nam 2023.
-                        </div>
-                    </li>
-
-                </ul>
-
-                <!-- PAGINATION -->
-                <div class="card-footer d-flex justify-content-between align-items-center">
-                    <small class="text-muted">
-                        Hi?n th? 1–2 trong 6 h? so
-                    </small>
-                    <nav>
-                        <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item">
-                                <a class="page-link" href="#">‹</a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">›</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
+</div>

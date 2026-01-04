@@ -1,11 +1,11 @@
-@model IdeaTrack.Areas.SciTech.Models.CategoryCreateEditVM
+﻿@model IdeaTrack.Areas.SciTech.Models.CategoryCreateEditVM
 
 <main class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="mb-4">
                 <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-outline-secondary rounded-pill">
-                    <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Quay lại
+                    <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Back
                 </a>
             </div>
 
@@ -13,7 +13,7 @@
                 <div class="card-header bg-info text-white">
                     <h5 class="mb-0">
                         <span class="material-icons align-middle me-2">edit</span>
-                        Chỉnh sửa Danh mục
+                        Edit Category
                     </h5>
                 </div>
                 <div class="card-body p-4">
@@ -25,59 +25,59 @@
                         <div class="row g-3 mb-3">
                             <div class="col-md-8">
                                 <label asp-for="Name" class="form-label fw-medium">
-                                    Tên danh mục <span class="text-danger">*</span>
+                                    Category Name <span class="text-danger">*</span>
                                 </label>
                                 <input asp-for="Name" class="form-control" />
                                 <span asp-validation-for="Name" class="text-danger small"></span>
                             </div>
                             <div class="col-md-4">
                                 <label asp-for="PeriodId" class="form-label fw-medium">
-                                    Thuộc đợt <span class="text-danger">*</span>
+                                    Period <span class="text-danger">*</span>
                                 </label>
                                 <select asp-for="PeriodId" asp-items="Model.Periods" class="form-select">
-                                    <option value="">-- Chọn đợt --</option>
+                                    <option value="">-- Select period --</option>
                                 </select>
                                 <span asp-validation-for="PeriodId" class="text-danger small"></span>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Description" class="form-label fw-medium">Mô tả</label>
+                            <label asp-for="Description" class="form-label fw-medium">Description</label>
                             <textarea asp-for="Description" class="form-control" rows="2"></textarea>
                         </div>
 
                         <hr class="my-4" />
 
                         <div class="alert alert-warning">
-                            <strong><span class="material-icons align-middle me-1" style="font-size: 18px;">warning</span> Lưu ý:</strong>
-                            Thay đổi Hội đồng/Tiêu chí chỉ ảnh hưởng đến các sáng kiến mới được duyệt. Các sáng kiến đã phân công sẽ giữ nguyên.
+                            <strong><span class="material-icons align-middle me-1" style="font-size: 18px;">warning</span> Note:</strong>
+                            Changing Board/Criteria only affects newly approved initiatives. Already assigned initiatives will remain unchanged.
                         </div>
 
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <label asp-for="BoardId" class="form-label fw-medium">
                                     <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">groups</span>
-                                    Hội đồng chấm
+                                    Evaluation Board
                                 </label>
                                 <select asp-for="BoardId" asp-items="Model.Boards" class="form-select">
-                                    <option value="">-- Chưa cấu hình --</option>
+                                    <option value="">-- Not configured --</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="TemplateId" class="form-label fw-medium">
                                     <span class="material-icons align-middle me-1 text-warning" style="font-size: 18px;">grade</span>
-                                    Bộ tiêu chí chấm
+                                    Criteria Template
                                 </label>
                                 <select asp-for="TemplateId" asp-items="Model.Templates" class="form-select">
-                                    <option value="">-- Chưa cấu hình --</option>
+                                    <option value="">-- Not configured --</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-outline-secondary">Hủy</a>
+                            <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-outline-secondary">Cancel</a>
                             <button type="submit" class="btn btn-primary px-4">
-                                <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Lưu thay đổi
+                                <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Save Changes
                             </button>
                         </div>
                     </form>

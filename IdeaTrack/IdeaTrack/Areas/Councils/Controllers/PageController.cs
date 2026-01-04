@@ -43,7 +43,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 ProgressPercentage = totalAssigned == 0 ? 0 : (int)Math.Round((decimal)completed / totalAssigned * 100, 0, MidpointRounding.AwayFromZero)
             };
 
-            vm.UpNextList = await baseQuery
+            vm.Assignments = await baseQuery
                 .Where(a => a.Status != AssignmentStatus.Completed)
                 .Include(a => a.Initiative)
                     .ThenInclude(i => i.Category)
@@ -79,7 +79,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
                     Timestamp = a.DecisionDate ?? a.AssignedDate,
                     DueDate = a.DueDate,
                     Status = a.Status,
-                    Score = a.EvaluationDetails.Select(d => (decimal?)d.ScoreGiven).Sum()
+                    Score = a.EvaluationDetails.Select(d => (decimal?)d.ScoreGiven).Sum(),
+                    Description = $"Evaluated {a.Initiative.InitiativeCode}: {a.Initiative.Title}"
                 })
                 .Take(3)
                 .ToListAsync();
@@ -167,7 +168,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
             var vm = new AssignedListVM
             {
                 Keyword = keyword,
-                Status = "Completed", // History chỉ hiển thị đã hoàn thành
+                Status = "Completed", // History chi hien thi da hoan thanh
                 SortOrder = string.IsNullOrWhiteSpace(sortOrder) ? "Newest" : sortOrder,
                 CurrentPage = page <= 0 ? 1 : page
             };
@@ -299,7 +300,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
             // Check if assignment is locked (already submitted)
             if (assignment.Status == AssignmentStatus.Completed)
             {
-                TempData["ErrorMessage"] = "Bạn không thể chỉnh sửa vì kết quả đã được nộp và khóa.";
+                TempData["ErrorMessage"] = "Ban khong the chinh sua vi ket qua da duoc nop va khoa.";
                 return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
             }
 
@@ -313,14 +314,14 @@ namespace IdeaTrack.Areas.Councils.Controllers
             {
                 if (!templateCriteria.TryGetValue(item.CriteriaId, out var criteria))
                 {
-                    ModelState.AddModelError(string.Empty, "Tiêu chí không hợp lệ.");
+                    ModelState.AddModelError(string.Empty, "Tieu chi khong hop le.");
                     continue;
                 }
 
                 if (item.ScoreGiven < 0 || item.ScoreGiven > criteria.MaxScore)
                 {
                     ModelState.AddModelError($"CriteriaItems[{vm.CriteriaItems.IndexOf(item)}].ScoreGiven",
-                        $"Điểm phải từ 0 đến {criteria.MaxScore}.");
+                        $"Diem phai tu 0 den {criteria.MaxScore}.");
                 }
             }
 
@@ -390,12 +391,12 @@ namespace IdeaTrack.Areas.Councils.Controllers
             await _db.SaveChangesAsync();
             
             TempData["SuccessMessage"] = string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase)
-                ? "Đã nộp kết quả chấm điểm thành công! Điểm số đã được khóa."
-                : "Đã lưu bản nháp thành công!";
+                ? "Da nop ket qua cham diem thanh cong! Diem so da duoc khoa."
+                : "Da luu ban nhap thanh cong!";
 
             if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
             {
-                // Sau khi nộp kết quả, quay về danh sách
+                // Sau khi nop ket qua, quay ve danh sach
                 return RedirectToAction(nameof(AssignedInitiatives), new { status = "Assigned" });
             }
 

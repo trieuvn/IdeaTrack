@@ -1,15 +1,15 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdeaTrack.Models
 {
     /// <summary>
-    /// Đợt sáng kiến - Quản lý các đợt nộp bài trong một năm học
-    /// Tại một thời điểm chỉ có 1 đợt được mở (IsActive = true)
+    /// Dot sang kien - Quan ly cac dot nop bai trong mot nam hoc
+    /// Tai mot thoi diem chi co 1 dot duoc mo (IsActive = true)
     /// </summary>
     public class InitiativePeriod
     {
         public int Id { get; set; }
-        public string Name { get; set; } = ""; // VD: "Đợt 1 - 2024-2025"
+        public string Name { get; set; } = ""; // VD: "Dot 1 - 2024-2025"
         public string? Description { get; set; }
         
         public int AcademicYearId { get; set; }

@@ -1,4 +1,4 @@
-@{
+ï»¿@{
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
 <!DOCTYPE html>
@@ -39,7 +39,7 @@
 
     <div class="app-layout">
 
-        <!-- SIDEBAR - C?u trúc gi?ng Home -->
+        <!-- SIDEBAR - C?u trÃºc gi?ng Home -->
         <aside class="sidebar">
 
             <!-- LOGIN -->
@@ -59,7 +59,7 @@
 
                 <a asp-area="Author" asp-controller="Initiative" asp-action="Create"
                    class="@(currentAction == "Create" ? "active" : "")">
-                    <span class="material-icons">add_circle</span> T?o sáng ki?n
+                    <span class="material-icons">add_circle</span> T?o sÃ¡ng ki?n
                 </a>
 
                 <a asp-area="Author" asp-controller="Initiative" asp-action="History"
@@ -69,12 +69,12 @@
 
                 <a asp-area="Author" asp-controller="HomePage" asp-action="DailyReport"
                    class="@(currentAction == "DailyReport" ? "active" : "")">
-                    <span class="material-icons">insights</span> Th?ng kê
+                    <span class="material-icons">insights</span> Th?ng kÃª
                 </a>
 
                 <a asp-area="Author" asp-controller="HomePage" asp-action="Setting"
                    class="@(currentAction == "Setting" ? "active" : "")">
-                    <span class="material-icons">settings</span> Cài d?t
+                    <span class="material-icons">settings</span> CÃ i d?t
                 </a>
 
                 <hr class="my-2" />

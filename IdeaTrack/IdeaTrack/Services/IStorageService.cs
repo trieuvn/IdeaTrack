@@ -1,4 +1,4 @@
-namespace IdeaTrack.Services
+﻿namespace IdeaTrack.Services
 {
     /// <summary>
     /// Generic service interface for file storage operations

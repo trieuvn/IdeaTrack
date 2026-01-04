@@ -1,4 +1,4 @@
-using IdeaTrack.Data;
+﻿using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;

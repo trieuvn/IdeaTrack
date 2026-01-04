@@ -1,16 +1,16 @@
-@model IdeaTrack.Areas.SciTech.Models.CategoryListVM
+﻿@model IdeaTrack.Areas.SciTech.Models.CategoryListVM
 
 <main class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold mb-1">
                 <span class="material-icons align-middle me-2 text-success">category</span>
-                Quản lý Danh mục Sáng kiến
+                Initiative Category Management
             </h2>
-            <p class="text-muted mb-0">Cấu hình Danh mục - Hội đồng - Bộ tiêu chí (cơ chế 1-1-1)</p>
+            <p class="text-muted mb-0">Configure Category - Board - Criteria Template (1-1-1 mechanism)</p>
         </div>
         <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-success rounded-pill px-4">
-            <span class="material-icons align-middle me-1" style="font-size: 18px;">add</span> Thêm danh mục
+            <span class="material-icons align-middle me-1" style="font-size: 18px;">add</span> Add Category
         </a>
     </div>
 
@@ -34,11 +34,11 @@
         <div class="card-body py-3">
             <form method="get" class="row align-items-center">
                 <div class="col-auto">
-                    <label class="form-label fw-medium mb-0">Lọc theo đợt:</label>
+                    <label class="form-label fw-medium mb-0">Filter by period:</label>
                 </div>
                 <div class="col-md-4">
                     <select name="periodId" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Tất cả đợt --</option>
+                        <option value="">-- All periods --</option>
                         @foreach (var period in Model.Periods)
                         {
                             <option value="@period.Value" selected="@(period.Value == Model.SelectedPeriodId.ToString())">@period.Text</option>
@@ -61,12 +61,12 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Tên danh mục</th>
-                            <th>Đợt</th>
-                            <th>Hội đồng chấm</th>
-                            <th>Bộ tiêu chí</th>
-                            <th class="text-center">Sáng kiến</th>
-                            <th class="text-end pe-4">Thao tác</th>
+                            <th class="ps-4">Category Name</th>
+                            <th>Period</th>
+                            <th>Evaluation Board</th>
+                            <th>Criteria Template</th>
+                            <th class="text-center">Initiatives</th>
+                            <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,7 +90,7 @@
                                         }
                                         else
                                         {
-                                            <span class="text-muted">Chưa cấu hình</span>
+                                            <span class="text-muted">Not configured</span>
                                         }
                                     </td>
                                     <td>
@@ -100,7 +100,7 @@
                                         }
                                         else
                                         {
-                                            <span class="text-muted">Chưa cấu hình</span>
+                                            <span class="text-muted">Not configured</span>
                                         }
                                     </td>
                                     <td class="text-center">
@@ -114,7 +114,7 @@
                                             @if (item.InitiativeCount == 0)
                                             {
                                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
-                                                      onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này?');">
+                                                      onsubmit="return confirm('Are you sure you want to delete this category?');">
                                                     @Html.AntiForgeryToken()
                                                     <button type="submit" class="btn btn-sm btn-outline-danger">
                                                         <span class="material-icons" style="font-size: 16px;">delete</span>
@@ -131,9 +131,9 @@
                             <tr>
                                 <td colspan="6" class="text-center py-5 text-muted">
                                     <span class="material-icons mb-2" style="font-size: 48px;">folder_off</span>
-                                    <p class="mb-0">Chưa có danh mục nào trong đợt này.</p>
+                                    <p class="mb-0">No categories found in this period.</p>
                                     <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-sm btn-outline-success mt-2">
-                                        <span class="material-icons align-middle" style="font-size: 16px;">add</span> Thêm danh mục
+                                        <span class="material-icons align-middle" style="font-size: 16px;">add</span> Add Category
                                     </a>
                                 </td>
                             </tr>
@@ -146,7 +146,7 @@
 
     <div class="mt-4">
         <a asp-controller="Period" asp-action="Index" class="btn btn-outline-secondary">
-            <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Quay lại Quản lý Đợt
+            <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Back to Period Management
         </a>
     </div>
 </main>

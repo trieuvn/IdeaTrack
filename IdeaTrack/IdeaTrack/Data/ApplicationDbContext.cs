@@ -12,13 +12,13 @@ namespace IdeaTrack.Data
         }
 
         // ========================================
-        // NHÓM HỆ THỐNG & NGƯỜI DÙNG
+        // NHOM HE THONG & NGUOI DUNG
         // ========================================
         public DbSet<Department> Departments { get; set; }
         public DbSet<SystemAuditLog> SystemAuditLogs { get; set; }
 
         // ========================================
-        // NHÓM NĂM HỌC & ĐỢT SÁNG KIẾN
+        // NHOM NAM HOC & DOT SANG KIEN
         // ========================================
         public DbSet<AcademicYear> AcademicYears { get; set; }
         public DbSet<InitiativePeriod> InitiativePeriods { get; set; }
@@ -26,7 +26,7 @@ namespace IdeaTrack.Data
         public DbSet<ReferenceForm> ReferenceForms { get; set; }
 
         // ========================================
-        // NHÓM SÁNG KIẾN & ĐỒNG TÁC GIẢ
+        // NHOM SANG KIEN & DONG TAC GIA
         // ========================================
         public DbSet<Initiative> Initiatives { get; set; }
         public DbSet<InitiativeAuthorship> InitiativeAuthorships { get; set; }
@@ -34,7 +34,7 @@ namespace IdeaTrack.Data
         public DbSet<RevisionRequest> RevisionRequests { get; set; }
 
         // ========================================
-        // NHÓM TIÊU CHÍ & CHẤM ĐIỂM
+        // NHOM TIEU CHI & CHAM DIEM
         // ========================================
         public DbSet<EvaluationTemplate> EvaluationTemplates { get; set; }
         public DbSet<EvaluationCriteria> EvaluationCriteria { get; set; }
@@ -44,7 +44,7 @@ namespace IdeaTrack.Data
         public DbSet<EvaluationDetail> EvaluationDetails { get; set; }
 
         // ========================================
-        // NHÓM KẾT QUẢ
+        // NHOM KET QUA
         // ========================================
         public DbSet<FinalResult> FinalResults { get; set; }
 
@@ -53,7 +53,7 @@ namespace IdeaTrack.Data
             base.OnModelCreating(builder);
 
             // ========================================
-            // 1. CẤU HÌNH ĐỘ CHÍNH XÁC CHO DECIMAL
+            // 1. CAU HINH DO CHINH XAC CHO DECIMAL
             // ========================================
             foreach (var property in builder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetProperties())
@@ -64,7 +64,7 @@ namespace IdeaTrack.Data
             }
 
             // ========================================
-            // 2. CẤU HÌNH QUAN HỆ NĂM HỌC -> ĐỢT SÁNG KIẾN
+            // 2. CAU HINH QUAN HE NAM HOC -> DOT SANG KIEN
             // ========================================
             builder.Entity<InitiativePeriod>()
                 .HasOne(p => p.AcademicYear)
@@ -73,7 +73,7 @@ namespace IdeaTrack.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // ========================================
-            // 3. CẤU HÌNH QUAN HỆ ĐỢT -> DANH MỤC
+            // 3. CAU HINH QUAN HE DOT -> DANH MUC
             // ========================================
             builder.Entity<InitiativeCategory>()
                 .HasOne(c => c.Period)
@@ -96,7 +96,7 @@ namespace IdeaTrack.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             // ========================================
-            // 4. CẤU HÌNH QUAN HỆ SÁNG KIẾN
+            // 4. CAU HINH QUAN HE SANG KIEN
             // ========================================
             
             // Initiative -> Creator (User)
@@ -128,36 +128,36 @@ namespace IdeaTrack.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // ========================================
-            // 5. CẤU HÌNH QUAN HỆ ĐỒNG TÁC GIẢ (N-N)
+            // 5. CAU HINH QUAN HE DONG TAC GIA (N-N)
             // ========================================
             builder.Entity<InitiativeAuthorship>()
                 .HasOne(a => a.Initiative)
                 .WithMany(i => i.Authorships)
                 .HasForeignKey(a => a.InitiativeId)
-                .OnDelete(DeleteBehavior.Cascade); // Xóa sáng kiến -> xóa authorships
+                .OnDelete(DeleteBehavior.Cascade); // Delete sang kien -> xoa authorships
 
             builder.Entity<InitiativeAuthorship>()
                 .HasOne(a => a.Author)
                 .WithMany(u => u.Authorships)
                 .HasForeignKey(a => a.AuthorId)
-                .OnDelete(DeleteBehavior.Restrict); // Không xóa user nếu còn authorships
+                .OnDelete(DeleteBehavior.Restrict); // Khong xoa user neu con authorships
 
-            // Unique constraint: Một user chỉ có 1 authorship record cho mỗi initiative
+            // Unique constraint: Mot user chi co 1 authorship record cho moi initiative
             builder.Entity<InitiativeAuthorship>()
                 .HasIndex(a => new { a.InitiativeId, a.AuthorId })
                 .IsUnique();
 
             // ========================================
-            // 6. CẤU HÌNH QUAN HỆ BIỂU MẪU
+            // 6. CAU HINH QUAN HE BIEU MAU
             // ========================================
             builder.Entity<ReferenceForm>()
                 .HasOne(r => r.Period)
                 .WithMany(p => p.ReferenceForms)
                 .HasForeignKey(r => r.PeriodId)
-                .OnDelete(DeleteBehavior.Cascade); // Xóa đợt -> xóa biểu mẫu
+                .OnDelete(DeleteBehavior.Cascade); // Delete dot -> xoa bieu mau
 
             // ========================================
-            // 7. CẤU HÌNH QUAN HỆ PHÂN CÔNG CHẤM ĐIỂM
+            // 7. CAU HINH QUAN HE PHAN CONG CHAM DIEM
             // ========================================
             builder.Entity<InitiativeAssignment>()
                 .HasOne(a => a.Member)
@@ -184,7 +184,7 @@ namespace IdeaTrack.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             // ========================================
-            // 8. CẤU HÌNH QUAN HỆ CHI TIẾT CHẤM ĐIỂM
+            // 8. CAU HINH QUAN HE CHI TIET CHAM DIEM
             // ========================================
             builder.Entity<EvaluationDetail>()
                 .HasOne(ed => ed.Assignment)
@@ -199,7 +199,7 @@ namespace IdeaTrack.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // ========================================
-            // 9. CẤU HÌNH QUAN HỆ YÊU CẦU SỬA ĐỔI
+            // 9. CAU HINH QUAN HE YEU CAU SUA DOI
             // ========================================
             builder.Entity<RevisionRequest>()
                 .HasOne(r => r.Initiative)
@@ -208,7 +208,7 @@ namespace IdeaTrack.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // ========================================
-            // 10. CẤU HÌNH QUAN HỆ KẾT QUẢ CUỐI CÙNG (1-1)
+            // 10. CAU HINH QUAN HE KET QUA CUOI CUNG (1-1)
             // ========================================
             builder.Entity<FinalResult>()
                 .HasOne(r => r.Initiative)
@@ -216,7 +216,7 @@ namespace IdeaTrack.Data
                 .HasForeignKey<FinalResult>(r => r.InitiativeId);
 
             // ========================================
-            // 11. CẤU HÌNH QUAN HỆ THÀNH VIÊN HỘI ĐỒNG
+            // 11. CAU HINH QUAN HE THANH VIEN HOI DONG
             // ========================================
             builder.Entity<BoardMember>()
                 .HasOne(bm => bm.User)
@@ -231,7 +231,7 @@ namespace IdeaTrack.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             // ========================================
-            // 12. CẤU HÌNH UNIQUE INDEX
+            // 12. CAU HINH UNIQUE INDEX
             // ========================================
             builder.Entity<Initiative>()
                 .HasIndex(i => i.InitiativeCode)

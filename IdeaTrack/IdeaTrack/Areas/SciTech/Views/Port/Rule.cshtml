@@ -1,15 +1,14 @@
-@using IdeaTrack.Models
+ï»¿@using IdeaTrack.Models
 @model List<EvaluationCriteria>
 
 <div class="card shadow-sm mb-4">
     <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
         <div>
-            <h2 class="fw-bold mb-1">Qu?n lý Tiêu chí & Tr?ng s?</h2>
+            <h2 class="fw-bold mb-1">Criteria & Weight Management</h2>
             <p class="text-muted mb-0">
-                T?ng tr?ng s? c?a t?t c? tiêu chí ph?i b?ng <strong>100%</strong> d? kích ho?t ch?m di?m.
+                The total weight of all criteria must equal <span class="fw-bold text-dark">100%</span> to enable scoring.
             </p>
         </div>
-        
     </div>
 </div>
 
@@ -18,7 +17,7 @@
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
-                <small class="text-muted">T?ng s? tiêu chí</small>
+                <small class="text-muted text-uppercase">Total Criteria</small>
                 <h3 class="fw-bold mb-0" id="totalCriteria">0</h3>
             </div>
         </div>
@@ -28,8 +27,8 @@
         <div class="card shadow-sm border-success">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <small class="text-muted">T?ng tr?ng s?</small>
-                    <span class="badge bg-success" id="weightStatus">H?p l?</span>
+                    <small class="text-muted">Total Weight</small>
+                    <span class="badge bg-success" id="weightStatus">Valid</span>
                 </div>
                 <h3 class="fw-bold text-success mb-0">
                     <span id="totalWeight">0</span>%
@@ -44,9 +43,9 @@
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
-                <small class="text-muted">C?p nh?t l?n cu?i</small>
-                <h6 class="fw-bold mb-0">@DateTime.Now.ToString("HH:mm – dd/MM/yyyy")</h6>
-                <small class="text-muted">b?i Admin</small>
+                <small class="text-muted">Last Updated</small>
+                <h6 class="fw-bold mb-0">@DateTime.Now.ToString("HH:mm - dd/MM/yyyy")</h6>
+                <small class="text-muted">by Admin</small>
             </div>
         </div>
     </div>
@@ -54,53 +53,46 @@
 
 <!-- ACTION -->
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="fw-bold mb-0">Danh sách tiêu chí</h5>
+    <h5 class="fw-bold mb-0">Criteria List</h5>
     <button type="button" class="btn btn-primary" onclick="addCriteriaRow()">
-        <i class="fa-solid fa-circle-plus me-1"></i>Thêm tiêu chí
+        <i class="fa-solid fa-circle-plus me-1"></i>Add Criteria
     </button>
 </div>
-<form asp-controller="SciTech"
-      asp-action="Rule"
-      method="post"
-      id="ruleForm">
-<!-- TABLE -->
-<div class="card shadow-sm mb-4">
-    <div class="table-responsive">
-        <table class="table align-middle mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th>Tên tiêu chí</th>
-                    <th>Mô t?</th>
-                    <th style="width:30%">Tr?ng s? (%)</th>
-                    <th class="text-end">Thao tác</th>
-                </tr>
-            </thead>
 
+<form asp-controller="SciTech" asp-action="Rule" method="post" id="ruleForm">
+    <!-- TABLE -->
+    <div class="card shadow-sm mb-4">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Criteria Name</th>
+                        <th>Description</th>
+                        <th style="width:30%">Weight (%)</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
                 <tbody id="criteriaTable">
                     @foreach (var item in Model)
                     {
                         <tr>
                             <td>
-                                @* Dùng name v?i ID d? Controller Dictionary nh?n di?n du?c *@
+                                @* Use name with ID for Controller Dictionary binding *@
                                 <input class="form-control form-control-sm"
                                        name="criteria[@item.Id].CriteriaName"
                                        value="@item.CriteriaName" />
                             </td>
-
                             <td>
                                 <input class="form-control form-control-sm"
                                        name="criteria[@item.Id].Description"
                                        value="@item.Description" />
                             </td>
-
                             <td>
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <strong class="text-primary">
+                                    <span class="text-primary fw-bold">
                                         <span class="weight-label">@item.MaxScore.ToString("F2")</span>%
-                                    </strong>
-
-                                    <input type="number"
-                                           lang="en-US"
+                                    </span>
+                                    <input type="number" lang="en-US"
                                            class="form-control form-control-sm text-center weight-input"
                                            style="width:70px"
                                            name="criteria[@item.Id].MaxScore"
@@ -108,14 +100,11 @@
                                            min="0" max="100" step="0.01"
                                            oninput="syncWeight(this)" />
                                 </div>
-
-                                <input type="range"
-                                       min="0" max="100" step="0.01"
+                                <input type="range" min="0" max="100" step="0.01"
                                        value="@item.MaxScore.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)"
                                        class="form-range weight-range"
                                        oninput="syncRange(this)" />
                             </td>
-
                             <td class="text-end">
                                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">
                                     <i class="fa-solid fa-trash"></i>
@@ -124,34 +113,33 @@
                         </tr>
                     }
                 </tbody>
-        </table>
+            </table>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <small class="text-muted">
+                Showing <span id="countRow">0</span> criteria
+            </small>
+            <a href="#" class="fw-semibold text-decoration-none">Restore Default</a>
+        </div>
     </div>
 
-    <div class="card-footer d-flex justify-content-between">
-        <small class="text-muted">
-            Hi?n th? <span id="countRow">0</span> tiêu chí
-        </small>
-        <a href="#" class="fw-semibold text-decoration-none">Khôi ph?c m?c d?nh</a>
+    <!-- PREVIEW -->
+    <div class="alert alert-secondary">
+        <i class="fa-solid fa-eye me-1"></i>
+        <span class="fw-bold">Scoring Formula:</span>
+        <span id="previewFormula"></span>
     </div>
-</div>
 
-<!-- PREVIEW -->
-<div class="alert alert-secondary">
-    <i class="fa-solid fa-eye me-1"></i>
-    <strong>Cách tính di?m:</strong>
-    <span id="previewFormula"></span>
-</div>
-
-<!-- FOOTER ACTION -->
-<div class="d-flex justify-content-end gap-3">
-    <button class="btn btn-outline-secondary">H?y</button>
+    <!-- FOOTER ACTION -->
+    <div class="d-flex justify-content-end gap-3">
+        <button class="btn btn-outline-secondary">Cancel</button>
         <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-floppy-disk me-1"></i>Luu thay d?i
+            <i class="fa-solid fa-floppy-disk me-1"></i>Save Changes
         </button>
-
-</div>
+    </div>
 </form>
-        <script>
+
+<script>
     let rowIndex = @Model.Count;
 
     /* =========================
@@ -161,22 +149,22 @@
         value = Number(value || 0);
         if (value < 0) return 0;
         if (value > 100) return 100;
-        return Number(value.toFixed(2)); // ép 2 ch? s? th?p phân
+        return Number(value.toFixed(2)); // 2 decimal places
     }
 
     /* =========================
        SYNC INPUT <-> RANGE
     ========================== */
-        function syncWeight(input) {
+    function syncWeight(input) {
         const td = input.closest("td");
         const range = td.querySelector(".weight-range");
         const label = td.querySelector(".weight-label");
 
-        // N?u ngu?i dùng xóa tr?ng ô thì coi nhu là 0
+        // If user clears the input, treat as 0
         let val = input.value.replace(',', '.');
         let value = Number(val || 0);
 
-        // Ch?n ngay l?p t?c n?u gõ quá 100
+        // Cap at 100 immediately
         if (value > 100) {
             value = 100;
             input.value = 100;
@@ -203,139 +191,115 @@
     /* =========================
        ADD / REMOVE ROW
     ========================== */
-        function addCriteriaRow() {
-        const table = document.getElementById("criteriaTable");
-        const nextId = getMaxId() + 1; // S? d?ng Max ID + 1 thay vì index
-
-        table.insertAdjacentHTML("beforeend", `
-        <tr>
-            <td>
-                <input class="form-control form-control-sm"
-                       name="criteria[${nextId}].CriteriaName"
-                       placeholder="Tên tiêu chí" />
-            </td>
-            <td>
-                <input class="form-control form-control-sm"
-                       name="criteria[${nextId}].Description"
-                       placeholder="Mô t?" />
-            </td>
-            <td>
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong class="text-primary">
-                        <span class="weight-label">0.00</span>%
-                    </strong>
-                        
-                <input type="number"
-                       lang="en-US"
-                       step="0.01"
-                       name="criteria[${nextId}].MaxScore"
-                       value="0"
-                       class="form-control form-control-sm text-center weight-input"
-                       style="width:70px"
-                       oninput="syncWeight(this)" />
-                </div>
-                <input type="range" value="0" step="0.01" class="form-range weight-range" oninput="syncRange(this)" />
-            </td>
-            <td class="text-end">
-                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-        `);
-
+    function addCriteriaRow() {
+        rowIndex++;
+        // Use a negative ID or special marker for new items if needed by controller
+        // For now using rowIndex as a temporary key
+        const newId = -rowIndex; 
+        
+        const html = `
+            <tr>
+                <td>
+                    <input class="form-control form-control-sm" name="criteria[${newId}].CriteriaName" placeholder="New Criteria" />
+                </td>
+                <td>
+                    <input class="form-control form-control-sm" name="criteria[${newId}].Description" placeholder="Description" />
+                </td>
+                <td>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-primary fw-bold">
+                            <span class="weight-label">0.00</span>%
+                        </span>
+                        <input type="number" lang="en-US" class="form-control form-control-sm text-center weight-input"
+                               style="width:70px" name="criteria[${newId}].MaxScore" value="0" min="0" max="100" step="0.01" oninput="syncWeight(this)" />
+                    </div>
+                    <input type="range" min="0" max="100" step="0.01" value="0" class="form-range weight-range" oninput="syncRange(this)" />
+                </td>
+                <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+        document.getElementById("criteriaTable").insertAdjacentHTML('beforeend', html);
         updateSummary();
     }
 
     function removeRow(btn) {
-        btn.closest("tr").remove();
-        updateSummary();
-    }
-
-    /* =========================
-       SYNC ALL ROWS ON PAGE LOAD
-    ========================== */
-    function syncAllRowsFromInput() {
-        document.querySelectorAll(".weight-input").forEach(input => {
-            const td = input.closest("td");
-            const range = td.querySelector(".weight-range");
-            const label = td.querySelector(".weight-label");
-            const value = clamp(input.value);
-
-            if (range) range.value = value;
-            if (label) label.innerText = value.toFixed(2);
-        });
+        if(confirm('Remove this criteria?')) {
+            btn.closest("tr").remove();
+            updateSummary();
+        }
     }
 
     /* =========================
        UPDATE SUMMARY
     ========================== */
-       function updateSummary() {
-        const inputs = document.querySelectorAll(".weight-input");
-        const count = inputs.length;
+    function updateSummary() {
+        const rows = document.querySelectorAll("#criteriaTable tr");
+        document.getElementById("countRow").innerText = rows.length;
+        document.getElementById("totalCriteria").innerText = rows.length;
 
-        let sum = 0;
-        inputs.forEach(x => {
-            // Thay th? d?u ph?y thành d?u ch?m d? JS tính toán dúng
-            let val = x.value.replace(',', '.');
-            sum += clamp(val);
+        let total = 0;
+        const inputs = document.querySelectorAll(".weight-input");
+        inputs.forEach(inp => {
+             let val = parseFloat(inp.value.replace(',', '.')); // Handle different decimal separators if needed
+             if(!isNaN(val)) total += val;
         });
 
-        const totalWeight = sum;
+        // Round to avoid float errors
+        total = Math.round(total * 100) / 100;
 
-        document.getElementById("totalCriteria").innerText = count;
-        document.getElementById("countRow").innerText = count;
-        document.getElementById("totalWeight").innerText = totalWeight.toFixed(2);
+        const totalEl = document.getElementById("totalWeight");
+        totalEl.innerText = total;
 
-        // C?p nh?t Progress Bar
-        const progress = document.getElementById("weightProgress");
-        const percent = Math.min(totalWeight, 100);
-        progress.style.width = percent + "%";
+        const statusEl = document.getElementById("weightStatus");
+        const progressEl = document.getElementById("weightProgress");
 
-        // Ð?i màu progress bar n?u vu?t quá 100
-        if (totalWeight > 100) {
-            progress.className = "progress-bar bg-danger";
+        progressEl.style.width = total + "%";
+
+        if (total === 100) {
+            statusEl.className = "badge bg-success";
+            statusEl.innerText = "Valid (100%)";
+            progressEl.className = "progress-bar bg-success";
+            document.getElementById("totalWeight").parentElement.classList.replace("text-danger", "text-success");
         } else {
-            progress.className = "progress-bar bg-success";
+            statusEl.className = "badge bg-danger";
+            statusEl.innerText = "Invalid (!= 100%)";
+            progressEl.className = "progress-bar bg-danger";
+            document.getElementById("totalWeight").parentElement.classList.replace("text-success", "text-danger");
         }
 
-        const valid = Math.abs(totalWeight - 100) < 0.01; // So sánh s? th?c
-        const weightStatus = document.getElementById("weightStatus");
-        weightStatus.innerText = valid ? "H?p l?" : "Chua h?p l?";
-        weightStatus.className = "badge " + (valid ? "bg-success" : "bg-danger");
-
-        document.getElementById("previewFormula").innerText =
-            [...document.querySelectorAll(".weight-label")]
-                .map(x => `(${x.innerText}%)`)
-                .join(" + ");
+        updateFormula();
     }
 
     /* =========================
-       INIT ON DOM CONTENT LOADED
+       UPDATE FORMULA PREVIEW
     ========================== */
+    function updateFormula() {
+         const rows = document.querySelectorAll("#criteriaTable tr");
+         let parts = [];
+         rows.forEach((row, idx) => {
+             const nameInput = row.querySelector("input[name*='CriteriaName']");
+             const weightInput = row.querySelector(".weight-input");
+             const name = nameInput ? nameInput.value : ("C" + (idx+1));
+             const weight = weightInput ? weightInput.value : 0;
+             if (weight > 0) {
+                 parts.push(`${weight}% * [${name || "Untitled"}]`);
+             }
+         });
+         
+         if (parts.length === 0) {
+             document.getElementById("previewFormula").innerText = "No criteria selected.";
+         } else {
+             document.getElementById("previewFormula").innerText = "Total Score = " + parts.join(" + ");
+         }
+    }
+
+    // Init
     document.addEventListener("DOMContentLoaded", () => {
-        syncAllRowsFromInput();
         updateSummary();
     });
 
-        function getMaxId() {
-        let max = 0;
-        document.querySelectorAll("#criteriaTable tr").forEach(row => {
-            const input = row.querySelector("input");
-            if (input) {
-                const name = input.getAttribute("name"); // Ví d?: criteria[5].CriteriaName
-                const match = name.match(/\[(\d+)\]/);
-                if (match) {
-                    const id = parseInt(match[1]);
-                    if (id > max) max = id;
-                }
-            }
-        });
-        return max;
-    }
-        function removeRow(btn) {
-        btn.closest("tr").remove();
-        updateSummary();
-    }
 </script>
-

@@ -1,4 +1,4 @@
-using IdeaTrack.Areas.SciTech.Models;
+﻿using IdeaTrack.Areas.SciTech.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Services;
@@ -104,18 +104,18 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             // Validate file
             if (vm.File == null || vm.File.Length == 0)
             {
-                ModelState.AddModelError("File", "Vui lòng chọn file");
+                ModelState.AddModelError("File", "Vui lAAAAAAAAAAAAAAAA²ng chAAAAAAAA¡AAAAAAAA»AAAAAAAAn file");
             }
             else
             {
                 var extension = Path.GetExtension(vm.File.FileName).ToLowerInvariant();
                 if (!AllowedExtensions.Contains(extension))
                 {
-                    ModelState.AddModelError("File", $"Chỉ chấp nhận các định dạng: {string.Join(", ", AllowedExtensions)}");
+                    ModelState.AddModelError("File", $"ChAAAAAAAA¡AAAAAAAA»AAAAAAAA chAAAAAAAA¡AAAAAAAAºAAAAAAAA¥p nhAAAAAAAA¡AAAAAAAAºAAAAAAAA­n cAAAAAAAAAAAAAAAA¡c AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAAnh dAAAAAAAA¡AAAAAAAAºAAAAAAAA¡ng: {string.Join(", ", AllowedExtensions)}");
                 }
                 if (vm.File.Length > MaxFileSize)
                 {
-                    ModelState.AddModelError("File", "File không được vượt quá 10MB");
+                    ModelState.AddModelError("File", "File khAAAAAAAAAAAAAAAA´ng AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA°AAAAAAAA¡AAAAAAAA»AAAAAAAA£c vAAAAAAAAAAAAAAAA°AAAAAAAA¡AAAAAAAA»AAAAAAAA£t quAAAAAAAAAAAAAAAA¡ 10MB");
                 }
             }
 
@@ -136,7 +136,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
                 if (string.IsNullOrEmpty(fileUrl))
                 {
-                    TempData["ErrorMessage"] = "Lỗi khi tải file lên. Vui lòng thử lại.";
+                    TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi tAAAAAAAA¡AAAAAAAAºAAAAAAAA£i file lAAAAAAAAAAAAAAAAªn. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                     vm.Periods = await GetPeriodSelectList();
                     return View(vm);
                 }
@@ -158,13 +158,13 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 _logger.LogInformation("Created ReferenceForm {Id}: {Name} - {FileUrl}",
                     referenceForm.Id, referenceForm.FormName, referenceForm.FileUrl);
 
-                TempData["SuccessMessage"] = $"Đã tạo biểu mẫu \"{referenceForm.FormName}\" thành công!";
+                TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ tAAAAAAAA¡AAAAAAAAºAAAAAAAA¡o biAAAAAAAA¡AAAAAAAA»AAAAAAAAu mAAAAAAAA¡AAAAAAAAºAAAAAAAA«u \"{referenceForm.FormName}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
                 return RedirectToAction(nameof(Index), new { periodId = vm.PeriodId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating ReferenceForm");
-                TempData["ErrorMessage"] = "Lỗi khi tạo biểu mẫu. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi tAAAAAAAA¡AAAAAAAAºAAAAAAAA¡o biAAAAAAAA¡AAAAAAAA»AAAAAAAAu mAAAAAAAA¡AAAAAAAAºAAAAAAAA«u. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                 vm.Periods = await GetPeriodSelectList();
                 return View(vm);
             }
@@ -204,11 +204,11 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 var extension = Path.GetExtension(vm.NewFile.FileName).ToLowerInvariant();
                 if (!AllowedExtensions.Contains(extension))
                 {
-                    ModelState.AddModelError("NewFile", $"Chỉ chấp nhận các định dạng: {string.Join(", ", AllowedExtensions)}");
+                    ModelState.AddModelError("NewFile", $"ChAAAAAAAA¡AAAAAAAA»AAAAAAAA chAAAAAAAA¡AAAAAAAAºAAAAAAAA¥p nhAAAAAAAA¡AAAAAAAAºAAAAAAAA­n cAAAAAAAAAAAAAAAA¡c AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAAnh dAAAAAAAA¡AAAAAAAAºAAAAAAAA¡ng: {string.Join(", ", AllowedExtensions)}");
                 }
                 if (vm.NewFile.Length > MaxFileSize)
                 {
-                    ModelState.AddModelError("NewFile", "File không được vượt quá 10MB");
+                    ModelState.AddModelError("NewFile", "File khAAAAAAAAAAAAAAAA´ng AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA°AAAAAAAA¡AAAAAAAA»AAAAAAAA£c vAAAAAAAAAAAAAAAA°AAAAAAAA¡AAAAAAAA»AAAAAAAA£t quAAAAAAAAAAAAAAAA¡ 10MB");
                 }
             }
 
@@ -244,7 +244,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
                     if (string.IsNullOrEmpty(fileUrl))
                     {
-                        TempData["ErrorMessage"] = "Lỗi khi tải file mới lên. Vui lòng thử lại.";
+                        TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi tAAAAAAAA¡AAAAAAAAºAAAAAAAA£i file mAAAAAAAA¡AAAAAAAA»AAAAAAAAi lAAAAAAAAAAAAAAAAªn. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                         vm.Periods = await GetPeriodSelectList();
                         return View(vm);
                     }
@@ -262,14 +262,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Updated ReferenceForm {Id}: {Name}", referenceForm.Id, referenceForm.FormName);
-                TempData["SuccessMessage"] = $"Đã cập nhật biểu mẫu \"{referenceForm.FormName}\" thành công!";
+                TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ cAAAAAAAA¡AAAAAAAAºAAAAAAAA­p nhAAAAAAAA¡AAAAAAAAºAAAAAAAA­t biAAAAAAAA¡AAAAAAAA»AAAAAAAAu mAAAAAAAA¡AAAAAAAAºAAAAAAAA«u \"{referenceForm.FormName}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
 
                 return RedirectToAction(nameof(Index), new { periodId = vm.PeriodId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating ReferenceForm {Id}", vm.Id);
-                TempData["ErrorMessage"] = "Lỗi khi cập nhật biểu mẫu. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi cAAAAAAAA¡AAAAAAAAºAAAAAAAA­p nhAAAAAAAA¡AAAAAAAAºAAAAAAAA­t biAAAAAAAA¡AAAAAAAA»AAAAAAAAu mAAAAAAAA¡AAAAAAAAºAAAAAAAA«u. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                 vm.Periods = await GetPeriodSelectList();
                 return View(vm);
             }
@@ -302,14 +302,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Deleted ReferenceForm {Id}: {Name}", id, formName);
-                TempData["SuccessMessage"] = $"Đã xóa biểu mẫu \"{formName}\" thành công!";
+                TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ xAAAAAAAAAAAAAAAA³a biAAAAAAAA¡AAAAAAAA»AAAAAAAAu mAAAAAAAA¡AAAAAAAAºAAAAAAAA«u \"{formName}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
 
                 return RedirectToAction(nameof(Index), new { periodId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting ReferenceForm {Id}", id);
-                TempData["ErrorMessage"] = "Lỗi khi xóa biểu mẫu. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi xAAAAAAAAAAAAAAAA³a biAAAAAAAA¡AAAAAAAA»AAAAAAAAu mAAAAAAAA¡AAAAAAAAºAAAAAAAA«u. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -323,7 +323,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Select(p => new SelectListItem
                 {
                     Value = p.Id.ToString(),
-                    Text = p.Name + (p.IsActive ? " (Đang mở)" : "")
+                    Text = p.Name + (p.IsActive ? " (AAAAAAAAAAAAAAAAang mAAAAAAAA¡AAAAAAAA»AAAAAAAA)" : "")
                 })
                 .ToListAsync();
         }

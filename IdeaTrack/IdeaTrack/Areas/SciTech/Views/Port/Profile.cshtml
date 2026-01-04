@@ -1,5 +1,5 @@
-@{
-    ViewData["Title"] = "H? so sau c?p Khoa";
+ï»¿@{
+    ViewData["Title"] = "Post-Faculty Files";
 }
 
 @section Styles {
@@ -11,22 +11,22 @@
     <div>
         <h2 class="fw-bold mb-1 d-flex align-items-center">
             <i class="fas fa-folder-open text-primary fs-4 me-2"></i>
-            H? so Sau C?p Khoa
+            Post-Faculty Files
         </h2>
         <p class="text-muted mb-0 d-flex align-items-center">
             <i class="fas fa-info-circle me-1"></i>
-            Danh sách các h? so d? tài dã du?c H?i d?ng Khoa phê duy?t
+            List of initiative files approved by Faculty Councils.
         </p>
     </div>
 
     <div class="d-flex gap-2">
         <button class="btn btn-outline-success">
             <i class="fas fa-file-excel me-1"></i>
-            Nh?p Excel
+            Import Excel
         </button>
         <button class="btn btn-primary">
             <i class="fas fa-plus-circle me-1"></i>
-            T?o h? so
+            Create File
         </button>
     </div>
 </div>
@@ -34,35 +34,34 @@
 <!-- ================= TOOLBAR ================= -->
 <div class="card mb-4 shadow-sm">
     <div class="card-body row g-3 align-items-center">
-
         <!-- SEARCH -->
         <div class="col-md-5">
             <label class="form-label small text-muted d-flex align-items-center mb-1">
-                <i class="fas fa-search me-1"></i> Tìm ki?m
+                <i class="fas fa-search me-1"></i> Search
             </label>
             <div class="input-group">
                 <span class="input-group-text bg-light">
                     <i class="fas fa-search text-secondary"></i>
                 </span>
                 <input class="form-control"
-                       placeholder="Nh?p mã h? so ho?c tên d? tài">
+                       placeholder="Enter file code or topic name">
             </div>
         </div>
 
         <!-- STATUS -->
         <div class="col-md-3">
             <label class="form-label small text-muted d-flex align-items-center mb-1">
-                <i class="fas fa-filter me-1"></i> Tr?ng thái
+                <i class="fas fa-filter me-1"></i> Status
             </label>
             <div class="input-group">
                 <span class="input-group-text bg-light">
                     <i class="fas fa-flag text-secondary"></i>
                 </span>
                 <select class="form-select">
-                    <option>T?t c? tr?ng thái</option>
-                    <option>Ðã duy?t</option>
-                    <option>Ch? x? lý</option>
-                    <option>Tr? v? ch?nh s?a</option>
+                    <option>All Statuses</option>
+                    <option>Approved</option>
+                    <option>Pending Processing</option>
+                    <option>Returned for Revision</option>
                 </select>
             </div>
         </div>
@@ -70,18 +69,17 @@
         <!-- FACULTY -->
         <div class="col-md-2">
             <label class="form-label small text-muted d-flex align-items-center mb-1">
-                <i class="fas fa-building me-1"></i> Khoa / Vi?n
+                <i class="fas fa-building me-1"></i> Faculty / Institute
             </label>
             <select class="form-select">
-                <option>Khoa / Vi?n</option>
-                <option>CNTT</option>
-                <option>Ði?n – Ði?n t?</option>
-                <option>Kinh t?</option>
-                <option>Môi tru?ng</option>
-                <option>Giáo d?c</option>
+                <option>All Faculties</option>
+                <option>IT</option>
+                <option>Electrical - Electronics</option>
+                <option>Economics</option>
+                <option>Environment</option>
+                <option>Education</option>
             </select>
         </div>
-
     </div>
 </div>
 
@@ -89,39 +87,37 @@
 <div class="card shadow-sm">
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
-
             <!-- HEADER -->
             <thead class="table-light">
                 <tr>
-                    <th><i class="fas fa-hashtag me-1 text-muted"></i>Mã</th>
-                    <th><i class="fas fa-file-alt me-1 text-muted"></i>Tên d? tài</th>
-                    <th><i class="fas fa-user-tie me-1 text-muted"></i>Ch? nhi?m</th>
-                    <th><i class="fas fa-layer-group me-1 text-muted"></i>Khoa</th>
-                    <th><i class="fas fa-calendar-alt me-1 text-muted"></i>Ngày g?i</th>
-                    <th><i class="fas fa-check-circle me-1 text-muted"></i>Tr?ng thái</th>
-                    <th class="text-end"><i class="fas fa-cogs me-1 text-muted"></i>Tác v?</th>
+                    <th><i class="fas fa-hashtag me-1 text-muted"></i>Code</th>
+                    <th><i class="fas fa-file-alt me-1 text-muted"></i>Topic Name</th>
+                    <th><i class="fas fa-user-tie me-1 text-muted"></i>Principal Investigator</th>
+                    <th><i class="fas fa-layer-group me-1 text-muted"></i>Faculty</th>
+                    <th><i class="fas fa-calendar-alt me-1 text-muted"></i>Date Sent</th>
+                    <th><i class="fas fa-check-circle me-1 text-muted"></i>Status</th>
+                    <th class="text-end"><i class="fas fa-cogs me-1 text-muted"></i>Actions</th>
                 </tr>
             </thead>
 
             <!-- BODY -->
             <tbody>
-
-                <!-- CNTT -->
+                <!-- IT -->
                 <tr>
                     <td class="text-monospace fw-semibold">
-                        <i class="fas fa-tag me-1 text-secondary"></i>T2023-CNTT-01
+                        <i class="fas fa-tag me-1 text-secondary"></i>T2023-IT-01
                     </td>
                     <td class="fw-medium text-primary">
-                        <i class="fas fa-robot me-1"></i>Nghiên c?u AI trong giao thông dô th?
+                        <i class="fas fa-robot me-1"></i>Research on AI for Urban Traffic
                     </td>
-                    <td><i class="fas fa-user-circle me-1"></i>TS. Nguy?n Van A</td>
+                    <td><i class="fas fa-user-circle me-1"></i>Dr. Nguyen Van A</td>
                     <td>
-                        <i class="fas fa-microchip text-primary me-1"></i>CNTT
+                        <i class="fas fa-microchip text-primary me-1"></i>IT
                     </td>
                     <td><i class="fas fa-clock me-1"></i>20/10/2023</td>
                     <td>
                         <span class="badge bg-success-subtle text-success">
-                            <i class="fas fa-check-circle me-1"></i>Ðã duy?t
+                            <i class="fas fa-check-circle me-1"></i>Approved
                         </span>
                     </td>
                     <td class="text-end">
@@ -132,22 +128,22 @@
                     </td>
                 </tr>
 
-                <!-- KINH T? -->
+                <!-- ECONOMICS -->
                 <tr>
                     <td class="text-monospace fw-semibold">
                         <i class="fas fa-tag me-1 text-secondary"></i>T2023-KT-05
                     </td>
                     <td class="fw-medium text-primary">
-                        <i class="fas fa-chart-line me-1"></i>Chi?n lu?c Digital Marketing cho SME
+                        <i class="fas fa-chart-line me-1"></i>Digital Marketing Strategy for SME
                     </td>
-                    <td><i class="fas fa-user-circle me-1"></i>ThS. Tr?n Th? B</td>
+                    <td><i class="fas fa-user-circle me-1"></i>MSc. Tran Thi B</td>
                     <td>
-                        <i class="fas fa-chart-line text-success me-1"></i>Kinh t?
+                        <i class="fas fa-chart-line text-success me-1"></i>Economics
                     </td>
                     <td><i class="fas fa-clock me-1"></i>22/10/2023</td>
                     <td>
                         <span class="badge bg-warning-subtle text-warning">
-                            <i class="fas fa-hourglass-half me-1"></i>Ch? x? lý
+                            <i class="fas fa-hourglass-half me-1"></i>Pending Processing
                         </span>
                     </td>
                     <td class="text-end">
@@ -158,22 +154,22 @@
                     </td>
                 </tr>
 
-                <!-- ÐI?N – ÐI?N T? -->
+                <!-- ELECTRONICS -->
                 <tr>
                     <td class="text-monospace fw-semibold">
                         <i class="fas fa-tag me-1 text-secondary"></i>T2023-DT-11
                     </td>
                     <td class="fw-medium text-primary">
-                        <i class="fas fa-bolt me-1"></i>?ng d?ng IoT trong nông nghi?p thông minh
+                        <i class="fas fa-bolt me-1"></i>IoT Application in Smart Agriculture
                     </td>
-                    <td><i class="fas fa-user-circle me-1"></i>TS. Ph?m Van C</td>
+                    <td><i class="fas fa-user-circle me-1"></i>Dr. Pham Van C</td>
                     <td>
-                        <i class="fas fa-bolt text-warning me-1"></i>Ði?n – Ði?n t?
+                        <i class="fas fa-bolt text-warning me-1"></i>Electrical - Electronics
                     </td>
                     <td><i class="fas fa-clock me-1"></i>25/10/2023</td>
                     <td>
                         <span class="badge bg-success-subtle text-success">
-                            <i class="fas fa-check-circle me-1"></i>Ðã duy?t
+                            <i class="fas fa-check-circle me-1"></i>Approved
                         </span>
                     </td>
                     <td class="text-end">
@@ -184,22 +180,22 @@
                     </td>
                 </tr>
 
-                <!-- MÔI TRU?NG -->
+                <!-- ENVIRONMENT -->
                 <tr>
                     <td class="text-monospace fw-semibold">
                         <i class="fas fa-tag me-1 text-secondary"></i>T2023-MT-07
                     </td>
                     <td class="fw-medium text-primary">
-                        <i class="fas fa-leaf me-1"></i>Ðánh giá tác d?ng môi tru?ng KCN
+                        <i class="fas fa-leaf me-1"></i>Industrial Zone Environmental Impact Assessment
                     </td>
-                    <td><i class="fas fa-user-circle me-1"></i>ThS. Lê Th? D</td>
+                    <td><i class="fas fa-user-circle me-1"></i>MSc. Le Thi D</td>
                     <td>
-                        <i class="fas fa-leaf text-success me-1"></i>Môi tru?ng
+                        <i class="fas fa-leaf text-success me-1"></i>Environment
                     </td>
                     <td><i class="fas fa-clock me-1"></i>26/10/2023</td>
                     <td>
                         <span class="badge bg-danger-subtle text-danger">
-                            <i class="fas fa-undo me-1"></i>Tr? v? ch?nh s?a
+                            <i class="fas fa-undo me-1"></i>Returned for Revision
                         </span>
                     </td>
                     <td class="text-end">
@@ -210,22 +206,22 @@
                     </td>
                 </tr>
 
-                <!-- GIÁO D?C -->
+                <!-- EDUCATION -->
                 <tr>
                     <td class="text-monospace fw-semibold">
                         <i class="fas fa-tag me-1 text-secondary"></i>T2023-GD-03
                     </td>
                     <td class="fw-medium text-primary">
-                        <i class="fas fa-graduation-cap me-1"></i>Ð?i m?i phuong pháp gi?ng d?y d?i h?c
+                        <i class="fas fa-graduation-cap me-1"></i>Innovation in Higher Education Teaching Methods
                     </td>
-                    <td><i class="fas fa-user-circle me-1"></i>ThS. Tr?n Van F</td>
+                    <td><i class="fas fa-user-circle me-1"></i>MSc. Tran Van F</td>
                     <td>
-                        <i class="fas fa-graduation-cap text-info me-1"></i>Giáo d?c
+                        <i class="fas fa-graduation-cap text-info me-1"></i>Education
                     </td>
                     <td><i class="fas fa-clock me-1"></i>29/10/2023</td>
                     <td>
                         <span class="badge bg-success-subtle text-success">
-                            <i class="fas fa-check-circle me-1"></i>Ðã duy?t
+                            <i class="fas fa-check-circle me-1"></i>Approved
                         </span>
                     </td>
                     <td class="text-end">
@@ -235,7 +231,6 @@
                         </div>
                     </td>
                 </tr>
-
             </tbody>
         </table>
     </div>

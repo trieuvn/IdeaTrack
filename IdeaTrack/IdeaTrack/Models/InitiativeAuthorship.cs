@@ -1,10 +1,10 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IdeaTrack.Models
 {
     /// <summary>
-    /// Bảng trung gian quản lý đồng tác giả (N-N relationship)
-    /// Cho phép nhiều giảng viên cùng tham gia một sáng kiến
+    /// Bang trung gian quan ly dong tac gia (N-N relationship)
+    /// Cho phep nhieu giang vien cung tham gia mot sang kien
     /// </summary>
     public class InitiativeAuthorship
     {
@@ -19,7 +19,7 @@ namespace IdeaTrack.Models
         public virtual ApplicationUser Author { get; set; } = null!;
         
         /// <summary>
-        /// Đánh dấu người tạo bản đầu tiên (không thể xóa)
+        /// Danh dau nguoi tao ban dau tien (khong the xoa)
         /// </summary>
         public bool IsCreator { get; set; } = false;
         

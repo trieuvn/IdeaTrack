@@ -250,7 +250,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             {
                 InitiativeId = id,
                 RequesterId = 1, // TODO: Replace with current user ID
-                RequestContent = requestContent ?? "Đã duyệt để chuyển Hội đồng chấm điểm",
+                RequestContent = requestContent ?? "Council approval and grading assignment initiated.",
                 RequestedDate = DateTime.Now,
                 Status = "Approved",
                 IsResolved = true
@@ -267,10 +267,10 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 // If no board/template configured, approve directly
                 initiative.Status = InitiativeStatus.Approved;
                 await _context.SaveChangesAsync();
-                TempData["WarningMessage"] = "Đã duyệt nhưng không có Hội đồng/Bộ tiêu chí được cấu hình cho danh mục này.";
+                TempData["WarningMessage"] = "Approved, but no Council or Grading Criteria configured for this category.";
             }
 
-            TempData["SuccessMessage"] = "Đã duyệt và phân công Hội đồng chấm điểm thành công!";
+            TempData["SuccessMessage"] = "Successfully approved and assigned to the Council for grading!";
             return RedirectToAction("Index");
         }
 
@@ -299,7 +299,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             _context.RevisionRequests.Add(revision);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Đã từ chối sáng kiến.";
+            TempData["SuccessMessage"] = "Initiative has been rejected.";
             return RedirectToAction("Index");
         }
 
@@ -313,7 +313,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             if (!success)
             {
-                TempData["ErrorMessage"] = "Không thể tạo vòng chấm mới. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "Could not create a new evaluation round. Please try again.";
                 return RedirectToAction("Approve", new { id });
             }
 
@@ -322,7 +322,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             {
                 InitiativeId = id,
                 RequesterId = 1,
-                RequestContent = reason ?? "Yêu cầu chấm lại vòng tiếp theo",
+                RequestContent = reason ?? "Requesting re-evaluation for next round",
                 RequestedDate = DateTime.Now,
                 Status = "Re-evaluation",
                 IsResolved = false
@@ -331,7 +331,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             _context.RevisionRequests.Add(revision);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Đã yêu cầu Hội đồng chấm lại vòng tiếp theo!";
+            TempData["SuccessMessage"] = "Re-evaluation round requested successfully!";
             return RedirectToAction("Index");
         }
 
@@ -352,11 +352,11 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             if (!success)
             {
-                TempData["ErrorMessage"] = "Không thể đưa ra quyết định cuối cùng. Vui lòng thử lại.";
+                TempData["ErrorMessage"] = "Could not make the final decision. Please try again.";
                 return RedirectToAction("Approve", new { id });
             }
 
-            TempData["SuccessMessage"] = $"Đã {(decision == "Approve" ? "phê duyệt" : "từ chối")} sáng kiến!";
+            TempData["SuccessMessage"] = $"Successfully {(decision == "Approve" ? "Approved" : "Rejected")} this initiative!";
             return RedirectToAction("Index");
         }
 

@@ -1,35 +1,35 @@
 ﻿namespace IdeaTrack.Models
 {
     /// <summary>
-    /// Trạng thái workflow của sáng kiến
+    /// Status workflow cua sang kien
     /// </summary>
     public enum InitiativeStatus
     {
-        /// <summary>Bản nháp - Đang soạn thảo</summary>
+        /// <summary>Ban nhap - Dang soan thao</summary>
         Draft = 0,
         
-        /// <summary>Đã nộp, chờ Lãnh đạo Khoa duyệt</summary>
+        /// <summary>Da nop, cho Lanh dao Khoa duyet</summary>
         Pending = 1,
         
-        /// <summary>Khoa đã duyệt, chờ Phòng KHCN sơ duyệt</summary>
+        /// <summary>Khoa da duyet, cho Phong KHCN so duyet</summary>
         Faculty_Approved = 2,
         
-        /// <summary>Đang được Hội đồng chấm điểm</summary>
+        /// <summary>Dang duoc Hoi dong cham diem</summary>
         Evaluating = 3,
         
-        /// <summary>Đang chấm lại (vòng mới)</summary>
+        /// <summary>Dang cham lai (vong moi)</summary>
         Re_Evaluating = 4,
         
-        /// <summary>Yêu cầu chỉnh sửa - Trả về cho tác giả</summary>
+        /// <summary>Request Revision - Tra ve cho tac gia</summary>
         Revision_Required = 5,
         
-        /// <summary>Hội đồng đã chấm xong, chờ quyết định cuối cùng</summary>
+        /// <summary>Hoi dong da cham xong, cho quyet dinh cuoi cung</summary>
         Pending_Final = 6,
         
-        /// <summary>Đã được phê duyệt</summary>
+        /// <summary>Da duoc phe duyet</summary>
         Approved = 7,
         
-        /// <summary>Bị từ chối</summary>
+        /// <summary>Bi tu choi</summary>
         Rejected = 8
     }
 }

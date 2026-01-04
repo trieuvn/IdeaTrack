@@ -1,4 +1,4 @@
-using IdeaTrack.Areas.SciTech.Models;
+﻿using IdeaTrack.Areas.SciTech.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -192,14 +192,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = "Dữ liệu nhập vào không hợp lệ. Vui lòng kiểm tra các trường bắt buộc.";
+                TempData["ErrorMessage"] = "Invalid input data. Please check required fields.";
                 return RedirectToAction(nameof(Index));
             }
 
             var existingUser = await _userManager.FindByEmailAsync(model.Email);
             if (existingUser != null)
             {
-                TempData["ErrorMessage"] = "Email này đã được sử dụng bởi một tài khoản khác.";
+                TempData["ErrorMessage"] = "This email is already in use by another account.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -221,12 +221,12 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "User");
-                TempData["SuccessMessage"] = "Thêm người dùng " + model.FullName + " thành công!";
+                TempData["SuccessMessage"] = "Successfully created new user " + model.FullName + "!";
                 return RedirectToAction(nameof(Index));
             }
 
             var errors = string.Join(" ", result.Errors.Select(e => e.Description));
-            TempData["ErrorMessage"] = "Lỗi từ hệ thống: " + errors;
+            TempData["ErrorMessage"] = "System Error: " + errors;
 
             return RedirectToAction(nameof(Index));
         }
@@ -272,27 +272,27 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     u.FullName,
                     u.Email,
                     Role = u.Position,
-                    Status = u.IsActive ? "Hoạt động" : "Đã khóa"
+                    Status = u.IsActive ? "Active" : "Locked"
                 })
                 .ToList();
 
             // Create Excel
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var package = new ExcelPackage();
-            var ws = package.Workbook.Worksheets.Add("Danh sách người dùng");
+            var ws = package.Workbook.Worksheets.Add("User_List");
 
             int colCount = 4;
 
             // Title
             ws.Cells[1, 1, 1, colCount].Merge = true;
-            ws.Cells[1, 1].Value = "BÁO CÁO DANH SÁCH NGƯỜI DÙNG";
+            ws.Cells[1, 1].Value = "USER REPORT";
             ws.Cells[1, 1].Style.Font.Size = 16;
             ws.Cells[1, 1].Style.Font.Bold = true;
             ws.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
             ws.Cells[1, 1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
 
             // Headers
-            var headers = new string[] { "Họ tên", "Email", "Vai trò", "Trạng thái" };
+            var headers = new string[] { "Full Name", "Email", "Role", "Status" };
             for (int i = 0; i < headers.Length; i++)
             {
                 ws.Cells[2, i + 1].Value = headers[i];

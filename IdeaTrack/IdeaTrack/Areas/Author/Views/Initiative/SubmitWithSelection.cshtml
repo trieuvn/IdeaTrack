@@ -1,6 +1,6 @@
-@model IdeaTrack.Areas.Author.ViewModels.SubmitInitiativeViewModel
+﻿@model IdeaTrack.Areas.Author.ViewModels.SubmitInitiativeViewModel
 @{
-    ViewData["Title"] = "Nộp sáng kiến";
+    ViewData["Title"] = "Submit Initiative";
     Layout = "~/Areas/Author/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,7 +10,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">
-                        <i class="fas fa-paper-plane me-2"></i>Nộp sáng kiến
+                        <i class="fas fa-paper-plane me-2"></i>Submit Initiative
                     </h4>
                 </div>
                 
@@ -32,7 +32,7 @@
 
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        Vui lòng chọn đợt sáng kiến và danh mục phù hợp trước khi nộp.
+                        Please select an initiative period and category before submitting.
                     </div>
 
                     <form asp-action="SubmitWithSelection" method="post">
@@ -45,33 +45,33 @@
 
                         <div class="mb-3">
                             <label asp-for="PeriodId" class="form-label">
-                                Đợt sáng kiến <span class="text-danger">*</span>
+                                Initiative Period <span class="text-danger">*</span>
                             </label>
                             <select asp-for="PeriodId" asp-items="Model.Periods" class="form-select" id="periodSelect">
-                                <option value="">-- Chọn đợt --</option>
+                                <option value="">-- Select period --</option>
                             </select>
                             <span asp-validation-for="PeriodId" class="text-danger"></span>
                         </div>
 
                         <div class="mb-4">
                             <label asp-for="CategoryId" class="form-label">
-                                Danh mục <span class="text-danger">*</span>
+                                Category <span class="text-danger">*</span>
                             </label>
                             <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select" id="categorySelect">
-                                <option value="">-- Chọn danh mục --</option>
+                                <option value="">-- Select category --</option>
                             </select>
                             <span asp-validation-for="CategoryId" class="text-danger"></span>
                             <div class="form-text">
-                                Danh mục sẽ được tải dựa trên đợt sáng kiến đã chọn
+                                Categories will be loaded based on the selected initiative period
                             </div>
                         </div>
 
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-success flex-fill">
-                                <i class="fas fa-paper-plane me-1"></i>Nộp sáng kiến
+                                <i class="fas fa-paper-plane me-1"></i>Submit Initiative
                             </button>
                             <a asp-action="Detail" asp-route-id="@Model.InitiativeId" class="btn btn-secondary">
-                                <i class="fas fa-times me-1"></i>Hủy
+                                <i class="fas fa-times me-1"></i>Cancel
                             </a>
                         </div>
                     </form>
@@ -89,7 +89,7 @@
             var categorySelect = document.getElementById('categorySelect');
             
             // Clear current options
-            categorySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
+            categorySelect.innerHTML = '<option value="">-- Select category --</option>';
             
             if (periodId) {
                 // Fetch categories for the selected period

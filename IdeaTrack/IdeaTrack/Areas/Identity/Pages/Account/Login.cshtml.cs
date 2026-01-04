@@ -64,22 +64,22 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
             /// <summary>
             /// Username or Email for login
             /// </summary>
-            [Required(ErrorMessage = "Vui lòng nhập tên đăng nhập hoặc email")]
-            [Display(Name = "Tên đăng nhập hoặc Email")]
+            [Required(ErrorMessage = "Please enter username or email")]
+            [Display(Name = "Name dang nhap hoac Email")]
             public string UsernameOrEmail { get; set; }
 
             /// <summary>
             /// Password
             /// </summary>
-            [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
+            [Required(ErrorMessage = "Please enter password")]
             [DataType(DataType.Password)]
-            [Display(Name = "Mật khẩu")]
+            [Display(Name = "Password")]
             public string Password { get; set; }
 
             /// <summary>
             /// Remember me
             /// </summary>
-            [Display(Name = "Ghi nhớ đăng nhập?")]
+            [Display(Name = "Ghi nho dang nhap?")]
             public bool RememberMe { get; set; }
         }
 
@@ -128,7 +128,7 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
 
                 if (user == null)
                 {
-                    ModelState.AddModelError(string.Empty, "Tài khoản không tồn tại.");
+                    ModelState.AddModelError(string.Empty, "Tai khoan khong ton tai.");
                     return Page();
                 }
 
@@ -165,7 +165,7 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Sai mật khẩu.");
+                    ModelState.AddModelError(string.Empty, "Sai mat khau.");
                     return Page();
                 }
             }
