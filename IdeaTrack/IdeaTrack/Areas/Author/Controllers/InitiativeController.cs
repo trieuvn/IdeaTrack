@@ -181,20 +181,30 @@ namespace IdeaTrack.Areas.Author.Controllers
                     _context.InitiativeAuthorships.Add(authorship);
                     await _context.SaveChangesAsync();
 
-                    _logger.LogInformation("Sang kien {InitiativeCode} duoc tao thanh cong boi user {UserId}", initiative.InitiativeCode, initiative.CreatorId);
+                    _logger.LogInformation("Initiative {InitiativeCode} created successfully by user {UserId}", initiative.InitiativeCode, initiative.CreatorId);
 
                     // Handle file uploads using Service
-                    if (viewModel.UploadedFiles != null && viewModel.UploadedFiles.Count > 0)
+                    _logger.LogInformation("[FileUpload] Checking for files. ProjectFiles is null: {IsNull}, Count: {Count}", 
+                        viewModel.ProjectFiles == null, viewModel.ProjectFiles?.Count ?? 0);
+                    
+                    if (viewModel.ProjectFiles != null && viewModel.ProjectFiles.Count > 0)
                     {
+                        _logger.LogInformation("[FileUpload] Processing {Count} files for initiative {InitiativeId}", 
+                            viewModel.ProjectFiles.Count, initiative.Id);
                         try 
                         {
-                            await _fileService.UploadFilesAsync(viewModel.UploadedFiles, initiative.Id);
+                            var uploadedFiles = await _fileService.UploadFilesAsync(viewModel.ProjectFiles, initiative.Id);
+                            _logger.LogInformation("[FileUpload] Successfully uploaded {Count} files", uploadedFiles.Count);
                         }
                         catch (Exception uploadEx)
                         {
-                            _logger.LogError(uploadEx, "Error khi xu ly file uploads cho sang kien {InitiativeId}", initiative.Id);
-                            TempData["WarningMessage"] = "Sang kien da duoc tao nhung co loi khi tai len mot so file.";
+                            _logger.LogError(uploadEx, "[FileUpload] Error processing file uploads for initiative {InitiativeId}", initiative.Id);
+                            TempData["WarningMessage"] = "Initiative created but some files failed to upload.";
                         }
+                    }
+                    else
+                    {
+                        _logger.LogInformation("[FileUpload] No files to upload");
                     }
 
                     if (action == "Submit")
@@ -252,7 +262,10 @@ namespace IdeaTrack.Areas.Author.Controllers
 
             try
             {
-                var initiative = await _context.Initiatives.FindAsync(id);
+                var initiative = await _context.Initiatives
+                    .Include(i => i.Files)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+                    
                 if (initiative == null)
                 {
                     _logger.LogWarning("Initiative with id {InitiativeId} not found for editing", id);
@@ -281,15 +294,16 @@ namespace IdeaTrack.Areas.Author.Controllers
                     Initiative = initiative,
                     Categories = new SelectList(categories, "Id", "Name", initiative.CategoryId),
                     Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", initiative.DepartmentId),
-                    ActivePeriodId = activePeriod?.Id
+                    ActivePeriodId = activePeriod?.Id,
+                    ExistingFiles = initiative.Files?.ToList() ?? new List<InitiativeFile>()
                 };
 
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error khi tai trang chinh sua sang kien {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Khong the tai form chinh sua. Vui long thu lai sau.";
+                _logger.LogError(ex, "Error loading edit page for initiative {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Cannot load edit form. Please try again later.";
                 return RedirectToAction(nameof(History));
             }
         }
@@ -364,29 +378,39 @@ namespace IdeaTrack.Areas.Author.Controllers
                     }
 
                     // Handle file uploads using Service
-                    if (viewModel.UploadedFiles != null && viewModel.UploadedFiles.Count > 0)
+                    _logger.LogInformation("[FileUpload-Edit] Checking for files. ProjectFiles is null: {IsNull}, Count: {Count}", 
+                        viewModel.ProjectFiles == null, viewModel.ProjectFiles?.Count ?? 0);
+                        
+                    if (viewModel.ProjectFiles != null && viewModel.ProjectFiles.Count > 0)
                     {
+                        _logger.LogInformation("[FileUpload-Edit] Processing {Count} files for initiative {InitiativeId}", 
+                            viewModel.ProjectFiles.Count, existingInitiative.Id);
                         try
                         {
-                             await _fileService.UploadFilesAsync(viewModel.UploadedFiles, existingInitiative.Id);
+                            var uploadedFiles = await _fileService.UploadFilesAsync(viewModel.ProjectFiles, existingInitiative.Id);
+                            _logger.LogInformation("[FileUpload-Edit] Successfully uploaded {Count} files", uploadedFiles.Count);
                         }
                         catch (Exception uploadEx)
                         {
-                            _logger.LogError(uploadEx, "Error khi xu ly file uploads cho sang kien {InitiativeId}", existingInitiative.Id);
-                            TempData["WarningMessage"] = "Sang kien da duoc cap nhat nhung co loi khi tai len mot so file.";
+                            _logger.LogError(uploadEx, "[FileUpload-Edit] Error processing file uploads for initiative {InitiativeId}", existingInitiative.Id);
+                            TempData["WarningMessage"] = "Initiative updated but some files failed to upload.";
                         }
+                    }
+                    else
+                    {
+                        _logger.LogInformation("[FileUpload-Edit] No new files to upload");
                     }
 
                     await _context.SaveChangesAsync();
-                    _logger.LogInformation("Sang kien {InitiativeId} duoc cap nhat thanh cong", id);
+                    _logger.LogInformation("Initiative {InitiativeId} updated successfully", id);
 
                     if (action == "Submit")
                     {
-                        TempData["SuccessMessage"] = "Sang kien da duoc nop thanh cong va dang cho duyet!";
+                        TempData["SuccessMessage"] = "Initiative submitted successfully and pending review!";
                         return RedirectToAction(nameof(History));
                     }
 
-                    TempData["SuccessMessage"] = "Sang kien da duoc cap nhat thanh cong!";
+                    TempData["SuccessMessage"] = "Initiative updated successfully!";
                     return RedirectToAction(nameof(Detail), new { id = existingInitiative.Id });
                 }
                 catch (DbUpdateConcurrencyException concurrencyEx)
@@ -534,9 +558,49 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error khong xac dinh khi xoa sang kien {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Error khi xoa sang kien. Vui long thu lai sau.";
+                _logger.LogError(ex, "Error deleting initiative {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Error deleting initiative. Please try again later.";
                 return RedirectToAction(nameof(Detail), new { id });
+            }
+        }
+
+        // POST: /Author/Initiative/DeleteFile
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteFile(int fileId, int initiativeId)
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                var userId = currentUser?.Id ?? 0;
+
+                // Verify initiative ownership
+                var initiative = await _context.Initiatives.FindAsync(initiativeId);
+                if (initiative == null || (initiative.CreatorId != userId && !User.IsInRole("Admin")))
+                {
+                    return Forbid();
+                }
+
+                // Delete file from storage and database
+                var success = await _fileService.DeleteFileAsync(fileId);
+                
+                if (success)
+                {
+                    TempData["SuccessMessage"] = "File deleted successfully.";
+                    _logger.LogInformation("File {FileId} deleted from initiative {InitiativeId} by user {UserId}", fileId, initiativeId, userId);
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Could not delete file.";
+                }
+
+                return RedirectToAction(nameof(Edit), new { id = initiativeId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting file {FileId}", fileId);
+                TempData["ErrorMessage"] = "Error deleting file. Please try again.";
+                return RedirectToAction(nameof(Edit), new { id = initiativeId });
             }
         }
 

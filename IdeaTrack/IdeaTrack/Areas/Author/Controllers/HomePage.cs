@@ -155,9 +155,20 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             try
             {
+                // Get current user ID for data isolation (security fix)
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int currentUserId))
+                {
+                    TempData["ErrorMessage"] = "Please log in to view your report.";
+                    return RedirectToAction("Index", "Dashboard");
+                }
+
+                // Only show initiatives belonging to current user (creator or co-author)
                 var allInitiatives = await _context.Initiatives
                     .Include(i => i.Category)
                     .Include(i => i.Creator)
+                    .Include(i => i.Authorships)
+                    .Where(i => i.CreatorId == currentUserId || i.Authorships.Any(a => a.AuthorId == currentUserId))
                     .ToListAsync();
 
                 var totalCount = allInitiatives.Count;
