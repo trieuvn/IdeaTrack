@@ -1,6 +1,6 @@
 ﻿@model IdeaTrack.Areas.Author.ViewModels.DailyReportViewModel
 @{
-    ViewData["Title"] = "Th?ng kê";
+    ViewData["Title"] = "Statistics";
 }
 
 <div class="container-fluid pb-5">
@@ -10,13 +10,13 @@
         <div class="row">
             <div class="col-lg-8">
                 <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-4 p-2 px-3" style="border: 1px solid rgba(0,255,255,0.2)">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">insights</span> TH?NG KÊ SÁNG KI?N
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">insights</span> INITIATIVE STATISTICS
                 </span>
 
                 <h1 class="fw-bold display-5 mb-3">Innovation Metrics</h1>
 
                 <p class="fs-5 mb-4 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    Theo dõi và phân tích các sáng ki?n c?a b?n. Xem phân b? theo danh m?c và ti?n d? xét duy?t.
+                    Track and analyze your initiatives. View distribution by category and approval progress.
                 </p>
             </div>
         </div>
@@ -30,7 +30,7 @@
                     <span class="material-icons text-primary">inventory_2</span>
                 </div>
                 <h2 class="fw-bold text-primary">@Model.TotalInitiatives</h2>
-                <p class="text-muted mb-0">T?ng sáng ki?n</p>
+                <p class="text-muted mb-0">Total Initiatives</p>
             </div>
         </div>
         <div class="col-md-3">
@@ -39,7 +39,7 @@
                     <span class="material-icons text-success">check_circle</span>
                 </div>
                 <h2 class="fw-bold text-success">@Model.MonthlyApproved</h2>
-                <p class="text-muted mb-0">Ðã duy?t (tháng này)</p>
+                <p class="text-muted mb-0">Approved (this month)</p>
             </div>
         </div>
         <div class="col-md-3">
@@ -48,7 +48,7 @@
                     <span class="material-icons text-warning">pending</span>
                 </div>
                 <h2 class="fw-bold text-warning">@Model.MonthlyPending</h2>
-                <p class="text-muted mb-0">Ðang ch? duy?t</p>
+                <p class="text-muted mb-0">Pending Approval</p>
             </div>
         </div>
         <div class="col-md-3">
@@ -57,7 +57,7 @@
                     <span class="material-icons" style="color: #be123c;">calendar_month</span>
                 </div>
                 <h2 class="fw-bold" style="color: #be123c;">@Model.MonthlyTotal</h2>
-                <p class="text-muted mb-0">Tháng này</p>
+                <p class="text-muted mb-0">This Month</p>
             </div>
         </div>
     </section>
@@ -67,7 +67,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <span class="material-icons text-danger me-2">pie_chart</span>
-                <h4 class="fw-bold mb-0">Phân ph?i theo Danh m?c</h4>
+                <h4 class="fw-bold mb-0">Distribution by Category</h4>
             </div>
         </div>
 
@@ -95,7 +95,7 @@
                         {
                             <div class="text-center py-5">
                                 <span class="material-icons text-muted" style="font-size: 48px;">donut_large</span>
-                                <p class="text-muted mt-2">Chua có d? li?u phân ph?i</p>
+                                <p class="text-muted mt-2">No distribution data</p>
                             </div>
                         }
                     </div>
@@ -128,7 +128,7 @@
                                     <div class="rounded-circle bg-white d-flex flex-column align-items-center justify-content-center" 
                                          style="width: 120px; height: 120px;">
                                         <span class="fs-2 fw-bold text-primary">@Model.TotalInitiatives</span>
-                                        <span class="text-muted small">T?ng</span>
+                                        <span class="text-muted small">Total</span>
                                     </div>
                                 </div>
                             </div>
@@ -144,10 +144,10 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <span class="material-icons text-danger me-2">history</span>
-                <h4 class="fw-bold mb-0">Sáng ki?n g?n dây (7 ngày)</h4>
+                <h4 class="fw-bold mb-0">Recent Initiatives (7 days)</h4>
             </div>
             <a asp-controller="Initiative" asp-action="History" class="text-danger text-decoration-none fw-bold small">
-                Xem t?t c? <span class="material-icons fs-6 align-middle">arrow_forward</span>
+                View All <span class="material-icons fs-6 align-middle">arrow_forward</span>
             </a>
         </div>
 
@@ -159,10 +159,10 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="border-0 ps-4">Tiêu d?</th>
-                                    <th class="border-0">Th?i gian</th>
-                                    <th class="border-0">Tr?ng thái</th>
-                                    <th class="border-0 pe-4 text-end">Thao tác</th>
+                                    <th class="border-0 ps-4">Title</th>
+                                    <th class="border-0">Time</th>
+                                    <th class="border-0">Status</th>
+                                    <th class="border-0 pe-4 text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -183,13 +183,13 @@
                                             @switch (item.Status)
                                             {
                                                 case IdeaTrack.Models.InitiativeStatus.Draft:
-                                                    <span class="badge bg-secondary">Nháp</span>
+                                                    <span class="badge bg-secondary">Draft</span>
                                                     break;
                                                 case IdeaTrack.Models.InitiativeStatus.Pending:
-                                                    <span class="badge bg-warning text-dark">Ch? duy?t</span>
+                                                    <span class="badge bg-warning text-dark">Pending</span>
                                                     break;
                                                 case IdeaTrack.Models.InitiativeStatus.Approved:
-                                                    <span class="badge bg-success">Ðã duy?t</span>
+                                                    <span class="badge bg-success">Approved</span>
                                                     break;
                                                 default:
                                                     <span class="badge bg-info">@item.Status</span>
@@ -211,9 +211,9 @@
                 {
                     <div class="text-center py-5">
                         <span class="material-icons text-muted" style="font-size: 64px;">inbox</span>
-                        <p class="text-muted mt-2">Chua có sáng ki?n nào trong 7 ngày qua</p>
+                        <p class="text-muted mt-2">No initiatives in the past 7 days</p>
                         <a asp-controller="Initiative" asp-action="Create" class="btn btn-danger rounded-pill px-4">
-                            <span class="material-icons align-middle me-1">add</span> T?o sáng ki?n m?i
+                            <span class="material-icons align-middle me-1">add</span> Create New Initiative
                         </a>
                     </div>
                 }

@@ -149,12 +149,13 @@
 
                 <p class="text-muted mb-4">Log in using your account on:</p>
 
-                <!-- Login with UEF ID Button -->
-                <a asp-page="/Account/ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl"
-                   class="btn btn-uef-id w-100 d-flex align-items-center justify-content-center mb-4">
-                    <img src="~/icons/logo-uef.ico" alt="" width="50" height="40" class="me-3">
-                    Login with UEF ID
-                </a>
+                <!-- Login with Google Button -->
+                <form asp-page="/Account/ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <button type="submit" name="provider" value="Google" class="btn btn-uef-id w-100 d-flex align-items-center justify-content-center mb-4">
+                        <img src="~/icons/logo-uef.ico" alt="" width="50" height="40" class="me-3">
+                        Login with Google
+                    </button>
+                </form>
 
                 <hr class="my-4">
 

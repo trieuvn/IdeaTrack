@@ -1,0 +1,59 @@
+@model IdeaTrack.ViewModels.HiddenRegisterViewModel
+@{
+    ViewData["Title"] = "Hidden Register";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm mt-5">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center text-primary mb-4">Hidden Registration</h2>
+                <form asp-action="HiddenRegister" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                        <label asp-for="Email">Email address</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Password" class="form-control" placeholder="Password" />
+                        <label asp-for="Password">Password</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" />
+                        <label asp-for="ConfirmPassword">Confirm Password</label>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="SelectedRole" asp-items="ViewBag.Roles" class="form-select">
+                            <option value="">-- Select Role --</option>
+                        </select>
+                        <label asp-for="SelectedRole">Select Role</label>
+                        <span asp-validation-for="SelectedRole" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">Register</button>
+                </form>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-provider="Google" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-google me-2"></i> Register with Google
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

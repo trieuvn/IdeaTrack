@@ -6,8 +6,8 @@
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index" class="text-decoration-none">Dashboard</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Initiative" asp-action="History" class="text-decoration-none">L?ch s?</a></li>
-            <li class="breadcrumb-item active">Chi ti?t</li>
+            <li class="breadcrumb-item"><a asp-controller="Initiative" asp-action="History" class="text-decoration-none">History</a></li>
+            <li class="breadcrumb-item active">Detail</li>
         </ol>
     </nav>
 
@@ -20,22 +20,22 @@
                     {
                         case IdeaTrack.Models.InitiativeStatus.Approved:
                             <span class="badge rounded-pill bg-success p-2 px-3">
-                                <span class="material-icons align-middle me-1" style="font-size: 14px;">check_circle</span> ÐÃ DUY?T
+                                <span class="material-icons align-middle me-1" style="font-size: 14px;">check_circle</span> APPROVED
                             </span>
                             break;
                         case IdeaTrack.Models.InitiativeStatus.Rejected:
                             <span class="badge rounded-pill bg-danger p-2 px-3">
-                                <span class="material-icons align-middle me-1" style="font-size: 14px;">cancel</span> T? CH?I
+                                <span class="material-icons align-middle me-1" style="font-size: 14px;">cancel</span> REJECTED
                             </span>
                             break;
                         case IdeaTrack.Models.InitiativeStatus.Draft:
                             <span class="badge rounded-pill bg-secondary p-2 px-3">
-                                <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> B?N NHÁP
+                                <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> DRAFT
                             </span>
                             break;
                         default:
                             <span class="badge rounded-pill bg-warning text-dark p-2 px-3">
-                                <span class="material-icons align-middle me-1" style="font-size: 14px;">pending</span> CH? DUY?T
+                                <span class="material-icons align-middle me-1" style="font-size: 14px;">pending</span> PENDING
                             </span>
                             break;
                     }
@@ -44,7 +44,7 @@
                 <h1 class="fw-bold display-5 mb-3">@Model.Initiative.Title</h1>
                 <p class="fs-5 mb-0 opacity-75">
                     <span class="material-icons align-middle me-1" style="font-size: 18px;">calendar_today</span> @Model.Initiative.CreatedAt.ToString("dd/MM/yyyy")
-                    <span class="mx-2"></span>
+                    <span class="mx-2">•</span>
                     <span class="material-icons align-middle me-1" style="font-size: 18px;">category</span> @(Model.Initiative.Category?.Name ?? "N/A")
                 </p>
             </div>
@@ -62,12 +62,12 @@
                 <div class="card-header bg-white border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
                         <span class="material-icons align-middle me-2 text-primary">description</span>
-                        Mô t? sáng ki?n
+                        Description
                     </h5>
                 </div>
                 <div class="card-body p-4">
                     <p class="mb-0" style="line-height: 1.8;">
-                        @(string.IsNullOrEmpty(Model.Initiative.Description) ? "Chua có mô t?." : Model.Initiative.Description)
+                        @(string.IsNullOrEmpty(Model.Initiative.Description) ? "No description." : Model.Initiative.Description)
                     </p>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                 <div class="card-header bg-white border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
                         <span class="material-icons align-middle me-2 text-info">info</span>
-                        Information chi ti?t
+                        Details
                     </h5>
                 </div>
                 <div class="card-body p-4">
@@ -86,7 +86,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="material-icons text-muted me-3">calendar_month</span>
                                 <div>
-                                    <div class="small text-muted">Nam h?c</div>
+                                    <div class="small text-muted">Academic Year</div>
                                     <div class="fw-medium">@(Model.Initiative.Period?.Name ?? "N/A")</div>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="material-icons text-muted me-3">business</span>
                                 <div>
-                                    <div class="small text-muted">Khoa/Phòng ban</div>
+                                    <div class="small text-muted">Department</div>
                                     <div class="fw-medium">@(Model.Initiative.Department?.Name ?? "N/A")</div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="material-icons text-muted me-3">payments</span>
                                 <div>
-                                    <div class="small text-muted">Ngân sách</div>
+                                    <div class="small text-muted">Budget</div>
                                     <div class="fw-medium">@Model.Initiative.Budget.ToString("N0") VND</div>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="material-icons text-muted me-3">event</span>
                                 <div>
-                                    <div class="small text-muted">Ngày t?o</div>
+                                    <div class="small text-muted">Created Date</div>
                                     <div class="fw-medium">@Model.Initiative.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
                                 </div>
                             </div>
@@ -127,9 +127,9 @@
                 <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0">
                         <span class="material-icons align-middle me-2 text-success">attach_file</span>
-                        Tài li?u dính kèm
+                        Attachments
                     </h5>
-                    <span class="badge bg-secondary rounded-pill">@Model.Files.Count t?p</span>
+                    <span class="badge bg-secondary rounded-pill">@Model.Files.Count files</span>
                 </div>
                 <div class="card-body p-4">
                     @if (Model.Files.Any())
@@ -175,7 +175,7 @@
                     {
                         <div class="text-center py-4">
                             <span class="material-icons text-muted" style="font-size: 48px;">folder_off</span>
-                            <p class="text-muted mt-2 mb-0">Chua có tài li?u dính kèm</p>
+                            <p class="text-muted mt-2 mb-0">No attachments found</p>
                         </div>
                     }
                 </div>
@@ -189,17 +189,17 @@
                 <div class="card-header bg-white border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
                         <span class="material-icons align-middle me-2 text-warning">timeline</span>
-                        Ti?n trình xét duy?t
+                        Timeline
                     </h5>
                 </div>
                 <div class="card-body p-4">
                     <div class="position-relative">
                         @{
                             var steps = new[] {
-                                ("Ðã n?p", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Pending),
-                                ("Duy?t c?p Khoa", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Faculty_Approved),
-                                ("H?i d?ng xét duy?t", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Evaluating),
-                                ("Quy?t d?nh cu?i", Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
+                                ("Submitted", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Pending),
+                                ("Faculty Approved", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Faculty_Approved),
+                                ("Council Evaluation", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Evaluating),
+                                ("Final Decision", Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
                             };
                         }
                         @for (int i = 0; i < steps.Length; i++)
@@ -220,7 +220,7 @@
                                 </div>
                                 <div>
                                     <div class="fw-medium @(completed ? "" : "text-muted")">@label</div>
-                                    <div class="small text-muted">@(completed ? "Hoàn thành" : "Ch? x? lý")</div>
+                                    <div class="small text-muted">@(completed ? "Completed" : "Pending")</div>
                                 </div>
                             </div>
                         }
@@ -236,18 +236,18 @@
                     <div class="card-header bg-white border-0 pt-4 px-4">
                         <h5 class="fw-bold mb-0">
                             <span class="material-icons align-middle me-2 text-primary">touch_app</span>
-                            Thao tác
+                            Actions
                         </h5>
                     </div>
                     <div class="card-body p-4">
                         <div class="d-flex gap-2">
                              <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@Model.Initiative.Id" class="btn btn-outline-primary btn-lg rounded-pill shadow-sm fw-bold w-50">
-                                <span class="material-icons align-middle me-1">edit</span> Ch?nh s?a
+                                <span class="material-icons align-middle me-1">edit</span> Edit
                             </a>
-                            <form asp-controller="Initiative" asp-action="SubmitInitiative" asp-route-id="@Model.Initiative.Id" method="post" class="w-50" onsubmit="return confirm('B?n có ch?c ch?n mu?n n?p sáng ki?n này?');">
+                            <form asp-controller="Initiative" asp-action="SubmitInitiative" asp-route-id="@Model.Initiative.Id" method="post" class="w-50" onsubmit="return confirm('Are you sure you want to submit this initiative?');">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold w-100">
-                                    <span class="material-icons align-middle me-1">send</span> N?p
+                                    <span class="material-icons align-middle me-1">send</span> Submit
                                 </button>
                             </form>
                         </div>
@@ -261,12 +261,12 @@
                 <div class="card border-danger shadow-sm" style="border-radius: 15px;">
                     <div class="card-body p-4">
                         <h6 class="fw-bold text-danger mb-3">
-                            <span class="material-icons align-middle me-1">warning</span> Vùng nguy hi?m
+                            <span class="material-icons align-middle me-1">warning</span> Danger Zone
                         </h6>
-                        <form asp-controller="Initiative" asp-action="Delete" asp-route-id="@Model.Initiative.Id" method="post" onsubmit="return confirm('B?n có ch?c mu?n xóa sáng ki?n này?');">
+                        <form asp-controller="Initiative" asp-action="Delete" asp-route-id="@Model.Initiative.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this initiative?');">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-outline-danger w-100 rounded-pill">
-                                <span class="material-icons align-middle me-1" style="font-size: 18px;">delete</span> Delete sáng ki?n
+                                <span class="material-icons align-middle me-1" style="font-size: 18px;">delete</span> Delete Initiative
                             </button>
                         </form>
                     </div>

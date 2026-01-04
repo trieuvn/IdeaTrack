@@ -16,8 +16,10 @@
             </a>
         </div>
 
-        <form asp-area="Identity"
-              asp-page="/Account/Logout"
+        <form asp-area=""
+              asp-controller="Account"
+              asp-action="Logout"
+              asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
               method="post">
             <button type="submit"
                     class="btn btn-sm btn-outline-light">

@@ -1,0 +1,38 @@
+@model IdeaTrack.ViewModels.ExternalRegisterViewModel
+@{
+    ViewData["Title"] = "Complete Registration";
+}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm mt-5">
+            <div class="card-body p-4">
+                <h2 class="card-title text-center text-primary mb-4">Complete Your Registration</h2>
+                <p class="text-center text-muted">You've successfully authenticated with Google. Please select a role to finish.</p>
+                
+                <form asp-controller="Account" asp-action="ExternalRegister" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="ReturnUrl" />
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" readonly />
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="SelectedRole" asp-items="ViewBag.Roles" class="form-select">
+                            <option value="">-- Select Role --</option>
+                        </select>
+                        <label asp-for="SelectedRole">Select Role</label>
+                        <span asp-validation-for="SelectedRole" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">Complete Registration</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

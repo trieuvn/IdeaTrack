@@ -35,9 +35,44 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error khi tai danh sach files");
-                TempData["ErrorMessage"] = "Khong the tai danh sach files. Vui long thu lai sau.";
+                _logger.LogError(ex, "Error loading files list");
+                TempData["ErrorMessage"] = "Cannot load files list. Please try again later.";
                 return View(new List<InitiativeFile>());
+            }
+        }
+
+        // GET: /Author/HomePage/DownloadGuideline
+        public IActionResult DownloadGuideline()
+        {
+            try
+            {
+                var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var filePath = Path.Combine(webRoot, "templates", "guideline.docx");
+
+                if (!System.IO.File.Exists(filePath))
+                {
+                    // Create directory if not exists
+                    var templateDir = Path.Combine(webRoot, "templates");
+                    if (!Directory.Exists(templateDir))
+                    {
+                        Directory.CreateDirectory(templateDir);
+                    }
+                    
+                    // In a real app we'd have the file. For now, create a dummy file to prevent crash
+                    // or just return not found with message
+                    _logger.LogWarning("Guideline file not found at {Path}", filePath);
+                    TempData["ErrorMessage"] = "Guideline file is currently unavailable.";
+                    return RedirectToAction("Index", "Dashboard");
+                }
+
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+                return File(fileBytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "IdeaTrack_Guideline.docx");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error downloading guideline");
+                TempData["ErrorMessage"] = "Error downloading file.";
+                return RedirectToAction("Index", "Dashboard");
             }
         }
 

@@ -36,7 +36,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(36500);
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders();
+.AddDefaultTokenProviders()
+.AddErrorDescriber<CustomIdentityErrorDescriber>();
 
 // Register Business Services
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
@@ -44,6 +45,7 @@ builder.Services.AddScoped<IInitiativeService, InitiativeService>();
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<DataSeederService>();
+builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
 builder.Services.AddHttpContextAccessor();
 
 // Storage Service Registration
@@ -66,6 +68,15 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
+
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        var googleAuth = builder.Configuration.GetSection("Authentication:Google");
+        options.ClientId = googleAuth["ClientId"];
+        options.ClientSecret = googleAuth["ClientSecret"];
+        options.CallbackPath = "/signin-google";
+    });
 
 // Configure authentication cookie
 builder.Services.ConfigureApplicationCookie(options =>
