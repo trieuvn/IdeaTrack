@@ -69,7 +69,7 @@
                  <h5 class="fw-bold mb-3">Review Action</h5>
                  <p class="text-muted small">Faculty Head Review</p>
                  
-                 <form asp-action="SubmitDecision" method="post">
+                 <form method="post">
                      <input type="hidden" name="InitiativeId" value="@Model.Id" />
                      
                      <div class="mb-3">
@@ -78,13 +78,13 @@
                      </div>
                      
                      <div class="d-grid gap-2">
-                         <button type="submit" name="Decision" value="Approve" class="btn btn-success text-white">
-                             <i class="bi bi-check-circle me-2"></i> Approve
+                         <button type="submit" asp-controller="Dashboard" asp-action="Accept" class="btn btn-success text-white">
+                             <i class="bi bi-check-circle me-2"></i> Accept
                          </button>
-                         <button type="submit" name="Decision" value="Revision" class="btn btn-warning text-dark">
+                         <button type="submit" asp-controller="Dashboard" asp-action="RequestRevision" class="btn btn-warning text-dark">
                              <i class="bi bi-pencil-square me-2"></i> Request Revision
                          </button>
-                         <button type="submit" name="Decision" value="Reject" class="btn btn-danger text-white">
+                         <button type="submit" asp-controller="Dashboard" asp-action="Reject" class="btn btn-danger text-white">
                              <i class="bi bi-x-circle me-2"></i> Reject
                          </button>
                      </div>

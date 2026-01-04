@@ -22,29 +22,45 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         // ==========================================
         // 1. DASHBOARD LIST (INDEX)
         // ==========================================
+        // ==========================================
+        // 1. DASHBOARD LIST (INDEX)
+        // ==========================================
         public async Task<IActionResult> Index(string searchString, string statusFilter, int pageNumber = 1)
         {
             int pageSize = 5;
+
+            // 1. Base Query - Filter explicitly for Faculty Workflow statuses
+            var allowedStatuses = new[] 
+            { 
+                InitiativeStatus.Pending, 
+                InitiativeStatus.Faculty_Approved, 
+                InitiativeStatus.Rejected, 
+                InitiativeStatus.Revision_Required 
+            };
 
             var query = _context.Initiatives
                 .Include(i => i.Creator)
                 .Include(i => i.Category)
                 .Include(i => i.Department)
+                .Where(i => allowedStatuses.Contains(i.Status))
                 .AsQueryable();
 
+            // 2. Apply Search
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(s => s.Title.Contains(searchString) || s.InitiativeCode.Contains(searchString) || s.Creator.FullName.Contains(searchString));
             }
 
+            // 3. Apply Status Filter (if specific one selected)
             if (!string.IsNullOrEmpty(statusFilter) && Enum.TryParse(typeof(InitiativeStatus), statusFilter, out var status))
             {
                 query = query.Where(s => s.Status == (InitiativeStatus)status);
             }
 
-            query = query.OrderByDescending(i => i.Status == InitiativeStatus.Pending)
-                         .ThenByDescending(i => i.CreatedAt);
+            // 4. Sorting: Latest updates first (SubmittedDate or CreatedAt)
+            query = query.OrderByDescending(i => i.SubmittedDate ?? i.CreatedAt);
 
+            // 5. Pagination
             var totalItems = await query.CountAsync();
             var totalPages = totalItems > 0 ? (int)Math.Ceiling(totalItems / (double)pageSize) : 1;
             pageNumber = Math.Max(1, Math.Min(pageNumber, totalPages));
@@ -54,11 +70,27 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            var allData = _context.Initiatives.AsQueryable();
-            ViewBag.CountPending = await allData.CountAsync(i => i.Status == InitiativeStatus.Pending);
-            ViewBag.CountRevision = await allData.CountAsync(i => i.Status == InitiativeStatus.Revision_Required);
-            ViewBag.CountApproved = await allData.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved || i.Status == InitiativeStatus.Approved);
-            ViewBag.Total = await allData.CountAsync();
+            // 6. Dynamic Statistics (Count directly from DB based on allowed workflow)
+            // Note: We query the base 'allowed' set for stats, ignoring the search filter to show overall dashboard health
+            var baseStatsQuery = _context.Initiatives.Where(i => allowedStatuses.Contains(i.Status));
+            
+            var viewModel = new FacultyDashboardVM
+            {
+                PendingCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Pending),
+                ApprovedCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved),
+                RejectedCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Rejected),
+                TotalInitiatives = await baseStatsQuery.CountAsync(), // Total of the 4 relevant statuses
+                Initiatives = initiatives.Select(i => new FacultyInitiativeItem
+                {
+                    Id = i.Id,
+                    Title = i.Title,
+                    InitiativeCode = i.InitiativeCode,
+                    ProposerName = i.Creator?.FullName ?? "Unknown",
+                    Category = i.Category,
+                    Status = i.Status,
+                    SubmittedDate = i.SubmittedDate ?? i.CreatedAt
+                }).ToList()
+            };
 
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPages = totalPages;
@@ -67,7 +99,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             ViewBag.CurrentSearch = searchString;
             ViewBag.CurrentStatus = statusFilter;
 
-            return View(initiatives);
+            return View(viewModel);
         }
 
         // ==========================================
@@ -166,65 +198,82 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
+
+
+        // ==========================================
         // 4. SUBMIT REVISION REQUEST (POST)
+        // ==========================================
+        // ==========================================
+        // 4. REQUEST REVISION (POST)
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitRevision(int initiativeId, string content, DateTime? deadline)
+        public async Task<IActionResult> RequestRevision(int InitiativeId, string Comments)
         {
-            var initiative = await _context.Initiatives.FindAsync(initiativeId);
+            var initiative = await _context.Initiatives.FindAsync(InitiativeId);
             if (initiative == null) return NotFound();
 
             initiative.Status = InitiativeStatus.Revision_Required;
-
-            var revisionRequest = new RevisionRequest
+            
+            if (!string.IsNullOrEmpty(Comments))
             {
-                InitiativeId = initiativeId,
-                RequestContent = content,
-                RequestedDate = DateTime.Now,
-                Deadline = deadline,
-                IsResolved = false,
-                Status = "Open",
-                RequesterId = 2 // TODO: Replace with real User.Identity
-            };
+                var revisionRequest = new RevisionRequest
+                {
+                    InitiativeId = InitiativeId,
+                    RequestContent = Comments,
+                    RequestedDate = DateTime.Now,
+                    IsResolved = false,
+                    Status = "Open",
+                    RequesterId = 2 // TODO: Get real user ID
+                };
+                _context.RevisionRequests.Add(revisionRequest);
+            }
 
-            _context.RevisionRequests.Add(revisionRequest);
             await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Review));
+            TempData["SuccessMessage"] = "Revision request sent to the author!";
+            return RedirectToAction(nameof(Details), new { id = InitiativeId });
         }
 
         // ==========================================
         // 5. APPROVE INITIATIVE (POST) - Faculty approves to OST
         // ==========================================
+        // ==========================================
+        // 5. ACCEPT INITIATIVE (POST)
+        // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Approve(int id)
+        public async Task<IActionResult> Accept(int InitiativeId, string Comments)
         {
-            var initiative = await _context.Initiatives.FindAsync(id);
+            var initiative = await _context.Initiatives.FindAsync(InitiativeId);
             if (initiative == null) return NotFound();
 
-            // Faculty approved -> moves to OST for screening
             initiative.Status = InitiativeStatus.Faculty_Approved;
+            // You can log comments if needed
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Details), new { id = id });
+            TempData["SuccessMessage"] = "Initiative accepted and forwarded to R&D Department!";
+            return RedirectToAction(nameof(Details), new { id = InitiativeId });
         }
 
         // ==========================================
         // 6. REJECT INITIATIVE (POST)
         // ==========================================
+        // ==========================================
+        // 6. REJECT INITIATIVE (POST)
+        // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Reject(int id)
+        public async Task<IActionResult> Reject(int InitiativeId, string Comments)
         {
-            var initiative = await _context.Initiatives.FindAsync(id);
+            var initiative = await _context.Initiatives.FindAsync(InitiativeId);
             if (initiative == null) return NotFound();
 
             initiative.Status = InitiativeStatus.Rejected;
+            // You can log comments if needed
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Details), new { id = id });
+            TempData["SuccessMessage"] = "Initiative has been rejected.";
+            return RedirectToAction(nameof(Details), new { id = InitiativeId });
         }
 
         // ==========================================
