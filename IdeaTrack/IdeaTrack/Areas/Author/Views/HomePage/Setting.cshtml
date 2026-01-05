@@ -7,11 +7,11 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <span class="badge rounded-pill bg-white bg-opacity-25 mb-3 p-2 px-3">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">settings</span> CÀI ĐẶT TÀI KHOẢN
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">settings</span> ACCOUNT SETTINGS
                 </span>
-                <h1 class="fw-bold display-5 mb-3">Xin chào, @Model.FullName!</h1>
+                <h1 class="fw-bold display-5 mb-3">Hello, @Model.FullName!</h1>
                 <p class="fs-5 mb-0 opacity-75">
-                    Quản lý thông tin cá nhân và tùy chỉnh các cài đặt hệ thống của bạn.
+                    Manage your personal information and customize your system settings.
                 </p>
             </div>
             <div class="col-lg-4 d-none d-lg-flex justify-content-end">
@@ -48,7 +48,7 @@
                         }
                     </div>
                     <h4 class="fw-bold mb-1">@Model.FullName</h4>
-                    <p class="text-muted mb-3">@(Model.Position ?? "Giảng viên")</p>
+                    <p class="text-muted mb-3">@(Model.Position ?? "Lecturer")</p>
                     
                     @if (!string.IsNullOrEmpty(Model.AcademicRank) || !string.IsNullOrEmpty(Model.Degree))
                     {
@@ -77,8 +77,8 @@
                         <div class="d-flex align-items-center">
                             <span class="material-icons text-muted me-3">business</span>
                             <div>
-                                <div class="small text-muted">Khoa/Phòng ban</div>
-                                <div class="fw-medium">@(Model.Department ?? "Chưa cập nhật")</div>
+                                <div class="small text-muted">Department</div>
+                                <div class="fw-medium">@(Model.Department ?? "Not updated")</div>
                             </div>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                 <div class="card-header bg-white border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
                         <span class="material-icons align-middle me-2 text-primary">manage_accounts</span>
-                        Cài đặt tài khoản
+                        Account Settings
                     </h5>
                 </div>
                 <div class="card-body p-0">
@@ -106,12 +106,12 @@
                                 <span class="material-icons text-primary">person</span>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-0">Thông tin cá nhân</h6>
-                                <small class="text-muted">Cập nhật họ tên, chức danh, học vị</small>
+                                <h6 class="fw-bold mb-0">Personal Information</h6>
+                                <small class="text-muted">Update full name, title, degree</small>
                             </div>
                         </div>
                         <button class="btn btn-outline-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                            <span class="material-icons align-middle" style="font-size: 18px;">edit</span> Sửa
+                            <span class="material-icons align-middle" style="font-size: 18px;">edit</span> Edit
                         </button>
                     </div>
 
@@ -122,12 +122,12 @@
                                 <span class="material-icons text-warning">lock</span>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-0">Đổi mật khẩu</h6>
-                                <small class="text-muted">Cập nhật mật khẩu đăng nhập</small>
+                                <h6 class="fw-bold mb-0">Change Password</h6>
+                                <small class="text-muted">Update your login password</small>
                             </div>
                         </div>
                         <button class="btn btn-outline-warning rounded-pill px-3">
-                            <span class="material-icons align-middle" style="font-size: 18px;">vpn_key</span> Đổi
+                            <span class="material-icons align-middle" style="font-size: 18px;">vpn_key</span> Change
                         </button>
                     </div>
 
@@ -138,8 +138,8 @@
                                 <span class="material-icons text-success">folder</span>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-0">Quản lý tệp tin</h6>
-                                <small class="text-muted">Xem và quản lý các tệp đã tải lên</small>
+                                <h6 class="fw-bold mb-0">File Management</h6>
+                                <small class="text-muted">View and manage uploaded files</small>
                             </div>
                         </div>
                         <span class="material-icons text-muted">chevron_right</span>
@@ -153,7 +153,7 @@
                 <div class="card-header bg-white border-0 pt-4 px-4">
                     <h5 class="fw-bold mb-0">
                         <span class="material-icons align-middle me-2 text-info">notifications</span>
-                        Thông báo
+                        Notification
                     </h5>
                 </div>
                 <div class="card-body p-0">
@@ -163,8 +163,8 @@
                         <div class="d-flex align-items-center">
                             <span class="material-icons text-info me-3">notifications_active</span>
                             <div>
-                                <h6 class="fw-bold mb-0">Thông báo hệ thống</h6>
-                                <small class="text-muted">Nhận thông báo khi có cập nhật sáng kiến</small>
+                                <h6 class="fw-bold mb-0">System Notifications</h6>
+                                <small class="text-muted">Receive notifications for initiative updates</small>
                             </div>
                         </div>
                         <div class="form-check form-switch">
@@ -177,8 +177,8 @@
                         <div class="d-flex align-items-center">
                             <span class="material-icons text-danger me-3">email</span>
                             <div>
-                                <h6 class="fw-bold mb-0">Thông báo qua Email</h6>
-                                <small class="text-muted">Nhận email khi sáng kiến được duyệt/từ chối</small>
+                                <h6 class="fw-bold mb-0">Email Notifications</h6>
+                                <small class="text-muted">Receive email when initiative is approved/rejected</small>
                             </div>
                         </div>
                         <div class="form-check form-switch">
@@ -196,13 +196,13 @@
                         <div class="d-flex align-items-center">
                             <span class="material-icons text-danger me-3">logout</span>
                             <div>
-                                <h6 class="fw-bold mb-0">Đăng xuất</h6>
-                                <small class="text-muted">Thoát khỏi tài khoản hiện tại</small>
+                                <h6 class="fw-bold mb-0">Logout</h6>
+                                <small class="text-muted">Sign out of current account</small>
                             </div>
                         </div>
                         <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post">
                             <button type="submit" class="btn btn-danger rounded-pill px-4">
-                                <span class="material-icons align-middle me-1" style="font-size: 18px;">power_settings_new</span> Đăng xuất
+                                <span class="material-icons align-middle me-1" style="font-size: 18px;">power_settings_new</span> Logout
                             </button>
                         </form>
                     </div>
@@ -221,43 +221,43 @@
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title fw-bold">
                     <span class="material-icons align-middle me-2 text-primary">edit</span>
-                    Chỉnh sửa thông tin
+                    Edit Profile
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form>
                     <div class="mb-3">
-                        <label class="form-label">Họ và tên</label>
+                        <label class="form-label">Full Name</label>
                         <input type="text" class="form-control" value="@Model.FullName">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Chức vụ</label>
+                        <label class="form-label">Position</label>
                         <input type="text" class="form-control" value="@Model.Position">
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Học hàm</label>
+                            <label class="form-label">Academic Rank</label>
                             <select class="form-select" id="academicRankSelect">
-                                <option value="">-- Chọn --</option>
+                                <option value="">-- Select --</option>
                                 <option value="PGS" selected="@(Model.AcademicRank == "PGS")">PGS</option>
                                 <option value="GS" selected="@(Model.AcademicRank == "GS")">GS</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Học vị</label>
+                            <label class="form-label">Degree</label>
                             <select class="form-select" id="degreeSelect">
-                                <option value="">-- Chọn --</option>
-                                <option value="Thạc sĩ" selected="@(Model.Degree == "Thạc sĩ")">Thạc sĩ</option>
-                                <option value="Tiến sĩ" selected="@(Model.Degree == "Tiến sĩ")">Tiến sĩ</option>
+                                <option value="">-- Select --</option>
+                                <option value="Master" selected="@(Model.Degree == "Th?c si")">Master</option>
+                                <option value="PhD" selected="@(Model.Degree == "Ti?n si")">PhD</option>
                             </select>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer border-0 pt-0">
-                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-danger rounded-pill px-4">Lưu thay đổi</button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4">Save Changes</button>
             </div>
         </div>
     </div>

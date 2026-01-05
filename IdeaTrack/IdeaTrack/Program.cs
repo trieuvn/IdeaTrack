@@ -1,6 +1,7 @@
-using IdeaTrack.Areas.Faculty.Hubs;
+﻿using IdeaTrack.Areas.Faculty.Hubs;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using IdeaTrack.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
@@ -35,12 +36,57 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(36500);
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders();
+.AddDefaultTokenProviders()
+.AddErrorDescriber<CustomIdentityErrorDescriber>();
+
+// Register Business Services
+builder.Services.AddScoped<IInitiativeService, InitiativeService>();
+// Register Business Services
+builder.Services.AddScoped<IInitiativeService, InitiativeService>();
+builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<DataSeederService>();
+builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
+builder.Services.AddHttpContextAccessor();
+
+// Storage Service Registration
+var storageProvider = builder.Configuration["Storage:Provider"];
+if (string.Equals(storageProvider, "Supabase", StringComparison.OrdinalIgnoreCase))
+{
+    builder.Services.AddScoped<IStorageService, SupabaseStorageService>();
+}
+else
+{
+    // Default to Local
+    builder.Services.AddScoped<IStorageService, LocalStorageService>();
+}
+
+// File Service (Business Logic) relies on IStorageService
+builder.Services.AddScoped<IFileService, InitiativeFileService>();
+builder.Services.AddHttpContextAccessor();
 
 // MVC + Razor
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
+
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        var googleAuth = builder.Configuration.GetSection("Authentication:Google");
+        options.ClientId = googleAuth["ClientId"];
+        options.ClientSecret = googleAuth["ClientSecret"];
+        options.CallbackPath = "/signin-google";
+    });
+
+// Configure authentication cookie
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromHours(24);
+    options.SlidingExpiration = true;
+});
 
 builder.Services.AddAntiforgery(options =>
 {
@@ -153,5 +199,23 @@ app.MapControllerRoute(
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+app.MapRazorPages();
+
+// Seed Data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var seeder = services.GetRequiredService<DataSeederService>();
+        await seeder.SeedAllAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
+}
 
 app.Run();

@@ -10,8 +10,8 @@ namespace IdeaTrack.Areas.Councils.Models
         public int PendingCount { get; set; }
         public int ProgressPercentage { get; set; } // Logic: (Completed/Total)*100
 
-        // Danh sách Up Next & Recent Activity
-        public List<DashboardItem> UpNextList { get; set; } = new();
+        // Danh sach Up Next & Recent Activity
+        public List<DashboardItem> Assignments { get; set; } = new();
         public List<DashboardItem> RecentActivityList { get; set; } = new();
     }
 
@@ -21,12 +21,13 @@ namespace IdeaTrack.Areas.Councils.Models
         public string InitiativeCode { get; set; }
         public string Title { get; set; }
         public string CategoryName { get; set; }
-        public DateTime Timestamp { get; set; } // Ngày giao hoặc Ngày chấm
-        public DateTime? DueDate { get; set; }  // Thêm cái này để tính hạn chót
+        public DateTime Timestamp { get; set; } // Ngay giao hoac Ngay cham
+        public DateTime? DueDate { get; set; }  // Add cai nay de tinh han chot
         public decimal? Score { get; set; }
-        public AssignmentStatus Status { get; set; } // Thêm cái này để check trạng thái nút bấm
+        public AssignmentStatus Status { get; set; } // Add cai nay de check trang thai nut bam
+        public string Description { get; set; } // For Recent Activity
 
-        // Logic hiển thị thời gian "Ago"
+        // Logic hien thi thoi gian "Ago"
         public string TimeAgo 
         {
             get 
@@ -39,7 +40,7 @@ namespace IdeaTrack.Areas.Councils.Models
             }
         }
 
-        // Logic nghiệp vụ: Cảnh báo hạn chót (Yêu cầu trong ảnh)
+        // Logic nghiep vu: Warning han chot (Yeu cau trong anh)
         public bool IsDueSoon => Status != AssignmentStatus.Completed 
                                  && DueDate.HasValue 
                                  && (DueDate.Value - DateTime.Now).TotalDays <= 7;

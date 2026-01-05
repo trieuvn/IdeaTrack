@@ -1,0 +1,92 @@
+﻿@model IdeaTrack.Areas.SciTech.Models.CategoryCreateEditVM
+
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-outline-secondary rounded-pill">
+                    <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Back
+                </a>
+            </div>
+
+            <div class="card card-custom shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <span class="material-icons align-middle me-2">edit</span>
+                        Edit Category
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-8">
+                                <label asp-for="Name" class="form-label fw-medium">
+                                    Category Name <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="PeriodId" class="form-label fw-medium">
+                                    Period <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="PeriodId" asp-items="Model.Periods" class="form-select">
+                                    <option value="">-- Select period --</option>
+                                </select>
+                                <span asp-validation-for="PeriodId" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label fw-medium">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="alert alert-warning">
+                            <strong><span class="material-icons align-middle me-1" style="font-size: 18px;">warning</span> Note:</strong>
+                            Changing Board/Criteria only affects newly approved initiatives. Already assigned initiatives will remain unchanged.
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="BoardId" class="form-label fw-medium">
+                                    <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">groups</span>
+                                    Evaluation Board
+                                </label>
+                                <select asp-for="BoardId" asp-items="Model.Boards" class="form-select">
+                                    <option value="">-- Not configured --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="TemplateId" class="form-label fw-medium">
+                                    <span class="material-icons align-middle me-1 text-warning" style="font-size: 18px;">grade</span>
+                                    Criteria Template
+                                </label>
+                                <select asp-for="TemplateId" asp-items="Model.Templates" class="form-select">
+                                    <option value="">-- Not configured --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

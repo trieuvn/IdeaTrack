@@ -62,26 +62,24 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
         public class InputModel
         {
             /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
+            /// Username or Email for login
             /// </summary>
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            [Required(ErrorMessage = "Please enter username or email")]
+            [Display(Name = "Name dang nhap hoac Email")]
+            public string UsernameOrEmail { get; set; }
 
             /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
+            /// Password
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Please enter password")]
             [DataType(DataType.Password)]
+            [Display(Name = "Password")]
             public string Password { get; set; }
 
             /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
+            /// Remember me
             /// </summary>
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Ghi nho dang nhap?")]
             public bool RememberMe { get; set; }
         }
 
@@ -110,13 +108,51 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                // Determine if input is email or username
+                string username = Input.UsernameOrEmail;
+                ApplicationUser user = null;
+
+                // If input looks like an email, find user by email first
+                if (Input.UsernameOrEmail.Contains("@"))
+                {
+                    user = await _signInManager.UserManager.FindByEmailAsync(Input.UsernameOrEmail);
+                    if (user != null)
+                    {
+                        username = user.UserName; // Use the actual username for sign-in
+                    }
+                }
+                else
+                {
+                    user = await _signInManager.UserManager.FindByNameAsync(Input.UsernameOrEmail);
+                }
+
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Tai khoan khong ton tai.");
+                    return Page();
+                }
+
+                // Sign in with username (Identity requires username, not email)
+                var result = await _signInManager.PasswordSignInAsync(username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    _logger.LogInformation("User {Username} logged in.", username);
+                    
+                    // Role-based redirect after successful login
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    
+                    if (roles.Contains("Admin"))
+                        return LocalRedirect("/Admin");
+                    if (roles.Contains("SciTech") || roles.Contains("OST_Admin"))
+                        return LocalRedirect("/SciTech/Port");
+                    if (roles.Contains("FacultyLeader") || roles.Contains("Faculty_Admin"))
+                        return LocalRedirect("/Faculty/Dashboard");
+                    if (roles.Contains("CouncilMember") || roles.Contains("Council_Member"))
+                        return LocalRedirect("/Councils/Page");
+                    
+                    // Default: Author/Lecturer
+                    return LocalRedirect("/Author/Dashboard");
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -129,7 +165,7 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Sai mat khau.");
                     return Page();
                 }
             }

@@ -2,8 +2,8 @@
 {
     public enum BoardRole
     {
-        Chairman,   // Chủ tịch
-        Secretary,  // Thư ký
-        Member      // Ủy viên/Phản biện
+        Chairman,   // Chu tich
+        Secretary,  // Thu ky
+        Member      // Uy vien/Phan bien
     }
 }

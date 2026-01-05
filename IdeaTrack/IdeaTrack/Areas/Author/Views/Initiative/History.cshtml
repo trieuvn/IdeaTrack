@@ -7,17 +7,17 @@
         <div class="row">
             <div class="col-lg-8">
                 <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-3 p-2 px-3" style="border: 1px solid rgba(0,255,255,0.2)">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">history</span> LỊCH SỬ SÁNG KIẾN
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">history</span> INITIATIVE HISTORY
                 </span>
-                <h1 class="fw-bold display-5 mb-3">Lịch sử hoạt động</h1>
+                <h1 class="fw-bold display-5 mb-3">Activity History</h1>
                 <p class="fs-5 mb-0 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    Theo dõi và quản lý tất cả các sáng kiến bạn đã đề xuất, từ nháp đến đã duyệt.
+                    Track and manage all your proposed initiatives, from drafts to approved ones.
                 </p>
             </div>
             <div class="col-lg-4 d-flex align-items-center justify-content-end">
                 <div class="text-center">
                     <div class="display-3 fw-bold">@Model.Count()</div>
-                    <div class="opacity-75">Tổng sáng kiến</div>
+                    <div class="opacity-75">Total Initiatives</div>
                 </div>
             </div>
         </div>
@@ -30,31 +30,31 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active rounded-pill" data-filter="all" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">apps</span>
-                        Tất cả <span class="badge bg-secondary ms-1">@Model.Count()</span>
+                        All <span class="badge bg-secondary ms-1">@Model.Count()</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="approved" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">check_circle</span>
-                        Đã duyệt <span class="badge bg-success ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Approved)</span>
+                        Approved <span class="badge bg-success ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Approved)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="pending" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">pending</span>
-                        Chờ duyệt <span class="badge bg-warning text-dark ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Pending || i.Status == IdeaTrack.Models.InitiativeStatus.Reviewing)</span>
+                        Pending <span class="badge bg-warning text-dark ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Pending || i.Status == IdeaTrack.Models.InitiativeStatus.Evaluating)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="draft" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">edit_note</span>
-                        Nháp <span class="badge bg-secondary ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Draft)</span>
+                        Draft <span class="badge bg-secondary ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Draft)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="rejected" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">cancel</span>
-                        Từ chối <span class="badge bg-danger ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Rejected)</span>
+                        Rejected <span class="badge bg-danger ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Rejected)</span>
                     </button>
                 </li>
             </ul>
@@ -70,11 +70,11 @@
                     <table class="table table-hover table-borderless align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="ps-4 py-3">Tiêu đề</th>
-                                <th class="py-3">Danh mục</th>
-                                <th class="py-3">Ngày tạo</th>
-                                <th class="py-3">Trạng thái</th>
-                                <th class="pe-4 py-3 text-end">Thao tác</th>
+                                <th class="ps-4 py-3">Title</th>
+                                <th class="py-3">Category</th>
+                                <th class="py-3">Created Date</th>
+                                <th class="py-3">Status</th>
+                                <th class="pe-4 py-3 text-end">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -93,12 +93,12 @@
                                     <td class="ps-4">
                                         <div class="fw-medium">@item.Title</div>
                                         <div class="text-muted small text-truncate" style="max-width: 300px;">
-                                            @(string.IsNullOrEmpty(item.Description) ? "Chưa có mô tả" : (item.Description.Length > 60 ? item.Description.Substring(0, 60) + "..." : item.Description))
+                                            @(string.IsNullOrEmpty(item.Description) ? "No description" : (item.Description.Length > 60 ? item.Description.Substring(0, 60) + "..." : item.Description))
                                         </div>
                                     </td>
                                     <td>
                                         <span class="badge bg-light text-dark rounded-pill">
-                                            @(item.Category?.Name ?? "Chưa phân loại")
+                                            @(item.Category?.Name ?? "Uncategorized")
                                         </span>
                                     </td>
                                     <td>
@@ -112,24 +112,24 @@
                                         {
                                             case IdeaTrack.Models.InitiativeStatus.Approved:
                                                 <span class="badge bg-success rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">check</span> Đã duyệt
+                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">check</span> Approved
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Rejected:
                                                 <span class="badge bg-danger rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">close</span> Từ chối
+                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">close</span> Rejected
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Draft:
                                                 <span class="badge bg-secondary rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> Nháp
+                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> Draft
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Pending:
-                                            case IdeaTrack.Models.InitiativeStatus.Reviewing:
-                                            case IdeaTrack.Models.InitiativeStatus.Dept_Review:
+                                            case IdeaTrack.Models.InitiativeStatus.Evaluating:
+                                            case IdeaTrack.Models.InitiativeStatus.Faculty_Approved:
                                                 <span class="badge bg-warning text-dark rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">schedule</span> Chờ duyệt
+                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">schedule</span> Pending
                                                 </span>
                                                 break;
                                             default:
@@ -138,12 +138,12 @@
                                         }
                                     </td>
                                     <td class="pe-4 text-end">
-                                        <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                            <span class="material-icons align-middle" style="font-size: 16px;">visibility</span> Xem
+                                        <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                            <span class="material-icons align-middle" style="font-size: 16px;">visibility</span> View
                                         </a>
                                         @if (item.Status == IdeaTrack.Models.InitiativeStatus.Draft)
                                         {
-                                            <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3 ms-1" title="Chỉnh sửa">
+                                            <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary rounded-pill px-3 ms-1" title="Edit">
                                                 <span class="material-icons align-middle" style="font-size: 16px;">edit</span>
                                             </a>
 
@@ -159,10 +159,10 @@
             {
                 <div class="text-center py-5">
                     <span class="material-icons text-muted" style="font-size: 80px;">inbox</span>
-                    <h5 class="text-muted mt-3">Chưa có sáng kiến nào</h5>
-                    <p class="text-muted mb-4">Bắt đầu bằng việc tạo sáng kiến đầu tiên của bạn</p>
-                    <a asp-controller="Initiative" asp-action="Create" class="btn btn-danger rounded-pill px-4">
-                        <span class="material-icons align-middle me-1">add_circle</span> Tạo sáng kiến mới
+                    <h5 class="text-muted mt-3">No initiatives found</h5>
+                    <p class="text-muted mb-4">Start by creating your first initiative</p>
+                    <a asp-controller="Initiative" asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                        <span class="material-icons align-middle me-1">add_circle</span> Create New Initiative
                     </a>
                 </div>
             }

@@ -2,23 +2,23 @@
 @model IdeaTrack.Areas.Councils.Models.AssignedListVM
 
 @{
-    ViewData["Title"] = "Lịch sử chấm";
-    // Tính toán số hiển thị cho phân trang
+    ViewData["Title"] = "L?ch s? ch?m";
+    // Tính toán s? hi?n th? cho phân trang
     int fromItem = (Model.CurrentPage - 1) * Model.PageSize + 1;
     int toItem = Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount);
 }
 
 <header class="header">
     <div class="header-title">
-        <h1>Lịch sử chấm sáng kiến</h1>
-        <p>Lịch sử các lần chấm điểm sáng kiến trong vai trò giảng viên hội đồng.</p>
+        <h1>L?ch s? ch?m sáng ki?n</h1>
+        <p>L?ch s? các l?n ch?m di?m sáng ki?n trong vai trò gi?ng viên h?i d?ng.</p>
     </div>
 
     <div class="user-card">
         <img src="https://i.pravatar.cc/80?img=15" class="avatar">
         <div>
             <div class="user-name">@User.Identity?.Name</div>
-            <div class="user-role"><i class="fas fa-user-check"></i> Thành viên Hội đồng</div>
+            <div class="user-role"><i class="fas fa-user-check"></i> Member H?i d?ng</div>
         </div>
     </div>
 </header>
@@ -27,21 +27,21 @@
     <section class="filter-bar">
         <div class="search-box">
             <i class="bi bi-search"></i>
-            <input type="text" name="keyword" value="@Model.Keyword" placeholder="Tìm theo tên sáng kiến...">
+            <input type="text" name="keyword" value="@Model.Keyword" placeholder="Tìm theo tên sáng ki?n...">
         </div>
 
         <div class="filter-options">
-            <span>Lọc theo khoa:</span>
+            <span>L?c theo khoa:</span>
             <select class="select-filter" name="faculty">
-                <option value="">Tất cả khoa</option>
-                <option>Công nghệ thông tin</option>
-                <option>Kinh tế</option>
+                <option value="">T?t c? khoa</option>
+                <option>Công ngh? thông tin</option>
+                <option>Kinh t?</option>
             </select>
 
             <select class="select-filter" name="sortOrder" onchange="this.form.submit()">
-                <option value="Newest" selected="@(Model.SortOrder == "Newest")">Mới nhất</option>
-                <option value="Oldest" selected="@(Model.SortOrder == "Oldest")">Cũ nhất</option>
-                <option value="ScoreDesc" selected="@(Model.SortOrder == "ScoreDesc")">Điểm cao nhất</option>
+                <option value="Newest" selected="@(Model.SortOrder == "Newest")">M?i nh?t</option>
+                <option value="Oldest" selected="@(Model.SortOrder == "Oldest")">Cu nh?t</option>
+                <option value="ScoreDesc" selected="@(Model.SortOrder == "ScoreDesc")">Ði?m cao nh?t</option>
             </select>
         </div>
     </section>
@@ -51,13 +51,13 @@
     <table>
         <thead>
             <tr>
-                <th>TÊN SÁNG KIẾN</th>
+                <th>TÊN SÁNG KI?N</th>
                 <th>KHOA</th>
-                <th>NGƯỜI ĐỀ XUẤT</th>
-                <th>VAI TRÒ CHẤM</th>
-                <th>NGÀY CHẤM</th>
-                <th>ĐIỂM</th>
-                <th>HÀNH ĐỘNG</th>
+                <th>NGU?I Ð? XU?T</th>
+                <th>VAI TRÒ CH?M</th>
+                <th>NGÀY CH?M</th>
+                <th>ÐI?M</th>
+                <th>HÀNH Ð?NG</th>
             </tr>
         </thead>
 
@@ -75,9 +75,9 @@
                             <span class="faculty-badge it">@item.CategoryName</span>
                         </td>
                         <td>
-                            <span class="author-name">ThS. Giảng Viên (Demo)</span>
+                            <span class="author-name">ThS. Gi?ng Viên (Demo)</span>
                         </td>
-                        <td><span class="role-badge">Thành viên</span></td>
+                        <td><span class="role-badge">Member</span></td>
                         <td>
                             @(item.AssignedDate.ToString("dd/MM/yyyy"))
                         </td>
@@ -88,16 +88,16 @@
                             <div class="d-flex gap-2">
                                 <a href="/Councils/Page/Details/@item.AssignmentId"
                                    class="btn btn-sm btn-success d-flex align-items-center gap-1 text-decoration-none"
-                                   title="Xem chi tiết">
+                                   title="Xem chi ti?t">
                                     <i class="bi bi-eye"></i>
                                     Xem
                                 </a>
 
                                 <a href="/Councils/Page/Details/@item.AssignmentId"
                                    class="btn btn-sm btn-warning d-flex align-items-center gap-1 text-white text-decoration-none"
-                                   title="Chỉnh sửa điểm">
+                                   title="Ch?nh s?a di?m">
                                     <i class="bi bi-pencil-square"></i>
-                                    Sửa
+                                    S?a
                                 </a>
                             </div>
                         </td>
@@ -107,7 +107,7 @@
             else
             {
                 <tr>
-                    <td colspan="7" class="text-center py-4 text-muted">Không tìm thấy dữ liệu chấm điểm nào.</td>
+                    <td colspan="7" class="text-center py-4 text-muted">Không tìm th?y d? li?u ch?m di?m nào.</td>
                 </tr>
             }
         </tbody>
@@ -117,7 +117,7 @@
 <footer class="pagination-container">
     @if (Model.TotalCount > 0)
     {
-        <span>Hiển thị @fromItem–@toItem trong @Model.TotalCount sáng kiến</span>
+        <span>Hi?n th? @fromItem@toItem trong @Model.TotalCount sáng ki?n</span>
         <div class="pagination">
             @if (Model.HasPreviousPage)
             {

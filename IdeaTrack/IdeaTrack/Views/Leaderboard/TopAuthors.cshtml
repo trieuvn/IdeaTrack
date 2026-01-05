@@ -1,0 +1,103 @@
+﻿@model List<IdeaTrack.Models.ViewModels.TopAuthorItem>
+@{
+    ViewData["Title"] = "Top Authors";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var periods = ViewBag.Periods as List<IdeaTrack.Models.ViewModels.PeriodSelectItem>;
+    var selectedPeriodId = ViewBag.SelectedPeriodId as int?;
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-success mb-0">
+            <i class="fas fa-user-graduate me-2"></i>Top Authors
+        </h2>
+        <form method="get" class="d-flex gap-2">
+            <select name="periodId" class="form-select" style="width: 250px" onchange="this.form.submit()">
+                @if (periods != null)
+                {
+                    @foreach (var period in periods)
+                    {
+                        <option value="@period.Id" selected="@(period.Id == selectedPeriodId)">
+                            @period.Name @(period.IsActive ? "(Current)" : "")
+                        </option>
+                    }
+                }
+            </select>
+        </form>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 60px">Rank</th>
+                                <th>Author</th>
+                                <th>Department</th>
+                                <th class="text-center">Total</th>
+                                <th class="text-center">Approved</th>
+                                <th class="text-end">Total Score</th>
+                                <th class="text-end">Avg Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (item.Rank <= 3)
+                                        {
+                                            var medalColor = item.Rank == 1 ? "gold" : item.Rank == 2 ? "silver" : "#CD7F32";
+                                            <i class="fas fa-medal fa-lg" style="color: @medalColor"></i>
+                                        }
+                                        else
+                                        {
+                                            <span class="fw-bold">@item.Rank</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <span class="fw-semibold">@item.AuthorName</span>
+                                        </div>
+                                    </td>
+                                    <td>@item.DepartmentName</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-info">@item.TotalInitiatives</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-success">@item.ApprovedCount</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="badge bg-primary fs-6">@item.TotalScore.ToString("F1")</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="text-muted">@item.AverageScore.ToString("F2")</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-users fa-4x mb-3"></i>
+                    <p>No ranking data available</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a asp-action="Index" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-2"></i>Back
+        </a>
+    </div>
+</div>

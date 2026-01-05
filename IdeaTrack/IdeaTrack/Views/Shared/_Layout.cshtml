@@ -3,7 +3,7 @@
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,19 +51,19 @@
                 <a asp-controller="Home"
                    asp-action="Index"
                    class="@(currentController == "Home" && currentAction == "Index" ? "active" : "")">
-                    <span class="material-icons">home</span> Trang chủ
+                    <span class="material-icons">home</span> Home
                 </a>
 
                 <a asp-controller="Home"
                    asp-action="About"
                    class="@(currentController == "Home" && currentAction == "About" ? "active" : "")">
-                    <span class="material-icons">info</span> Giới thiệu
+                    <span class="material-icons">info</span> About
                 </a>
 
                 <a asp-controller="Home"
                    asp-action="Privacy"
                    class="@(currentController == "Home" && currentAction == "Privacy" ? "active" : "")">
-                    <span class="material-icons">menu_book</span> Hướng dẫn nộp sáng kiến
+                    <span class="material-icons">menu_book</span> Guidelines
                 </a>
 
             </div>

@@ -15,9 +15,9 @@ public static class FakeInitiativeService
         if (!context.Departments.Any())
         {
             context.Departments.AddRange(
-                new Department { Code = "CNTT", Name = "Công nghệ thông tin" },
-                new Department { Code = "NN", Name = "Nông nghiệp" },
-                new Department { Code = "MT", Name = "Môi trường" }
+                new Department { Code = "CNTT", Name = "Cong nghe thong tin" },
+                new Department { Code = "NN", Name = "Nong nghiep" },
+                new Department { Code = "MT", Name = "Moi truong" }
             );
             await context.SaveChangesAsync();
         }
@@ -29,36 +29,97 @@ public static class FakeInitiativeService
         {
             context.AcademicYears.AddRange(
                 new AcademicYear { Name = "2023-2024" },
-                new AcademicYear { Name = "2024-2025" }
+                new AcademicYear { Name = "2024-2025", IsCurrent = true }
             );
             await context.SaveChangesAsync();
         }
 
         // =======================
-        // 3️⃣ SEED INITIATIVE CATEGORY
+        // 3️⃣ SEED INITIATIVE PERIOD
+        // =======================
+        if (!context.InitiativePeriods.Any())
+        {
+            var currentYear = await context.AcademicYears.FirstOrDefaultAsync(a => a.IsCurrent);
+            if (currentYear != null)
+            {
+                context.InitiativePeriods.Add(new InitiativePeriod
+                {
+                    Name = "Dot 1 - 2024-2025",
+                    AcademicYearId = currentYear.Id,
+                    StartDate = new DateTime(2024, 9, 1),
+                    EndDate = new DateTime(2025, 6, 30),
+                    IsActive = true
+                });
+                await context.SaveChangesAsync();
+            }
+        }
+
+        // =======================
+        // 4️⃣ SEED EVALUATION TEMPLATE
+        // =======================
+        if (!context.EvaluationTemplates.Any())
+        {
+            context.EvaluationTemplates.AddRange(
+                new EvaluationTemplate { TemplateName = "Evaluation Templates AI", Type = TemplateType.Scoring, IsActive = true },
+                new EvaluationTemplate { TemplateName = "Evaluation Templates Nong nghiep", Type = TemplateType.Scoring, IsActive = true },
+                new EvaluationTemplate { TemplateName = "Evaluation Templates Moi truong", Type = TemplateType.Scoring, IsActive = true }
+            );
+            await context.SaveChangesAsync();
+        }
+
+        // =======================
+        // 5️⃣ SEED BOARD (EVALUATION BOARD)
+        // =======================
+        if (!context.Boards.Any())
+        {
+            context.Boards.AddRange(
+                new Board { BoardName = "Hoi dong Ky thuat", FiscalYear = 2024, IsActive = true },
+                new Board { BoardName = "Hoi dong Nong nghiep", FiscalYear = 2024, IsActive = true },
+                new Board { BoardName = "Hoi dong Moi truong", FiscalYear = 2024, IsActive = true }
+            );
+            await context.SaveChangesAsync();
+        }
+
+        // =======================
+        // 6️⃣ SEED INITIATIVE CATEGORY (linked to Period, Board, Template)
         // =======================
         if (!context.InitiativeCategories.Any())
         {
-            context.InitiativeCategories.AddRange(
-                new InitiativeCategory
-                {
-                 
-                    Name = "Trí tuệ nhân tạo"
-                },
-                new InitiativeCategory
-                {
-                    Name = "Nông nghiệp"
-                },
-                new InitiativeCategory
-                {
-                    Name = "Môi trường"
-                }
-            );
-            await context.SaveChangesAsync();
+            var period = await context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+            var templates = await context.EvaluationTemplates.ToListAsync();
+            var boards = await context.Boards.ToListAsync();
+
+            if (period != null && templates.Count >= 3 && boards.Count >= 3)
+            {
+                context.InitiativeCategories.AddRange(
+                    new InitiativeCategory
+                    {
+                        Name = "Tri tue nhan tao",
+                        PeriodId = period.Id,
+                        BoardId = boards[0].Id,
+                        TemplateId = templates[0].Id
+                    },
+                    new InitiativeCategory
+                    {
+                        Name = "Nong nghiep",
+                        PeriodId = period.Id,
+                        BoardId = boards[1].Id,
+                        TemplateId = templates[1].Id
+                    },
+                    new InitiativeCategory
+                    {
+                        Name = "Moi truong",
+                        PeriodId = period.Id,
+                        BoardId = boards[2].Id,
+                        TemplateId = templates[2].Id
+                    }
+                );
+                await context.SaveChangesAsync();
+            }
         }
 
         // =======================
-        // 4️⃣ SEED USER (IDENTITY)
+        // 7️⃣ SEED USER (IDENTITY)
         // =======================
         if (userManager.Users.Count() < 3)
         {
@@ -75,7 +136,7 @@ public static class FakeInitiativeService
                 {
                     UserName = email,
                     Email = email,
-                    FullName = $"Giảng viên {i}",
+                    FullName = $"Giang vien {i}",
                     DepartmentId = departments[i - 1].Id,
                     EmailConfirmed = true,
                     IsActive = true
@@ -86,7 +147,7 @@ public static class FakeInitiativeService
         }
 
         // =======================
-        // 5️⃣ SEED INITIATIVE
+        // 8️⃣ SEED INITIATIVE
         // =======================
         if (context.Initiatives.Any())
             return;
@@ -94,55 +155,74 @@ public static class FakeInitiativeService
         var users = await userManager.Users.Take(3).ToListAsync();
         var departmentsSeeded = await context.Departments.Take(3).ToListAsync();
         var categories = await context.InitiativeCategories.Take(3).ToListAsync();
-        var academicYearId = await context.AcademicYears
-            .OrderByDescending(x => x.Id)
-            .Select(x => x.Id)
-            .FirstAsync();
+        var activePeriod = await context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+
+        if (users.Count < 3 || categories.Count < 3 || activePeriod == null)
+            return;
 
         var initiatives = new List<Initiative>
         {
             new Initiative
             {
-                InitiativeCode = "HS-001",
-                Title = "Nghiên cứu AI trong chẩn đoán y tế",
+                InitiativeCode = "SK-2024-0001",
+                Title = "Nghien cuu AI trong chan doan y te",
                 CreatedAt = DateTime.Now.AddDays(-30),
                 SubmittedDate = DateTime.Now.AddDays(-30),
                 Status = InitiativeStatus.Approved,
-
-                ProposerId = users[0].Id,
+                CreatorId = users[0].Id,
                 DepartmentId = departmentsSeeded[0].Id,
-                AcademicYearId = academicYearId,
-                CategoryId = categories[0].Id
+                PeriodId = activePeriod.Id,
+                CategoryId = categories[0].Id,
+                CurrentRound = 1
             },
             new Initiative
             {
-                InitiativeCode = "HS-002",
-                Title = "Nông nghiệp xanh bền vững",
+                InitiativeCode = "SK-2024-0002",
+                Title = "Nong nghiep xanh ben vung",
                 CreatedAt = DateTime.Now.AddDays(-25),
                 SubmittedDate = DateTime.Now.AddDays(-25),
                 Status = InitiativeStatus.Pending,
-
-                ProposerId = users[1].Id,
+                CreatorId = users[1].Id,
                 DepartmentId = departmentsSeeded[1].Id,
-                AcademicYearId = academicYearId,
-                CategoryId = categories[1].Id
+                PeriodId = activePeriod.Id,
+                CategoryId = categories[1].Id,
+                CurrentRound = 1
             },
             new Initiative
             {
-                InitiativeCode = "HS-003",
-                Title = "Hệ thống IoT giám sát môi trường",
+                InitiativeCode = "SK-2024-0003",
+                Title = "He thong IoT giam sat moi truong",
                 CreatedAt = DateTime.Now.AddDays(-20),
                 SubmittedDate = DateTime.Now.AddDays(-20),
                 Status = InitiativeStatus.Rejected,
-
-                ProposerId = users[2].Id,
+                CreatorId = users[2].Id,
                 DepartmentId = departmentsSeeded[2].Id,
-                AcademicYearId = academicYearId,
-                CategoryId = categories[2].Id
+                PeriodId = activePeriod.Id,
+                CategoryId = categories[2].Id,
+                CurrentRound = 1
             }
         };
 
         context.Initiatives.AddRange(initiatives);
+        await context.SaveChangesAsync();
+
+        // =======================
+        // 9️⃣ SEED AUTHORSHIP (Creator as primary author)
+        // =======================
+        var seededInitiatives = await context.Initiatives.ToListAsync();
+        foreach (var initiative in seededInitiatives)
+        {
+            if (!context.InitiativeAuthorships.Any(a => a.InitiativeId == initiative.Id))
+            {
+                context.InitiativeAuthorships.Add(new InitiativeAuthorship
+                {
+                    InitiativeId = initiative.Id,
+                    AuthorId = initiative.CreatorId,
+                    IsCreator = true,
+                    JoinedAt = initiative.CreatedAt
+                });
+            }
+        }
         await context.SaveChangesAsync();
     }
 }

@@ -1,219 +1,124 @@
 ﻿@model IdeaTrack.Areas.Author.ViewModels.AuthorDashboardViewModel
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Overview";
 }
 
-<div class="container-fluid pb-5">
-
-    <!-- Hero Banner - Giống trang Home nhưng cho Author -->
-    <div class="hero-banner p-5 text-white mb-5 shadow-lg">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <div class="d-flex align-items-center gap-2 mb-3">
-                    <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-bold">AUTHOR DASHBOARD</span>
-                    <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-2">@DateTime.Now.ToString("MMMM yyyy")</span>
-                </div>
-
-                <h1 class="display-4 fw-bold mb-3">Xin chào, @Model.UserName! 👋</h1>
-
-                <p class="fs-5 fw-light opacity-90 mb-4">
-                    Bạn có <strong>@Model.DraftCount</strong> bản nháp và <strong>@Model.UnderReviewCount</strong> sáng kiến đang chờ duyệt.
-                </p>
-
-                <div class="d-flex gap-3">
-                    <a asp-controller="Initiative" asp-action="Create" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
-                        <span class="material-icons align-middle me-1">add_circle</span> Tạo sáng kiến mới
-                    </a>
-                    <a asp-controller="Initiative" asp-action="History" class="btn btn-outline-light btn-lg px-4 rounded-3 bg-white bg-opacity-10">
-                        <span class="material-icons align-middle me-1">history</span> Xem lịch sử
-                    </a>
-                </div>
-            </div>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark">Dashboard</h2>
+            <p class="text-muted mb-0">Welcome back, @Model.UserName</p>
         </div>
-
-        <div class="award-circle d-none d-lg-flex">
-            <span class="material-icons text-warning mb-2" style="font-size: 50px;">emoji_events</span>
-            <div class="fw-bold text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">Thành tựu</div>
-            <div class="display-6 fw-bold text-warning">@Model.ApprovedCount</div>
-            <div class="small opacity-75">Đã duyệt</div>
-        </div>
+        <a asp-controller="Initiative" asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2">
+            <span class="material-icons">add_circle</span>
+            Create New Initiative
+        </a>
     </div>
 
-    <!-- Stats Cards - Giống style Home page -->
-    <div class="row g-4 mb-5">
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <!-- Drafts -->
         <div class="col-md-3">
-            <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-                     style="width: 60px; height: 60px; background-color: #dbeafe; border-radius: 50%;">
-                    <span class="material-icons" style="color: #1d4ed8;">edit_note</span>
+            <div class="card border-0 shadow-sm h-100 dash-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-box bg-secondary bg-opacity-10 text-secondary rounded-circle p-3">
+                            <span class="material-icons">edit_note</span>
+                        </div>
+                        <span class="badge bg-secondary rounded-pill">Drafts</span>
+                    </div>
+                    <h3 class="fw-bold mb-1">@Model.DraftCount</h3>
+                    <p class="text-muted small mb-0">Total drafts</p>
                 </div>
-                <h2 class="fw-bold text-primary mb-1">@Model.DraftCount</h2>
-                <p class="text-muted small mb-0">Bản nháp</p>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-                     style="width: 60px; height: 60px; background-color: #fef3c7; border-radius: 50%;">
-                    <span class="material-icons" style="color: #b45309;">pending</span>
-                </div>
-                <h2 class="fw-bold text-warning mb-1">@Model.SubmittedCount</h2>
-                <p class="text-muted small mb-0">Đã nộp</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-                     style="width: 60px; height: 60px; background-color: #d1fae5; border-radius: 50%;">
-                    <span class="material-icons" style="color: #059669;">check_circle</span>
-                </div>
-                <h2 class="fw-bold text-success mb-1">@Model.ApprovedCount</h2>
-                <p class="text-muted small mb-0">Đã duyệt</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
-                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-                     style="width: 60px; height: 60px; background-color: #fce7f3; border-radius: 50%;">
-                    <span class="material-icons" style="color: #be123c;">trending_up</span>
-                </div>
-                <h2 class="fw-bold mb-1" style="color: #be123c;">@Model.SuccessRate%</h2>
-                <p class="text-muted small mb-0">Tỷ lệ thành công</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Initiatives Table - Card style giống Home -->
-    <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div class="d-flex align-items-center">
-                <span class="material-icons text-danger me-2">folder_open</span>
-                <h4 class="fw-bold mb-0">Sáng kiến gần đây</h4>
-            </div>
-            <a asp-controller="Initiative" asp-action="History" class="text-danger text-decoration-none fw-bold small">
-                Xem tất cả <span class="material-icons fs-6 align-middle">arrow_forward</span>
-            </a>
         </div>
 
-        <div class="card border-0 shadow-sm" style="border-radius: 15px;">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="border-0 ps-4">Tiêu đề</th>
-                                <th class="border-0">Danh mục</th>
-                                <th class="border-0">Ngày tạo</th>
-                                <th class="border-0">Trạng thái</th>
-                                <th class="border-0 pe-4 text-end">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.RecentInitiatives.Any())
-                            {
-                                @foreach (var item in Model.RecentInitiatives)
-                                {
-                                    <tr>
-                                        <td class="ps-4 fw-medium">@item.Title</td>
-                                        <td>
-                                            <span class="badge bg-light text-dark">@(item.Category?.Name ?? "N/A")</span>
-                                        </td>
-                                        <td class="text-muted">@item.CreatedAt.ToString("dd/MM/yyyy")</td>
-                                        <td>
-                                            @switch (item.Status)
-                                            {
-                                                case IdeaTrack.Models.InitiativeStatus.Draft:
-                                                    <span class="badge bg-secondary">Nháp</span>
-                                                    break;
-                                                case IdeaTrack.Models.InitiativeStatus.Pending:
-                                                    <span class="badge bg-warning text-dark">Chờ duyệt</span>
-                                                    break;
-                                                case IdeaTrack.Models.InitiativeStatus.Reviewing:
-                                                case IdeaTrack.Models.InitiativeStatus.Dept_Review:
-                                                    <span class="badge bg-info">Đang xét duyệt</span>
-                                                    break;
-                                                case IdeaTrack.Models.InitiativeStatus.Approved:
-                                                    <span class="badge bg-success">Đã duyệt</span>
-                                                    break;
-                                                case IdeaTrack.Models.InitiativeStatus.Rejected:
-                                                    <span class="badge bg-danger">Từ chối</span>
-                                                    break;
-                                                default:
-                                                    <span class="badge bg-light text-dark">@item.Status</span>
-                                                    break;
-                                            }
-                                        </td>
-                                        <td class="pe-4 text-end">
-                                            <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                                <span class="material-icons" style="font-size: 16px;">visibility</span> Xem
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="5" class="text-center py-5">
-                                        <span class="material-icons text-muted" style="font-size: 48px;">inbox</span>
-                                        <p class="text-muted mt-2 mb-3">Chưa có sáng kiến nào</p>
-                                        <a asp-controller="Initiative" asp-action="Create" class="btn btn-danger rounded-pill px-4">
-                                            <span class="material-icons align-middle me-1">add</span> Tạo sáng kiến đầu tiên
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+        <!-- Pending -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 dash-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle p-3">
+                            <span class="material-icons">hourglass_empty</span>
+                        </div>
+                        <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                    </div>
+                    <h3 class="fw-bold mb-1">@Model.SubmittedCount</h3>
+                    <p class="text-muted small mb-0">Waiting for approval</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Under Review -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 dash-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-box bg-info bg-opacity-10 text-info rounded-circle p-3">
+                            <span class="material-icons">fact_check</span>
+                        </div>
+                        <span class="badge bg-info rounded-pill">Reviewing</span>
+                    </div>
+                    <h3 class="fw-bold mb-1">@Model.UnderReviewCount</h3>
+                    <p class="text-muted small mb-0">Being evaluated</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approved -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100 dash-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle p-3">
+                            <span class="material-icons">check_circle</span>
+                        </div>
+                        <span class="badge bg-success rounded-pill">Approved</span>
+                    </div>
+                    <h3 class="fw-bold mb-1">@Model.ApprovedCount</h3>
+                    <p class="text-muted small mb-0">Successful initiatives</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Quick Actions - Giống Tài liệu & Hỗ trợ của Home -->
-    <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div class="d-flex align-items-center">
-                <span class="material-icons text-danger me-2">bolt</span>
-                <h4 class="fw-bold mb-0">Thao tác nhanh</h4>
-            </div>
-        </div>
-
+    <!-- Quick Actions -->
+    <div class="mb-4">
+        <h4 class="fw-bold text-dark mb-3">Quick Actions</h4>
         <div class="row g-4">
             <div class="col-md-4">
-                <a asp-controller="Initiative" asp-action="Create" class="text-decoration-none">
-                    <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #450a0a, #111827);">
+                <a asp-controller="Initiative" asp-action="History" class="text-decoration-none">
+                    <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #1e3a8a, #0f172a);">
                         <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                            <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">add_circle</span>
-                            <h5 class="fw-bold mb-1">Tạo sáng kiến mới</h5>
-                            <p class="small opacity-75">Bắt đầu với ý tưởng của bạn</p>
+                            <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">history</span>
+                            <h5 class="fw-bold mb-1">My Initiatives</h5>
+                            <p class="small opacity-75">View submission history</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a asp-controller="HomePage" asp-action="DownloadGuideline" class="text-decoration-none">
+                    <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #14532d, #064e3b);">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
+                            <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">cloud_download</span>
+                            <h5 class="fw-bold mb-1">Download Guidelines</h5>
+                            <p class="small opacity-75">Get templates & forms</p>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-md-4">
                 <a asp-controller="HomePage" asp-action="DailyReport" class="text-decoration-none">
-                    <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #1e3a8a, #0f172a);">
+                     <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #7c2d12, #451a03);">
                         <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
                             <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">insights</span>
-                            <h5 class="fw-bold mb-1">Xem thống kê</h5>
-                            <p class="small opacity-75">Theo dõi tiến độ sáng kiến</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4">
-                <a asp-controller="Home" asp-action="Privacy" asp-area="" class="text-decoration-none">
-                    <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #14532d, #064e3b);">
-                        <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                            <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">menu_book</span>
-                            <h5 class="fw-bold mb-1">Hướng dẫn</h5>
-                            <p class="small opacity-75">Quy trình nộp sáng kiến</p>
+                            <h5 class="fw-bold mb-1">Statistics</h5>
+                            <p class="small opacity-75">View performance reports</p>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
     </div>
-
 </div>

@@ -1,0 +1,159 @@
+﻿@model List<IdeaTrack.Services.AuditLogEntry>
+@{
+    ViewData["Title"] = "System Audit Log";
+    Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
+    var tables = ViewBag.Tables as List<string> ?? new List<string>();
+    var selectedTable = ViewBag.SelectedTable as string;
+    var currentPage = (int)ViewBag.CurrentPage;
+    var totalPages = (int)ViewBag.TotalPages;
+    var totalCount = (int)ViewBag.TotalCount;
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">
+            <i class="fas fa-history text-primary me-2"></i>System Audit Log
+        </h2>
+        <a asp-action="Statistics" class="btn btn-outline-primary">
+            <i class="fas fa-chart-bar me-1"></i>Statistics
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Table</label>
+                    <select name="table" class="form-select">
+                        <option value="">All</option>
+                        @foreach (var t in tables)
+                        {
+                            <option value="@t" selected="@(t == selectedTable)">@t</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Target ID</label>
+                    <input type="number" name="targetId" class="form-control" value="@ViewBag.SelectedTargetId" placeholder="ID">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">User ID</label>
+                    <input type="number" name="userId" class="form-control" value="@ViewBag.SelectedUserId" placeholder="User ID">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-search me-1"></i>Filter
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i>Clear Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+            <span class="text-muted">Total: <strong>@totalCount</strong> records</span>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 150px">Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Table</th>
+                                <th style="width: 80px">ID</th>
+                                <th>IP</th>
+                                <th style="width: 80px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var log in Model)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">
+                                        <small>@log.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")</small>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Index" asp-route-userId="@log.UserId">@log.UserName</a>
+                                    </td>
+                                    <td>
+                                        <span class="badge @GetActionBadgeClass(log.Action)">@log.Action</span>
+                                    </td>
+                                    <td>
+                                        <code>@log.TargetTable</code>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Index" asp-route-table="@log.TargetTable" asp-route-targetId="@log.TargetId">
+                                            @log.TargetId
+                                        </a>
+                                    </td>
+                                    <td><small class="text-muted">@log.IpAddress</small></td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(log.Details))
+                                        {
+                                            <a asp-action="Details" asp-route-id="@log.Id" class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-clipboard-check fa-4x mb-3"></i>
+                    <p>No records found</p>
+                </div>
+            }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1)
+        {
+            <div class="card-footer">
+                <nav>
+                    <ul class="pagination pagination-sm justify-content-center mb-0">
+                        @for (int i = Math.Max(1, currentPage - 3); i <= Math.Min(totalPages, currentPage + 3); i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Index" 
+                                   asp-route-table="@selectedTable" 
+                                   asp-route-targetId="@ViewBag.SelectedTargetId"
+                                   asp-route-userId="@ViewBag.SelectedUserId"
+                                   asp-route-page="@i">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
+    </div>
+</div>
+
+@functions {
+    string GetActionBadgeClass(string action)
+    {
+        return action.ToLower() switch
+        {
+            "create" => "bg-success",
+            "update" => "bg-primary",
+            "delete" => "bg-danger",
+            "approve" => "bg-info",
+            "reject" => "bg-warning",
+            "submit" => "bg-secondary",
+            _ => "bg-secondary"
+        };
+    }
+}

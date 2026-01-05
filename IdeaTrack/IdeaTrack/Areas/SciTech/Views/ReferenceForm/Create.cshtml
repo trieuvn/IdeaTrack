@@ -1,0 +1,79 @@
+﻿@model IdeaTrack.Areas.SciTech.Models.ReferenceFormCreateVM
+@{
+    ViewData["Title"] = "Add New Form";
+    Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle me-2"></i>Add New Form
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="PeriodId" class="form-label">Initiative Period <span class="text-danger">*</span></label>
+                            <select asp-for="PeriodId" asp-items="Model.Periods" class="form-select">
+                                <option value="">-- Select period --</option>
+                            </select>
+                            <span asp-validation-for="PeriodId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FormName" class="form-label">Form Name <span class="text-danger">*</span></label>
+                            <input asp-for="FormName" class="form-control" placeholder="e.g., Initiative Recognition Application Form" />
+                            <span asp-validation-for="FormName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="3" 
+                                      placeholder="Brief description of the form content"></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="File" class="form-label">Form File <span class="text-danger">*</span></label>
+                            <input asp-for="File" type="file" class="form-control" 
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+                            <span asp-validation-for="File" class="text-danger"></span>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Supported formats: PDF, Word, Excel, PowerPoint. Max size: 10MB
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Upload
+                            </button>
+                            <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

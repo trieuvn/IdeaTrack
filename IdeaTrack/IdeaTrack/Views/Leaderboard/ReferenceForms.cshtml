@@ -1,0 +1,99 @@
+﻿@model IdeaTrack.Models.ViewModels.ReferenceFormsDownloadViewModel
+@{
+    ViewData["Title"] = "Reference Forms";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">
+            <i class="fas fa-file-download me-2"></i>Reference Forms
+        </h1>
+        <p class="lead text-muted">Download templates and guidelines for initiative submission</p>
+    </div>
+
+    <!-- Period Filter -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-4">
+            <form method="get" class="d-flex gap-2">
+                <select name="periodId" class="form-select" onchange="this.form.submit()">
+                    @foreach (var period in Model.Periods)
+                    {
+                        <option value="@period.Id" selected="@(period.Id == Model.SelectedPeriodId)">
+                            @period.Name @(period.IsActive ? "(Current)" : "")
+                        </option>
+                    }
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-folder-open me-2"></i>Form List - @Model.PeriodName
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Forms.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var form in Model.Forms)
+                            {
+                                var iconClass = form.FileType switch
+                                {
+                                    "PDF" => "fas fa-file-pdf text-danger",
+                                    "Word" => "fas fa-file-word text-primary",
+                                    "Excel" => "fas fa-file-excel text-success",
+                                    _ => "fas fa-file text-secondary"
+                                };
+                                
+                                <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                    <div class="d-flex align-items-center">
+                                        <i class="@iconClass fa-2x me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">@form.FileName</h6>
+                                            @if (!string.IsNullOrEmpty(form.Description))
+                                            {
+                                                <small class="text-muted">@form.Description</small>
+                                            }
+                                            <div class="mt-1">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>@form.UploadedAt.ToString("dd/MM/yyyy")
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a href="@form.FileUrl" target="_blank" class="btn btn-outline-primary" download>
+                                        <i class="fas fa-download me-1"></i>Download
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-folder-open fa-4x mb-3"></i>
+                            <p class="mb-0">No forms available for this period</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Link -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a asp-action="Index" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Leaderboard
+            </a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary ms-2">
+                <i class="fas fa-home me-2"></i>Back to Home
+            </a>
+        </div>
+    </div>
+</div>

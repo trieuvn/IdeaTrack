@@ -12,12 +12,14 @@
             <a asp-area="Identity"
                asp-page="/Account/Manage/Index"
                class="text-warning text-decoration-none small">
-                Quản lý tài khoản
+                My Profile
             </a>
         </div>
 
-        <form asp-area="Identity"
-              asp-page="/Account/Logout"
+        <form asp-area=""
+              asp-controller="Account"
+              asp-action="Logout"
+              asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
               method="post">
             <button type="submit"
                     class="btn btn-sm btn-outline-light">
@@ -32,6 +34,6 @@ else
        asp-page="/Account/Login"
        class="btn btn-warning w-100 fw-bold">
         <span class="material-icons align-middle me-1">login</span>
-        Đăng nhập
+        Login
     </a>
 }

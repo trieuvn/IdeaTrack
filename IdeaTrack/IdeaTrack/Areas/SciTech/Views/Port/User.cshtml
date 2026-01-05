@@ -1,303 +1,274 @@
 ﻿@model IEnumerable<IdeaTrack.Areas.SciTech.Models.UserViewModel>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa-solid fa-triangle-exclamation me-2"></i> @TempData["ErrorMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    }
-    <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
-        <div>
-            <h1 class="fw-bold mb-1">Quản lý Người dùng & Truy cập</h1>
-            <p class="text-muted mb-0">
-                Quản lý tài khoản, phân quyền và theo dõi hoạt động truy cập hệ thống.
-            </p>
-        </div>
-        <a class="btn btn-outline-primary custom-btn" style="height:70px;padding-top:20px;"
-           href="@Url.Action("ExportExcelUser", "Port", new {
-                keyword = ViewBag.Keyword,
-                role = ViewBag.Role,
-                status = ViewBag.Status
-           })">
-    <i class="fa-solid fa-file-export me-1"></i>Xuất báo cáo
-</a>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+    <div>
+        <h1 class="fw-bold mb-1">User & Access Management</h1>
+        <p class="text-muted mb-0">
+            Manage accounts, permissions, and track system access logs.
+        </p>
+    </div>
+    <a class="btn btn-outline-primary custom-btn" style="height:70px;padding-top:20px;"
+       href="@Url.Action("ExportExcelUser", "Port", new {
+            keyword = ViewBag.Keyword,
+            role = ViewBag.Role,
+            status = ViewBag.Status
+       })">
+        <i class="fa-solid fa-file-export me-1"></i>Export Report
+    </a>
+</div>
+
+<!-- STATS -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <i class="fa-solid fa-users text-primary fs-4"></i>
+                <p class="text-muted small mb-1">Total Users</p>
+                <h3 class="fw-bold mb-0">@ViewBag.TotalUsers</h3>
+                <small class="text-success">
+                    <i class="fa-solid fa-arrow-up"></i>
+                    System Activity in check
+                </small>
+            </div>
+        </div>
     </div>
 
-    <!-- STATS -->
-    <div class="row g-4 mb-4">
-
-        <!-- Tổng người dùng -->
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <i class="fa-solid fa-users text-primary fs-4"></i>
-                    <p class="text-muted small mb-1">Tổng người dùng</p>
-                    <h3 class="fw-bold mb-0">@ViewBag.TotalUsers</h3>
-                    <small class="text-success">
-                        <i class="fa-solid fa-arrow-up"></i>
-                        Hoạt động hệ thống
-                    </small>
-                </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <i class="fa-solid fa-circle-check text-success fs-4"></i>
+                <p class="text-muted small mb-1">Active Now</p>
+                <h3 class="fw-bold mb-0">@ViewBag.ActivePercent%</h3>
+                <small class="text-muted">
+                    @ViewBag.ActiveUsers accounts
+                </small>
             </div>
         </div>
-
-        <!-- Đang hoạt động -->
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <i class="fa-solid fa-circle-check text-success fs-4"></i>
-                    <p class="text-muted small mb-1">Đang hoạt động</p>
-                    <h3 class="fw-bold mb-0">@ViewBag.ActivePercent%</h3>
-                    <small class="text-muted">
-                        @ViewBag.ActiveUsers tài khoản
-                    </small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Đăng nhập gần đây -->
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <i class="fa-solid fa-right-to-bracket text-info fs-4"></i>
-                    <p class="text-muted small mb-1">Đăng nhập gần đây</p>
-                    <h3 class="fw-bold mb-0">@ViewBag.RecentLogins</h3>
-                    <small class="text-muted">24 giờ qua</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chờ duyệt -->
-        <div class="col-md-3">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <i class="fa-solid fa-clock text-warning fs-4"></i>
-                    <p class="text-muted small mb-1">Chờ duyệt</p>
-                    <h3 class="fw-bold mb-0">@ViewBag.PendingUsers</h3>
-                    <small class="text-muted">Tài khoản</small>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- TOOLBAR -->
-    <form method="get" class="card shadow-sm mb-4">
-        <div class="card-body d-flex flex-wrap align-items-center gap-2">
-
-            <!-- Search input -->
-            <div class="flex-grow-1" style="min-width: 200px;">
-                <div class="input-group">
-                    <span class="input-group-text bg-white">
-                        <i class="fa-solid fa-search"></i>
-                    </span>
-                    <input class="form-control"
-                           name="keyword"
-                           value="@ViewBag.Keyword"
-                           placeholder="Tìm theo tên hoặc email">
-                </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <i class="fa-solid fa-right-to-bracket text-info fs-4"></i>
+                <p class="text-muted small mb-1">Recent Logins</p>
+                <h3 class="fw-bold mb-0">@ViewBag.RecentLogins</h3>
+                <small class="text-muted">Past 24 hours</small>
             </div>
-
-            <!-- Role select -->
-            <div style="min-width: 150px;">
-                <select class="form-select" name="role">
-                    <option value="">Tất cả vai trò</option>
-                    @foreach (var r in ViewBag.Roles as List<string>)
-                    {
-                        <option value="@r" selected="@(ViewBag.Role == r)">
-                            @r
-                        </option>
-                    }
-                </select>
-            </div>
-
-            <!-- Status select -->
-            <div style="min-width: 150px;">
-                <select class="form-select" name="status">
-                    <option value="">Tất cả trạng thái</option>
-                    <option value="active" selected="@(ViewBag.Status == "active")">Hoạt động</option>
-                    <option value="locked" selected="@(ViewBag.Status == "locked")">Đã khóa</option>
-                    <option value="pending" selected="@(ViewBag.Status == "pending")">Chờ duyệt</option>
-                </select>
-            </div>
-
-            <!-- Filter button -->
-            <button type="submit" class="btn btn-outline-primary d-flex align-items-center">
-                <i class="fa-solid fa-filter me-1"></i>Lọc
-            </button>
-
-            <!-- Add user -->
-            <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createUserModal">
-    <i class="fa-solid fa-user-plus me-1"></i> Thêm người dùng
-</a>
-
         </div>
-    </form>
+    </div>
 
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <i class="fa-solid fa-clock text-warning fs-4"></i>
+                <p class="text-muted small mb-1">Pending Approval</p>
+                <h3 class="fw-bold mb-0">@ViewBag.PendingUsers</h3>
+                <small class="text-muted">Accounts</small>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- TOOLBAR -->
+<form method="get" class="card shadow-sm mb-4">
+    <div class="card-body d-flex flex-wrap align-items-center gap-2">
+        <div class="flex-grow-1" style="min-width: 200px;">
+            <div class="input-group">
+                <span class="input-group-text bg-white">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <input class="form-control"
+                       name="keyword"
+                       value="@ViewBag.Keyword"
+                       placeholder="Search by name or email">
+            </div>
+        </div>
 
-    <!-- TABLE -->
-    <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+        <div style="min-width: 150px;">
+            <select class="form-select" name="role">
+                <option value="">All Roles</option>
+                @foreach (var r in ViewBag.Roles as List<string> ?? new List<string>())
+                {
+                    <option value="@r" selected="@(ViewBag.Role == r)">
+                        @r
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div style="min-width: 150px;">
+            <select class="form-select" name="status">
+                <option value="">All Statuses</option>
+                <option value="active" selected="@(ViewBag.Status == "active")">Active</option>
+                <option value="locked" selected="@(ViewBag.Status == "locked")">Locked</option>
+                <option value="pending" selected="@(ViewBag.Status == "pending")">Pending</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary d-flex align-items-center">
+            <i class="fa-solid fa-filter me-1"></i>Filter
+        </button>
+
+        <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createUserModal">
+            <i class="fa-solid fa-user-plus me-1"></i> Add User
+        </a>
+    </div>
+</form>
+
+<!-- TABLE -->
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>User</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th class="text-center">Login Count</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
                     <tr>
-                        <th>Người dùng</th>
-                        <th>Vai trò</th>
-                        <th>Trạng thái</th>
-                        <th>Đăng nhập cuối</th>
-                        <th class="text-center">Lượt truy cập</th>
-                        <th class="text-end">Hành động</th>
+                        <td>
+                            <div class="fw-semibold">@user.FullName</div>
+                            <small class="text-muted">@user.Email</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary-subtle text-primary">
+                                @user.Role
+                            </span>
+                        </td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Locked</span>
+                            }
+                        </td>
+                        <td>
+                            @(user.LastActive?.ToString("dd/MM/yyyy HH:mm") ?? "Never")
+                        </td>
+                        <td class="text-center fw-semibold">
+                            @user.LoginCount
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary" onclick="openUserModal(@user.Id)">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            @if (user.IsActive)
+                            {
+                                <a href="@Url.Action("LockUser", "Port", new { area = "SciTech", id = user.Id })"
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to lock this account?');">
+                                    <i class="fa-solid fa-user-slash"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("UnlockUser","Port", new { area = "SciTech", id = user.Id })"
+                                   class="btn btn-sm btn-outline-success">
+                                    <i class="fa-solid fa-unlock"></i>
+                                </a>
+                            }
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model)
-                    {
-                        <tr>
-                            <td>
-                                <div class="fw-semibold">@user.FullName</div>
-                                <small class="text-muted">@user.Email</small>
-                            </td>
-
-                            <td>
-                                <span class="badge bg-primary-subtle text-primary">
-                                    @user.Role
-                                </span>
-                            </td>
-
-                            <td>
-                                @if (user.IsActive)
-                                {
-                                    <span class="badge bg-success">Hoạt động</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger">Đã khóa</span>
-                                }
-                            </td>
-
-                            <td>
-                                @(user.LastActive?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")
-                            </td>
-
-                            <td class="text-center fw-semibold">
-                                @user.LoginCount
-                            </td>
-
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-primary" onclick="openUserModal(@user.Id)">
-                                     <i class="fa-solid fa-eye"></i>
-                                </button>
-
-                                @if (user.IsActive)
-                                {
-                                   <a href="@Url.Action("LockUser", "Port", new { area = "SciTech", id = user.Id })"
-                                       class="btn btn-sm btn-outline-danger"
-                                       onclick="return confirm('Bạn có chắc chắn muốn khóa tài khoản này?');">
-                                        <i class="fa-solid fa-user-slash"></i>
-                                    </a>
-                                }
-                                else
-                                {
-                                   <a href="@Url.Action("UnlockUser","Port", new { area = "SciTech", id = user.Id })"
-                                       class="btn btn-sm btn-outline-success">
-                                        <i class="fa-solid fa-unlock"></i>
-                                    </a>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <!-- PAGINATION -->
-        <div class="card-footer d-flex justify-content-between align-items-center">
-
-            <small class="text-muted">
-                Hiển thị @ViewBag.From–@ViewBag.To / @ViewBag.TotalUsers người dùng
-            </small>
-
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-
-                    <!-- Previous -->
-                    <li class="page-item @(ViewBag.Page == 1 ? "disabled" : "")">
-                        <a class="page-link"
-                           href="?page=@(ViewBag.Page - 1)&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
-                            ‹
-                        </a>
-                    </li>
-
-                    <!-- Page numbers -->
-                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                    {
-                        <li class="page-item @(i == ViewBag.Page ? "active" : "")">
-                            <a class="page-link"
-                               href="?page=@i&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
-                                @i
-                            </a>
-                        </li>
-                    }
-
-                    <!-- Next -->
-                    <li class="page-item @(ViewBag.Page == ViewBag.TotalPages ? "disabled" : "")">
-                        <a class="page-link"
-                           href="?page=@(ViewBag.Page + 1)&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
-                            ›
-                        </a>
-                    </li>
-
-                </ul>
-            </nav>
-        </div>
-
+                }
+            </tbody>
+        </table>
     </div>
 
-<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg"> <div class="modal-content">
+    <!-- PAGINATION -->
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <small class="text-muted">
+            Showing @ViewBag.From–@ViewBag.To / @ViewBag.TotalUsers users
+        </small>
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(ViewBag.Page == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       href="?page=@(ViewBag.Page - 1)&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                </li>
+                @for (int i = 1; i <= (ViewBag.TotalPages ?? 1); i++)
+                {
+                    <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                        <a class="page-link"
+                           href="?page=@i&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
+                            @i
+                        </a>
+                    </li>
+                }
+                <li class="page-item @(ViewBag.Page == ViewBag.TotalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       href="?page=@(ViewBag.Page + 1)&keyword=@ViewBag.Keyword&role=@ViewBag.Role&status=@ViewBag.Status">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Modal: Create User -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
             <form action="@Url.Action("CreateUser", "Port", new { area = "SciTech" })" method="post">
                 @Html.AntiForgeryToken()
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="createUserModalLabel">Thêm người dùng mới</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Create New User</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Tên đăng nhập</label>
-                                <input name="UserName" class="form-control" placeholder="Nhập tên đăng nhập..." required />
+                                <label class="form-label fw-bold">Username</label>
+                                <input name="UserName" class="form-control" placeholder="Enter username..." required />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Địa chỉ Email</label>
-                                <input name="Email" class="form-control" type="email" placeholder="vi-du@email.com" required />
+                                <label class="form-label fw-bold">Email</label>
+                                <input name="Email" class="form-control" type="email" placeholder="example@email.com" required />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Họ và tên</label>
-                                <input name="FullName" class="form-control" placeholder="Nhập họ tên đầy đủ..." required />
+                                <label class="form-label fw-bold">Full Name</label>
+                                <input name="FullName" class="form-control" placeholder="Enter full name..." required />
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Mật khẩu hệ thống</label>
-                                <input name="Password" class="form-control" type="password" placeholder="Mật khẩu (VD: Abc@123)" required />
-                                <small class="text-muted small">Tối thiểu 6 ký tự, có chữ hoa, số và ký tự đặc biệt.</small>
+                                <label class="form-label fw-bold">Password</label>
+                                <input name="Password" class="form-control" type="password" placeholder="Password (e.g. Abc@123)" required />
+                                <small class="text-muted small">Min 6 chars, uppercase, number, special char.</small>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Thuộc Khoa/Phòng</label>
-                                <select name="DepartmentId" id="DepartmentId" class="form-select" required>
-                                    <option value="">-- Chọn khoa/phòng --</option>
+                                <label class="form-label fw-bold">Department/Faculty</label>
+                                <select name="DepartmentId" class="form-select" required>
+                                    <option value="">-- Select Department --</option>
                                     @if (ViewBag.Departments != null)
                                     {
                                         foreach (var item in (SelectList)ViewBag.Departments)
@@ -308,35 +279,35 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Học hàm</label>
+                                <label class="form-label fw-bold">Academic Rank</label>
                                 <select name="AcademicRank" class="form-select">
-                                    <option value="">-- Chọn học hàm --</option>
-                                    <option value="Giáo sư">Giáo sư</option>
-                                    <option value="Phó giáo sư">Phó giáo sư</option>
-                                    <option value="Không">Không</option>
+                                    <option value="">-- Select Rank --</option>
+                                    <option value="Professor">Professor</option>
+                                    <option value="Associate Professor">Associate Professor</option>
+                                    <option value="None">None</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Học vị</label>
+                                <label class="form-label fw-bold">Degree</label>
                                 <select name="Degree" class="form-select">
-                                    <option value="">-- Chọn học vị --</option>
-                                    <option value="Tiến sĩ">Tiến sĩ</option>
-                                    <option value="Thạc sĩ">Thạc sĩ</option>
-                                    <option value="Cử nhân">Cử nhân</option>
-                                    <option value="Kỹ sư">Kỹ sư</option>
+                                    <option value="">-- Select Degree --</option>
+                                    <option value="PhD">PhD</option>
+                                    <option value="Masters">Masters</option>
+                                    <option value="Bachelor">Bachelor</option>
+                                    <option value="Engineer">Engineer</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Chức vụ</label>
-                                <input name="Position" class="form-control" placeholder="Ví dụ: Trưởng phòng, Giảng viên..." />
+                                <label class="form-label fw-bold">Position</label>
+                                <input name="Position" class="form-control" placeholder="e.g. Head of Dept, Lecturer..." />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa-solid fa-user-plus me-1"></i> Xác nhận thêm
+                        <i class="fa-solid fa-user-plus me-1"></i> Create
                     </button>
                 </div>
             </form>
@@ -344,13 +315,13 @@
     </div>
 </div>
 
-
+<!-- Modal: User Info -->
 <div class="modal fade" id="userInfoModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Thông tin chi tiết</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">User Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <div class="text-center mb-4">
@@ -359,25 +330,25 @@
      onerror="this.src='/images/default-avatar.png';" 
      class="rounded-circle img-thumbnail" 
      style="width: 120px; height: 120px; object-fit: cover;">
-          <h4 id="displayFullName" class="mt-2 mb-0">Họ và tên</h4>
-          <span id="displayIsActive" class="badge rounded-pill mt-1">Trạng thái</span>
+          <h4 id="displayFullName" class="mt-2 mb-0">Full Name</h4>
+          <span id="displayIsActive" class="badge rounded-pill mt-1">Status</span>
         </div>
 
         <div class="row g-3">
           <div class="col-6">
-            <label class="text-muted mb-0">Học hàm</label>
+            <label class="text-muted mb-0">Academic Rank</label>
             <p id="displayAcademicRank" class="fw-bold text-primary">-</p>
           </div>
           <div class="col-6">
-            <label class="text-muted mb-0">Học vị</label>
+            <label class="text-muted mb-0">Degree</label>
             <p id="displayDegree" class="fw-bold text-primary">-</p>
           </div>
           <div class="col-12">
-            <label class="text-muted mb-0">Phòng ban / Khoa</label>
+            <label class="text-muted mb-0">Department / Faculty</label>
             <p id="displayDepartment" class="fw-bold">-</p>
           </div>
           <div class="col-12">
-            <label class="text-muted mb-0">Chức vụ</label>
+            <label class="text-muted mb-0">Position</label>
             <p id="displayPosition" class="fw-bold">-</p>
           </div>
         </div>
@@ -385,43 +356,37 @@
     </div>
   </div>
 </div>
+
 <script>
     function openUserModal(userId) {
-    // Đường dẫn trỏ tới Action 'GetUserDetail' trong cùng Controller
-    // ASP.NET Core sẽ hiểu đây là: /TenController/GetUserDetail?id=...
-    fetch(`./GetUserDetail?id=${userId}`) 
-        .then(response => {
-            if (!response.ok) throw new Error("Lỗi mạng hoặc không tìm thấy User");
-            return response.json();
-        })
-        .then(data => {
-            // Đổ dữ liệu vào Modal
-            document.getElementById('displayFullName').innerText = data.fullName;
-            document.getElementById('displayAcademicRank').innerText = data.academicRank || "-";
-            document.getElementById('displayDegree').innerText = data.degree || "-";
-            document.getElementById('displayDepartment').innerText = data.departmentName;
-            document.getElementById('displayPosition').innerText = data.position || "-";
+        // Fetch details from the same controller's GetUserDetail action
+        fetch(`./GetUserDetail?id=${userId}`) 
+            .then(response => {
+                if (!response.ok) throw new Error("Network error or User not found");
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('displayFullName').innerText = data.fullName;
+                document.getElementById('displayAcademicRank').innerText = data.academicRank || "-";
+                document.getElementById('displayDegree').innerText = data.degree || "-";
+                document.getElementById('displayDepartment').innerText = data.departmentName || "-";
+                document.getElementById('displayPosition').innerText = data.position || "-";
 
-            // Xử lý ảnh Base64
-            const imgElement = document.getElementById('displayAvatar');
-            if (data.avatarUrl) {
-                // Nếu chuỗi base64 trong DB chưa có tiền tố thì cộng thêm vào
-                imgElement.src = data.avatarUrl.includes('base64,') 
-                                 ? data.avatarUrl 
-                                 : 'data:image/png;base64,' + data.avatarUrl;
-            } else {
-                imgElement.src = '/images/default-avatar.png';
-            }
-
-            // Trạng thái
-            const badge = document.getElementById('displayIsActive');
-            badge.innerText = data.isActive ? "Đang hoạt động" : "Ngừng hoạt động";
-            badge.className = `badge rounded-pill mt-1 ${data.isActive ? 'bg-success' : 'bg-danger'}`;
-
-            // Hiển thị Modal
-            var myModal = new bootstrap.Modal(document.getElementById('userInfoModal'));
-            myModal.show();
-        })
-        .catch(error => console.error('Lỗi:', error));
-}
+                const badge = document.getElementById('displayIsActive');
+                if (data.isActive) {
+                    badge.className = "badge rounded-pill mt-1 bg-success";
+                    badge.innerText = "Active";
+                } else {
+                    badge.className = "badge rounded-pill mt-1 bg-danger";
+                    badge.innerText = "Locked";
+                }
+                
+                // Show Modal
+                new bootstrap.Modal(document.getElementById('userInfoModal')).show();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Cannot load user info");
+            });
+    }
 </script>

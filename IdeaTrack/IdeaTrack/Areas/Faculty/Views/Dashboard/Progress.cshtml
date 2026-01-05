@@ -92,7 +92,7 @@
                                         string dotColor = "bg-secondary";
 
                                         if (item.Status == InitiativeStatus.Pending) { badgeClass = "bg-warning-subtle text-warning"; statusLabel = "Pending Review"; dotColor = "bg-warning"; }
-                                        else if (item.Status == InitiativeStatus.Dept_Review) { badgeClass = "bg-success-subtle text-success"; statusLabel = "Forwarded to R&D"; dotColor = "bg-success"; }
+                                        else if (item.Status == InitiativeStatus.Faculty_Approved) { badgeClass = "bg-success-subtle text-success"; statusLabel = "Forwarded to R&D"; dotColor = "bg-success"; }
                                         else if (item.Status == InitiativeStatus.Revision_Required) { badgeClass = "bg-danger-subtle text-danger"; statusLabel = "Revision Required"; dotColor = "bg-danger"; }
 
                                         <tr>
@@ -103,7 +103,7 @@
                                                 </div>
                                                 <div class="text-muted extra-small">Code: @item.InitiativeCode</div>
                                             </td>
-                                            <td>@(item.Proposer?.FullName ?? "N/A")</td>
+                                            <td>@(item.Creator?.FullName ?? "N/A")</td>
                                             <td class="text-secondary">@item.CreatedAt.ToString("dd/MM/yyyy")</td>
                                             <td><span class="badge @badgeClass rounded-pill px-3 py-2">@statusLabel</span></td>
                                         </tr>

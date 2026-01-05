@@ -1,20 +1,25 @@
-using IdeaTrack.Areas.Author.ViewModels;
+﻿using IdeaTrack.Areas.Author.ViewModels;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdeaTrack.Areas.Author.Controllers
 {
     [Area("Author")]
+    [Authorize(Roles = "Author,Lecturer,Admin")]
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<DashboardController> _logger;
 
-        public DashboardController(ApplicationDbContext context, ILogger<DashboardController> logger)
+        public DashboardController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<DashboardController> logger)
         {
             _context = context;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -23,27 +28,33 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             try
             {
-                // Tạm thời lấy tất cả initiatives (sau này sẽ filter theo user đăng nhập)
-                var initiatives = await _context.Initiatives
+                var currentUser = await _userManager.GetUserAsync(User);
+                var userId = currentUser?.Id ?? 0;
+
+                // Get initiatives where user is creator or co-author
+                var allInitiatives = await _context.Initiatives
                     .Include(i => i.Category)
-                    .Include(i => i.AcademicYear)
-                    .OrderByDescending(i => i.CreatedAt)
-                    .Take(10)
+                    .Include(i => i.Authorships)
+                    .Where(i => i.CreatorId == userId || i.Authorships.Any(a => a.AuthorId == userId))
                     .ToListAsync();
 
-                var allInitiatives = await _context.Initiatives.ToListAsync();
+                var recentInitiatives = allInitiatives
+                    .OrderByDescending(i => i.CreatedAt)
+                    .Take(10)
+                    .ToList();
+
                 var approvedCount = allInitiatives.Count(i => i.Status == InitiativeStatus.Approved);
                 var totalCount = allInitiatives.Count;
 
                 var viewModel = new AuthorDashboardViewModel
                 {
-                    UserName = "John", // Tạm thời hardcode
-                    RecentInitiatives = initiatives,
+                    UserName = currentUser?.FullName ?? "Giang vien",
+                    RecentInitiatives = recentInitiatives,
                     DraftCount = allInitiatives.Count(i => i.Status == InitiativeStatus.Draft),
                     SubmittedCount = allInitiatives.Count(i => i.Status == InitiativeStatus.Pending),
                     ApprovedCount = approvedCount,
-                    UnderReviewCount = allInitiatives.Count(i => i.Status == InitiativeStatus.Reviewing || i.Status == InitiativeStatus.Dept_Review),
-                    TotalScore = 845, // Demo value
+                    UnderReviewCount = allInitiatives.Count(i => i.Status == InitiativeStatus.Evaluating || i.Status == InitiativeStatus.Faculty_Approved),
+                    TotalScore = 845, // Demo value - will be calculated from FinalResults
                     SuccessRate = totalCount > 0 ? Math.Round((decimal)approvedCount / totalCount * 100, 0) : 0
                 };
 
@@ -51,8 +62,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang Dashboard");
-                TempData["ErrorMessage"] = "Không thể tải dữ liệu Dashboard. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang Dashboard");
+                TempData["ErrorMessage"] = "Khong the tai du lieu Dashboard. Vui long thu lai sau.";
                 
                 // Return empty view model to prevent crash
                 var emptyViewModel = new AuthorDashboardViewModel

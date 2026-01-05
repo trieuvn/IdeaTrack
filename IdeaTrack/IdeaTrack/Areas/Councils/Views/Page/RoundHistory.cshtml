@@ -1,0 +1,146 @@
+﻿@model IdeaTrack.Areas.Councils.Models.RoundHistoryVM
+@{
+    ViewData["Title"] = "Grading History";
+    Layout = "~/Areas/Councils/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="fas fa-history me-2"></i>Round Grading History
+            </h4>
+            <a asp-action="AssignedInitiatives" class="btn btn-light btn-sm">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </a>
+        </div>
+        
+        <div class="card-body">
+            <div class="mb-4">
+                <h5>
+                    <span class="badge bg-secondary">@Model.InitiativeCode</span>
+                    @Model.InitiativeTitle
+                </h5>
+                <p class="text-muted mb-0">
+                    Current Round: <strong>@Model.CurrentRound</strong>
+                </p>
+            </div>
+
+            @if (Model.Rounds.Any())
+            {
+                @foreach (var roundGroup in Model.Rounds.GroupBy(r => r.RoundNumber).OrderBy(g => g.Key))
+                {
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-layer-group me-1"></i>Round @roundGroup.Key
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Member</th>
+                                            <th>Assigned Date</th>
+                                            <th>Completed Date</th>
+                                            <th>Total Score</th>
+                                            <th>Status</th>
+                                            <th style="width: 100px">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in roundGroup)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <i class="fas fa-user me-1 text-primary"></i>
+                                                    @item.MemberName
+                                                </td>
+                                                <td>@item.AssignedDate.ToString("dd/MM/yyyy")</td>
+                                                <td>
+                                                    @if (item.CompletedDate.HasValue)
+                                                    {
+                                                        @item.CompletedDate.Value.ToString("dd/MM/yyyy HH:mm")
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">-</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
+                                                    {
+                                                        <span class="fw-bold text-success">@item.TotalScore.ToString("F1")</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-muted">-</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @switch (item.Status)
+                                                    {
+                                                        case IdeaTrack.Models.AssignmentStatus.Assigned:
+                                                            <span class="badge bg-warning">Assigned</span>
+                                                            break;
+                                                        case IdeaTrack.Models.AssignmentStatus.InProgress:
+                                                            <span class="badge bg-info">In Progress</span>
+                                                            break;
+                                                        case IdeaTrack.Models.AssignmentStatus.Completed:
+                                                            <span class="badge bg-success">Completed</span>
+                                                            break;
+                                                        default:
+                                                            <span class="badge bg-secondary">@item.Status</span>
+                                                            break;
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
+                                                    {
+                                                        <a asp-action="ViewPastAssignment" asp-route-id="@item.AssignmentId" 
+                                                           class="btn btn-sm btn-outline-primary" title="View Details">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Round Summary -->
+                            @{
+                                var completedItems = roundGroup.Where(r => r.Status == IdeaTrack.Models.AssignmentStatus.Completed).ToList();
+                                if (completedItems.Any())
+                                {
+                                    var avgScore = completedItems.Average(r => r.TotalScore);
+                                    <div class="p-3 bg-light border-top">
+                                        <div class="row text-center">
+                                            <div class="col">
+                                                <div class="h5 mb-0 text-primary">@completedItems.Count/@roundGroup.Count()</div>
+                                                <small class="text-muted">Completed</small>
+                                            </div>
+                                            <div class="col">
+                                                <div class="h5 mb-0 text-success">@avgScore.ToString("F2")</div>
+                                                <small class="text-muted">Avg Score</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-clipboard-list fa-4x mb-3"></i>
+                    <p>No grading data available</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

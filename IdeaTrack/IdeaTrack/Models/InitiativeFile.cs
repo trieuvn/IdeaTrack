@@ -11,7 +11,7 @@ namespace IdeaTrack.Models
         public long FileSize { get; set; }
         public DateTime UploadDate { get; set; } = DateTime.Now;
         public int InitiativeId { get; set; }
-        // Bổ sung thuộc tính điều hướng (Navigation Property)
+        // Bo sung thuoc tinh dieu huong (Navigation Property)
         [ForeignKey("InitiativeId")]
         public virtual Initiative Initiative { get; set; }
     }

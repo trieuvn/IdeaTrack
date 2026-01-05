@@ -1,241 +1,218 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Evaluation Result";
+}
 
-    <!-- PAGE HEADER -->
-    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">
-                <i class="fa-solid fa-users-gear text-primary me-2"></i>
-                Kết quả Đánh giá Hội đồng
-            </h2>
-            <p class="text-muted mb-0">
-                Hồ sơ:
-                <span class="fw-semibold">Nghiên cứu ứng dụng AI trong nông nghiệp công nghệ cao</span>
-                | Chủ nhiệm: <span class="fw-semibold">TS. Nguyễn Văn An</span>
-            </p>
-        </div>
+<!-- PAGE HEADER -->
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="fa-solid fa-users-gear text-primary me-2"></i>
+            Council Evaluation Results
+        </h2>
+        <p class="text-muted mb-0">
+            File:
+            <span class="fw-semibold">AI Application in High-tech Agriculture</span>
+            | Principal Investigator: <span class="fw-semibold">Dr. Nguyen Van An</span>
+        </p>
+    </div>
 
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary">
-                <i class="fa-solid fa-print me-1"></i>In kết quả
-            </button>
-            <button class="btn btn-outline-secondary">
-                <i class="fa-solid fa-file-pdf me-1"></i>Xuất PDF
-            </button>
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary">
+            <i class="fa-solid fa-print me-1"></i>Print Result
+        </button>
+        <button class="btn btn-outline-secondary">
+            <i class="fa-solid fa-file-pdf me-1"></i>Export PDF
+        </button>
+    </div>
+</div>
+
+<!-- SUMMARY CARDS -->
+<div class="row g-3 mb-4">
+    <!-- CARD 1: AVERAGE SCORE -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100 position-relative overflow-hidden">
+            <i class="fa-solid fa-chart-line position-absolute end-0 top-0 m-3 fs-1 text-primary opacity-25"></i>
+            <div class="card-body">
+                <small class="text-muted text-uppercase">Average Score</small>
+                <div class="d-flex align-items-end gap-2 mt-2">
+                    <h2 class="text-primary fw-bold mb-0">85.5</h2>
+                    <span class="text-muted">/100</span>
+                </div>
+                <div class="progress mt-3" style="height:6px;">
+                    <div class="progress-bar bg-primary" style="width:85.5%"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- SUMMARY CARDS -->
-    <div class="row g-3 mb-4">
-
-        <!-- CARD 1: AVERAGE SCORE -->
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100 position-relative overflow-hidden">
-                <!-- Icon background -->
-                <i class="fa-solid fa-chart-line position-absolute end-0 top-0 m-3 fs-1 text-primary opacity-25"></i>
-
-                <div class="card-body">
-                    <small class="text-muted text-uppercase">Điểm trung bình</small>
-                    <div class="d-flex align-items-end gap-2 mt-2">
-                        <h2 class="text-primary fw-bold mb-0">85.5</h2>
-                        <span class="text-muted">/100</span>
-                    </div>
-                    <div class="progress mt-3" style="height:6px;">
-                        <div class="progress-bar bg-primary" style="width:85.5%"></div>
-                    </div>
-                </div>
+    <!-- CARD 2: FINAL RESULT -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100 position-relative overflow-hidden">
+            <i class="fa-solid fa-circle-check position-absolute end-0 top-0 m-3 fs-1 text-success opacity-25"></i>
+            <div class="card-body">
+                <small class="text-muted text-uppercase">Final Result</small>
+                <h4 class="fw-bold text-success mt-2">
+                    Requirements Met
+                </h4>
+                <p class="text-muted mb-0">Recommended for implementation</p>
             </div>
-        </div>
-
-        <!-- CARD 2: FINAL RESULT -->
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100 position-relative overflow-hidden">
-                <!-- Icon background -->
-                <i class="fa-solid fa-circle-check position-absolute end-0 top-0 m-3 fs-1 text-success opacity-25"></i>
-
-                <div class="card-body">
-                    <small class="text-muted text-uppercase">Kết quả chung cuộc</small>
-                    <h4 class="fw-bold text-success mt-2">
-                        Đạt yêu cầu
-                    </h4>
-                    <p class="text-muted mb-0">Đề nghị tiếp tục thực hiện</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- CARD 3: CONSENSUS RATE -->
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100 position-relative overflow-hidden">
-                <!-- Icon background -->
-                <i class="fa-solid fa-users position-absolute end-0 top-0 m-3 fs-1 text-info opacity-25"></i>
-
-                <div class="card-body">
-                    <small class="text-muted text-uppercase">Tỷ lệ đồng thuận</small>
-                    <h4 class="fw-bold mt-2">
-                        100% <small class="text-muted">(7/7)</small>
-                    </h4>
-                    <div class="progress mt-3" style="height:6px;">
-                        <div class="progress-bar bg-success" style="width:100%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- MAIN CONTENT -->
-    <div class="row g-4">
-
-        <!-- LEFT: SCORE TABLE -->
-        <div class="col-lg-8">
-
-            <div class="card shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">
-                        <i class="fa-solid fa-table me-1"></i>
-                        Chi tiết điểm thành viên
-                    </h5>
-                    <a href="#" class="text-decoration-none">Xem biểu đồ</a>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Thành viên</th>
-                                <th class="text-center">Vai trò</th>
-                                <th class="text-end">KH (40)</th>
-                                <th class="text-end">TT (40)</th>
-                                <th class="text-end">KP (20)</th>
-                                <th class="text-end">Tổng</th>
-                                <th class="text-center">Phiếu</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <tr>
-                                <td>
-                                    <div class="fw-semibold">Trần Văn Bình</div>
-                                    <small class="text-muted">ĐH Bách Khoa</small>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-purple-subtle text-purple">Chủ tịch</span>
-                                </td>
-                                <td class="text-end">35</td>
-                                <td class="text-end">36</td>
-                                <td class="text-end">18</td>
-                                <td class="text-end fw-bold">89</td>
-                                <td class="text-center">
-                                    <i class="fa-solid fa-eye text-secondary"></i>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="fw-semibold">Lê Hoàng Lan</div>
-                                    <small class="text-muted">Viện Nông nghiệp</small>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary-subtle text-primary">Phản biện 1</span>
-                                </td>
-                                <td class="text-end">32</td>
-                                <td class="text-end">35</td>
-                                <td class="text-end">16</td>
-                                <td class="text-end fw-bold">83</td>
-                                <td class="text-center">
-                                    <i class="fa-solid fa-eye text-secondary"></i>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="fw-semibold">Nguyễn Minh</div>
-                                    <small class="text-muted">Sở KHCN</small>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary-subtle text-primary">Phản biện 2</span>
-                                </td>
-                                <td class="text-end">30</td>
-                                <td class="text-end">34</td>
-                                <td class="text-end">18</td>
-                                <td class="text-end fw-bold">82</td>
-                                <td class="text-center">
-                                    <i class="fa-solid fa-eye text-secondary"></i>
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- RIGHT: CONSOLIDATED FEEDBACK -->
-        <div class="col-lg-4">
-
-            <div class="card shadow-sm mb-4">
-                <div class="card-header fw-bold">
-                    <i class="fa-solid fa-comments me-1"></i>
-                    Tổng hợp ý kiến
-                </div>
-                <div class="card-body">
-
-                    <div class="mb-3 p-3 bg-success-subtle rounded">
-                        <h6 class="fw-bold text-success">
-                            <i class="fa-solid fa-circle-check me-1"></i>Ưu điểm
-                        </h6>
-                        <p class="mb-0 text-muted">
-                            Đề tài có tính cấp thiết cao, phương pháp hiện đại,
-                            đội ngũ đủ năng lực triển khai.
-                        </p>
-                    </div>
-
-                    <div class="mb-3 p-3 bg-danger-subtle rounded">
-                        <h6 class="fw-bold text-danger">
-                            <i class="fa-solid fa-circle-exclamation me-1"></i>Hạn chế
-                        </h6>
-                        <ul class="mb-0 text-muted">
-                            <li>Chưa rõ phương án thương mại hóa</li>
-                            <li>Dự toán phần mềm còn cao</li>
-                        </ul>
-                    </div>
-
-                    <div class="p-3 bg-info-subtle rounded">
-                        <h6 class="fw-bold text-info">
-                            <i class="fa-solid fa-lightbulb me-1"></i>Kiến nghị
-                        </h6>
-                        <p class="mb-0 text-muted">
-                            Bổ sung địa điểm thử nghiệm,
-                            giảm 15% chi phí chuyên gia nước ngoài.
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- FOOTER ACTION BAR -->
-    <div class="border-top pt-3 mt-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-        <small class="text-muted">
-            <i class="fa-solid fa-circle-info me-1"></i>
-            Quyết định cuối cùng thuộc về Lãnh đạo PKHCN
-        </small>
-
-        <div class="d-flex gap-2">
-            <button class="btn btn-outline-danger">
-                <i class="fa-solid fa-xmark me-1"></i>Từ chối
-            </button>
-            <button class="btn btn-outline-secondary">
-                <i class="fa-solid fa-pen-to-square me-1"></i>Yêu cầu chỉnh sửa
-            </button>
-            <button class="btn btn-primary">
-                <i class="fa-solid fa-check me-1"></i>Phê duyệt
-            </button>
         </div>
     </div>
 
+    <!-- CARD 3: CONSENSUS RATE -->
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100 position-relative overflow-hidden">
+            <i class="fa-solid fa-users position-absolute end-0 top-0 m-3 fs-1 text-info opacity-25"></i>
+            <div class="card-body">
+                <small class="text-muted text-uppercase">Consensus Rate</small>
+                <h4 class="fw-bold mt-2">
+                    100% <small class="text-muted">(7/7)</small>
+                </h4>
+                <div class="progress mt-3" style="height:6px;">
+                    <div class="progress-bar bg-success" style="width:100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- MAIN CONTENT -->
+<div class="row g-4">
+    <!-- LEFT: SCORE TABLE -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">
+                    <i class="fa-solid fa-table me-1"></i>
+                    Detailed Member Scores
+                </h5>
+                <a href="#" class="text-decoration-none">View Chart</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Member</th>
+                            <th class="text-center">Role</th>
+                            <th class="text-end">Sci (40)</th>
+                            <th class="text-end">Prac (40)</th>
+                            <th class="text-end">Cost (20)</th>
+                            <th class="text-end">Total</th>
+                            <th class="text-center">Vote</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">Tran Van Binh</div>
+                                <small class="text-muted">Bach Khoa Faculty</small>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-purple-subtle text-purple">Chairman</span>
+                            </td>
+                            <td class="text-end">35</td>
+                            <td class="text-end">36</td>
+                            <td class="text-end">18</td>
+                            <td class="text-end fw-bold">89</td>
+                            <td class="text-center">
+                                <i class="fa-solid fa-eye text-secondary"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">Le Hoang Lan</div>
+                                <small class="text-muted">Agricultural Institute</small>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-primary-subtle text-primary">Reviewer 1</span>
+                            </td>
+                            <td class="text-end">32</td>
+                            <td class="text-end">35</td>
+                            <td class="text-end">16</td>
+                            <td class="text-end fw-bold">83</td>
+                            <td class="text-center">
+                                <i class="fa-solid fa-eye text-secondary"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">Nguyen Minh</div>
+                                <small class="text-muted">Dept. of Science & Tech</small>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-primary-subtle text-primary">Reviewer 2</span>
+                            </td>
+                            <td class="text-end">30</td>
+                            <td class="text-end">34</td>
+                            <td class="text-end">18</td>
+                            <td class="text-end fw-bold">82</td>
+                            <td class="text-center">
+                                <i class="fa-solid fa-eye text-secondary"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: CONSOLIDATED FEEDBACK -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header fw-bold">
+                <i class="fa-solid fa-comments me-1"></i>
+                Consolidated Feedback
+            </div>
+            <div class="card-body">
+                <div class="mb-3 p-3 bg-success-subtle rounded">
+                    <h6 class="fw-bold text-success">
+                        <i class="fa-solid fa-circle-check me-1"></i>Strengths
+                    </h6>
+                    <p class="mb-0 text-muted">
+                        Highly urgent topic, modern methodology, capable implementation team.
+                    </p>
+                </div>
+
+                <div class="mb-3 p-3 bg-danger-subtle rounded">
+                    <h6 class="fw-bold text-danger">
+                        <i class="fa-solid fa-circle-exclamation me-1"></i>Limitations
+                    </h6>
+                    <ul class="mb-0 text-muted">
+                        <li>Commercialization plan unclear</li>
+                        <li>High software budget</li>
+                    </ul>
+                </div>
+
+                <div class="p-3 bg-info-subtle rounded">
+                    <h6 class="fw-bold text-info">
+                        <i class="fa-solid fa-lightbulb me-1"></i>Recommendations
+                    </h6>
+                    <p class="mb-0 text-muted">
+                        Add trial location, reduce foreign expert budget by 15%.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER ACTION BAR -->
+<div class="border-top pt-3 mt-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <small class="text-muted">
+        <i class="fa-solid fa-circle-info me-1"></i>
+        Final decision belongs to SciTech Leadership
+    </small>
+
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-danger">
+            <i class="fa-solid fa-xmark me-1"></i>Reject
+        </button>
+        <button class="btn btn-outline-secondary">
+            <i class="fa-solid fa-pen-to-square me-1"></i>Request Revision
+        </button>
+        <button class="btn btn-primary">
+            <i class="fa-solid fa-check me-1"></i>Approve
+        </button>
+    </div>
+</div>

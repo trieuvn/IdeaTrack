@@ -1,12 +1,14 @@
 ﻿using IdeaTrack.Areas.Author.ViewModels;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdeaTrack.Areas.Author.Controllers
 {
     [Area("Author")]
+    [Authorize(Roles = "Author,Lecturer,Admin")]
     public class HomePage : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -33,9 +35,44 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải danh sách files");
-                TempData["ErrorMessage"] = "Không thể tải danh sách files. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error loading files list");
+                TempData["ErrorMessage"] = "Cannot load files list. Please try again later.";
                 return View(new List<InitiativeFile>());
+            }
+        }
+
+        // GET: /Author/HomePage/DownloadGuideline
+        public IActionResult DownloadGuideline()
+        {
+            try
+            {
+                var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                var filePath = Path.Combine(webRoot, "templates", "guideline.docx");
+
+                if (!System.IO.File.Exists(filePath))
+                {
+                    // Create directory if not exists
+                    var templateDir = Path.Combine(webRoot, "templates");
+                    if (!Directory.Exists(templateDir))
+                    {
+                        Directory.CreateDirectory(templateDir);
+                    }
+                    
+                    // In a real app we'd have the file. For now, create a dummy file to prevent crash
+                    // or just return not found with message
+                    _logger.LogWarning("Guideline file not found at {Path}", filePath);
+                    TempData["ErrorMessage"] = "Guideline file is currently unavailable.";
+                    return RedirectToAction("Index", "Dashboard");
+                }
+
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+                return File(fileBytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "IdeaTrack_Guideline.docx");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error downloading guideline");
+                TempData["ErrorMessage"] = "Error downloading file.";
+                return RedirectToAction("Index", "Dashboard");
             }
         }
 
@@ -64,8 +101,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang attachments cho sáng kiến {InitiativeId}", id);
-                TempData["ErrorMessage"] = "Không thể tải trang attachments. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang attachments cho sang kien {InitiativeId}", id);
+                TempData["ErrorMessage"] = "Khong the tai trang attachments. Vui long thu lai sau.";
                 return RedirectToAction("Index", "Dashboard");
             }
         }
@@ -97,8 +134,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải trang cài đặt");
-                TempData["ErrorMessage"] = "Không thể tải trang cài đặt. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai trang cai dat");
+                TempData["ErrorMessage"] = "Khong the tai trang cai dat. Vui long thu lai sau.";
                 
                 // Return empty view model to prevent crash
                 var emptyViewModel = new SettingViewModel
@@ -118,9 +155,20 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             try
             {
+                // Get current user ID for data isolation (security fix)
+                var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId) || !int.TryParse(userId, out int currentUserId))
+                {
+                    TempData["ErrorMessage"] = "Please log in to view your report.";
+                    return RedirectToAction("Index", "Dashboard");
+                }
+
+                // Only show initiatives belonging to current user (creator or co-author)
                 var allInitiatives = await _context.Initiatives
                     .Include(i => i.Category)
-                    .Include(i => i.Proposer)
+                    .Include(i => i.Creator)
+                    .Include(i => i.Authorships)
+                    .Where(i => i.CreatorId == currentUserId || i.Authorships.Any(a => a.AuthorId == currentUserId))
                     .ToListAsync();
 
                 var totalCount = allInitiatives.Count;
@@ -167,15 +215,15 @@ namespace IdeaTrack.Areas.Author.Controllers
                     SelectedDate = today,
                     MonthlyTotal = monthlyInitiatives.Count,
                     MonthlyApproved = monthlyInitiatives.Count(i => i.Status == InitiativeStatus.Approved),
-                    MonthlyPending = monthlyInitiatives.Count(i => i.Status == InitiativeStatus.Pending || i.Status == InitiativeStatus.Reviewing)
+                    MonthlyPending = monthlyInitiatives.Count(i => i.Status == InitiativeStatus.Pending || i.Status == InitiativeStatus.Evaluating)
                 };
 
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi tải báo cáo hàng ngày");
-                TempData["ErrorMessage"] = "Không thể tải báo cáo. Vui lòng thử lại sau.";
+                _logger.LogError(ex, "Error khi tai bao cao hang ngay");
+                TempData["ErrorMessage"] = "Khong the tai bao cao. Vui long thu lai sau.";
                 
                 // Return empty view model
                 var emptyViewModel = new DailyReportViewModel

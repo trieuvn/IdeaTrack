@@ -1,4 +1,4 @@
-@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
 
 <main class="container py-5">
 
@@ -7,11 +7,11 @@
         <div class="row">
             <div class="col-lg-8">
                 <span class="badge rounded-pill bg-info text-white mb-3 p-2 px-3">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">edit</span> CHỈNH SỬA SÁNG KIẾN
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">edit</span> EDIT INITIATIVE
                 </span>
-                <h1 class="fw-bold display-5 mb-3">Cập nhật Sáng kiến</h1>
+                <h1 class="fw-bold display-5 mb-3">Update Initiative</h1>
                 <p class="fs-5 mb-0 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    Chỉnh sửa thông tin sáng kiến của bạn. Mã sáng kiến: <strong>@Model.Initiative.InitiativeCode</strong>
+                    Edit your initiative information. Initiative Code: <strong>@Model.Initiative.InitiativeCode</strong>
                 </p>
             </div>
         </div>
@@ -22,7 +22,7 @@
         <div class="card-header bg-white border-0 pt-4 px-4">
             <h5 class="fw-bold mb-0">
                 <span class="material-icons align-middle me-2 text-info">edit_note</span>
-                Thông tin sáng kiến
+                Initiative Information
             </h5>
         </div>
         <div class="card-body p-4">
@@ -30,65 +30,68 @@
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Initiative.Id" />
                 <input type="hidden" asp-for="Initiative.InitiativeCode" />
-                <input type="hidden" asp-for="Initiative.ProposerId" />
+                <input type="hidden" asp-for="Initiative.CreatorId" />
                 <input type="hidden" asp-for="Initiative.Status" />
                 <input type="hidden" asp-for="Initiative.CreatedAt" />
                 
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <!-- Row 1: Academic Year & Category -->
+                <!-- Row 1: Category & Department -->
                 <div class="row g-4 mb-4">
-                    <div class="col-md-6">
-                        <label asp-for="Initiative.AcademicYearId" class="form-label fw-medium">
-                            <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">calendar_today</span>
-                            Năm học <span class="text-danger">*</span>
-                        </label>
-                        <select asp-for="Initiative.AcademicYearId" asp-items="Model.AcademicYears" class="form-select">
-                            <option value="">-- Chọn năm học --</option>
-                        </select>
-                        <span asp-validation-for="Initiative.AcademicYearId" class="text-danger small"></span>
-                    </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.CategoryId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">category</span>
-                            Danh mục <span class="text-danger">*</span>
+                            Category <span class="text-danger">*</span>
                         </label>
                         <select asp-for="Initiative.CategoryId" asp-items="Model.Categories" class="form-select">
-                            <option value="">-- Chọn danh mục --</option>
+                            <option value="">-- Select category --</option>
                         </select>
                         <span asp-validation-for="Initiative.CategoryId" class="text-danger small"></span>
                     </div>
-                </div>
-
-                <!-- Row 2: Department & Budget -->
-                <div class="row g-4 mb-4">
                     <div class="col-md-6">
                         <label asp-for="Initiative.DepartmentId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">business</span>
-                            Khoa/Phòng ban <span class="text-danger">*</span>
+                            Department <span class="text-danger">*</span>
                         </label>
                         <select asp-for="Initiative.DepartmentId" asp-items="Model.Departments" class="form-select">
-                            <option value="">-- Chọn khoa/phòng ban --</option>
+                            <option value="">-- Select department --</option>
                         </select>
                         <span asp-validation-for="Initiative.DepartmentId" class="text-danger small"></span>
                     </div>
+                </div>
+
+                <!-- Row 2: Budget -->
+                <div class="row g-4 mb-4">
                     <div class="col-md-6">
                         <label asp-for="Initiative.Budget" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-warning" style="font-size: 18px;">payments</span>
-                            Ngân sách (VND)
+                            Budget (VND)
                         </label>
-                        <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Nhập số tiền dự kiến" class="form-control" />
+                        <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Enter estimated budget" class="form-control" />
                         <span asp-validation-for="Initiative.Budget" class="text-danger small"></span>
                     </div>
+                    @if (Model.ActivePeriodId.HasValue)
+                    {
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">
+                                <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">event</span>
+                                Initiative Period
+                            </label>
+                            <div class="form-control bg-light">
+                                <span class="badge bg-success me-2">Active</span> Current Period
+                            </div>
+                            <small class="text-muted">Initiative will be submitted to the active period when you click "Submit Initiative"</small>
+                        </div>
+                    }
                 </div>
 
                 <!-- Title -->
                 <div class="mb-4">
                     <label asp-for="Initiative.Title" class="form-label fw-medium">
                         <span class="material-icons align-middle me-1 text-danger" style="font-size: 18px;">title</span>
-                        Tiêu đề sáng kiến <span class="text-danger">*</span>
+                        Initiative Title <span class="text-danger">*</span>
                     </label>
-                    <input asp-for="Initiative.Title" placeholder="Nhập tiêu đề mô tả ngắn gọn cho sáng kiến" class="form-control form-control-lg" />
+                    <input asp-for="Initiative.Title" placeholder="Enter a brief title for the initiative" class="form-control form-control-lg" />
                     <span asp-validation-for="Initiative.Title" class="text-danger small"></span>
                 </div>
 
@@ -96,24 +99,107 @@
                 <div class="mb-4">
                     <label asp-for="Initiative.Description" class="form-label fw-medium">
                         <span class="material-icons align-middle me-1 text-secondary" style="font-size: 18px;">notes</span>
-                        Mô tả chi tiết
+                        Detailed Description
                     </label>
-                    <textarea asp-for="Initiative.Description" placeholder="Mô tả đầy đủ về sáng kiến, mục tiêu, và kết quả mong đợi..." rows="6" class="form-control"></textarea>
+                    <textarea asp-for="Initiative.Description" placeholder="Describe the initiative, objectives, and expected outcomes..." rows="6" class="form-control"></textarea>
                     <span asp-validation-for="Initiative.Description" class="text-danger small"></span>
+                </div>
+
+                <!-- Existing Attachments -->
+                @if (Model.ExistingFiles != null && Model.ExistingFiles.Any())
+                {
+                    <div class="mb-4">
+                        <label class="form-label fw-medium">
+                            <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">folder</span>
+                            Current Attachments (@Model.ExistingFiles.Count)
+                        </label>
+                        <div class="existing-files-list">
+                            @foreach (var file in Model.ExistingFiles)
+                            {
+                                var iconClass = file.FileType switch {
+                                    ".pdf" => "picture_as_pdf",
+                                    ".doc" or ".docx" => "description",
+                                    ".xls" or ".xlsx" => "table_chart",
+                                    ".ppt" or ".pptx" => "slideshow",
+                                    _ => "insert_drive_file"
+                                };
+                                var iconColor = file.FileType switch {
+                                    ".pdf" => "#dc3545",
+                                    ".doc" or ".docx" => "#0d6efd",
+                                    ".xls" or ".xlsx" => "#198754",
+                                    ".ppt" or ".pptx" => "#fd7e14",
+                                    _ => "#6c757d"
+                                };
+                                <div class="file-item existing">
+                                    <div class="file-info">
+                                        <div class="file-icon" style="background: @(iconColor)20;">
+                                            <span class="material-icons" style="color: @iconColor; font-size: 20px;">@iconClass</span>
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium text-truncate" style="max-width: 280px;">@file.FileName</div>
+                                            <small class="text-muted">@((file.FileSize / 1024.0).ToString("F1")) KB • @file.UploadDate.ToString("MMM dd, yyyy")</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-1">
+                                        <a href="@file.FilePath" target="_blank" class="btn btn-sm btn-outline-primary" title="View">
+                                            <span class="material-icons" style="font-size: 16px;">visibility</span>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Delete"
+                                                onclick="if(confirm('Delete this file?')) { document.getElementById('delete-file-@file.Id').submit(); }">
+                                            <span class="material-icons" style="font-size: 16px;">delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+                    @foreach (var file in Model.ExistingFiles)
+                    {
+                        <form id="delete-file-@file.Id" asp-area="Author" asp-controller="Initiative" asp-action="DeleteFile" asp-route-fileId="@file.Id" asp-route-initiativeId="@Model.Initiative.Id" method="post" style="display:none;">
+                            @Html.AntiForgeryToken()
+                        </form>
+                    }
+                }
+
+                <!-- Modern Drag & Drop File Upload -->
+                <div class="mb-4">
+                    <label class="form-label fw-medium">
+                        <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">attach_file</span>
+                        Add New Attachments
+                    </label>
+                    
+                    <!-- File input - use CSS to hide instead of hidden attribute for better browser compatibility -->
+                    <input type="file" id="ProjectFiles" name="ProjectFiles" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" 
+                           style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;" />
+                    
+                    <!-- Drop Zone -->
+                    <div id="dropZone" class="drop-zone border border-2 border-dashed rounded-4 p-4 text-center bg-light position-relative" 
+                         style="border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;">
+                        <div class="drop-zone-content">
+                            <span class="material-icons text-primary mb-2" style="font-size: 36px;">cloud_upload</span>
+                            <h6 class="fw-bold text-dark mb-1">Drag and drop files here</h6>
+                            <p class="text-muted mb-2 small">or click to upload</p>
+                            <span class="badge bg-light text-muted border" style="font-size: 11px;">PDF, Word, Excel, PowerPoint • Max 10MB</span>
+                        </div>
+                    </div>
+                    
+                    <!-- New File List -->
+                    <div id="fileList" class="mt-3"></div>
                 </div>
 
                 <!-- Action Buttons -->
                 <hr class="my-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@Model.Initiative.Id" class="btn btn-outline-secondary rounded-pill px-4">
-                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Quay lại
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Back
                     </a>
                     <div class="d-flex gap-3">
                         <button type="submit" name="action" value="Save" class="btn btn-outline-primary rounded-pill px-4">
-                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Lưu thay đổi
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Save Changes
                         </button>
                         <button type="submit" name="action" value="Submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow">
-                            <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> Nộp sáng kiến
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> Submit Initiative
                         </button>
                     </div>
                 </div>
@@ -126,4 +212,205 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <style>
+        .drop-zone.drag-over {
+            border-color: #0d6efd !important;
+            background-color: #e7f1ff !important;
+        }
+        .drop-zone:hover {
+            border-color: #0d6efd !important;
+            background-color: #f8f9fa !important;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+        .file-item:hover {
+            background: #f8f9fa;
+            border-color: #dee2e6;
+        }
+        .file-item.existing {
+            background: #f8fff8;
+            border-color: #d4edda;
+        }
+        .file-item .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .file-item .file-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+        .file-item .remove-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .file-item .remove-btn:hover {
+            background: #fee2e2;
+        }
+    </style>
+    
+    <script>
+        (function() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('ProjectFiles');
+            const fileList = document.getElementById('fileList');
+            let selectedFiles = [];
+            
+            // Click to open file dialog
+            dropZone.addEventListener('click', () => fileInput.click());
+            
+            // Drag events
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-over');
+            });
+            
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+            });
+            
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-over');
+                const files = Array.from(e.dataTransfer.files);
+                addFiles(files);
+            });
+            
+            // File input change (for click to upload)
+            fileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                addFiles(files);
+            });
+            
+            function addFiles(files) {
+                const allowedTypes = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx'];
+                
+                files.forEach(file => {
+                    const ext = '.' + file.name.split('.').pop().toLowerCase();
+                    if (allowedTypes.includes(ext)) {
+                        // Avoid duplicates
+                        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                            selectedFiles.push(file);
+                        }
+                    } else {
+                        alert(`File "${file.name}" is not a supported format.`);
+                    }
+                });
+                
+                updateFileList();
+                syncWithInput();
+            }
+            
+            function removeFile(index) {
+                selectedFiles.splice(index, 1);
+                updateFileList();
+                syncWithInput();
+            }
+            
+            function updateFileList() {
+                if (selectedFiles.length === 0) {
+                    fileList.innerHTML = '';
+                    return;
+                }
+                
+                let html = '<div class="small text-muted mb-2"><span class="badge bg-primary me-1">' + selectedFiles.length + '</span> new file(s) to upload</div>';
+                
+                selectedFiles.forEach((file, index) => {
+                    const size = formatFileSize(file.size);
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    const iconClass = getFileIcon(ext);
+                    const iconColor = getFileColor(ext);
+                    
+                    html += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <div class="file-icon" style="background: ${iconColor}20;">
+                                    <span class="material-icons" style="color: ${iconColor}; font-size: 20px;">${iconClass}</span>
+                                </div>
+                                <div>
+                                    <div class="fw-medium text-truncate" style="max-width: 280px;">${file.name}</div>
+                                    <small class="text-muted">${size} • <span class="text-primary">New</span></small>
+                                </div>
+                            </div>
+                            <button type="button" class="remove-btn" onclick="window.removeFileAtIndex(${index})" title="Remove">
+                                <span class="material-icons" style="font-size: 20px;">close</span>
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                fileList.innerHTML = html;
+            }
+            
+            function syncWithInput() {
+                const dt = new DataTransfer();
+                selectedFiles.forEach(file => dt.items.add(file));
+                fileInput.files = dt.files;
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+            
+            function getFileIcon(ext) {
+                switch(ext) {
+                    case 'pdf': return 'picture_as_pdf';
+                    case 'doc': case 'docx': return 'description';
+                    case 'xls': case 'xlsx': return 'table_chart';
+                    case 'ppt': case 'pptx': return 'slideshow';
+                    default: return 'insert_drive_file';
+                }
+            }
+            
+            function getFileColor(ext) {
+                switch(ext) {
+                    case 'pdf': return '#dc3545';
+                    case 'doc': case 'docx': return '#0d6efd';
+                    case 'xls': case 'xlsx': return '#198754';
+                    case 'ppt': case 'pptx': return '#fd7e14';
+                    default: return '#6c757d';
+                }
+            }
+            
+            // Expose removeFile to global scope for onclick
+            window.removeFileAtIndex = removeFile;
+            
+            // CRITICAL: Sync files on form submit
+            const form = document.querySelector('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Ensure files are synced right before submit
+                    syncWithInput();
+                    console.log('[FileUpload] Form submitting with ' + selectedFiles.length + ' files');
+                    console.log('[FileUpload] Input files count: ' + fileInput.files.length);
+                    if (fileInput.files.length > 0) {
+                        console.log('[FileUpload] Files to upload:', Array.from(fileInput.files).map(f => f.name));
+                    }
+                });
+            }
+        })();
+    </script>
 }
+
