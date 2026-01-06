@@ -207,8 +207,9 @@
             <nav class="nav flex-column px-2 mt-2 flex-grow-1">
 
                 <!-- Dashboard -->
-                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Port" && currentAction == "Index" ? "active" : "")"
-                   href="@Url.Action("Index", "Port", new { area = "SciTech" })">
+                <!-- Dashboard -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Council" && currentAction == "Index" ? "active" : "")"
+                   href="@Url.Action("Index", "Council", new { area = "SciTech" })">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
@@ -253,8 +254,9 @@
                 </a>
 
                 <!-- Councils -->
-                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Council" ? "active" : "")"
-                   href="@Url.Action("Index", "Council", new { area = "SciTech" })">
+                <!-- Councils -->
+                <a class="nav-link d-flex align-items-center gap-2 @(currentArea == "SciTech" && currentController == "Council" && currentAction == "ManageBoards" ? "active" : "")"
+                   href="@Url.Action("ManageBoards", "Council", new { area = "SciTech" })">
                     <i class="fas fa-users-cog"></i> <!-- icon updated -->
                     <span>Councils</span>
                 </a>
@@ -272,11 +274,20 @@
             <!-- TOPBAR -->
             <header class="topbar bg-white border-bottom px-4 py-3 d-flex justify-content-between" >
                 <div></div>
-                <div class="d-flex align-items-center gap-3">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <div class="text-end">
-                        <div class="fw-semibold">Nguyen Van Admin</div>
-                        <small class="text-muted">OST Specialist</small>
+                <div class="d-flex align-items-center gap-4">
+                    <span class="material-symbols-outlined text-secondary">notifications</span>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                         <div class="text-end">
+                            <div class="fw-semibold">Nguyen Van Admin</div>
+                            <small class="text-muted">OST Specialist</small>
+                        </div>
+                        <div class="vr"></div>
+                         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                            <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none" title="Logout">
+                                <span class="material-symbols-outlined">logout</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </header>
