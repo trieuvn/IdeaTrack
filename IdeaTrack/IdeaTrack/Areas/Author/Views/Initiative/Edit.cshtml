@@ -36,18 +36,39 @@
                 
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <!-- Row 1: Category & Department -->
+                <!-- Row 1: Academic Year & Category (Dependent Dropdowns) -->
                 <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-medium">
+                            <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">school</span>
+                            Academic Year <span class="text-danger">*</span>
+                        </label>
+                        <select id="AcademicYearId" name="SelectedAcademicYearId" asp-items="Model.AcademicYears" class="form-select">
+                            <option value="">-- Select academic year --</option>
+                        </select>
+                        <small class="text-muted">Select year first to see available categories</small>
+                    </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.CategoryId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">category</span>
                             Category <span class="text-danger">*</span>
                         </label>
-                        <select asp-for="Initiative.CategoryId" asp-items="Model.Categories" class="form-select">
-                            <option value="">-- Select category --</option>
+                        <select asp-for="Initiative.CategoryId" id="CategoryId" class="form-select">
+                            <option value="">-- Select academic year first --</option>
+                            @if (Model.Categories != null)
+                            {
+                                @foreach (var item in Model.Categories)
+                                {
+                                    <option value="@item.Value" selected="@(item.Value == Model.Initiative.CategoryId.ToString())">@item.Text</option>
+                                }
+                            }
                         </select>
                         <span asp-validation-for="Initiative.CategoryId" class="text-danger small"></span>
                     </div>
+                </div>
+
+                <!-- Row 2: Department & Budget -->
+                <div class="row g-4 mb-4">
                     <div class="col-md-6">
                         <label asp-for="Initiative.DepartmentId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">business</span>
@@ -58,10 +79,6 @@
                         </select>
                         <span asp-validation-for="Initiative.DepartmentId" class="text-danger small"></span>
                     </div>
-                </div>
-
-                <!-- Row 2: Budget -->
-                <div class="row g-4 mb-4">
                     <div class="col-md-6">
                         <label asp-for="Initiative.Budget" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-warning" style="font-size: 18px;">payments</span>
@@ -70,19 +87,6 @@
                         <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Enter estimated budget" class="form-control" />
                         <span asp-validation-for="Initiative.Budget" class="text-danger small"></span>
                     </div>
-                    @if (Model.ActivePeriodId.HasValue)
-                    {
-                        <div class="col-md-6">
-                            <label class="form-label fw-medium">
-                                <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">event</span>
-                                Initiative Period
-                            </label>
-                            <div class="form-control bg-light">
-                                <span class="badge bg-success me-2">Active</span> Current Period
-                            </div>
-                            <small class="text-muted">Initiative will be submitted to the active period when you click "Submit Initiative"</small>
-                        </div>
-                    }
                 </div>
 
                 <!-- Title -->
@@ -268,6 +272,59 @@
         }
     </style>
     
+    <!-- Dependent Dropdown AJAX Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearSelect = document.getElementById('AcademicYearId');
+            const categorySelect = document.getElementById('CategoryId');
+            const currentCategoryId = '@Model.Initiative.CategoryId';
+            
+            if (yearSelect && categorySelect) {
+                yearSelect.addEventListener('change', function() {
+                    const yearId = this.value;
+                    
+                    // Clear and disable category while loading
+                    categorySelect.innerHTML = '<option value="">-- Loading categories... --</option>';
+                    categorySelect.disabled = true;
+                    
+                    if (!yearId) {
+                        categorySelect.innerHTML = '<option value="">-- Select academic year first --</option>';
+                        categorySelect.disabled = false;
+                        return;
+                    }
+                    
+                    // AJAX call to get categories
+                    fetch('/Author/Initiative/GetCategoriesByYear?yearId=' + yearId)
+                        .then(response => response.json())
+                        .then(data => {
+                            categorySelect.innerHTML = '<option value="">-- Select category --</option>';
+                            if (data.length === 0) {
+                                categorySelect.innerHTML = '<option value="">-- No open periods in this year --</option>';
+                            } else {
+                                data.forEach(item => {
+                                    const option = document.createElement('option');
+                                    option.value = item.value;
+                                    option.textContent = item.text;
+                                    // Preserve selection if editing
+                                    if (item.value.toString() === currentCategoryId) {
+                                        option.selected = true;
+                                    }
+                                    categorySelect.appendChild(option);
+                                });
+                            }
+                            categorySelect.disabled = false;
+                        })
+                        .catch(error => {
+                            console.error('Error loading categories:', error);
+                            categorySelect.innerHTML = '<option value="">-- Error loading categories --</option>';
+                            categorySelect.disabled = false;
+                        });
+                });
+            }
+        });
+    </script>
+    
+    <!-- File Upload Script -->
     <script>
         (function() {
             const dropZone = document.getElementById('dropZone');

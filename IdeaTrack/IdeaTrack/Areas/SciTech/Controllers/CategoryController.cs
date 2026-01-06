@@ -122,13 +122,13 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 _logger.LogInformation("Created Category {Id}: {Name} with Board={BoardId}, Template={TemplateId}",
                     category.Id, category.Name, category.BoardId, category.TemplateId);
 
-                TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ tAAAAAAAA¡AAAAAAAAºAAAAAAAA¡o danh mAAAAAAAA¡AAAAAAAA»AAAAAAAA¥c \"{category.Name}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
+                TempData["SuccessMessage"] = $"Đã tạo danh mục \"{category.Name}\" thành công!";
                 return RedirectToAction(nameof(Index), new { periodId = vm.PeriodId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creating Category");
-                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi tAAAAAAAA¡AAAAAAAAºAAAAAAAA¡o danh mAAAAAAAA¡AAAAAAAA»AAAAAAAA¥c. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
+                TempData["ErrorMessage"] = "Lỗi khi tạo danh mục. Vui lòng thử lại.";
                 vm.Periods = await GetPeriodSelectList();
                 vm.Boards = await GetBoardSelectList();
                 vm.Templates = await GetTemplateSelectList();
@@ -193,13 +193,13 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 _logger.LogInformation("Updated Category {Id}: {Name} with Board={BoardId}, Template={TemplateId}",
                     category.Id, category.Name, category.BoardId, category.TemplateId);
 
-                TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ cAAAAAAAA¡AAAAAAAAºAAAAAAAA­p nhAAAAAAAA¡AAAAAAAAºAAAAAAAA­t danh mAAAAAAAA¡AAAAAAAA»AAAAAAAA¥c \"{category.Name}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
+                TempData["SuccessMessage"] = $"Đã cập nhật danh mục \"{category.Name}\" thành công!";
                 return RedirectToAction(nameof(Index), new { periodId = vm.PeriodId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating Category {Id}", vm.Id);
-                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi cAAAAAAAA¡AAAAAAAAºAAAAAAAA­p nhAAAAAAAA¡AAAAAAAAºAAAAAAAA­t danh mAAAAAAAA¡AAAAAAAA»AAAAAAAA¥c. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
+                TempData["ErrorMessage"] = "Lỗi khi cập nhật danh mục. Vui lòng thử lại.";
                 vm.Periods = await GetPeriodSelectList();
                 vm.Boards = await GetBoardSelectList();
                 vm.Templates = await GetTemplateSelectList();
@@ -225,7 +225,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
                 if (category.Initiatives.Any())
                 {
-                    TempData["ErrorMessage"] = $"KhAAAAAAAAAAAAAAAA´ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA xAAAAAAAAAAAAAAAA³a danh mAAAAAAAA¡AAAAAAAA»AAAAAAAA¥c \"{category.Name}\" vAAAAAAAAAAAAAAAA¬ cAAAAAAAAAAAAAAAA³ sAAAAAAAAAAAAAAAA¡ng kiAAAAAAAA¡AAAAAAAAºAAAAAAAA¿n liAAAAAAAAAAAAAAAAªn quan.";
+                    TempData["ErrorMessage"] = $"Không thể xóa danh mục \"{category.Name}\" vì có sáng kiến liên quan.";
                     return RedirectToAction(nameof(Index), new { periodId = category.PeriodId });
                 }
 
@@ -234,14 +234,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Deleted Category {Id}: {Name}", category.Id, category.Name);
-                TempData["SuccessMessage"] = $"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA£ xAAAAAAAAAAAAAAAA³a danh mAAAAAAAA¡AAAAAAAA»AAAAAAAA¥c \"{category.Name}\" thAAAAAAAAAAAAAAAA nh cAAAAAAAAAAAAAAAA´ng!";
+                TempData["SuccessMessage"] = $"Đã xóa danh mục \"{category.Name}\" thành công!";
 
                 return RedirectToAction(nameof(Index), new { periodId });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting Category {Id}", id);
-                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi xAAAAAAAAAAAAAAAA³a danh mAAAAAAAA¡AAAAAAAA»AAAAAAAA¥c. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
+                TempData["ErrorMessage"] = "Lỗi khi xóa danh mục. Vui lòng thử lại.";
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -255,7 +255,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Select(p => new SelectListItem
                 {
                     Value = p.Id.ToString(),
-                    Text = p.Name + (p.IsActive ? " (AAAAAAAAAAAAAAAAang mAAAAAAAA¡AAAAAAAA»AAAAAAAA)" : "")
+                    Text = p.Name + (p.IsActive ? " (Đang mở)" : "")
                 })
                 .ToListAsync();
         }

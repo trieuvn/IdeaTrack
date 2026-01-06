@@ -3,7 +3,9 @@
 namespace IdeaTrack.Areas.SciTech.Models
 {
     /// <summary>
-    /// ViewModel for displaying and managing InitiativePeriod
+    /// ViewModel for displaying and managing InitiativePeriod.
+    /// Key business logic: A period is considered "Open" if StartDate <= Today <= EndDate.
+    /// Multiple periods can be open simultaneously.
     /// </summary>
     public class PeriodViewModel
     {
@@ -13,7 +15,18 @@ namespace IdeaTrack.Areas.SciTech.Models
         public int AcademicYearId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        
+        /// <summary>
+        /// Legacy flag for manual activation. Use IsOpen for date-based status.
+        /// </summary>
         public bool IsActive { get; set; }
+        
+        /// <summary>
+        /// Computed property: True if StartDate <= Today <= EndDate.
+        /// This determines if Authors can submit to this period.
+        /// </summary>
+        public bool IsOpen { get; set; }
+        
         public DateTime CreatedAt { get; set; }
         public int CategoryCount { get; set; }
         public int InitiativeCount { get; set; }

@@ -66,13 +66,17 @@
                                         <span class="badge bg-secondary">@item.InitiativeCount</span>
                                     </td>
                                     <td class="text-center">
-                                        @if (item.IsActive)
+                                        @if (item.IsOpen)
                                         {
-                                            <span class="badge bg-success">Open</span>
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-door-open me-1"></i>Open
+                                            </span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-outline-secondary text-muted border">Closed</span>
+                                            <span class="badge bg-outline-secondary text-muted border">
+                                                <i class="fas fa-door-closed me-1"></i>Closed
+                                            </span>
                                         }
                                     </td>
                                     <td class="text-end pe-4">

@@ -82,29 +82,54 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             try
             {
-                // Get active period's categories
-                var activePeriod = await _context.InitiativePeriods
-                    .Where(p => p.IsActive)
-                    .FirstOrDefaultAsync();
-
-                var categories = activePeriod != null
-                    ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
-                    : await _context.InitiativeCategories.ToListAsync();
+                // Load all academic years for dropdown
+                var academicYears = await _context.AcademicYears
+                    .OrderByDescending(y => y.Name)
+                    .ToListAsync();
+                
+                // Get current academic year as default selection
+                var currentYear = academicYears.FirstOrDefault(y => y.IsCurrent) ?? academicYears.FirstOrDefault();
+                
+                // Categories will be loaded via AJAX when user selects academic year
+                // For initial load, pre-load categories if there's a current year with open periods
+                var categories = new List<InitiativeCategory>();
+                int? activePeriodId = null;
+                
+                if (currentYear != null)
+                {
+                    var today = DateTime.Today;
+                    var openPeriods = await _context.InitiativePeriods
+                        .Where(p => p.AcademicYearId == currentYear.Id 
+                                 && p.StartDate <= today && today <= p.EndDate)
+                        .ToListAsync();
+                    
+                    if (openPeriods.Any())
+                    {
+                        activePeriodId = openPeriods.First().Id;
+                        var periodIds = openPeriods.Select(p => p.Id).ToList();
+                        categories = await _context.InitiativeCategories
+                            .Where(c => periodIds.Contains(c.PeriodId))
+                            .OrderBy(c => c.Name)
+                            .ToListAsync();
+                    }
+                }
 
                 var viewModel = new InitiativeCreateViewModel
                 {
                     Initiative = new Initiative(),
+                    AcademicYears = new SelectList(academicYears, "Id", "Name", currentYear?.Id),
+                    SelectedAcademicYearId = currentYear?.Id,
                     Categories = new SelectList(categories, "Id", "Name"),
                     Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name"),
-                    ActivePeriodId = activePeriod?.Id
+                    ActivePeriodId = activePeriodId
                 };
 
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error khi tai trang tao sang kien");
-                TempData["ErrorMessage"] = "Khong the tai form tao sang kien. Vui long thu lai sau.";
+                _logger.LogError(ex, "Error loading create initiative page");
+                TempData["ErrorMessage"] = "Cannot load create form. Please try again later.";
                 return RedirectToAction(nameof(History));
             }
         }
@@ -264,6 +289,8 @@ namespace IdeaTrack.Areas.Author.Controllers
             {
                 var initiative = await _context.Initiatives
                     .Include(i => i.Files)
+                    .Include(i => i.Category)
+                        .ThenInclude(c => c.Period)
                     .FirstOrDefaultAsync(i => i.Id == id);
                     
                 if (initiative == null)
@@ -284,17 +311,56 @@ namespace IdeaTrack.Areas.Author.Controllers
                     return Forbid();
                 }
 
-                var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
-                var categories = activePeriod != null
-                    ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
-                    : await _context.InitiativeCategories.ToListAsync();
+                // Load all academic years for dropdown
+                var academicYears = await _context.AcademicYears
+                    .OrderByDescending(y => y.Name)
+                    .ToListAsync();
+                
+                // Determine which academic year to pre-select:
+                // 1) If initiative has a category, use its period's academic year
+                // 2) Otherwise, use the current academic year
+                int? selectedYearId = null;
+                if (initiative.Category?.Period != null)
+                {
+                    selectedYearId = initiative.Category.Period.AcademicYearId;
+                }
+                else
+                {
+                    selectedYearId = academicYears.FirstOrDefault(y => y.IsCurrent)?.Id;
+                }
+                
+                // Load categories from open periods in the selected academic year
+                var categories = new List<InitiativeCategory>();
+                var today = DateTime.Today;
+                
+                if (selectedYearId.HasValue)
+                {
+                    var openPeriodIds = await _context.InitiativePeriods
+                        .Where(p => p.AcademicYearId == selectedYearId.Value 
+                                 && p.StartDate <= today && today <= p.EndDate)
+                        .Select(p => p.Id)
+                        .ToListAsync();
+                    
+                    categories = await _context.InitiativeCategories
+                        .Where(c => openPeriodIds.Contains(c.PeriodId))
+                        .OrderBy(c => c.Name)
+                        .ToListAsync();
+                }
+                
+                // If the initiative's current category isn't in the list, add it
+                if (initiative.Category != null && !categories.Any(c => c.Id == initiative.CategoryId))
+                {
+                    categories.Insert(0, initiative.Category);
+                }
 
                 var viewModel = new InitiativeCreateViewModel
                 {
                     Initiative = initiative,
+                    AcademicYears = new SelectList(academicYears, "Id", "Name", selectedYearId),
+                    SelectedAcademicYearId = selectedYearId,
                     Categories = new SelectList(categories, "Id", "Name", initiative.CategoryId),
                     Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", initiative.DepartmentId),
-                    ActivePeriodId = activePeriod?.Id,
+                    ActivePeriodId = null,
                     ExistingFiles = initiative.Files?.ToList() ?? new List<InitiativeFile>()
                 };
 
@@ -372,8 +438,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                         existingInitiative.Status = InitiativeStatus.Pending;
                         existingInitiative.SubmittedDate = DateTime.Now;
                         
-                        // Set period when submitting
-                        var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                        // Set period when submitting (date-based selection)
+                        var today = DateTime.Today;
+                        var activePeriod = await _context.InitiativePeriods
+                            .FirstOrDefaultAsync(p => p.StartDate <= today && today <= p.EndDate);
                         existingInitiative.PeriodId = activePeriod?.Id;
                     }
 
@@ -433,7 +501,13 @@ namespace IdeaTrack.Areas.Author.Controllers
             // If validation fails or error occurred, reload dropdowns
             try
             {
-                var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                // Get currently OPEN periods (date-based)
+                var today = DateTime.Today;
+                var openPeriods = await _context.InitiativePeriods
+                    .Where(p => p.StartDate <= today && today <= p.EndDate)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .ToListAsync();
+                var activePeriod = openPeriods.FirstOrDefault();
                 var categories = activePeriod != null
                     ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
                     : await _context.InitiativeCategories.ToListAsync();
@@ -485,8 +559,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                     initiative.Status = InitiativeStatus.Pending;
                     initiative.SubmittedDate = DateTime.Now;
                     
-                    // Set period when submitting
-                    var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                    // Set period when submitting (date-based selection)
+                    var today = DateTime.Today;
+                    var activePeriod = await _context.InitiativePeriods
+                        .FirstOrDefaultAsync(p => p.StartDate <= today && today <= p.EndDate);
                     initiative.PeriodId = activePeriod?.Id;
                     
                     await _context.SaveChangesAsync();
@@ -955,9 +1031,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                     return RedirectToAction(nameof(Detail), new { id });
                 }
 
-                // Get active periods
+                // Get OPEN periods (date-based: StartDate <= Today <= EndDate)
+                var today = DateTime.Today;
                 var periods = await _context.InitiativePeriods
-                    .Where(p => p.IsActive)
+                    .Where(p => p.StartDate <= today && today <= p.EndDate)
                     .OrderByDescending(p => p.CreatedAt)
                     .Select(p => new SelectListItem
                     {
@@ -1007,8 +1084,10 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // Reload OPEN periods (date-based)
+                var today = DateTime.Today;
                 vm.Periods = await _context.InitiativePeriods
-                    .Where(p => p.IsActive)
+                    .Where(p => p.StartDate <= today && today <= p.EndDate)
                     .Select(p => new SelectListItem { Value = p.Id.ToString(), Text = p.Name })
                     .ToListAsync();
                 vm.Categories = await GetCategoriesForPeriod(vm.PeriodId);
@@ -1057,6 +1136,39 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             var categories = await GetCategoriesForPeriod(periodId);
             return Json(categories.Select(c => new { value = c.Value, text = c.Text }));
+        }
+
+        // API: Get categories by academic year (for dependent dropdown AJAX)
+        // Returns categories from all OPEN periods within the selected academic year
+        [HttpGet]
+        public async Task<IActionResult> GetCategoriesByYear(int yearId)
+        {
+            try
+            {
+                var today = DateTime.Today;
+                
+                // Get open periods for this academic year
+                var openPeriodIds = await _context.InitiativePeriods
+                    .Where(p => p.AcademicYearId == yearId 
+                             && p.StartDate <= today 
+                             && today <= p.EndDate)
+                    .Select(p => p.Id)
+                    .ToListAsync();
+                
+                // Get categories from those open periods
+                var categories = await _context.InitiativeCategories
+                    .Where(c => openPeriodIds.Contains(c.PeriodId))
+                    .OrderBy(c => c.Name)
+                    .Select(c => new { value = c.Id, text = c.Name })
+                    .ToListAsync();
+                
+                return Json(categories);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting categories for year {YearId}", yearId);
+                return Json(new List<object>());
+            }
         }
 
         private async Task<List<SelectListItem>> GetCategoriesForPeriod(int periodId)
