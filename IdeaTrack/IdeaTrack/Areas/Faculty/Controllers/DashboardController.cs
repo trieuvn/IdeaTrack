@@ -23,18 +23,23 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             _userManager = userManager;
         }
 
+        private async Task<int?> GetCurrentUserDepartmentId()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            return user?.DepartmentId;
+        }
 
-        // ==========================================
-        // 1. DASHBOARD LIST (INDEX)
-        // ==========================================
         // ==========================================
         // 1. DASHBOARD LIST (INDEX)
         // ==========================================
         public async Task<IActionResult> Index(string searchString, string statusFilter, int pageNumber = 1)
         {
+            var deptId = await GetCurrentUserDepartmentId();
+            if (deptId == null) return View("Error", new { message = "User not assigned to a department" });
+
             int pageSize = 5;
 
-            // 1. Base Query - Filter explicitly for Faculty Workflow statuses
+            // 1. Base Query - Filter explicitly for Faculty Workflow statuses AND Current Dept
             var allowedStatuses = new[] 
             { 
                 InitiativeStatus.Pending, 
@@ -47,7 +52,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Include(i => i.Creator)
                 .Include(i => i.Category)
                 .Include(i => i.Department)
-                .Where(i => allowedStatuses.Contains(i.Status))
+                .Where(i => i.DepartmentId == deptId && allowedStatuses.Contains(i.Status))
                 .AsQueryable();
 
             // 2. Apply Search
@@ -62,7 +67,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 query = query.Where(s => s.Status == (InitiativeStatus)status);
             }
 
-            // 4. Sorting: Latest updates first (SubmittedDate or CreatedAt)
+            // 4. Sorting
             query = query.OrderByDescending(i => i.SubmittedDate ?? i.CreatedAt);
 
             // 5. Pagination
@@ -75,16 +80,16 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            // 6. Dynamic Statistics (Count directly from DB based on allowed workflow)
-            // Note: We query the base 'allowed' set for stats, ignoring the search filter to show overall dashboard health
-            var baseStatsQuery = _context.Initiatives.Where(i => allowedStatuses.Contains(i.Status));
+            // 6. Dynamic Statistics (Count directly from DB based on allowed workflow, restricted to Dept)
+            var baseStatsQuery = _context.Initiatives
+                .Where(i => i.DepartmentId == deptId && allowedStatuses.Contains(i.Status));
             
             var viewModel = new FacultyDashboardVM
             {
                 PendingCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Pending),
                 ApprovedCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved),
                 RejectedCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Rejected),
-                TotalInitiatives = await baseStatsQuery.CountAsync(), // Total of the 4 relevant statuses
+                TotalInitiatives = await baseStatsQuery.CountAsync(), 
                 Initiatives = initiatives.Select(i => new FacultyInitiativeItem
                 {
                     Id = i.Id,
@@ -115,6 +120,8 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         {
             if (id == null) return NotFound();
 
+            var deptId = await GetCurrentUserDepartmentId();
+
             var initiative = await _context.Initiatives
                 .Include(i => i.Creator).ThenInclude(u => u.Department)
                 .Include(i => i.Category)
@@ -123,6 +130,12 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (initiative == null) return NotFound();
+
+            // Security Check
+            if (initiative.DepartmentId != deptId)
+            {
+                return Forbid(); // Or RedirectToAction("Index") with error
+            }
 
             var viewModel = new FacultyInitiativeDetailVM
             {
@@ -138,7 +151,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 Files = initiative.Files?.Select(f => new InitiativeFileVM 
                 { 
                     FileName = f.FileName, 
-                    FileUrl = f.FilePath // Assuming FilePath or similar exists, might need adjustment
+                    FileUrl = f.FilePath 
                 }).ToList()
             };
 
@@ -150,11 +163,15 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         // ==========================================
         public async Task<IActionResult> Review(int pageNumber = 1, string filterType = "All")
         {
+            var deptId = await GetCurrentUserDepartmentId();
+            if (deptId == null) return RedirectToAction("Index");
+
             int pageSize = 5;
 
             var query = _context.Initiatives
                 .Include(i => i.Creator)
                 .Include(i => i.RevisionRequests)
+                .Where(i => i.DepartmentId == deptId) // Strict Filter
                 .AsQueryable();
 
             switch (filterType)
@@ -181,7 +198,8 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            var allData = _context.Initiatives.AsQueryable();
+            // Stats for this view - restricted to department
+            var allData = _context.Initiatives.Where(i => i.DepartmentId == deptId).AsQueryable();
             ViewBag.CountEditing = await allData.CountAsync(i => i.Status == InitiativeStatus.Revision_Required);
             ViewBag.CountResubmitted = await allData.CountAsync(i => i.Status == InitiativeStatus.Pending);
 
@@ -203,20 +221,17 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-
-
-        // ==========================================
-        // 4. SUBMIT REVISION REQUEST (POST)
-        // ==========================================
-        // ==========================================
         // 4. REQUEST REVISION (POST)
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RequestRevision(int InitiativeId, string Comments)
         {
+            var deptId = await GetCurrentUserDepartmentId();
             var initiative = await _context.Initiatives.FindAsync(InitiativeId);
+            
             if (initiative == null) return NotFound();
+            if (initiative.DepartmentId != deptId) return Forbid();
 
             initiative.Status = InitiativeStatus.Revision_Required;
             
@@ -229,7 +244,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                     RequestedDate = DateTime.Now,
                     IsResolved = false,
                     Status = "Open",
-                    RequesterId = 2 // TODO: Get real user ID
+                    RequesterId = int.Parse(_userManager.GetUserId(User))
                 };
                 _context.RevisionRequests.Add(revisionRequest);
             }
@@ -240,17 +255,17 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         }
 
         // ==========================================
-        // 5. APPROVE INITIATIVE (POST) - Faculty approves to OST
-        // ==========================================
-        // ==========================================
         // 5. ACCEPT INITIATIVE (POST)
         // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Accept(int InitiativeId, string Comments)
         {
+            var deptId = await GetCurrentUserDepartmentId();
             var initiative = await _context.Initiatives.FindAsync(InitiativeId);
+            
             if (initiative == null) return NotFound();
+            if (initiative.DepartmentId != deptId) return Forbid();
 
             initiative.Status = InitiativeStatus.Faculty_Approved;
             // You can log comments if needed
@@ -263,15 +278,15 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         // ==========================================
         // 6. REJECT INITIATIVE (POST)
         // ==========================================
-        // ==========================================
-        // 6. REJECT INITIATIVE (POST)
-        // ==========================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reject(int InitiativeId, string Comments)
         {
+            var deptId = await GetCurrentUserDepartmentId();
             var initiative = await _context.Initiatives.FindAsync(InitiativeId);
+
             if (initiative == null) return NotFound();
+            if (initiative.DepartmentId != deptId) return Forbid();
 
             initiative.Status = InitiativeStatus.Rejected;
             // You can log comments if needed
@@ -286,8 +301,12 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         // ==========================================
         public async Task<IActionResult> Progress(string searchString)
         {
+            var deptId = await GetCurrentUserDepartmentId();
+            if (deptId == null) return RedirectToAction("Index");
+
             var query = _context.Initiatives
                 .Include(i => i.Creator)
+                .Where(i => i.DepartmentId == deptId) // Strict Filter
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -304,7 +323,8 @@ namespace IdeaTrack.Areas.Faculty.Controllers
 
             ViewBag.CurrentSearch = searchString;
 
-            var allData = _context.Initiatives.AsQueryable();
+            // Stats restricted to Dept
+            var allData = _context.Initiatives.Where(i => i.DepartmentId == deptId).AsQueryable();
 
             int countPending = await allData.CountAsync(i => i.Status == InitiativeStatus.Pending);
             int countApproved = await allData.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved || i.Status == InitiativeStatus.Approved);
@@ -335,8 +355,12 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         // ==========================================
         public async Task<IActionResult> ExportToExcel()
         {
+            var deptId = await GetCurrentUserDepartmentId();
+            if (deptId == null) return Forbid();
+
             var data = await _context.Initiatives
                 .Include(i => i.Creator)
+                .Where(i => i.DepartmentId == deptId) // Strict Filter
                 .OrderByDescending(i => i.CreatedAt)
                 .ToListAsync();
 
@@ -405,7 +429,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 DepartmentName = user.Department?.Name ?? "Khoa Công nghệ thông tin",
                 AvatarUrl = user.AvatarUrl ?? "https://i.pravatar.cc/150?img=32",
                 InitiativeCount = initiativeCount,
-                AchievementCount = 5 // Placeholder, can be calculated if needed
+                AchievementCount = 5
             };
 
             return View(viewModel);
