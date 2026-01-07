@@ -2,6 +2,7 @@
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -14,22 +15,34 @@ namespace IdeaTrack.Areas.Councils.Controllers
     public class PageController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PageController(ApplicationDbContext db)
+        public PageController(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
 
-        private int GetCurrentUserIdForTest() => 1;
+        private async Task<int> GetCurrentUserId()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            return user?.Id ?? 0;
+        }
 
         public async Task<IActionResult> Index()
         {
-            var userId = GetCurrentUserIdForTest();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account", new { area = "" });
+            
+            var userId = user.Id;
             var now = DateTime.Now;
+            
+            // Only show initiatives that are in Evaluating or Re_Evaluating status
+            var allowedStatuses = new[] { InitiativeStatus.Evaluating, InitiativeStatus.Re_Evaluating };
 
             var baseQuery = _db.InitiativeAssignments
                 .AsNoTracking()
-                .Where(a => a.MemberId == userId);
+                .Where(a => a.MemberId == userId && allowedStatuses.Contains(a.Initiative.Status));
 
             var totalAssigned = await baseQuery.CountAsync();
             var completed = await baseQuery.CountAsync(a => a.Status == AssignmentStatus.Completed);
@@ -37,11 +50,13 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             var vm = new DashboardVM
             {
+                UserFullName = user.FullName ?? user.UserName ?? "Expert",
                 TotalAssigned = totalAssigned,
                 CompletedCount = completed,
                 PendingCount = pending,
                 ProgressPercentage = totalAssigned == 0 ? 0 : (int)Math.Round((decimal)completed / totalAssigned * 100, 0, MidpointRounding.AwayFromZero)
             };
+
 
             vm.Assignments = await baseQuery
                 .Where(a => a.Status != AssignmentStatus.Completed)
@@ -90,7 +105,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
         public async Task<IActionResult> AssignedInitiatives(string? keyword, string status = "Assigned", string sortOrder = "Deadline", int page = 1)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
 
             var vm = new AssignedListVM
             {
@@ -100,11 +116,16 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 CurrentPage = page <= 0 ? 1 : page
             };
 
+            // Only show initiatives that are in Evaluating or Re_Evaluating status
+            var allowedStatuses = new[] { InitiativeStatus.Evaluating, InitiativeStatus.Re_Evaluating };
+
             var query = _db.InitiativeAssignments
                 .AsNoTracking()
-                .Where(a => a.MemberId == userId)
+                .Where(a => a.MemberId == userId && allowedStatuses.Contains(a.Initiative.Status))
                 .Include(a => a.Initiative)
                     .ThenInclude(i => i.Category)
+                .Include(a => a.Initiative)
+                    .ThenInclude(i => i.Period)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(vm.Keyword))
@@ -163,7 +184,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
         public async Task<IActionResult> History(string? keyword, string sortOrder = "Newest", int page = 1)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
 
             var vm = new AssignedListVM
             {
@@ -220,7 +242,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
 
             var assignment = await _db.InitiativeAssignments
                 .AsNoTracking()
@@ -256,6 +279,9 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 DueDate = assignment.DueDate,
                 Files = assignment.Initiative.Files?.ToList() ?? new(),
                 GeneralComment = assignment.ReviewComment,
+                Strengths = assignment.Strengths,
+                Limitations = assignment.Limitations,
+                Recommendations = assignment.Recommendations,
                 SubmitAction = "SaveDraft",
                 RoundNumber = assignment.RoundNumber,
                 IsLocked = assignment.Status == AssignmentStatus.Completed,
@@ -286,7 +312,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitGrading(GradingVM vm)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
 
             var assignment = await _db.InitiativeAssignments
                 .Include(a => a.Template)
@@ -300,7 +327,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
             // Check if assignment is locked (already submitted)
             if (assignment.Status == AssignmentStatus.Completed)
             {
-                TempData["ErrorMessage"] = "Ban khong the chinh sua vi ket qua da duoc nop va khoa.";
+                TempData["ErrorMessage"] = "You cannot edit this evaluation as it has already been submitted and locked.";
                 return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
             }
 
@@ -377,6 +404,9 @@ namespace IdeaTrack.Areas.Councils.Controllers
             }
 
             assignment.ReviewComment = vm.GeneralComment;
+            assignment.Strengths = vm.Strengths;
+            assignment.Limitations = vm.Limitations;
+            assignment.Recommendations = vm.Recommendations;
 
             if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
             {
@@ -390,18 +420,85 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             await _db.SaveChangesAsync();
             
+            // If submitting, check if all members have completed and calculate average
+            if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
+            {
+                await CheckAndCalculateAverageScore(assignment.InitiativeId, assignment.RoundNumber);
+            }
+            
             TempData["SuccessMessage"] = string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase)
-                ? "Da nop ket qua cham diem thanh cong! Diem so da duoc khoa."
-                : "Da luu ban nhap thanh cong!";
+                ? "Evaluation submitted successfully! Your scores have been locked."
+                : "Draft saved successfully!";
 
             if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
             {
-                // Sau khi nop ket qua, quay ve danh sach
+                // After submitting, return to assigned list
                 return RedirectToAction(nameof(AssignedInitiatives), new { status = "Assigned" });
             }
 
             // Return to the details page after saving draft
             return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
+        }
+        
+        /// <summary>
+        /// Check if all council members have completed their evaluations and calculate average score
+        /// </summary>
+        private async Task CheckAndCalculateAverageScore(int initiativeId, int roundNumber)
+        {
+            // Get all assignments for this initiative in the current round
+            var assignments = await _db.InitiativeAssignments
+                .Include(a => a.EvaluationDetails)
+                .Where(a => a.InitiativeId == initiativeId && a.RoundNumber == roundNumber)
+                .ToListAsync();
+            
+            if (!assignments.Any())
+                return;
+            
+            // Check if all assignments are completed
+            var allCompleted = assignments.All(a => a.Status == AssignmentStatus.Completed);
+            
+            if (!allCompleted)
+                return;
+            
+            // Calculate average score from all members
+            var memberScores = assignments
+                .Select(a => a.EvaluationDetails.Sum(d => d.ScoreGiven))
+                .ToList();
+            
+            if (!memberScores.Any())
+                return;
+            
+            var averageScore = memberScores.Average();
+            
+            // Get the initiative to update status
+            var initiative = await _db.Initiatives
+                .Include(i => i.FinalResult)
+                .FirstOrDefaultAsync(i => i.Id == initiativeId);
+            
+            if (initiative == null)
+                return;
+            
+            // Create or update FinalResult
+            if (initiative.FinalResult == null)
+            {
+                initiative.FinalResult = new FinalResult
+                {
+                    InitiativeId = initiativeId,
+                    AverageScore = averageScore,
+                    DecisionDate = DateTime.Now,
+                    ChairmanId = 1 // Will be set when Chairman makes final decision
+                };
+                _db.Set<FinalResult>().Add(initiative.FinalResult);
+            }
+            else
+            {
+                initiative.FinalResult.AverageScore = averageScore;
+            }
+            
+            // Update initiative status to Pending_Final (all evaluations complete)
+            initiative.Status = InitiativeStatus.Pending_Final;
+            
+            await _db.SaveChangesAsync();
         }
 
         public IActionResult CouncilChair()
@@ -417,7 +514,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
         [HttpGet]
         public async Task<IActionResult> RoundHistory(int initiativeId)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
             
             var initiative = await _db.Initiatives
                 .AsNoTracking()
@@ -504,6 +602,9 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 DueDate = assignment.DueDate,
                 Files = assignment.Initiative.Files?.ToList() ?? new(),
                 GeneralComment = assignment.ReviewComment,
+                Strengths = assignment.Strengths,
+                Limitations = assignment.Limitations,
+                Recommendations = assignment.Recommendations,
                 RoundNumber = assignment.RoundNumber,
                 IsLocked = true, // Always locked in view mode
                 HasPreviousRounds = false

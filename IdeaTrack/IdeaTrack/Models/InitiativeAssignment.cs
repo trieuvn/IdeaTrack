@@ -115,6 +115,21 @@ namespace IdeaTrack.Models
         public string? ReviewComment { get; set; }
         
         /// <summary>
+        /// Detailed feedback: Key strengths of the initiative identified by the evaluator
+        /// </summary>
+        public string? Strengths { get; set; }
+        
+        /// <summary>
+        /// Detailed feedback: Limitations or weaknesses identified by the evaluator
+        /// </summary>
+        public string? Limitations { get; set; }
+        
+        /// <summary>
+        /// Detailed feedback: Recommendations for improvement from the evaluator
+        /// </summary>
+        public string? Recommendations { get; set; }
+        
+        /// <summary>
         /// Date when decision was made
         /// </summary>
         public DateTime? DecisionDate { get; set; }
