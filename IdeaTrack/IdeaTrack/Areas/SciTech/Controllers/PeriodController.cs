@@ -316,7 +316,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting InitiativePeriod {Id}", id);
-                TempData["ErrorMessage"] = "LAAAAAAAA¡AAAAAAAA»AAAAAAAAi khi xAAAAAAAAAAAAAAAA³a AAAAAAAAAAAAAAAAAAAAAAAA¡AAAAAAAA»AAAAAAAA£t sAAAAAAAAAAAAAAAA¡ng kiAAAAAAAA¡AAAAAAAAºAAAAAAAA¿n. Vui lAAAAAAAAAAAAAAAA²ng thAAAAAAAA¡AAAAAAAA»AAAAAAAA­ lAAAAAAAA¡AAAAAAAAºAAAAAAAA¡i.";
+                TempData["ErrorMessage"] = "Lỗi khi xóa Đợt sáng kiến. Vui lòng thử lại.";
                 return RedirectToAction(nameof(Index));
             }
         }

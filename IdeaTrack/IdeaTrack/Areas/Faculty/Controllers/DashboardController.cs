@@ -2,8 +2,10 @@
 using IdeaTrack.Models;
 using IdeaTrack.Areas.Faculty.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Text;
 
 namespace IdeaTrack.Areas.Faculty.Controllers
@@ -13,11 +15,14 @@ namespace IdeaTrack.Areas.Faculty.Controllers
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public DashboardController(ApplicationDbContext context)
+        public DashboardController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
 
         // ==========================================
         // 1. DASHBOARD LIST (INDEX)
@@ -365,6 +370,45 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             return File(result, "text/csv", $"Initiative_Stats_{DateTime.Now:ddMMyyyy}.csv");
         }
 
-        public IActionResult Profile() => View();
+        // ==========================================
+        // 9. USER PROFILE PAGE
+        // ==========================================
+        public async Task<IActionResult> Profile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var user = await _context.Users
+                .Include(u => u.Department)
+                .FirstOrDefaultAsync(u => u.Id == int.Parse(userId));
+
+            if (user == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var initiativeCount = await _context.Initiatives
+                .CountAsync(i => i.CreatorId == user.Id);
+
+            var viewModel = new FacultyProfileVM
+            {
+                UserId = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Position = user.Position ?? "Trưởng khoa",
+                AcademicRank = user.AcademicRank,
+                Degree = user.Degree,
+                DepartmentName = user.Department?.Name ?? "Khoa Công nghệ thông tin",
+                AvatarUrl = user.AvatarUrl ?? "https://i.pravatar.cc/150?img=32",
+                InitiativeCount = initiativeCount,
+                AchievementCount = 5 // Placeholder, can be calculated if needed
+            };
+
+            return View(viewModel);
+        }
     }
 }

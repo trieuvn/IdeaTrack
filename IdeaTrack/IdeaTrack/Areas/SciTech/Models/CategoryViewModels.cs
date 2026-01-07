@@ -1,4 +1,6 @@
-﻿namespace IdeaTrack.Areas.SciTech.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IdeaTrack.Areas.SciTech.Models
 {
     /// <summary>
     /// ViewModel for displaying category with Board/Template links
@@ -18,15 +20,35 @@
     }
 
     /// <summary>
-    /// ViewModel for creating/editing category
+    /// ViewModel for creating/editing category.
+    /// IMPORTANT: Enforces the 1-1-1 mechanism where each category must be linked
+    /// to exactly one EvaluationBoard and one EvaluationTemplate.
+    /// This enables automatic assignment of initiatives to boards and scoring templates.
     /// </summary>
     public class CategoryCreateEditVM
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Tên danh mục là bắt buộc")]
         public string Name { get; set; } = "";
+
         public string? Description { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng chọn Đợt sáng kiến")]
         public int PeriodId { get; set; }
+
+        /// <summary>
+        /// REQUIRED: The evaluation board that will score initiatives in this category.
+        /// Part of the 1-1-1 mechanism for automatic assignment.
+        /// </summary>
+        [Required(ErrorMessage = "Vui lòng chọn Hội đồng đánh giá (bắt buộc theo quy tắc 1-1-1)")]
         public int? BoardId { get; set; }
+
+        /// <summary>
+        /// REQUIRED: The evaluation template (scoring criteria) for this category.
+        /// Part of the 1-1-1 mechanism for automatic assignment.
+        /// </summary>
+        [Required(ErrorMessage = "Vui lòng chọn Mẫu chấm điểm (bắt buộc theo quy tắc 1-1-1)")]
         public int? TemplateId { get; set; }
 
         // For dropdowns

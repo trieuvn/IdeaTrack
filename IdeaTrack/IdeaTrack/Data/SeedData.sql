@@ -302,6 +302,84 @@ INSERT INTO [dbo].[ReferenceForms] ([Id], [PeriodId], [FileName], [Description],
 SET IDENTITY_INSERT [dbo].[ReferenceForms] OFF
 GO
 
+-- ========================================
+-- 13. INITIATIVES (25 rows) ✓
+-- Status: 0=Draft, 1=Pending, 2=Faculty_Approved, 3=OST_Approved, 4=Evaluating, 5=Revision_Required, 6=Pending_Final, 7=Approved, 8=Rejected
+-- ========================================
+SET IDENTITY_INSERT [dbo].[Initiatives] ON
+INSERT INTO [dbo].[Initiatives] ([Id], [InitiativeCode], [Title], [Description], [Budget], [Status], [CreatedAt], [SubmittedDate], [CurrentRound], [CreatorId], [DepartmentId], [CategoryId], [PeriodId]) VALUES
+-- Current period 7: Active initiatives (mixed statuses)
+(1, 'SK-2026-0001', N'Hệ thống quản lý điểm danh bằng AI', N'Sử dụng nhận diện khuôn mặt để tự động điểm danh sinh viên', 50000000, 4, '2025-10-01', '2025-10-05', 1, 20, 1, 1, 7),
+(2, 'SK-2026-0002', N'Robot dẫn đường tự động trong khuôn viên', N'Robot tự hành giúp hướng dẫn khách tham quan', 150000000, 4, '2025-10-02', '2025-10-10', 1, 22, 2, 2, 7),
+(3, 'SK-2026-0003', N'Hệ thống tưới cây thông minh', N'IoT tự động tưới cây theo độ ẩm đất', 30000000, 2, '2025-10-15', '2025-10-20', 1, 24, 3, 2, 7),
+(4, 'SK-2026-0004', N'Ứng dụng đăng ký học phần online', N'Cải tiến quy trình đăng ký môn học', 20000000, 1, '2025-11-01', '2025-11-05', 1, 25, 4, 4, 7),
+(5, 'SK-2026-0005', N'Phương pháp học từ vựng theo chủ đề', N'Đổi mới cách dạy từ vựng tiếng Anh', 5000000, 6, '2025-09-20', '2025-09-25', 1, 26, 5, 6, 7),
+(6, 'SK-2026-0006', N'Hệ thống quản lý tài liệu điện tử', N'Số hóa văn bản hành chính', 80000000, 7, '2025-09-15', '2025-09-18', 1, 21, 1, 1, 7),
+(7, 'SK-2026-0007', N'Thiết bị đo chất lượng không khí', N'Cảm biến IoT giám sát môi trường', 45000000, 8, '2025-09-10', '2025-09-12', 1, 23, 2, 2, 7),
+(8, 'SK-2026-0008', N'Chatbot hỗ trợ sinh viên 24/7', N'Trợ lý ảo AI trả lời thắc mắc sinh viên', 35000000, 5, '2025-10-20', '2025-10-25', 1, 20, 1, 1, 7),
+
+-- Current period 8: Special period initiatives
+(9, 'SK-2026-S001', N'Ứng dụng Machine Learning dự đoán điểm thi', N'AI phân tích dữ liệu học tập dự đoán kết quả', 100000000, 4, '2025-12-10', '2025-12-15', 1, 28, 1, 7, 8),
+(10, 'SK-2026-S002', N'Hệ thống năng lượng mặt trời cho giảng đường', N'Pin mặt trời cấp điện cho phòng học', 200000000, 1, '2025-12-20', '2025-12-22', 1, 29, 9, 8, 8),
+(11, 'SK-2026-S003', N'Platform chuyển đổi số quản lý đào tạo', N'Hệ thống tích hợp quản lý đào tạo toàn diện', 500000000, 2, '2025-12-05', '2025-12-08', 1, 21, 1, 9, 8),
+
+-- Historical period 5: Completed initiatives
+(12, 'SK-2024-0001', N'Website Portal sinh viên', N'Cổng thông tin điện tử cho sinh viên', 40000000, 7, '2024-09-10', '2024-09-15', 1, 20, 1, 11, 5),
+(13, 'SK-2024-0002', N'Máy in 3D chi phí thấp', N'Chế tạo máy in 3D từ linh kiện tái chế', 25000000, 7, '2024-09-12', '2024-09-18', 1, 22, 2, 12, 5),
+(14, 'SK-2024-0003', N'Quy trình đánh giá năng lực nhân sự', N'Bộ công cụ đánh giá hiệu quả nhân viên', 10000000, 7, '2024-10-01', '2024-10-05', 1, 25, 4, 13, 5),
+(15, 'SK-2024-0004', N'Bộ slide bài giảng tương tác', N'Slide trình chiếu kết hợp game hóa', 8000000, 8, '2024-10-10', '2024-10-12', 1, 26, 5, 14, 5),
+
+-- Historical period 6: Mixed statuses
+(16, 'SK-2025-0001', N'App quản lý thời gian biểu', N'Ứng dụng mobile quản lý lịch học', 30000000, 7, '2024-12-20', '2024-12-25', 1, 21, 1, 16, 6),
+(17, 'SK-2025-0002', N'Robot vệ sinh tự động', N'Robot làm sạch hành lang tự động', 120000000, 7, '2025-01-05', '2025-01-10', 1, 23, 2, 17, 6),
+(18, 'SK-2025-0003', N'Hệ thống quản lý kho thông minh', N'Phần mềm quản lý tài sản thiết bị', 60000000, 7, '2025-02-01', '2025-02-05', 1, 25, 4, 18, 6),
+(19, 'SK-2025-0004', N'Phương pháp dạy học kết hợp', N'Blended learning cho các môn đại cương', 15000000, 8, '2025-02-15', '2025-02-18', 1, 27, 6, 19, 6),
+(20, 'SK-2025-0005', N'Ý tưởng khởi nghiệp EdTech', N'Platform học trực tuyến cho THPT', 250000000, 7, '2025-03-01', '2025-03-05', 1, 28, 1, 20, 6),
+
+-- Draft initiatives (not submitted yet)
+(21, NULL, N'Hệ thống nhà xe thông minh', N'Bãi đậu xe tự động tính phí', 80000000, 0, '2026-01-02', NULL, 1, 20, 1, 1, NULL),
+(22, NULL, N'VR Lab thực hành Hóa học', N'Phòng thí nghiệm thực tế ảo', 300000000, 0, '2026-01-03', NULL, 1, 27, 6, 6, NULL),
+(23, NULL, N'App kiểm tra sức khỏe sinh viên', N'Ứng dụng theo dõi sức khỏe cộng đồng', 50000000, 0, '2026-01-04', NULL, 1, 30, 9, 8, NULL),
+(24, NULL, N'Hệ thống đèn LED thông minh', N'Đèn tự động điều chỉnh theo ánh sáng', 70000000, 0, '2026-01-05', NULL, 1, 29, 8, 8, NULL),
+(25, NULL, N'Phần mềm chấm bài tự động', N'AI chấm bài tự luận', 90000000, 0, '2026-01-06', NULL, 1, 21, 1, 7, NULL)
+SET IDENTITY_INSERT [dbo].[Initiatives] OFF
+GO
+
+-- ========================================
+-- 14. INITIATIVE AUTHORSHIPS (For multi-author initiatives)
+-- Some initiatives have co-authors
+-- ========================================
+SET IDENTITY_INSERT [dbo].[InitiativeAuthorships] ON
+INSERT INTO [dbo].[InitiativeAuthorships] ([Id], [InitiativeId], [UserId], [IsCreator], [ContributionPercentage], [JoinedAt]) VALUES
+-- Initiative 1: 2 authors
+(1, 1, 20, 1, 60, '2025-10-01'),
+(2, 1, 21, 0, 40, '2025-10-02'),
+-- Initiative 2: 3 authors
+(3, 2, 22, 1, 50, '2025-10-02'),
+(4, 2, 23, 0, 30, '2025-10-03'),
+(5, 2, 24, 0, 20, '2025-10-04'),
+-- Initiative 6: 2 authors
+(6, 6, 21, 1, 70, '2025-09-15'),
+(7, 6, 20, 0, 30, '2025-09-16'),
+-- Initiative 9: 3 authors (AI project)
+(8, 9, 28, 1, 40, '2025-12-10'),
+(9, 9, 29, 0, 30, '2025-12-11'),
+(10, 9, 20, 0, 30, '2025-12-12'),
+-- Initiative 11: 2 authors
+(11, 11, 21, 1, 60, '2025-12-05'),
+(12, 11, 28, 0, 40, '2025-12-06'),
+-- Single authors for remaining initiatives
+(13, 3, 24, 1, 100, '2025-10-15'),
+(14, 4, 25, 1, 100, '2025-11-01'),
+(15, 5, 26, 1, 100, '2025-09-20'),
+(16, 7, 23, 1, 100, '2025-09-10'),
+(17, 8, 20, 1, 100, '2025-10-20'),
+(18, 10, 29, 1, 100, '2025-12-20'),
+(19, 12, 20, 1, 100, '2024-09-10'),
+(20, 13, 22, 1, 100, '2024-09-12')
+SET IDENTITY_INSERT [dbo].[InitiativeAuthorships] OFF
+GO
+
 PRINT N'✓ Expanded sample data inserted successfully!'
 PRINT N'- Departments: 10 rows'
 PRINT N'- Users: 30 rows'
@@ -313,4 +391,6 @@ PRINT N'- Boards: 5 rows'
 PRINT N'- BoardMembers: 25 rows'
 PRINT N'- InitiativeCategories: 30 rows'
 PRINT N'- ReferenceForms: 10 rows'
+PRINT N'- Initiatives: 25 rows'
+PRINT N'- InitiativeAuthorships: 20 rows'
 GO

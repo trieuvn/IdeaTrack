@@ -1,12 +1,32 @@
 ﻿@using IdeaTrack.Models
 @model List<EvaluationCriteria>
 
+<style>
+    .btn-primary-custom {
+        background-color: #b91c1c;
+        color: white;
+        border: none;
+        transition: all 0.2s;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #991b1b;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.2);
+        }
+        
+    .text-brand {
+        color: #b91c1c !important;
+    }
+</style>
+
 <div class="card shadow-sm mb-4">
     <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
         <div>
             <h2 class="fw-bold mb-1">Criteria & Weight Management</h2>
             <p class="text-muted mb-0">
-                The total weight of all criteria must equal <span class="fw-bold text-dark">100%</span> to enable scoring.
+                Define the scoring criteria and their weights. Total score is flexible.
             </p>
         </div>
     </div>
@@ -54,12 +74,12 @@
 <!-- ACTION -->
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="fw-bold mb-0">Criteria List</h5>
-    <button type="button" class="btn btn-primary" onclick="addCriteriaRow()">
+    <button type="button" class="btn btn-primary-custom" onclick="addCriteriaRow()">
         <i class="fa-solid fa-circle-plus me-1"></i>Add Criteria
     </button>
 </div>
 
-<form asp-controller="SciTech" asp-action="Rule" method="post" id="ruleForm">
+<form asp-area="SciTech" asp-controller="Template" asp-action="Rule" method="post" id="ruleForm">
     <!-- TABLE -->
     <div class="card shadow-sm mb-4">
         <div class="table-responsive">
@@ -89,7 +109,7 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="text-primary fw-bold">
+                                    <span class="text-brand fw-bold">
                                         <span class="weight-label">@item.MaxScore.ToString("F2")</span>%
                                     </span>
                                     <input type="number" lang="en-US"
@@ -119,7 +139,7 @@
             <small class="text-muted">
                 Showing <span id="countRow">0</span> criteria
             </small>
-            <a href="#" class="fw-semibold text-decoration-none">Restore Default</a>
+            <a href="#" class="fw-semibold text-decoration-none text-brand">Restore Default</a>
         </div>
     </div>
 
@@ -132,8 +152,8 @@
 
     <!-- FOOTER ACTION -->
     <div class="d-flex justify-content-end gap-3">
-        <button class="btn btn-outline-secondary">Cancel</button>
-        <button type="submit" class="btn btn-primary">
+        <a href="@Url.Action("Index", "Template", new { area = "SciTech" })" class="btn btn-outline-secondary">Back</a>
+        <button type="submit" class="btn btn-primary-custom">
             <i class="fa-solid fa-floppy-disk me-1"></i>Save Changes
         </button>
     </div>
@@ -207,7 +227,7 @@
                 </td>
                 <td>
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="text-primary fw-bold">
+                        <span class="text-brand fw-bold">
                             <span class="weight-label">0.00</span>%
                         </span>
                         <input type="number" lang="en-US" class="form-control form-control-sm text-center weight-input"
@@ -259,17 +279,14 @@
 
         progressEl.style.width = total + "%";
 
-        if (total === 100) {
-            statusEl.className = "badge bg-success";
-            statusEl.innerText = "Valid (100%)";
-            progressEl.className = "progress-bar bg-success";
-            document.getElementById("totalWeight").parentElement.classList.replace("text-danger", "text-success");
-        } else {
-            statusEl.className = "badge bg-danger";
-            statusEl.innerText = "Invalid (!= 100%)";
-            progressEl.className = "progress-bar bg-danger";
-            document.getElementById("totalWeight").parentElement.classList.replace("text-success", "text-danger");
-        }
+        // Always display as valid/info
+        statusEl.className = "badge bg-info text-dark";
+        statusEl.innerText = "Total Score";
+        progressEl.className = "progress-bar bg-info";
+        // Clamp visual progress to 100% to avoid overflow
+        progressEl.style.width = Math.min(total, 100) + "%"; 
+        
+        document.getElementById("totalWeight").parentElement.className = "fw-bold text-dark mb-0";
 
         updateFormula();
     }

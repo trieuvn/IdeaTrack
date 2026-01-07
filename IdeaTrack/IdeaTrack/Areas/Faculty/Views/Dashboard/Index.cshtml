@@ -96,8 +96,12 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <select class="form-select" name="statusFilter" asp-items="Html.GetEnumSelectList<InitiativeStatus>()">
+                        <select class="form-select" name="statusFilter">
                             <option value="">All Statuses</option>
+                            <option value="Pending" selected="@(ViewBag.CurrentStatus == "Pending")">Pending</option>
+                            <option value="Faculty_Approved" selected="@(ViewBag.CurrentStatus == "Faculty_Approved")">Faculty Approved</option>
+                            <option value="Rejected" selected="@(ViewBag.CurrentStatus == "Rejected")">Rejected</option>
+                            <option value="Revision_Required" selected="@(ViewBag.CurrentStatus == "Revision_Required")">Revision Required</option>
                         </select>
                     </div>
                     <div class="col-md-3">
