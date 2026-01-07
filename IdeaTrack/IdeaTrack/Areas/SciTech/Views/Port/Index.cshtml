@@ -124,9 +124,13 @@
         <label class="form-label">Status</label>
         <select name="status" class="form-select">
             <option value="">All</option>
+            <option value="Faculty_Approved" selected="@(Model.Status == "Faculty_Approved")">Faculty Approved</option>
+            <option value="Evaluating" selected="@(Model.Status == "Evaluating")">Evaluating</option>
+            <option value="Re_Evaluating" selected="@(Model.Status == "Re_Evaluating")">Re-evaluating</option>
+            <option value="Pending_Final" selected="@(Model.Status == "Pending_Final")">Pending Final</option>
             <option value="Approved" selected="@(Model.Status == "Approved")">Approved</option>
             <option value="Rejected" selected="@(Model.Status == "Rejected")">Rejected</option>
-            <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+            <option value="Revision_Required" selected="@(Model.Status == "Revision_Required")">Revision Required</option>
         </select>
     </div>
 
@@ -153,8 +157,8 @@
                 <tr>
                     <th>Code</th>
                     <th>Title</th>
+                    <th>Year/Period</th>
                     <th>Author</th>
-                    <th>Date</th>
                     <th>Department</th>
                     <th>Status</th>
                     <th class="text-end">Actions</th>
@@ -175,27 +179,68 @@
                     {
                         <tr>
                             <td class="fw-semibold">@item.InitiativeCode</td>
-                            <td>@item.Title</td>
+                            <td>
+                                <div>@item.Title</div>
+                                <small class="text-muted"><i class="fa-regular fa-clock me-1"></i>@item.SubmittedDate?.ToString("dd/MM/yyyy")</small>
+                            </td>
+                            <td>
+                                <div class="badge bg-light text-dark border">@item.AcademicYear</div>
+                                <div class="small text-muted mt-1">@item.PeriodName</div>
+                            </td>
                             <td>@item.ProposerName</td>
-                            <td>@item.SubmittedDate?.ToString("dd/MM/yyyy")</td>
                             <td>@item.DepartmentName</td>
                             <td>
-                                @if (item.Status == "Approved")
-                                {
-                                    <span class="badge bg-success">Approved</span>
+                                @{
+                                    string badgeClass = "bg-secondary";
+                                    string label = item.Status;
+
+                                    switch (item.Status)
+                                    {
+                                        case "Approved":
+                                            badgeClass = "bg-success";
+                                            break;
+                                        case "Rejected":
+                                            badgeClass = "bg-danger";
+                                            break;
+                                        case "Pending":
+                                            badgeClass = "bg-warning text-dark";
+                                            break;
+                                        case "Faculty_Approved":
+                                            badgeClass = "bg-info text-white";
+                                            label = "Faculty Approved";
+                                            break;
+                                        case "Evaluating":
+                                            badgeClass = "bg-primary";
+                                            break;
+                                        case "Re_Evaluating":
+                                            badgeClass = "bg-primary";
+                                            label = "Re-evaluating";
+                                            break;
+                                        case "Pending_Final":
+                                            badgeClass = "bg-warning text-dark";
+                                            label = "Pending Final";
+                                            break;
+                                        case "Revision_Required":
+                                            badgeClass = "bg-warning text-dark";
+                                            label = "Revision Required";
+                                            break;
+                                        case "Draft":
+                                            badgeClass = "bg-secondary";
+                                            break;
+                                    }
                                 }
-                                else if (item.Status == "Rejected")
-                                {
-                                    <span class="badge bg-danger">Rejected</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-warning text-dark">Pending</span>
-                                }
+                                <span class="badge @badgeClass rounded-pill">@label</span>
                             </td>
                             <td class="text-end">
-                                <a href="/SciTech/Port/Approve/@item.Id" class="btn btn-sm btn-outline-primary" title="View Details">
-                                    <i class="fas fa-eye"></i>
+                                @{
+                                    var resultStatuses = new[] { "Evaluating", "Re_Evaluating", "Pending_Final", "Approved", "Rejected" };
+                                    var action = resultStatuses.Contains(item.Status) ? "Result" : "Approve";
+                                    var btnClass = action == "Result" ? "btn-outline-primary" : "btn-primary";
+                                    var icon = action == "Result" ? "fa-chart-bar" : "fa-eye";
+                                    var title = action == "Result" ? "View Result" : "View Detail";
+                                }
+                                <a href="/SciTech/Port/@action/@item.Id" class="btn btn-sm @btnClass" title="@title">
+                                    <i class="fas @icon"></i>
                                 </a>
                             </td>
                         </tr>

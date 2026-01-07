@@ -371,15 +371,16 @@ namespace IdeaTrack.Services
             var existingYearCount = await _context.AcademicYears.CountAsync();
             if (existingYearCount < 20)
             {
-                for (int year = 2010; year <= 2035; year++)
+                for (int year = 2015; year <= 2035; year++)
                 {
                     var yearName = $"Academic Year {year}-{year + 1}";
                     if (!await _context.AcademicYears.AnyAsync(y => y.Name == yearName))
                     {
+                        bool isCurrent = (year == 2025);
                         _context.AcademicYears.Add(new AcademicYear 
                         { 
                             Name = yearName, 
-                            IsCurrent = (year == 2025),
+                            IsCurrent = isCurrent,
                             CreatedAt = new DateTime(year, 9, 1)
                         });
                     }
@@ -392,43 +393,45 @@ namespace IdeaTrack.Services
             // EXPAND INITIATIVE PERIODS (ensure 20 total with OPEN ones)
             // =====================================================
             var existingPeriodCount = await _context.InitiativePeriods.CountAsync();
-            if (existingPeriodCount < 20)
+            if (existingPeriodCount < 40) // Target ~40 periods
             {
-                var currentYear = await _context.AcademicYears.FirstOrDefaultAsync(y => y.IsCurrent);
-                var allYears = await _context.AcademicYears.OrderByDescending(y => y.Name).Take(10).ToListAsync();
+                var allYears = await _context.AcademicYears.OrderBy(y => y.Name).ToListAsync();
                 
                 var periodNames = new[]
                 {
-                    "Đợt NCKH Học kỳ 1", "Đợt NCKH Học kỳ 2", "Đợt Sáng kiến Kỹ thuật",
-                    "Đợt Đổi mới Sáng tạo", "Đợt Chuyển đổi Số", "Đợt Công nghệ Xanh",
-                    "Đợt Hợp tác Quốc tế", "Đợt Khởi nghiệp", "Đợt Ứng dụng AI",
-                    "Đợt Cải tiến Quy trình", "Đợt Sáng kiến Trẻ", "Đợt Nghiên cứu Liên ngành"
+                    "Research Batch - Sem 1", "Research Batch - Sem 2", 
+                    "Innovation Drive", "Digital Transformation Wave"
                 };
                 
-                int periodId = existingPeriodCount + 1;
                 foreach (var year in allYears)
                 {
-                    foreach (var name in periodNames.Take(3))
+                    // Create 2 periods per year by default
+                    int yearVal = int.Parse(year.Name.Split(' ')[2].Split('-')[0]);
+                    
+                    foreach (var name in periodNames.Take(2))
                     {
-                        var periodName = $"{name} - {year.Name.Replace("Academic Year ", "")}";
-                        if (!await _context.InitiativePeriods.AnyAsync(p => p.Name == periodName))
+                        var periodName = $"{name} ({yearVal}-{yearVal+1})";
+                        if (!await _context.InitiativePeriods.AnyAsync(p => p.Name == periodName && p.AcademicYearId == year.Id))
                         {
-                            var isOpen = year.IsCurrent && periodId <= 5;
+                            var startDate = new DateTime(yearVal, 9, 1);
+                            if (name.Contains("Sem 2")) startDate = new DateTime(yearVal + 1, 2, 1);
+                            
+                            var endDate = startDate.AddMonths(4);
+                            
+                            bool isOpen = (DateTime.Now >= startDate && DateTime.Now <= endDate);
+
                             _context.InitiativePeriods.Add(new InitiativePeriod
                             {
                                 Name = periodName,
-                                Description = $"{name} for academic year",
-                                StartDate = isOpen ? today.AddMonths(-2) : new DateTime(2020 + periodId % 5, 9, 1),
-                                EndDate = isOpen ? today.AddMonths(4) : new DateTime(2020 + periodId % 5, 12, 31),
+                                Description = $"{name} for {year.Name}, focused on university-wide initiatives.",
+                                StartDate = startDate,
+                                EndDate = endDate,
                                 IsActive = isOpen,
                                 AcademicYearId = year.Id,
                                 CreatedAt = DateTime.Now
                             });
-                            periodId++;
-                            if (periodId > 25) break;
                         }
                     }
-                    if (periodId > 25) break;
                 }
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Expanded periods to {Count} total", await _context.InitiativePeriods.CountAsync());
@@ -552,7 +555,11 @@ namespace IdeaTrack.Services
                         "Robot hướng dẫn trong trường", "Ứng dụng AI nhận diện khuôn mặt",
                         "Hệ thống quản lý phòng thí nghiệm", "Phần mềm mô phỏng thí nghiệm",
                         "Ứng dụng blockchain quản lý bằng cấp", "Hệ thống năng lượng mặt trời",
-                        "Máy lọc nước thông minh", "Drone giám sát cây trồng"
+                        "Máy lọc nước thông minh", "Drone giám sát cây trồng",
+                        "Hệ thống tưới tiêu tự động", "Mạng xã hội học tập nội bộ",
+                        "Ví điện tử thanh toán học phí", "Cổng thông tin việc làm sinh viên",
+                        "Hệ thống đặt phòng họp trực tuyến", "Ứng dụng quản lý ký túc xá",
+                        "Bản đồ số 3D khuôn viên trường", "Hệ thống cảnh báo cháy thông minh"
                     };
                     
                     var statuses = new[] { InitiativeStatus.Draft, InitiativeStatus.Pending, InitiativeStatus.Faculty_Approved, 
@@ -560,7 +567,7 @@ namespace IdeaTrack.Services
                     
                     var random = new Random(42);
                     int code = existingInitCount + 1;
-                    
+
                     foreach (var title in titles)
                     {
                         if (!await _context.Initiatives.AnyAsync(i => i.Title == title))

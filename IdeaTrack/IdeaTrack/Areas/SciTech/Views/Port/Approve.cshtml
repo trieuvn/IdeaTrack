@@ -220,38 +220,50 @@
 
                     <!-- ACTIONS -->
                     <div class="d-grid gap-2">
-                        <!-- APPROVE / ASSIGN -->
-                        <button type="submit" asp-action="ApproveInitiative" asp-controller="Port" asp-area="SciTech"
-                                class="btn btn-success" onclick="return confirm('Confirm approve this initiative?');">
-                            <i class="fas fa-check-circle me-1"></i>Approve / Assign
-                        </button>
-                        
-                        <!-- RE-EVALUATE -->
-                        <button type="submit" asp-action="RequestReEvaluation" asp-controller="Port" asp-area="SciTech"
-                                class="btn btn-warning text-white" onclick="return confirm('Confirm request next round re-evaluation?');">
-                            <i class="fas fa-sync-alt me-1"></i>Request Re-evaluation
-                        </button>
+                        @if (Model.Status == InitiativeStatus.Faculty_Approved)
+                        {
+                            <!-- ACCEPT & ASSIGN (For Faculty Approved) -->
+                            <button type="submit" asp-action="ApproveInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id"
+                                    class="btn btn-success" onclick="return confirm('Confirm accept and assign this initiative?');">
+                                <i class="fas fa-check-circle me-1"></i>Accept & Assign
+                            </button>
+                            
+                            <!-- REJECT (For Faculty Approved) -->
+                            <button type="submit" asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id"
+                                    class="btn btn-danger" onclick="return confirm('Confirm reject this initiative?');">
+                                <i class="fas fa-times-circle me-1"></i>Reject
+                            </button>
+                        }
 
-                         <!-- FINAL DECISION (Approve/Reject) -->
-                        <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Approve"
-                                class="btn btn-outline-success fw-bold" onclick="return confirm('Confirm FINAL APPROVAL?');">
-                            <i class="fas fa-award me-1"></i>Final Approve
-                        </button>
+                        @if (Model.Status == InitiativeStatus.Evaluating)
+                        {
+                            <!-- RE-EVALUATE -->
+                            <button type="submit" asp-action="RequestReEvaluation" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id"
+                                    class="btn btn-warning text-white" onclick="return confirm('Confirm request next round re-evaluation?');">
+                                <i class="fas fa-sync-alt me-1"></i>Request Re-evaluation
+                            </button>
 
-                        <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Reject"
-                                class="btn btn-outline-danger fw-bold" onclick="return confirm('Confirm FINAL REJECTION?');">
-                            <i class="fas fa-times-circle me-1"></i>Final Reject
-                        </button>
+                             <!-- FINAL DECISION (Approve/Reject) -->
+                            <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Approve" asp-route-id="@Model.Id"
+                                    class="btn btn-outline-success fw-bold" onclick="return confirm('Confirm FINAL APPROVAL?');">
+                                <i class="fas fa-award me-1"></i>Final Approve
+                            </button>
 
-                        <!-- REVISION REQUEST -->
-                        <button type="button" id="btnShowDeadline" class="btn btn-outline-secondary">
-                            <i class="fas fa-undo me-1"></i>Request Revision
-                        </button>
-                        
-                        <button type="submit" asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech"
-                                id="btnReject" class="btn btn-danger d-none" onclick="return validateReject();">
-                            <i class="fas fa-paper-plane me-1"></i>Send Revision Request
-                        </button>
+                            <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Reject" asp-route-id="@Model.Id"
+                                    class="btn btn-outline-danger fw-bold" onclick="return confirm('Confirm FINAL REJECTION?');">
+                                <i class="fas fa-times-circle me-1"></i>Final Reject
+                            </button>
+
+                            <!-- REVISION REQUEST -->
+                            <button type="button" id="btnShowDeadline" class="btn btn-outline-secondary">
+                                <i class="fas fa-undo me-1"></i>Request Revision
+                            </button>
+                            
+                            <button type="submit" asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id"
+                                    id="btnReject" class="btn btn-danger d-none" onclick="return validateReject();">
+                                <i class="fas fa-paper-plane me-1"></i>Send Revision Request
+                            </button>
+                        }
                     </div>
                 </form>
             </div>

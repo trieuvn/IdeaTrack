@@ -27,10 +27,10 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             // Allowed statuses for Council Dashboard
             var allowedStatuses = new[] 
             { 
-                 InitiativeStatus.Faculty_Approved, // Awaiting Council
-                 InitiativeStatus.Evaluating,       // In Progress (optional)
-                 InitiativeStatus.Pending_Final,    // Approved by Council (Waiting Final)
-                 InitiativeStatus.Revision_Required,
+                 InitiativeStatus.Evaluating,
+                 InitiativeStatus.Re_Evaluating,
+                 InitiativeStatus.Pending_Final,
+                 InitiativeStatus.Approved,
                  InitiativeStatus.Rejected
             };
 

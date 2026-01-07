@@ -1,0 +1,248 @@
+using IdeaTrack.Data;
+using IdeaTrack.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace IdeaTrack.Areas.SciTech.Controllers
+{
+    [Area("SciTech")]
+    [Authorize(Roles = "SciTech,OST_Admin,Admin")]
+    public class ConfigurationController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public ConfigurationController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // =================================================
+        // 1. ACADEMIC YEAR MANAGEMENT
+        // =================================================
+
+        // GET: /SciTech/Configuration/AcademicYear
+        public async Task<IActionResult> AcademicYear()
+        {
+            var items = await _context.AcademicYears.OrderByDescending(y => y.Name).ToListAsync();
+            return View("~/Areas/SciTech/Views/Configuration/AcademicYear.cshtml", items);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateYear(string name, bool isCurrent)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return BadRequest("Name required");
+
+            if (isCurrent)
+            {
+                var currents = await _context.AcademicYears.Where(y => y.IsCurrent).ToListAsync();
+                currents.ForEach(y => y.IsCurrent = false);
+            }
+
+            _context.AcademicYears.Add(new AcademicYear { Name = name, IsCurrent = isCurrent });
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(AcademicYear));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetCurrentYear(int id)
+        {
+            var year = await _context.AcademicYears.FindAsync(id);
+            if (year == null) return NotFound();
+
+            var oldCurrents = await _context.AcademicYears.Where(y => y.IsCurrent).ToListAsync();
+            oldCurrents.ForEach(y => y.IsCurrent = false);
+
+            year.IsCurrent = true;
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteYear(int id)
+        {
+            var year = await _context.AcademicYears.Include(y => y.Periods).FirstOrDefaultAsync(y => y.Id == id);
+            if (year == null) return NotFound();
+            
+            if (year.Periods.Any()) return BadRequest("Cannot delete year containing periods.");
+
+            _context.AcademicYears.Remove(year);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+
+        // =================================================
+        // 2. INITIATIVE PERIOD MANAGEMENT
+        // =================================================
+
+        // GET: /SciTech/Configuration/InitiativePeriod?yearId=...&status=...
+        public async Task<IActionResult> InitiativePeriod(int? yearId, string status = "All")
+        {
+            // Default to current year if not specified
+            if (!yearId.HasValue)
+            {
+                var current = await _context.AcademicYears.FirstOrDefaultAsync(y => y.IsCurrent);
+                if (current != null) yearId = current.Id;
+            }
+
+            ViewBag.Years = await _context.AcademicYears.OrderByDescending(y => y.Name).ToListAsync();
+            ViewBag.SelectedYearId = yearId;
+            ViewBag.SelectedStatus = status;
+
+            IQueryable<InitiativePeriod> query = _context.InitiativePeriods
+                .Include(p => p.AcademicYear)
+                .Include(p => p.Categories)
+                .OrderByDescending(p => p.StartDate);
+
+            if (yearId.HasValue)
+            {
+                query = query.Where(p => p.AcademicYearId == yearId);
+            }
+
+            var allItems = await query.ToListAsync();
+            var now = DateTime.Now;
+
+            // Client-side/Memory filtering for date logic is safer/easier than complex LINQ to SQL date diffs
+            if (status == "Open")
+            {
+                allItems = allItems.Where(p => now >= p.StartDate && now <= p.EndDate).ToList();
+            }
+            else if (status == "Closed")
+            {
+                allItems = allItems.Where(p => now < p.StartDate || now > p.EndDate).ToList();
+            }
+
+            return View("~/Areas/SciTech/Views/Configuration/InitiativePeriod.cshtml", allItems);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreatePeriod(int yearId, string name, DateTime startDate, DateTime endDate, string? description)
+        {
+            // Allow multiple open periods - just check if this specific period is active by date
+            bool isActive = (DateTime.Now >= startDate && DateTime.Now <= endDate);
+
+            _context.InitiativePeriods.Add(new InitiativePeriod
+            {
+                AcademicYearId = yearId,
+                Name = name,
+                StartDate = startDate,
+                EndDate = endDate,
+                Description = description,
+                IsActive = isActive
+            });
+            await _context.SaveChangesAsync();
+            
+            // Redirect preserving year filter
+            return RedirectToAction(nameof(InitiativePeriod), new { yearId });
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> DeletePeriod(int id)
+        {
+            var period = await _context.InitiativePeriods.Include(p => p.Initiatives).FirstOrDefaultAsync(p => p.Id == id);
+            if (period == null) return NotFound();
+            if (period.Initiatives.Any()) return BadRequest("Cannot delete period containing initiatives.");
+
+            _context.InitiativePeriods.Remove(period);
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+
+        // =================================================
+        // 3. CATEGORY MANAGEMENT & CLONING
+        // =================================================
+
+        // GET: /SciTech/Configuration/InitiativeCategory?periodId=...
+        public async Task<IActionResult> InitiativeCategory(int? periodId)
+        {
+             // Default to active period if not specified
+            if (!periodId.HasValue)
+            {
+                var active = await _context.InitiativePeriods.OrderByDescending(p => p.IsActive).ThenByDescending(p => p.Id).FirstOrDefaultAsync();
+                if (active != null) periodId = active.Id;
+            }
+            
+            // Get all periods for clone dropdown and filter dropdown
+            var yearGroups = await _context.InitiativePeriods
+                .Include(p => p.AcademicYear)
+                .OrderByDescending(p => p.AcademicYear.Name)
+                .ThenByDescending(p => p.StartDate)
+                .ToListAsync();
+
+            ViewBag.Periods = yearGroups;
+            ViewBag.SelectedPeriodId = periodId;
+            ViewBag.Boards = await _context.Boards.Where(b => b.IsActive).ToListAsync();
+            ViewBag.Templates = await _context.EvaluationTemplates.Where(t => t.IsActive).ToListAsync();
+
+            List<InitiativeCategory> items = new List<InitiativeCategory>();
+            if (periodId.HasValue)
+            {
+                items = await _context.InitiativeCategories
+                    .Include(c => c.Board)
+                    .Include(c => c.Template)
+                    .Where(c => c.PeriodId == periodId)
+                    .ToListAsync();
+            }
+
+            return View("~/Areas/SciTech/Views/Configuration/InitiativeCategory.cshtml", items);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategory(int periodId, string name, int? boardId, int? templateId)
+        {
+            _context.InitiativeCategories.Add(new InitiativeCategory
+            {
+                PeriodId = periodId,
+                Name = name,
+                BoardId = boardId,
+                TemplateId = templateId
+            });
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(InitiativeCategory), new { periodId });
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+             var cat = await _context.InitiativeCategories.Include(c => c.Initiatives).FirstOrDefaultAsync(c => c.Id == id);
+             if (cat == null) return NotFound();
+             if (cat.Initiatives.Any()) return BadRequest("Cannot delete category containing initiatives.");
+             
+             _context.InitiativeCategories.Remove(cat);
+             await _context.SaveChangesAsync();
+             return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CloneCategories(int sourcePeriodId, int targetPeriodId)
+        {
+            if (sourcePeriodId == targetPeriodId) return BadRequest("Source and target cannot be the same.");
+
+            var sourceCats = await _context.InitiativeCategories
+                .AsNoTracking() // Important for cloning
+                .Where(c => c.PeriodId == sourcePeriodId)
+                .ToListAsync();
+
+            if (!sourceCats.Any()) return BadRequest("Source period has no categories.");
+
+            foreach (var cat in sourceCats)
+            {
+                // Create new instance
+                _context.InitiativeCategories.Add(new InitiativeCategory
+                {
+                    PeriodId = targetPeriodId, // Reassignment
+                    Name = cat.Name,
+                    Description = cat.Description,
+                    BoardId = cat.BoardId,
+                    TemplateId = cat.TemplateId
+                });
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(InitiativeCategory), new { periodId = targetPeriodId });
+        }
+    }
+}

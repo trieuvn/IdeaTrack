@@ -39,9 +39,21 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         {
             const int PAGE_SIZE = 5;
 
+            var allowedStatuses = new[] { 
+                InitiativeStatus.Faculty_Approved, 
+                InitiativeStatus.Evaluating, 
+                InitiativeStatus.Re_Evaluating, 
+                InitiativeStatus.Pending_Final, 
+                InitiativeStatus.Approved, 
+                InitiativeStatus.Rejected 
+            };
+
             var query = _context.Initiatives
                 .Include(i => i.Creator)
                 .Include(i => i.Department)
+                .Include(i => i.Period)
+                .ThenInclude(p => p.AcademicYear)
+                .Where(i => allowedStatuses.Contains(i.Status))
                 .AsQueryable();
 
             if (fromDate.HasValue)
@@ -83,7 +95,9 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     ProposerName = i.Creator.FullName,
                     DepartmentName = i.Department.Name,
                     SubmittedDate = i.SubmittedDate ?? i.CreatedAt,
-                    Status = i.Status.ToString()
+                    Status = i.Status.ToString(),
+                    PeriodName = i.Period != null ? i.Period.Name : "N/A",
+                    AcademicYear = i.Period != null && i.Period.AcademicYear != null ? i.Period.AcademicYear.Name : "N/A"
                 })
                 .ToList();
 
@@ -194,8 +208,70 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             return File(pdfBytes, "application/pdf", "BaoCaoHoSo.pdf");
         }
 
-        // GET: /SciTech/Port/Result
-        public IActionResult Result() => View();
+        // GET: /SciTech/Port/Result/5
+        public async Task<IActionResult> Result(int id)
+        {
+            var initiative = await _context.Initiatives
+                .Include(i => i.Creator)
+                .Include(i => i.Department)
+                .Include(i => i.Category)
+                .Include(i => i.FinalResult)
+                .Include(i => i.Assignments)
+                    .ThenInclude(a => a.Member)
+                .Include(i => i.Assignments)
+                    .ThenInclude(a => a.EvaluationDetails)
+                        .ThenInclude(ed => ed.Criteria)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (initiative == null) return NotFound();
+
+            // Calculate Stats
+            var assignments = initiative.Assignments.Where(a => a.RoundNumber == initiative.CurrentRound).ToList();
+            var completed = assignments.Count(a => a.Status == AssignmentStatus.Completed);
+            var totalMembers = assignments.Count;
+            var consensusRate = totalMembers > 0 ? (double)completed / totalMembers * 100 : 0;
+
+            decimal averageScore = 0;
+            if (completed > 0)
+            {
+                averageScore = assignments
+                    .Where(a => a.Status == AssignmentStatus.Completed)
+                    .SelectMany(a => a.EvaluationDetails)
+                    .Sum(d => d.ScoreGiven) / completed; 
+            }
+            
+            var memberScores = assignments.Select(a => new MemberScoreVM
+            {
+                MemberName = a.Member.FullName,
+                Role = "Member", 
+                Scores = a.EvaluationDetails.ToDictionary(d => d.Criteria.CriteriaName, d => d.ScoreGiven),
+                TotalScore = a.EvaluationDetails.Sum(d => d.ScoreGiven),
+                IsCompleted = a.Status == AssignmentStatus.Completed
+            }).ToList();
+
+            if (completed > 0)
+            {
+                 averageScore = memberScores.Where(ms => ms.IsCompleted).Average(ms => ms.TotalScore);
+            }
+
+            var vm = new InitiativeResultVM
+            {
+                Id = initiative.Id,
+                Title = initiative.Title,
+                InitiativeCode = initiative.InitiativeCode,
+                ProposerName = initiative.Creator.FullName,
+                AverageScore = averageScore,
+                ConsensusRate = consensusRate,
+                CompletedCount = completed,
+                TotalMembers = totalMembers,
+                FinalStatus = initiative.FinalResult?.ChairmanDecision ?? "Pending",
+                Rank = initiative.FinalResult?.Rank ?? "N/A",
+                MemberScores = memberScores,
+                Status = initiative.Status.ToString()
+            };
+
+            return View(vm);
+        }
 
         // GET: /SciTech/Port/Approve/5
         [HttpGet]
@@ -209,6 +285,20 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .FirstOrDefault(i => i.Id == id);
 
             if (initiative == null) return NotFound();
+
+            // Auto-redirect to Result view for evaluating/finished initiatives
+            var resultStatuses = new[] { 
+                InitiativeStatus.Evaluating, 
+                InitiativeStatus.Re_Evaluating, 
+                InitiativeStatus.Pending_Final, 
+                InitiativeStatus.Approved,
+                InitiativeStatus.Rejected
+            };
+
+            if (resultStatuses.Contains(initiative.Status))
+            {
+                return RedirectToAction("Result", new { id = initiative.Id });
+            }
 
             var vm = new InitiativeDetailVM
             {
@@ -271,7 +361,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             }
 
             TempData["SuccessMessage"] = "Successfully approved and assigned to the Council for grading!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Result", new { id });
         }
 
         // POST: /SciTech/Port/RejectInitiative
@@ -300,7 +390,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Initiative has been rejected.";
-            return RedirectToAction("Index");
+            return RedirectToAction("Result", new { id });
         }
 
         // POST: /SciTech/Port/RequestReEvaluation
