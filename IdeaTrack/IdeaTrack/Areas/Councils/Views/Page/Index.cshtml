@@ -8,192 +8,60 @@
 
 @section Styles {
 <style>
-    .dashboard-wrapper {
-        padding: 2rem 2.5rem;
-        max-width: 1400px;
+    .page-header {
+        margin-bottom: 1.5rem;
     }
     
-    /* Header */
-    .dashboard-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 2rem;
-    }
-    
-    .welcome-text h1 {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin: 0;
-        font-family: 'Space Grotesk', sans-serif;
-    }
-    
-    .welcome-text .date {
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        margin-top: 0.25rem;
-    }
-    
-    .search-input {
-        position: relative;
-        width: 280px;
-    }
-    
-    .search-input input {
-        width: 100%;
-        padding: 0.75rem 1rem 0.75rem 2.75rem;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-lg);
-        background: var(--bg-card);
-        font-size: 0.875rem;
-        transition: all 0.2s;
-    }
-    
-    .search-input input:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    .search-input .icon {
-        position: absolute;
-        left: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-muted);
-    }
-    
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-    
-    .stat-card {
-        background: var(--bg-card);
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
-        box-shadow: var(--shadow-sm);
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        transition: all 0.2s;
-        border: 1px solid var(--border-color);
-    }
-    
-    .stat-card:hover {
-        box-shadow: var(--shadow-md);
-        transform: translateY(-2px);
-    }
-    
-    .stat-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: var(--radius-md);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .page-header h3 {
         font-size: 1.5rem;
-    }
-    
-    .stat-icon.blue { 
-        background: linear-gradient(135deg, #3b82f6, #1d4ed8); 
-        color: white;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
-    }
-    .stat-icon.green { 
-        background: linear-gradient(135deg, #10b981, #059669); 
-        color: white;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
-    }
-    .stat-icon.orange { 
-        background: linear-gradient(135deg, #f59e0b, #d97706); 
-        color: white;
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
-    }
-    
-    .stat-info h3 {
-        font-size: 0.8rem;
-        font-weight: 500;
-        color: var(--text-muted);
-        margin: 0 0 0.25rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    
-    .stat-info .value {
-        font-size: 1.75rem;
         font-weight: 700;
         color: var(--text-primary);
         margin: 0;
-        font-family: 'Space Grotesk', sans-serif;
     }
     
-    /* Progress Section */
-    .progress-card {
-        background: var(--bg-card);
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--border-color);
+    .page-header .date {
+        font-size: 0.875rem;
+        color: var(--text-muted);
     }
     
-    .progress-header {
+    /* Stats Cards Row */
+    .stats-row {
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Progress Card */
+    .progress-card .progress-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
     
-    .progress-header h3 {
-        font-size: 1rem;
+    .progress-card .progress-header h6 {
         font-weight: 600;
-        color: var(--text-primary);
         margin: 0;
+        color: var(--text-primary);
     }
     
-    .progress-header .percentage {
-        font-weight: 700;
-        color: var(--primary);
+    .progress-card .progress-percent {
         font-size: 1.25rem;
-        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        color: var(--brand-primary);
     }
     
-    .progress-bar-wrapper {
-        height: 12px;
-        background: #e2e8f0;
-        border-radius: 9999px;
-        overflow: hidden;
-    }
-    
-    .progress-bar-fill {
-        height: 100%;
-        background: var(--primary-gradient);
-        border-radius: 9999px;
-        transition: width 0.5s ease;
-    }
-    
-    .progress-message {
-        margin-top: 0.75rem;
-        font-size: 0.875rem;
+    .progress-card .progress-message {
+        font-size: 0.85rem;
         color: var(--text-secondary);
+        margin-top: 0.75rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
     
-    .progress-message i {
-        color: var(--primary);
-    }
-    
-    /* Main Grid */
-    .main-grid {
+    /* Content Grid */
+    .content-grid {
         display: grid;
-        grid-template-columns: 1fr 340px;
+        grid-template-columns: 1fr 380px;
         gap: 1.5rem;
     }
     
@@ -205,101 +73,117 @@
         margin-bottom: 1rem;
     }
     
-    .section-header h2 {
-        font-size: 1.1rem;
+    .section-header h5 {
         font-weight: 600;
-        color: var(--text-primary);
         margin: 0;
+        color: var(--text-primary);
     }
     
     .section-header a {
-        color: var(--primary);
-        font-size: 0.875rem;
+        font-size: 0.85rem;
+        color: var(--brand-primary);
         text-decoration: none;
         font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
     }
     
     .section-header a:hover {
         text-decoration: underline;
     }
     
-    /* Initiative Cards */
-    .initiative-cards {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .initiative-card {
+    /* Task Cards */
+    .task-card {
         background: var(--bg-card);
         border-radius: var(--radius-lg);
-        padding: 1.5rem;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
         box-shadow: var(--shadow-sm);
         border: 1px solid var(--border-color);
         transition: all 0.2s;
     }
     
-    .initiative-card:hover {
+    .task-card:hover {
         box-shadow: var(--shadow-md);
+        border-color: var(--brand-primary);
         transform: translateY(-2px);
-        border-color: var(--primary);
     }
     
-    .initiative-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 0.75rem;
-    }
-    
-    .initiative-card h4 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin: 0.5rem 0 0;
-        line-height: 1.4;
-    }
-    
-    .category-tag {
+    .task-card .task-category {
         display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        background: linear-gradient(135deg, #a855f7, #7c3aed);
+        padding: 0.2rem 0.6rem;
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-medium));
         color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        border-radius: 9999px;
         text-transform: uppercase;
         letter-spacing: 0.03em;
     }
     
-    .due-badge {
-        display: inline-flex;
+    .task-card h6 {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0.75rem 0 0.5rem;
+        line-height: 1.4;
+    }
+    
+    .task-card .task-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+    }
+    
+    .task-card .task-meta span {
+        display: flex;
         align-items: center;
         gap: 0.25rem;
-        padding: 0.25rem 0.5rem;
+    }
+    
+    .task-card .due-warning {
         background: var(--warning-light);
-        color: #92400e;
+        color: #b45309;
+        padding: 0.2rem 0.5rem;
         font-size: 0.7rem;
         font-weight: 600;
         border-radius: var(--radius-sm);
-    }
-    
-    .initiative-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 1rem;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-    }
-    
-    .initiative-meta span {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         gap: 0.25rem;
+    }
+    
+    /* Score Display */
+    .task-score {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.625rem 0.875rem;
+        background: var(--brand-light);
+        border-radius: var(--radius-md);
+        margin-bottom: 0.875rem;
+        border: 1px solid rgba(190, 18, 60, 0.15);
+    }
+    
+    .task-score .label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+    
+    .task-score .value {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+    }
+    
+    .task-score .value.pending {
+        color: var(--text-muted);
+        font-weight: 500;
+        font-style: italic;
     }
     
     .btn-start-review {
@@ -308,64 +192,62 @@
         justify-content: center;
         gap: 0.5rem;
         width: 100%;
-        padding: 0.75rem 1.5rem;
-        background: var(--primary-gradient);
+        padding: 0.65rem 1rem;
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-medium));
         color: white;
         border: none;
         border-radius: var(--radius-md);
         font-weight: 600;
-        font-size: 0.875rem;
-        cursor: pointer;
-        transition: all 0.2s;
+        font-size: 0.85rem;
         text-decoration: none;
+        transition: all 0.2s;
     }
     
     .btn-start-review:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        box-shadow: 0 4px 12px rgba(190,18,60,0.35);
         color: white;
     }
     
-    /* Activity Sidebar */
+    /* Right Sidebar */
+    .right-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+    
+    /* Activity Card */
     .activity-card {
         background: var(--bg-card);
         border-radius: var(--radius-lg);
-        padding: 1.5rem;
+        padding: 1.25rem;
         box-shadow: var(--shadow-sm);
         border: 1px solid var(--border-color);
     }
     
-    .activity-card h3 {
-        font-size: 1rem;
+    .activity-card h5 {
         font-weight: 600;
-        color: var(--text-primary);
-        margin: 0 0 1.25rem;
+        margin: 0 0 1rem;
+        font-size: 1rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
     
-    .activity-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
     .activity-item {
         display: flex;
         gap: 0.75rem;
-        padding-bottom: 1rem;
+        padding: 0.75rem 0;
         border-bottom: 1px solid var(--border-color);
     }
     
     .activity-item:last-child {
         border-bottom: none;
-        padding-bottom: 0;
     }
     
     .activity-icon {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background: var(--success-light);
         color: var(--success);
@@ -373,6 +255,7 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        font-size: 0.85rem;
     }
     
     .activity-content {
@@ -381,9 +264,9 @@
     }
     
     .activity-content p {
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         color: var(--text-primary);
-        margin: 0 0 0.25rem;
+        margin: 0;
         font-weight: 500;
         white-space: nowrap;
         overflow: hidden;
@@ -396,201 +279,359 @@
     }
     
     .activity-content .score {
-        font-weight: 600;
         color: var(--success);
+        font-weight: 600;
     }
     
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 3rem 2rem;
+    /* Quick Links Widget */
+    .quick-links-card {
         background: var(--bg-card);
         border-radius: var(--radius-lg);
+        padding: 1.25rem;
         box-shadow: var(--shadow-sm);
         border: 1px solid var(--border-color);
     }
     
-    .empty-state i {
-        font-size: 3rem;
-        color: #d1d5db;
-        margin-bottom: 1rem;
+    .quick-links-card h5 {
+        font-weight: 600;
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
-    .empty-state h4 {
-        font-size: 1.125rem;
+    .quick-links-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+    
+    .quick-link-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 0.75rem;
+        background: var(--brand-light);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+    
+    .quick-link-item:hover {
+        border-color: var(--brand-primary);
+        background: #fff5f5;
+        transform: translateY(-2px);
+    }
+    
+    .quick-link-item i {
+        font-size: 1.5rem;
+        color: var(--brand-primary);
+    }
+    
+    .quick-link-item span {
+        font-size: 0.75rem;
         font-weight: 600;
         color: var(--text-primary);
-        margin: 0 0 0.5rem;
+        text-align: center;
+    }
+    
+    /* Completion Chart Widget */
+    .completion-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+    }
+    
+    .completion-card h5 {
+        font-weight: 600;
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .donut-chart-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    
+    .donut-chart {
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+    
+    .donut-chart svg {
+        transform: rotate(-90deg);
+    }
+    
+    .donut-chart .chart-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+    
+    .donut-chart .chart-center .percent {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        line-height: 1;
+    }
+    
+    .donut-chart .chart-center .label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+    }
+    
+    .chart-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+    
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+    
+    .legend-dot.completed { background: var(--brand-primary); }
+    .legend-dot.pending { background: #e2e8f0; }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 2.5rem 1.5rem;
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+    }
+    
+    .empty-state i {
+        font-size: 2.5rem;
+        color: #d1d5db;
+        margin-bottom: 0.75rem;
+    }
+    
+    .empty-state h6 {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 0.25rem;
     }
     
     .empty-state p {
         color: var(--text-muted);
-        font-size: 0.875rem;
+        font-size: 0.85rem;
         margin: 0;
     }
     
     @@media (max-width: 1024px) {
-        .main-grid {
+        .content-grid {
             grid-template-columns: 1fr;
-        }
-        
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .search-input {
-            width: 100%;
-            margin-top: 1rem;
-        }
-        
-        .dashboard-header {
-            flex-direction: column;
         }
     }
 </style>
 }
 
-<div class="dashboard-wrapper">
-    <!-- Header -->
-    <div class="dashboard-header">
-        <div class="welcome-text">
-            <h1>Welcome back, @Model.UserFullName</h1>
+<div class="page-inner">
+    <!-- Page Header -->
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h3>Welcome back, @Model.UserFullName</h3>
             <p class="date">@today</p>
         </div>
-        <div class="search-input">
-            <i class="bi bi-search icon"></i>
-            <input type="text" placeholder="Search initiatives..." id="searchInput" />
-        </div>
     </div>
     
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-icon blue">
-                <i class="bi bi-folder-fill"></i>
-            </div>
-            <div class="stat-info">
-                <h3>Total Assigned</h3>
-                <p class="value">@Model.TotalAssigned</p>
+    <!-- Stats Cards -->
+    <div class="row stats-row">
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="icon-big icon-primary">
+                                <i class="bi bi-folder-fill"></i>
+                            </div>
+                        </div>
+                        <div class="col ps-0">
+                            <div class="numbers">
+                                <p class="card-category">Total Assigned</p>
+                                <h4 class="card-title">@Model.TotalAssigned</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div class="stat-card">
-            <div class="stat-icon green">
-                <i class="bi bi-check-circle-fill"></i>
-            </div>
-            <div class="stat-info">
-                <h3>Completed</h3>
-                <p class="value">@Model.CompletedCount</p>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="icon-big icon-success">
+                                <i class="bi bi-check-circle-fill"></i>
+                            </div>
+                        </div>
+                        <div class="col ps-0">
+                            <div class="numbers">
+                                <p class="card-category">Completed</p>
+                                <h4 class="card-title">@Model.CompletedCount</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div class="stat-card">
-            <div class="stat-icon orange">
-                <i class="bi bi-hourglass-split"></i>
-            </div>
-            <div class="stat-info">
-                <h3>Pending Scoring</h3>
-                <p class="value">@Model.PendingCount</p>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="icon-big icon-warning">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                        </div>
+                        <div class="col ps-0">
+                            <div class="numbers">
+                                <p class="card-category">Pending Scoring</p>
+                                <h4 class="card-title">@Model.PendingCount</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
-    <!-- Overall Progress -->
-    <div class="progress-card">
-        <div class="progress-header">
-            <h3><i class="bi bi-graph-up-arrow me-2"></i>Overall Progress</h3>
-            <span class="percentage">@Model.ProgressPercentage%</span>
+    <!-- Progress Card -->
+    <div class="card progress-card mb-4">
+        <div class="card-body">
+            <div class="progress-header">
+                <h6><i class="bi bi-graph-up-arrow me-2"></i>Overall Progress</h6>
+                <span class="progress-percent">@Model.ProgressPercentage%</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: @Model.ProgressPercentage%"></div>
+            </div>
+            <p class="progress-message">
+                @if (Model.ProgressPercentage >= 100)
+                {
+                    <i class="bi bi-trophy-fill text-warning"></i>
+                    <span>Excellent! You've completed all assigned reviews.</span>
+                }
+                else if (Model.ProgressPercentage >= 50)
+                {
+                    <i class="bi bi-lightning-fill text-primary"></i>
+                    <span>Great progress! Keep up the momentum to finish all reviews.</span>
+                }
+                else if (Model.PendingCount > 0)
+                {
+                    <i class="bi bi-clock text-muted"></i>
+                    <span>You have @Model.PendingCount initiatives awaiting your expert review.</span>
+                }
+                else
+                {
+                    <i class="bi bi-inbox text-muted"></i>
+                    <span>No initiatives assigned yet. Check back later!</span>
+                }
+            </p>
         </div>
-        <div class="progress-bar-wrapper">
-            <div class="progress-bar-fill" style="width: @Model.ProgressPercentage%"></div>
-        </div>
-        <p class="progress-message">
-            @if (Model.ProgressPercentage >= 100)
-            {
-                <i class="bi bi-trophy-fill"></i>
-                <span>Excellent! You've completed all assigned reviews.</span>
-            }
-            else if (Model.ProgressPercentage >= 50)
-            {
-                <i class="bi bi-lightning-fill"></i>
-                <span>You're on track! Keep up the great work to complete all reviews on time.</span>
-            }
-            else if (Model.PendingCount > 0)
-            {
-                <i class="bi bi-clock-fill"></i>
-                <span>You have @Model.PendingCount initiatives waiting for your expert review.</span>
-            }
-            else
-            {
-                <i class="bi bi-inbox-fill"></i>
-                <span>No initiatives assigned yet. Check back later!</span>
-            }
-        </p>
     </div>
     
-    <!-- Main Content Grid -->
-    <div class="main-grid">
-        <!-- Up Next Section -->
-        <div class="up-next-section">
+    <!-- Content Grid -->
+    <div class="content-grid">
+        <!-- Up Next -->
+        <div>
             <div class="section-header">
-                <h2><i class="bi bi-list-task me-2"></i>Up Next</h2>
+                <h5><i class="bi bi-list-task me-2"></i>Up Next</h5>
                 <a asp-action="AssignedInitiatives">View All <i class="bi bi-arrow-right"></i></a>
             </div>
             
             @if (Model.Assignments != null && Model.Assignments.Any())
             {
-                <div class="initiative-cards">
-                    @foreach (var item in Model.Assignments)
-                    {
-                        <div class="initiative-card">
-                            <div class="initiative-header">
-                                <div>
-                                    <span class="category-tag">@item.CategoryName</span>
-                                    <h4>@item.Title</h4>
-                                </div>
-                                @if (item.IsDueSoon)
-                                {
-                                    <span class="due-badge">
-                                        <i class="bi bi-exclamation-triangle-fill"></i>
-                                        Due Soon
-                                    </span>
-                                }
-                            </div>
-                            <div class="initiative-meta">
-                                <span><i class="bi bi-hash"></i> @item.InitiativeCode</span>
-                                <span><i class="bi bi-clock"></i> @item.TimeAgo</span>
-                                @if (item.DueDate.HasValue)
-                                {
-                                    <span><i class="bi bi-calendar-event"></i> Due @item.DueDate.Value.ToString("MMM dd")</span>
-                                }
-                            </div>
-                            <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-start-review">
-                                <i class="bi bi-play-circle-fill"></i>
-                                Start Review
-                            </a>
+                @foreach (var item in Model.Assignments)
+                {
+                    <div class="task-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <span class="task-category">@item.CategoryName</span>
+                            @if (item.IsDueSoon)
+                            {
+                                <span class="due-warning">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    Due Soon
+                                </span>
+                            }
                         </div>
-                    }
-                </div>
+                        <h6>@item.Title</h6>
+                        <div class="task-meta">
+                            <span><i class="bi bi-hash"></i> @item.InitiativeCode</span>
+                            <span><i class="bi bi-clock"></i> @item.TimeAgo</span>
+                            @if (item.DueDate.HasValue)
+                            {
+                                <span><i class="bi bi-calendar-event"></i> Due @item.DueDate.Value.ToString("MMM dd")</span>
+                            }
+                        </div>
+                        
+                        <!-- Score Display -->
+                        <div class="task-score">
+                            <span class="label"><i class="bi bi-star-fill"></i> Score</span>
+                            @if (item.Score.HasValue)
+                            {
+                                <span class="value">@item.Score.Value.ToString("0.#") / @item.MaxScore.ToString("0")</span>
+                            }
+                            else
+                            {
+                                <span class="value pending">Not scored yet</span>
+                            }
+                        </div>
+                        
+                        <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-start-review">
+                            <i class="bi bi-play-circle-fill"></i>
+                            @(item.Score.HasValue ? "Continue Review" : "Start Review")
+                        </a>
+                    </div>
+                }
             }
             else
             {
                 <div class="empty-state">
                     <i class="bi bi-check2-all"></i>
-                    <h4>You're all caught up!</h4>
-                    <p>No pending initiatives assigned to you at the moment.</p>
+                    <h6>You're all caught up!</h6>
+                    <p>No pending initiatives at the moment.</p>
                 </div>
             }
         </div>
         
-        <!-- Recent Activity Sidebar -->
-        <div class="activity-card">
-            <h3><i class="bi bi-activity"></i> Recent Activity</h3>
-            
-            @if (Model.RecentActivityList != null && Model.RecentActivityList.Any())
-            {
-                <div class="activity-list">
-                    @foreach (var act in Model.RecentActivityList)
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <!-- Recent Activity -->
+            <div class="activity-card">
+                <h5><i class="bi bi-activity"></i> Recent Activity</h5>
+                
+                @if (Model.RecentActivityList != null && Model.RecentActivityList.Any())
+                {
+                    @foreach (var act in Model.RecentActivityList.Take(4))
                     {
                         <div class="activity-item">
                             <div class="activity-icon">
@@ -602,41 +643,84 @@
                                     @act.TimeAgo
                                     @if (act.Score.HasValue)
                                     {
-                                        <span class="score ms-2">• Score: @act.Score.Value.ToString("0.#")</span>
+                                        <span class="score ms-1">• @act.Score.Value.ToString("0.#") / @act.MaxScore pts</span>
                                     }
                                 </span>
                             </div>
                         </div>
                     }
+                    
+                    <div class="mt-3 text-center">
+                        <a asp-action="History" style="font-size: 0.85rem; color: var(--brand-primary);">
+                            View History <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-3">
+                        <i class="bi bi-inbox text-muted" style="font-size: 1.5rem;"></i>
+                        <p class="text-muted small mt-2 mb-0">No recent activity</p>
+                    </div>
+                }
+            </div>
+            
+            <!-- Completion Chart -->
+            <div class="completion-card">
+                <h5><i class="bi bi-pie-chart-fill"></i> Task Overview</h5>
+                <div class="donut-chart-container">
+                    <div class="donut-chart">
+                        @{
+                            var circleRadius = 40;
+                            var circumference = 2 * Math.PI * circleRadius;
+                            var completedOffset = circumference - (circumference * Model.ProgressPercentage / 100);
+                        }
+                        <svg width="100" height="100" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="@circleRadius" fill="none" stroke="#e2e8f0" stroke-width="12"/>
+                            <circle cx="50" cy="50" r="@circleRadius" fill="none" stroke="var(--brand-primary)" stroke-width="12"
+                                    stroke-dasharray="@circumference" stroke-dashoffset="@completedOffset.ToString("0.#")"
+                                    stroke-linecap="round"/>
+                        </svg>
+                        <div class="chart-center">
+                            <div class="percent">@Model.ProgressPercentage%</div>
+                            <div class="label">Done</div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-dot completed"></span>
+                            <span>Completed (@Model.CompletedCount)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot pending"></span>
+                            <span>Pending (@Model.PendingCount)</span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="mt-3 text-center">
-                    <a asp-action="History" class="text-decoration-none" style="font-size: 0.875rem; color: var(--primary);">
-                        View Full History <i class="bi bi-arrow-right"></i>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="quick-links-card">
+                <h5><i class="bi bi-lightning-fill"></i> Quick Links</h5>
+                <div class="quick-links-grid">
+                    <a href="#" class="quick-link-item">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                        <span>Scoring Guidelines</span>
+                    </a>
+                    <a href="#" class="quick-link-item">
+                        <i class="bi bi-question-circle-fill"></i>
+                        <span>FAQs</span>
+                    </a>
+                    <a href="#" class="quick-link-item">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>Templates</span>
+                    </a>
+                    <a href="#" class="quick-link-item">
+                        <i class="bi bi-headset"></i>
+                        <span>Support</span>
                     </a>
                 </div>
-            }
-            else
-            {
-                <div class="text-center py-4">
-                    <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
-                    <p class="text-muted small mt-2 mb-0">No recent activity</p>
-                </div>
-            }
+            </div>
         </div>
     </div>
 </div>
-
-@section Scripts {
-<script>
-    // Search functionality
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            const keyword = this.value.trim();
-            if (keyword) {
-                window.location.href = '/Councils/Page/AssignedInitiatives?keyword=' + encodeURIComponent(keyword);
-            }
-        }
-    });
-</script>
-}

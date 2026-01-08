@@ -103,6 +103,26 @@ namespace IdeaTrack.Areas.Councils.Controllers
             return View(vm);
         }
 
+        // ============ PROFILE PAGE ============
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account", new { area = "" });
+
+            // Load department if available
+            if (user.DepartmentId.HasValue)
+            {
+                user = await _db.Users
+                    .Include(u => u.Department)
+                    .FirstOrDefaultAsync(u => u.Id == user.Id) ?? user;
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            ViewBag.UserRoles = string.Join(", ", roles);
+            return View(user);
+        }
+
         public async Task<IActionResult> AssignedInitiatives(string? keyword, string status = "Assigned", string sortOrder = "Deadline", int page = 1)
         {
             var userId = await GetCurrentUserId();
@@ -163,6 +183,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
             if (vm.CurrentPage > vm.TotalPages) vm.CurrentPage = vm.TotalPages;
 
             vm.Items = await query
+                .Include(a => a.EvaluationDetails)
                 .Skip((vm.CurrentPage - 1) * vm.PageSize)
                 .Take(vm.PageSize)
                 .Select(a => new AssignedListItem
@@ -174,7 +195,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
                     CategoryName = a.Initiative.Category.Name,
                     AssignedDate = a.AssignedDate,
                     DueDate = a.DueDate,
-                    Status = a.Status
+                    Status = a.Status,
+                    FinalScore = a.EvaluationDetails.Select(d => (decimal?)d.ScoreGiven).Sum()
                 })
                 .ToListAsync();
 
@@ -232,7 +254,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
                     CategoryName = a.Initiative.Category.Name,
                     AssignedDate = a.AssignedDate,
                     DueDate = a.DueDate,
-                    Status = a.Status
+                    Status = a.Status,
+                    FinalScore = a.EvaluationDetails.Select(d => (decimal?)d.ScoreGiven).Sum()
                 })
                 .ToListAsync();
 

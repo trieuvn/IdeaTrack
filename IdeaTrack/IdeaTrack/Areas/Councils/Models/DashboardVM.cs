@@ -28,6 +28,7 @@ namespace IdeaTrack.Areas.Councils.Models
         public DateTime Timestamp { get; set; } // Assigned date or Score date
         public DateTime? DueDate { get; set; }  // For deadline calculation
         public decimal? Score { get; set; }
+        public decimal MaxScore { get; set; } = 100; // Default max score
         public AssignmentStatus Status { get; set; } // Add cai nay de check trang thai nut bam
         public string Description { get; set; } // For Recent Activity
 

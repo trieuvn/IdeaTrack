@@ -5,227 +5,588 @@
     var isViewOnly = ViewData["ViewOnlyMode"] as bool? ?? Model.IsLocked;
 }
 
-<div class="d-flex flex-column h-100">
-    <!-- Action Header -->
-    <div class="bg-white border-bottom py-3 px-4 shadow-sm z-3">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-3">
-                <a asp-action="AssignedInitiatives" class="btn btn-outline-modern p-2 rounded-circle border-0 bg-light">
-                    <i class="bi bi-arrow-left fs-5"></i>
-                </a>
-                <div>
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <span class="badge badge-primary">@Model.InitiativeCode</span>
-                        @if (isViewOnly)
-                        {
-                            <span class="badge badge-secondary"><i class="bi bi-lock-fill me-1"></i>Locked</span>
-                        }
-                        else
-                        {
-                            <span class="badge badge-warning">In Progress</span>
-                        }
-                    </div>
-                    <h5 class="fw-bold mb-0 text-dark">@Model.InitiativeTitle</h5>
-                </div>
+@section Styles {
+<style>
+    .eval-header {
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border-color);
+        padding: 1rem 1.5rem;
+        margin: -2rem -2rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    
+    .eval-header .back-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    
+    .eval-header .back-btn:hover {
+        background: var(--brand-light);
+        color: var(--brand-primary);
+        border-color: var(--brand-primary);
+    }
+    
+    .eval-header .title-group h5 {
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-primary);
+    }
+    
+    .eval-header .title-group .meta {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+    
+    .eval-header .badges {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .badge-code {
+        background: var(--brand-light);
+        color: var(--brand-primary);
+        font-weight: 600;
+        font-size: 0.7rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 9999px;
+    }
+    
+    .badge-round {
+        background: var(--brand-primary);
+        color: white;
+        font-weight: 600;
+        font-size: 0.7rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 9999px;
+    }
+    
+    .badge-locked {
+        background: #6b7280;
+        color: white;
+        font-weight: 600;
+        font-size: 0.7rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 9999px;
+    }
+    
+    /* Split View */
+    .eval-split {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 0;
+        margin-top: 1.5rem;
+        min-height: calc(100vh - 180px);
+    }
+    
+    .eval-info-panel {
+        background: var(--bg-main);
+        padding: 1.5rem;
+        border-right: 1px solid var(--border-color);
+        overflow-y: auto;
+    }
+    
+    .eval-form-panel {
+        background: var(--bg-card);
+        padding: 1.5rem 2rem;
+        overflow-y: auto;
+    }
+    
+    /* Info Cards */
+    .info-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .info-card h6 {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+        margin-bottom: 1rem;
+    }
+    
+    .info-row {
+        margin-bottom: 0.75rem;
+    }
+    
+    .info-row label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+    
+    .info-row .value {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+    
+    .author-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--brand-light);
+        color: var(--brand-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    
+    /* Attachments */
+    .attachment-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem;
+        background: var(--bg-main);
+        border-radius: var(--radius-md);
+        margin-bottom: 0.5rem;
+    }
+    
+    .attachment-item .file-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-sm);
+        background: var(--danger-light);
+        color: var(--danger);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .attachment-item .file-name {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-primary);
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    /* Scoring Section */
+    .scoring-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .scoring-header h4 {
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    .total-score-box {
+        background: var(--bg-main);
+        padding: 0.75rem 1.25rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .total-score-box .label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+    
+    .total-score-box .value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+    }
+    
+    .total-score-box .max {
+        color: var(--text-muted);
+        font-weight: 400;
+    }
+    
+    /* Criteria Table */
+    .criteria-table {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+    
+    .criteria-table table {
+        margin: 0;
+        width: 100%;
+    }
+    
+    .criteria-table thead th {
+        background: var(--bg-main);
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        letter-spacing: 0.05em;
+        padding: 0.875rem 1rem;
+        border: none;
+    }
+    
+    .criteria-table tbody td {
+        padding: 1rem;
+        vertical-align: top;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .criteria-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .criteria-table tbody tr:hover {
+        background: #fafaff;
+    }
+    
+    .criteria-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+    
+    .criteria-desc {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        line-height: 1.4;
+    }
+    
+    .score-input-group {
+        display: flex;
+        align-items: center;
+    }
+    
+    .score-input-group input {
+        width: 60px;
+        text-align: center;
+        font-weight: 600;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        padding: 0.5rem;
+    }
+    
+    .score-input-group input:focus {
+        outline: none;
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 2px rgba(190,18,60,0.1);
+    }
+    
+    .score-input-group .max-badge {
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        border-left: none;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+    
+    .note-input {
+        width: 100%;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    .note-input:focus {
+        outline: none;
+        border-color: var(--brand-primary);
+    }
+    
+    /* Feedback Section */
+    .feedback-section {
+        margin-top: 2rem;
+    }
+    
+    .feedback-section h5 {
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .feedback-box textarea {
+        width: 100%;
+        border: none;
+        background: transparent;
+        resize: none;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .feedback-box textarea:focus {
+        outline: none;
+    }
+    
+    /* Action Footer */
+    .action-footer {
+        position: sticky;
+        bottom: 0;
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        padding: 1rem 2rem;
+        margin: 2rem -2rem -1.5rem;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+    }
+    
+    .btn-save-draft {
+        background: var(--bg-card);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    
+    .btn-save-draft:hover {
+        background: var(--bg-main);
+        border-color: var(--text-muted);
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-medium));
+        color: white;
+        border: none;
+        padding: 0.75rem 1.75rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(190,18,60,0.35);
+        color: white;
+    }
+    
+    @@media (max-width: 991px) {
+        .eval-split {
+            grid-template-columns: 1fr;
+        }
+        
+        .eval-info-panel {
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+        }
+    }
+</style>
+}
+
+<div class="page-inner">
+    <!-- Header -->
+    <div class="eval-header">
+        <div class="d-flex align-items-center gap-3">
+            <a asp-action="AssignedInitiatives" class="back-btn">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div class="title-group">
+                <h5>@Model.InitiativeTitle</h5>
+                <span class="meta">@Model.ProposerName • @Model.DepartmentName</span>
             </div>
-            
-            <div class="d-flex align-items-center gap-3">
-                @if (Model.DueDate.HasValue)
-                {
-                    <div class="text-end d-none d-md-block">
-                        <small class="d-block text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Due Date</small>
-                        <span class="fw-bold @(Model.DueDate.Value < DateTime.Now ? "text-danger" : "text-dark")">
-                            @Model.DueDate.Value.ToString("MMM dd, yyyy")
-                        </span>
-                    </div>
-                    <div class="vr mx-2"></div>
-                }
-                
-                <div class="text-end d-none d-md-block">
-                    <small class="d-block text-muted text-uppercase fw-bold" style="font-size: 0.65rem;">Round</small>
-                    <span class="fw-bold text-dark">@Model.RoundNumber</span>
-                </div>
-            </div>
+        </div>
+        <div class="badges">
+            <span class="badge-code">@Model.InitiativeCode</span>
+            <span class="badge-round">Round @Model.RoundNumber</span>
+            @if (isViewOnly)
+            {
+                <span class="badge-locked"><i class="bi bi-lock-fill me-1"></i>Locked</span>
+            }
         </div>
     </div>
 
-    <!-- Main Content Split -->
-    <div class="row g-0 flex-grow-1 overflow-hidden" style="height: calc(100vh - 85px);">
-        
-        <!-- LEFT: Initiative Details -->
-        <div class="col-lg-5 col-xl-4 h-100 border-end bg-light overflow-auto custom-scrollbar p-4">
-            
-            <!-- Info Card -->
-            <div class="card-modern bg-white p-4 mb-4">
-                <h6 class="text-uppercase text-muted fw-bold mb-3" style="font-size: 0.75rem;">General Information</h6>
+    <!-- Split View -->
+    <div class="eval-split">
+        <!-- Info Panel -->
+        <div class="eval-info-panel">
+            <div class="info-card">
+                <h6><i class="bi bi-info-circle me-1"></i>Initiative Details</h6>
                 
-                <div class="mb-3">
-                    <label class="small text-muted mb-1">Author</label>
+                <div class="info-row">
+                    <label>Author</label>
                     <div class="d-flex align-items-center gap-2">
-                        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px">
-                            @Model.ProposerName.Substring(0,1).ToUpper()
-                        </div>
-                        <span class="fw-medium">@Model.ProposerName</span>
+                        <div class="author-avatar">@Model.ProposerName.Substring(0,1).ToUpper()</div>
+                        <span class="value">@Model.ProposerName</span>
                     </div>
                 </div>
                 
-                <div class="mb-3">
-                    <label class="small text-muted mb-1">Department</label>
-                    <div class="fw-medium">@Model.DepartmentName</div>
+                <div class="info-row">
+                    <label>Department</label>
+                    <span class="value">@Model.DepartmentName</span>
                 </div>
-            </div>
-
-            <!-- Description -->
-            <div class="card-modern bg-white p-4 mb-4">
-                <h6 class="text-uppercase text-muted fw-bold mb-3" style="font-size: 0.75rem;">Description</h6>
-                <div class="text-secondary" style="line-height: 1.7; text-align: justify;">
-                     @Html.Raw(Model.Description?.Replace("\n", "<br>") ?? "No description provided.")
-                </div>
-            </div>
-
-            <!-- Attachments -->
-            <div class="card-modern bg-white p-4">
-                <h6 class="text-uppercase text-muted fw-bold mb-3" style="font-size: 0.75rem;">
-                    <i class="bi bi-paperclip me-1"></i> Attachments
-                </h6>
-                @if (Model.Files != null && Model.Files.Any())
+                
+                @if (Model.DueDate.HasValue)
                 {
-                    <div class="d-flex flex-column gap-2">
-                        @foreach (var f in Model.Files)
-                        {
-                            <div class="d-flex align-items-center justify-content-between p-3 rounded-3 border bg-light">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-danger-subtle text-danger rounded p-2">
-                                        <i class="bi bi-file-earmark-pdf-fill fs-5"></i>
-                                    </div>
-                                    <div class="d-flex flex-column" style="min-width: 0;">
-                                        <span class="fw-medium text-truncate" style="max-width: 180px;" title="@f.FileName">@f.FileName</span>
-                                        <small class="text-muted">PDF Document</small>
-                                    </div>
-                                </div>
-                                <a href="@f.FilePath" target="_blank" class="btn btn-sm btn-outline-modern border-0">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                            </div>
-                        }
+                    <div class="info-row">
+                        <label>Due Date</label>
+                        <span class="value @(Model.DueDate.Value < DateTime.Now ? "text-danger" : "")">
+                            @Model.DueDate.Value.ToString("MMMM dd, yyyy")
+                        </span>
                     </div>
                 }
-                else 
+            </div>
+            
+            <div class="info-card">
+                <h6><i class="bi bi-file-text me-1"></i>Description</h6>
+                <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary);">
+                    @Html.Raw(Model.Description?.Replace("\n", "<br>") ?? "No description provided.")
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <h6><i class="bi bi-paperclip me-1"></i>Attachments</h6>
+                @if (Model.Files != null && Model.Files.Any())
                 {
-                    <div class="text-center py-3 text-muted">
-                        <i class="bi bi-file-earmark-x fs-4 d-block mb-1"></i>
-                        <small>No attachments</small>
-                    </div>
+                    @foreach (var f in Model.Files)
+                    {
+                        <div class="attachment-item">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="file-icon">
+                                    <i class="bi bi-file-earmark-pdf-fill"></i>
+                                </div>
+                                <span class="file-name" title="@f.FileName">@f.FileName</span>
+                            </div>
+                            <a href="@f.FilePath" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted small mb-0">No attachments</p>
                 }
             </div>
         </div>
 
-        <!-- RIGHT: Grading Form -->
-        <div class="col-lg-7 col-xl-8 h-100 overflow-auto custom-scrollbar bg-white p-0">
-            <form asp-area="Councils" asp-controller="Page" asp-action="SubmitGrading" method="post" id="gradingForm" class="h-100 d-flex flex-column">
+        <!-- Form Panel -->
+        <div class="eval-form-panel">
+            <form asp-area="Councils" asp-controller="Page" asp-action="SubmitGrading" method="post" id="gradingForm">
                 <input type="hidden" asp-for="AssignmentId" />
                 
-                <div class="p-4 p-lg-5 flex-grow-1">
-                    
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                         <h4 class="fw-bold mb-0">Scoring & Feedback</h4>
-                         <div class="bg-light px-3 py-2 rounded-3 border">
-                             <span class="text-muted small fw-bold me-2">TOTAL SCORE</span>
-                             <span class="fs-5 fw-bold text-primary" id="totalScore">0</span>
-                             <span class="text-muted">/ @Model.MaxTotalScore</span>
-                         </div>
+                <div class="scoring-header">
+                    <h4>Scoring & Feedback</h4>
+                    <div class="total-score-box">
+                        <span class="label">Total Score</span>
+                        <span class="value" id="totalScore">0</span>
+                        <span class="max">/ @Model.MaxTotalScore</span>
                     </div>
-
-                    <!-- Criteria Table -->
-                    @if (Model.CriteriaItems != null)
-                    {
-                        <div class="card-modern border mb-4 overflow-hidden">
-                            <table class="table table-modern table-hover mb-0">
-                                <thead>
+                </div>
+                
+                <!-- Criteria Table -->
+                @if (Model.CriteriaItems != null)
+                {
+                    <div class="criteria-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%;">Criteria</th>
+                                    <th style="width: 20%;">Score</th>
+                                    <th style="width: 35%;">Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.CriteriaItems.Count; i++)
+                                {
+                                    var criterion = Model.CriteriaItems[i];
+                                    <input type="hidden" name="CriteriaItems[@i].CriteriaId" value="@criterion.CriteriaId" />
+                                    
                                     <tr>
-                                        <th style="width: 45%;">Criteria</th>
-                                        <th style="width: 15%;">Score</th>
-                                        <th style="width: 40%;">Note</th>
+                                        <td>
+                                            <div class="criteria-name">@criterion.CriteriaName</div>
+                                            <div class="criteria-desc">@criterion.Description</div>
+                                        </td>
+                                        <td>
+                                            <div class="score-input-group">
+                                                <input type="number" name="CriteriaItems[@i].ScoreGiven" 
+                                                       class="score-input" 
+                                                       min="0" max="@criterion.MaxScore" 
+                                                       value="@criterion.ScoreGiven"
+                                                       @(isViewOnly ? "readonly" : "") required />
+                                                <span class="max-badge">/@criterion.MaxScore</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="CriteriaItems[@i].Note" 
+                                                   class="note-input" 
+                                                   value="@criterion.Note"
+                                                   @(isViewOnly ? "readonly" : "") 
+                                                   placeholder="Add note..." />
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @for (int i = 0; i < Model.CriteriaItems.Count; i++)
-                                    {
-                                        var criterion = Model.CriteriaItems[i];
-                                        <input type="hidden" name="CriteriaItems[@i].CriteriaId" value="@criterion.CriteriaId" />
-                                        
-                                        <tr>
-                                            <td>
-                                                <div class="fw-semibold text-dark mb-1">@criterion.CriteriaName</div>
-                                                <small class="text-muted d-block" style="line-height:1.4">@criterion.Description</small>
-                                            </td>
-                                            <td class="align-top pt-3">
-                                                <div class="input-group input-group-sm">
-                                                    <input type="number" name="CriteriaItems[@i].ScoreGiven" 
-                                                           class="form-control fw-bold text-center score-input" 
-                                                           min="0" max="@criterion.MaxScore" 
-                                                           value="@criterion.ScoreGiven"
-                                                           @(isViewOnly ? "readonly" : "") required />
-                                                    <span class="input-group-text text-muted bg-light">/@criterion.MaxScore</span>
-                                                </div>
-                                            </td>
-                                            <td class="align-top pt-3">
-                                                <input type="text" name="CriteriaItems[@i].Note" 
-                                                       class="form-control form-control-sm" 
-                                                       value="@criterion.Note"
-                                                       @(isViewOnly ? "readonly" : "") 
-                                                       placeholder="Add a note..." />
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-
-                    <!-- Feedback Boxes -->
-                    <h5 class="fw-bold mb-3 mt-5">Detailed Assessment</h5>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                
+                <!-- Feedback Section -->
+                <div class="feedback-section">
+                    <h5>Detailed Assessment</h5>
                     
-                    <div class="row g-3">
+                    <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <div class="feedback-box feedback-strengths h-100">
                                 <h6><i class="bi bi-check-circle-fill"></i> Strengths</h6>
-                                <textarea name="Strengths" class="form-control border-0 bg-transparent shadow-none" rows="4" 
+                                <textarea name="Strengths" rows="3" 
                                           @(isViewOnly ? "readonly" : "") 
-                                          placeholder="Highlight the key strengths...">@Model.Strengths</textarea>
+                                          placeholder="What are the key strengths?">@Model.Strengths</textarea>
                             </div>
                         </div>
-                        
                         <div class="col-md-6">
                             <div class="feedback-box feedback-limitations h-100">
                                 <h6><i class="bi bi-exclamation-triangle-fill"></i> Limitations</h6>
-                                <textarea name="Limitations" class="form-control border-0 bg-transparent shadow-none" rows="4" 
+                                <textarea name="Limitations" rows="3" 
                                           @(isViewOnly ? "readonly" : "") 
-                                          placeholder="Identity areas for improvement...">@Model.Limitations</textarea>
-                            </div>
-                        </div>
-                        
-                        <div class="col-12">
-                            <div class="feedback-box feedback-recommendations">
-                                <h6><i class="bi bi-lightbulb-fill"></i> Recommendations</h6>
-                                <textarea name="Recommendations" class="form-control border-0 bg-transparent shadow-none" rows="3" 
-                                          @(isViewOnly ? "readonly" : "") 
-                                          placeholder="Suggest actionable recommendations...">@Model.Recommendations</textarea>
+                                          placeholder="What are the limitations?">@Model.Limitations</textarea>
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="feedback-box feedback-recommendations">
+                        <h6><i class="bi bi-lightbulb-fill"></i> Recommendations</h6>
+                        <textarea name="Recommendations" rows="2" 
+                                  @(isViewOnly ? "readonly" : "") 
+                                  placeholder="Suggest improvements...">@Model.Recommendations</textarea>
+                    </div>
                 </div>
-
-                <!-- Footer Actions -->
+                
+                <!-- Action Footer -->
                 @if (!isViewOnly)
                 {
-                    <div class="border-top bg-light p-4 d-flex justify-content-end gap-3 sticky-bottom">
-                        <button type="submit" name="SubmitAction" value="SaveDraft" class="btn btn-outline-modern bg-white">
+                    <div class="action-footer">
+                        <button type="submit" name="SubmitAction" value="SaveDraft" class="btn-save-draft">
                             <i class="bi bi-save me-2"></i>Save Draft
                         </button>
-                        <button type="submit" name="SubmitAction" value="Submit" class="btn btn-primary-modern shadow-md px-4"
-                                onclick="return confirm('Confirm submission?\nOnce submitted, you cannot modify your scores.');">
-                            <i class="bi bi-send-fill me-2"></i>Submit Final Review
+                        <button type="submit" name="SubmitAction" value="Submit" class="btn-submit"
+                                onclick="return confirm('Submit your evaluation? You cannot modify after submitting.');">
+                            <i class="bi bi-send-fill me-2"></i>Submit Final
                         </button>
                     </div>
                 }
@@ -234,36 +595,26 @@
     </div>
 </div>
 
+@section Scripts {
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         calculateTotal();
-        
-        // Auto-expand textareas
-        const tx = document.getElementsByTagName("textarea");
-        for (let i = 0; i < tx.length; i++) {
-            tx[i].setAttribute("style", "height:" + (tx[i].scrollHeight) + "px;overflow-y:hidden;");
-            tx[i].addEventListener("input", OnInput, false);
-        }
     });
     
     document.addEventListener('input', function (e) {
         if (e.target.classList.contains('score-input')) {
             calculateTotal();
-        }
-        
-        // Simple validation visualization
-        if (e.target.type === 'number') {
+            
+            // Validation
             const max = parseFloat(e.target.getAttribute('max'));
             const val = parseFloat(e.target.value);
-            if (val > max) e.target.classList.add('is-invalid');
-            else e.target.classList.remove('is-invalid');
+            if (val > max || val < 0) {
+                e.target.style.borderColor = 'var(--danger)';
+            } else {
+                e.target.style.borderColor = 'var(--border-color)';
+            }
         }
     });
-
-    function OnInput() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    }
 
     function calculateTotal() {
         let total = 0;
@@ -273,3 +624,4 @@
         document.getElementById('totalScore').innerText = total.toFixed(1);
     }
 </script>
+}

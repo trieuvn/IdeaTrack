@@ -14,7 +14,7 @@
     <link rel="icon" type="image/x-icon" href="~/lib/favicon.ico">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,71 +25,65 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
-        /* ============ BRANDING & CSS VARIABLES ============ */
+        /* ============ BRANDING - MAROON THEME (Matching Homepage) ============ */
         :root {
-            /* PKHCN Portal Brand Colors - Dark Blue Theme */
-            --sidebar-bg: #0f172a;         /* Slate 900 */
-            --sidebar-hover: #1e293b;      /* Slate 800 */
-            --sidebar-active: #1e3a5f;     /* Blue accent */
-            --sidebar-border: #1e293b;
-            --sidebar-text: #94a3b8;       /* Slate 400 */
-            --sidebar-text-active: #ffffff;
-            --sidebar-width: 280px;
+            /* Maroon Brand Colors from Homepage */
+            --brand-primary: #be123c;      /* Rose 700 */
+            --brand-dark: #450a0a;         /* Rose 950 */
+            --brand-medium: #7f1d1d;       /* Red 900 */
+            --brand-light: #fef2f2;        /* Rose 50 */
+            --brand-accent: #fbbf24;       /* Amber 400 - for highlights */
             
-            /* Primary Colors */
-            --primary: #3b82f6;            /* Blue 500 */
-            --primary-dark: #2563eb;       /* Blue 600 */
-            --primary-light: #dbeafe;      /* Blue 100 */
-            --primary-gradient: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            /* Sidebar */
+            --sidebar-bg: linear-gradient(180deg, #450a0a 0%, #7f1d1d 100%);
+            --sidebar-width: 260px;
+            --sidebar-text: rgba(255,255,255,0.7);
+            --sidebar-text-active: #ffffff;
+            --sidebar-hover: rgba(255,255,255,0.1);
+            --sidebar-active: rgba(255,255,255,0.15);
             
             /* Status Colors */
-            --success: #10b981;            /* Emerald 500 */
-            --success-light: #d1fae5;
-            --warning: #f59e0b;            /* Amber 500 */
+            --success: #16a34a;
+            --success-light: #dcfce7;
+            --warning: #d97706;
             --warning-light: #fef3c7;
-            --danger: #ef4444;             /* Red 500 */
+            --danger: #dc2626;
             --danger-light: #fee2e2;
+            --info: #2563eb;
+            --info-light: #dbeafe;
             
-            /* Neutral Colors */
-            --bg-main: #f8fafc;            /* Slate 50 */
+            /* Neutral */
+            --bg-main: #f8fafc;
             --bg-card: #ffffff;
             --border-color: #e2e8f0;
-            --text-primary: #0f172a;
+            --text-primary: #1e293b;
             --text-secondary: #475569;
             --text-muted: #94a3b8;
             
             /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
             
-            /* Border Radius */
-            --radius-sm: 0.5rem;
-            --radius-md: 0.75rem;
-            --radius-lg: 1rem;
-            --radius-xl: 1.5rem;
+            /* Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
         }
         
-        /* ============ BASE STYLES ============ */
-        * {
-            box-sizing: border-box;
-        }
+        /* ============ BASE ============ */
+        * { box-sizing: border-box; }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-main);
             margin: 0;
-            padding: 0;
             color: var(--text-primary);
-            line-height: 1.6;
         }
         
-        .font-display {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        
-        /* ============ APP LAYOUT ============ */
-        .app-layout {
+        /* ============ LAYOUT ============ */
+        .app-wrapper {
             display: flex;
             min-height: 100vh;
         }
@@ -97,88 +91,82 @@
         /* ============ SIDEBAR ============ */
         .sidebar {
             width: var(--sidebar-width);
-            height: 100vh;
+            min-height: 100vh;
             background: var(--sidebar-bg);
-            display: flex;
-            flex-direction: column;
             position: fixed;
             left: 0;
             top: 0;
             z-index: 1000;
-            padding: 1.5rem 1rem;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
         }
         
         .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-brand {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 0.5rem 0.75rem;
-            margin-bottom: 2rem;
+            gap: 12px;
+            text-decoration: none;
         }
         
-        .brand-logo {
-            width: 44px;
-            height: 44px;
-            padding: 8px;
-            background: rgba(59, 130, 246, 0.15);
+        .sidebar-brand img {
+            width: 40px;
+            height: 40px;
             border-radius: var(--radius-md);
-            border: 1px solid rgba(59, 130, 246, 0.25);
-            object-fit: contain;
+            background: rgba(255,255,255,0.1);
+            padding: 6px;
         }
         
-        .brand-info {
+        .sidebar-brand-text {
             display: flex;
             flex-direction: column;
         }
         
-        .brand-name {
+        .sidebar-brand-name {
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--sidebar-text-active);
-            font-family: 'Space Grotesk', sans-serif;
             letter-spacing: -0.02em;
         }
         
-        .brand-subtext {
-            font-size: 0.75rem;
-            color: var(--sidebar-text);
-            margin-top: 2px;
-        }
-        
-        .sidebar-nav {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        
-        .nav-section-title {
+        .sidebar-brand-sub {
             font-size: 0.7rem;
-            font-weight: 600;
             color: var(--sidebar-text);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            padding: 0.5rem 0.75rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
         }
         
-        .nav-group {
-            flex-grow: 1;
+        .sidebar-nav {
+            padding: 1rem 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .nav-section-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 1rem 1.5rem 0.5rem;
         }
         
         .sidebar .nav-link {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 0.75rem 1rem;
-            margin-bottom: 4px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            gap: 12px;
+            padding: 0.75rem 1.5rem;
             color: var(--sidebar-text);
             text-decoration: none;
-            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
             transition: all 0.2s ease;
+            border-left: 3px solid transparent;
         }
         
         .sidebar .nav-link:hover {
@@ -189,37 +177,48 @@
         .sidebar .nav-link.active {
             background: var(--sidebar-active);
             color: var(--sidebar-text-active);
+            border-left-color: var(--brand-accent);
         }
         
-        .sidebar .nav-link .material-icons,
         .sidebar .nav-link i {
-            font-size: 1.25rem;
-            width: 24px;
+            font-size: 1.1rem;
+            width: 22px;
             text-align: center;
         }
         
-        .sidebar-divider {
-            border: none;
-            border-top: 1px solid var(--sidebar-border);
-            margin: 1rem 0;
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
         
-        .nav-footer {
-            margin-top: auto;
-            padding-top: 1rem;
-            border-top: 1px solid var(--sidebar-border);
+        .sidebar-footer .nav-link {
+            border-radius: var(--radius-md);
+            margin-bottom: 4px;
+        }
+        
+        .sidebar-footer .nav-link.logout-btn {
+            color: #fca5a5;
+        }
+        
+        .sidebar-footer .nav-link.logout-btn:hover {
+            background: rgba(220,38,38,0.2);
+            color: #fecaca;
         }
         
         /* ============ MAIN CONTENT ============ */
-        .main-content {
-            margin-left: var(--sidebar-width);
+        .main-panel {
             flex: 1;
+            margin-left: var(--sidebar-width);
             min-height: 100vh;
             background: var(--bg-main);
         }
         
+        .page-inner {
+            padding: 2rem;
+        }
+        
         /* ============ CARDS ============ */
-        .card-modern {
+        .card {
             background: var(--bg-card);
             border: none;
             border-radius: var(--radius-lg);
@@ -227,33 +226,69 @@
             transition: all 0.2s ease;
         }
         
-        .card-modern:hover {
+        .card:hover {
             box-shadow: var(--shadow-md);
+        }
+        
+        .card-stats {
+            border-radius: var(--radius-xl);
+        }
+        
+        .card-stats .card-body {
+            padding: 1.25rem;
+        }
+        
+        .card-stats .icon-big {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .icon-big.icon-primary { background: rgba(190,18,60,0.15); color: var(--brand-primary); }
+        .icon-big.icon-success { background: rgba(22,163,74,0.15); color: var(--success); }
+        .icon-big.icon-warning { background: rgba(217,119,6,0.15); color: var(--warning); }
+        .icon-big.icon-info { background: rgba(37,99,235,0.15); color: var(--info); }
+        
+        .card-stats .numbers .card-category {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-bottom: 0.25rem;
+        }
+        
+        .card-stats .numbers .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        /* ============ PROGRESS BAR ============ */
+        .progress-card {
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 9999px;
+            background: #e2e8f0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-medium));
+            border-radius: 9999px;
         }
         
         /* ============ BUTTONS ============ */
-        .btn-primary-modern {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .btn-primary-modern:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-            color: white;
-        }
-        
-        .btn-success-modern {
-            background: linear-gradient(135deg, #10b981, #059669);
+        .btn-brand {
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-medium));
             color: white;
             border: none;
             padding: 0.75rem 1.5rem;
@@ -262,76 +297,28 @@
             transition: all 0.2s ease;
         }
         
-        .btn-success-modern:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
+        .btn-brand:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(190,18,60,0.35);
             color: white;
         }
         
-        .btn-danger-modern {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-danger-modern:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-            color: white;
-        }
-        
-        .btn-outline-modern {
+        .btn-brand-outline {
             background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
+            color: var(--brand-primary);
+            border: 1px solid var(--brand-primary);
             padding: 0.75rem 1.5rem;
             border-radius: var(--radius-md);
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.2s ease;
         }
         
-        .btn-outline-modern:hover {
-            background: var(--bg-main);
-            border-color: var(--primary);
-            color: var(--primary);
+        .btn-brand-outline:hover {
+            background: var(--brand-light);
+            color: var(--brand-primary);
         }
         
-        /* ============ BADGES ============ */
-        .badge-status {
-            padding: 0.35rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-        
-        .badge-success {
-            background: var(--success-light);
-            color: #065f46;
-        }
-        
-        .badge-warning {
-            background: var(--warning-light);
-            color: #92400e;
-        }
-        
-        .badge-danger {
-            background: var(--danger-light);
-            color: #991b1b;
-        }
-        
-        .badge-primary {
-            background: var(--primary-light);
-            color: #1e40af;
-        }
-        
-        /* ============ FEEDBACK BOXES ============ */
+        /* ============ FEEDBACK BOXES (Pastel) ============ */
         .feedback-box {
             border-radius: var(--radius-md);
             padding: 1rem 1.25rem;
@@ -339,21 +326,28 @@
         }
         
         .feedback-strengths {
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            background: var(--success-light);
             border-left: 4px solid var(--success);
         }
         
+        .feedback-strengths h6 { color: #166534; }
+        
         .feedback-limitations {
-            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            background: var(--danger-light);
             border-left: 4px solid var(--danger);
         }
         
+        .feedback-limitations h6 { color: #991b1b; }
+        
         .feedback-recommendations {
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
-            border-left: 4px solid var(--primary);
+            background: var(--info-light);
+            border-left: 4px solid var(--info);
         }
         
+        .feedback-recommendations h6 { color: #1e40af; }
+        
         .feedback-box h6 {
+            font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             display: flex;
@@ -361,55 +355,46 @@
             gap: 0.5rem;
         }
         
-        .feedback-strengths h6 { color: #065f46; }
-        .feedback-limitations h6 { color: #991b1b; }
-        .feedback-recommendations h6 { color: #1e40af; }
+        /* ============ BADGES ============ */
+        .badge-brand {
+            background: var(--brand-primary);
+            color: white;
+        }
+        
+        .badge-pill {
+            border-radius: 9999px;
+            padding: 0.35rem 0.75rem;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
         
         /* ============ TABLES ============ */
-        .table-modern {
+        .table-clean {
             margin-bottom: 0;
         }
         
-        .table-modern thead th {
+        .table-clean thead th {
             background: var(--bg-main);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
             color: var(--text-secondary);
             letter-spacing: 0.05em;
-            padding: 1rem 1.25rem;
+            padding: 0.875rem 1rem;
             border: none;
         }
         
-        .table-modern tbody td {
-            padding: 1rem 1.25rem;
+        .table-clean tbody td {
+            padding: 1rem;
             vertical-align: middle;
             border-bottom: 1px solid var(--border-color);
         }
         
-        .table-modern tbody tr:hover {
+        .table-clean tbody tr:hover {
             background: #f8fafc;
         }
         
-        .table-modern tbody tr:last-child td {
-            border-bottom: none;
-        }
-        
-        /* ============ PROGRESS BAR ============ */
-        .progress-modern {
-            height: 10px;
-            background: #e2e8f0;
-            border-radius: 9999px;
-            overflow: hidden;
-        }
-        
-        .progress-modern .progress-bar {
-            background: var(--primary-gradient);
-            border-radius: 9999px;
-            transition: width 0.5s ease;
-        }
-        
-        /* ============ TOAST CONTAINER ============ */
+        /* ============ TOAST ============ */
         #toastContainer {
             position: fixed;
             top: 1rem;
@@ -418,7 +403,7 @@
         }
         
         /* ============ RESPONSIVE ============ */
-        @@media (max-width: 1024px) {
+        @@media (max-width: 991px) {
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
@@ -428,7 +413,7 @@
                 transform: translateX(0);
             }
             
-            .main-content {
+            .main-panel {
                 margin-left: 0;
             }
         }
@@ -439,112 +424,102 @@
 
 <body>
 
-    <div class="app-layout">
+    <div class="app-wrapper">
 
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <img src="~/images/logo-uef.png" class="brand-logo" alt="Logo" />
-                <div class="brand-info">
-                    <span class="brand-name">PKHCN Portal</span>
-                    <span class="brand-subtext">Council Reviewer</span>
-                </div>
+                <a href="/Councils/Page/Index" class="sidebar-brand">
+                    <img src="~/images/logo-uef.png" alt="UEF Logo" />
+                    <div class="sidebar-brand-text">
+                        <span class="sidebar-brand-name">PKHCN Portal</span>
+                        <span class="sidebar-brand-sub">Council Reviewer</span>
+                    </div>
+                </a>
             </div>
 
             <nav class="sidebar-nav">
-                <div class="nav-group">
-                    <span class="nav-section-title">Overview</span>
+                <!-- Return to Home Link -->
+                <a href="/" class="nav-link" style="color: var(--brand-accent); margin-bottom: 0.5rem;">
+                    <i class="bi bi-house-door-fill"></i>
+                    Return to Home
+                </a>
+                
+                <span class="nav-section-label">Overview</span>
 
-                    <!-- DASHBOARD -->
-                    <a href="/Councils/Page/Index"
-                       class="nav-link @(currentArea == "Councils" && currentController == "Page" && currentAction == "Index" ? "active" : "")">
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        Dashboard
-                    </a>
+                <a href="/Councils/Page/Index"
+                   class="nav-link @(currentAction == "Index" ? "active" : "")">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    Dashboard
+                </a>
 
-                    <!-- ASSIGNED INITIATIVES -->
-                    <a href="/Councils/Page/AssignedInitiatives"
-                       class="nav-link @(currentArea == "Councils" && currentAction == "AssignedInitiatives" ? "active" : "")">
-                        <i class="bi bi-folder-fill"></i>
-                        Assigned Tasks
-                    </a>
+                <a href="/Councils/Page/AssignedInitiatives"
+                   class="nav-link @(currentAction == "AssignedInitiatives" ? "active" : "")">
+                    <i class="bi bi-folder-fill"></i>
+                    Assigned Tasks
+                </a>
 
-                    <!-- HISTORY -->
-                    <a href="/Councils/Page/History"
-                       class="nav-link @(currentArea == "Councils" && currentAction == "History" ? "active" : "")">
-                        <i class="bi bi-clock-history"></i>
-                        History
-                    </a>
-                </div>
-
-                <div class="nav-footer">
-                    <!-- User Profile -->
-                    <a asp-area="Identity" asp-page="/Account/Manage/Index" class="nav-link">
-                        <i class="bi bi-person-circle"></i>
-                        My Profile
-                    </a>
-
-                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                        <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent" style="color: #f87171;">
-                            <i class="bi bi-box-arrow-right"></i>
-                            Sign Out
-                        </button>
-                    </form>
-                </div>
+                <a href="/Councils/Page/History"
+                   class="nav-link @(currentAction == "History" ? "active" : "")">
+                    <i class="bi bi-clock-history"></i>
+                    History
+                </a>
             </nav>
 
+            <div class="sidebar-footer">
+                <a href="/Councils/Page/Profile" class="nav-link @(currentAction == "Profile" ? "active" : "")">
+                    <i class="bi bi-person-circle"></i>
+                    My Profile
+                </a>
+
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline w-100">
+                    <button type="submit" class="nav-link logout-btn w-100 text-start border-0 bg-transparent">
+                        <i class="bi bi-box-arrow-right"></i>
+                        Sign Out
+                    </button>
+                </form>
+            </div>
         </aside>
 
-        <main class="main-content">
+        <!-- MAIN PANEL -->
+        <div class="main-panel">
             @RenderBody()
-        </main>
+        </div>
 
     </div>
 
+    <div id="toastContainer"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Toast Notification System -->
     <script>
+        // Toast Notification System
         document.addEventListener('DOMContentLoaded', function() {
             @if (TempData["SuccessMessage"] != null) {
-                <text>
-                showToast('@TempData["SuccessMessage"]', 'success');
-                </text>
+                <text>showToast('@TempData["SuccessMessage"]', 'success');</text>
             }
             @if (TempData["ErrorMessage"] != null) {
-                <text>
-                showToast('@TempData["ErrorMessage"]', 'danger');
-                </text>
+                <text>showToast('@TempData["ErrorMessage"]', 'danger');</text>
             }
         });
         
         function showToast(message, type) {
-            const toastContainer = document.getElementById('toastContainer') || createToastContainer();
-            const toastId = 'toast-' + Date.now();
-            const bgClass = type === 'success' ? 'bg-success' : (type === 'warning' ? 'bg-warning' : 'bg-danger');
-            const iconHtml = type === 'success' 
-                ? '<i class="bi bi-check-circle-fill me-2"></i>' 
-                : (type === 'warning' ? '<i class="bi bi-exclamation-triangle-fill me-2"></i>' : '<i class="bi bi-x-circle-fill me-2"></i>');
+            const container = document.getElementById('toastContainer');
+            const id = 'toast-' + Date.now();
+            const bgClass = type === 'success' ? 'bg-success' : 'bg-danger';
+            const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill';
             
-            toastContainer.innerHTML += `
-                <div id="${toastId}" class="toast ${bgClass} text-white border-0 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            container.innerHTML += `
+                <div id="${id}" class="toast ${bgClass} text-white border-0 shadow-lg" role="alert">
                     <div class="toast-body d-flex align-items-center py-3 px-4">
-                        ${iconHtml}
+                        <i class="bi ${icon} me-2 fs-5"></i>
                         <span class="fw-medium">${message}</span>
                         <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast"></button>
                     </div>
                 </div>`;
             
-            const toastEl = document.getElementById(toastId);
-            const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+            const toast = new bootstrap.Toast(document.getElementById(id), { delay: 5000 });
             toast.show();
-        }
-        
-        function createToastContainer() {
-            const container = document.createElement('div');
-            container.id = 'toastContainer';
-            document.body.appendChild(container);
-            return container;
         }
     </script>
     
