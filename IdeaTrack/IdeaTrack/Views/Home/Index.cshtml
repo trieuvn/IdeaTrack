@@ -1,5 +1,7 @@
-﻿@{
+﻿@using IdeaTrack.ViewModels
+@{
     ViewData["Title"] = "Home";
+    var leaderboard = ViewBag.Leaderboard as LeaderboardVM;
 }
 
 
@@ -9,33 +11,50 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-bold">IMPORTANT ANNOUNCEMENT</span>
+                    <span class="badge rounded-pill bg-danger text-white px-3 py-2 fw-bold">IMPORTANT ANNOUNCEMENT</span>
                     <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-2">Deadline: 30/06/2026</span>
                 </div>
 
-                <h1 class="display-3 fw-black mb-0" style="letter-spacing: -1px; line-height: 1;">ACADEMIC</h1>
-                <h1 class="display-3 fw-black mb-3" style="letter-spacing: -1px; line-height: 1;">INITIATIVES 2026</h1>
+                <h1 class="display-2 fw-bold mb-0" style="letter-spacing: -2px; line-height: 0.95; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">ACADEMIC</h1>
+                <h1 class="display-2 fw-bold mb-3" style="letter-spacing: -2px; line-height: 0.95; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">INITIATIVES 2026</h1>
 
-                <p class="fs-4 fw-light opacity-90 mb-5">
+                <p class="fs-5 fw-light opacity-90 mb-5" style="letter-spacing: 0.5px;">
                     Sparking Innovation - Elevating Education Quality
                 </p>
 
-                <div class="d-flex gap-3">
-                    <a asp-controller="Account" asp-action="Login" asp-area="Identity" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
-                        <span class="material-icons align-middle me-1">rocket_launch</span> Submit Initiative
-                    </a>
+                <div class="d-flex gap-3 flex-wrap">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                         <a asp-controller="Initiative" asp-action="Create" asp-area="Author" class="btn btn-danger btn-lg px-4 fw-bold shadow-sm rounded-3">
+                            <span class="material-icons align-middle me-1">rocket_launch</span> Submit Initiative
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" asp-area="Identity" class="btn btn-danger btn-lg px-4 fw-bold shadow-sm rounded-3">
+                            <span class="material-icons align-middle me-1">rocket_launch</span> Submit Initiative
+                        </a>
+                    }
+                    
                     <a href="/Home/Privacy" class="btn btn-outline-light btn-lg px-4 rounded-3 bg-white bg-opacity-10">
                         <span class="material-icons align-middle me-1">info</span> Guidelines
                     </a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                         <a href="@(ViewBag.PortalUrl ?? "/Identity/Account/Manage")" class="btn btn-danger btn-lg px-4 rounded-3 fw-bold shadow-sm">
+                            <span class="material-icons align-middle me-1">dashboard</span> Go to Portal
+                        </a>
+                    }
                 </div>
             </div>
         </div>
 
         <div class="award-circle d-none d-lg-flex">
-            <span class="material-icons text-warning mb-2" style="font-size: 50px;">emoji_events</span>
-            <div class="fw-bold text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">Innovation</div>
-            <div class="fw-bold text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">Awards</div>
-            <div class="display-6 fw-bold text-warning">2026</div>
+            <span class="material-icons mb-2" style="font-size: 50px; color: #fbbf24;">emoji_events</span>
+            <div class="fw-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">INNOVATION</div>
+            <div class="fw-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">AWARDS</div>
+            <div class="display-6 fw-bold" style="color: #fbbf24;">2026</div>
         </div>
     </div>
 
@@ -72,6 +91,210 @@
         </div>
     </div>
 
+    <!-- LEADERBOARD SECTION -->
+    <div id="leaderboard" class="py-5">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div class="d-flex align-items-center">
+                <span class="material-icons text-danger me-2">leaderboard</span>
+                <h4 class="fw-bold mb-0">Leaderboard</h4>
+            </div>
+            
+            <!-- Filters -->
+            <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-outline-danger btn-sm active" id="btn-all-time" onclick="resetFilters()">
+                    All-time
+                </button>
+                
+                <div class="dropdown">
+                    <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="yearFilterBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        Year: All
+                    </button>
+                    <ul class="dropdown-menu" id="yearFilterList">
+                        <li><a class="dropdown-item" href="#" onclick="selectYear(null, 'All')">All</a></li>
+                        @{
+                            var years = ViewBag.AvailableYears as List<IdeaTrack.Services.FilterOption>;
+                             if (years != null)
+                             {
+                                 foreach (var y in years)
+                                 {
+                                     <li><a class="dropdown-item" href="#" onclick="selectYear(@y.Id, '@y.Name')">@y.Name</a></li>
+                                 }
+                             }
+                        }
+                    </ul>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-outline-danger btn-sm dropdown-toggle disabled" type="button" id="periodFilterBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        Period: All
+                    </button>
+                    <ul class="dropdown-menu" id="periodFilterList">
+                        <li><a class="dropdown-item" href="#" onclick="selectPeriod(null, 'All')">All</a></li>
+                        <!-- Periods will be populated via AJAX -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Top Initiatives -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                    <div class="card-header py-3 border-0 text-white" style="background: linear-gradient(135deg, #991b1b, #7f1d1d);">
+                        <div class="d-flex align-items-center">
+                            <span class="material-icons me-2">emoji_events</span>
+                            <h5 class="mb-0 fw-bold">Top Initiatives</h5>
+                        </div>
+                        <small class="opacity-75">Ranked by evaluation score percentage</small>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="initiatives-table-container">
+                        @if (leaderboard?.TopInitiatives?.Any() == true)
+                        {
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-3" style="width: 50px;">#</th>
+                                        <th>Initiative</th>
+                                        <th class="text-end pe-3" style="width: 100px;">Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in leaderboard.TopInitiatives)
+                                    {
+                                        <tr class="@(item.Rank <= 3 ? "table-warning" : "")">
+                                            <td class="ps-3 fw-bold">
+                                                @if (item.Rank == 1)
+                                                {
+                                                    <span style="font-size: 1.2rem;">🥇</span>
+                                                }
+                                                else if (item.Rank == 2)
+                                                {
+                                                    <span style="font-size: 1.2rem;">🥈</span>
+                                                }
+                                                else if (item.Rank == 3)
+                                                {
+                                                    <span style="font-size: 1.2rem;">🥉</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">@item.Rank</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="fw-semibold text-truncate" style="max-width: 250px;" title="@item.Title">
+                                                    @item.Title
+                                                </div>
+                                                <small class="text-muted">@item.AuthorName • @item.CategoryName</small>
+                                            </td>
+                                            <td class="text-end pe-3">
+                                                <span class="badge @(item.ScorePercent >= 90 ? "bg-success" : item.ScorePercent >= 80 ? "bg-primary" : item.ScorePercent >= 70 ? "bg-info" : "bg-secondary") px-2 py-1">
+                                                    @item.ScorePercent%
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted py-5">
+                                <span class="material-icons mb-2" style="font-size: 48px; opacity: 0.3;">inbox</span>
+                                <p class="mb-0">No approved initiatives yet</p>
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Lecturers -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                    <div class="card-header py-3 border-0 text-white" style="background: linear-gradient(135deg, #991b1b, #7f1d1d);">
+                        <div class="d-flex align-items-center">
+                            <span class="material-icons me-2">stars</span>
+                            <h5 class="mb-0 fw-bold">Top Lecturers</h5>
+                        </div>
+                        <small class="opacity-75">Ranked by approved initiatives count</small>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="lecturers-table-container">
+                        @if (leaderboard?.TopLecturers?.Any() == true)
+                        {
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-3" style="width: 50px;">#</th>
+                                        <th>Lecturer</th>
+                                        <th class="text-end pe-3" style="width: 100px;">Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in leaderboard.TopLecturers)
+                                    {
+                                        <tr class="@(item.Rank <= 3 ? "table-warning" : "")">
+                                            <td class="ps-3 fw-bold">
+                                                @if (item.Rank == 1)
+                                                {
+                                                    <span style="font-size: 1.2rem;">🥇</span>
+                                                }
+                                                else if (item.Rank == 2)
+                                                {
+                                                    <span style="font-size: 1.2rem;">🥈</span>
+                                                }
+                                                else if (item.Rank == 3)
+                                                {
+                                                    <span style="font-size: 1.2rem;">🥉</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">@item.Rank</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @if (!string.IsNullOrEmpty(item.AvatarUrl))
+                                                    {
+                                                        <img src="@item.AvatarUrl" class="rounded-circle me-2" width="32" height="32" alt="Avatar" style="object-fit: cover;" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                                                            @item.FullName.Substring(0, 1).ToUpper()
+                                                        </div>
+                                                    }
+                                                    <div>
+                                                        <div class="fw-semibold">@item.FullName</div>
+                                                        <small class="text-muted">@item.DepartmentName</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-end pe-3">
+                                                <span class="badge bg-danger px-2 py-1">
+                                                    @item.ApprovedCount initiatives
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div class="text-center text-muted py-5">
+                                <span class="material-icons mb-2" style="font-size: 48px; opacity: 0.3;">person_off</span>
+                                <p class="mb-0">No lecturers with approved initiatives yet</p>
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="mb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
@@ -83,27 +306,33 @@
 
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #450a0a, #111827);">
+                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #991b1b, #450a0a);">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                        <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">description</span>
+                        <div class="mb-2 rounded-3 p-3" style="background-color: #fbbf24;">
+                            <span class="material-icons" style="font-size: 2rem; color: #78350f;">description</span>
+                        </div>
                         <h5 class="fw-bold mb-1">Registration Forms</h5>
                         <p class="small opacity-75">Download necessary forms</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #1e3a8a, #0f172a);">
+                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #3b82f6, #1e3a8a);">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                        <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">insights</span>
+                        <div class="mb-2 rounded-3 p-3" style="background-color: #14b8a6;">
+                            <span class="material-icons" style="font-size: 2rem; color: #134e4a;">insights</span>
+                        </div>
                         <h5 class="fw-bold mb-1">Approval Process</h5>
                         <p class="small opacity-75">Steps from idea to execution</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #14532d, #064e3b);">
+                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #22c55e, #14532d);">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                        <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">inventory_2</span>
+                        <div class="mb-2 rounded-3 p-3" style="background-color: #f97316;">
+                            <span class="material-icons" style="font-size: 2rem; color: #7c2d12;">inventory_2</span>
+                        </div>
                         <h5 class="fw-bold mb-1">Initiative Bank</h5>
                         <p class="small opacity-75">Browse past initiatives</p>
                     </div>
@@ -121,3 +350,186 @@
         <span class="material-icons">chat</span>
     </a>
 </div>
+
+@section Scripts {
+    <script>
+        let currentYearId = null;
+        let currentPeriodId = null;
+
+        // Reset all filters to All-time
+        function resetFilters() {
+            currentYearId = null;
+            currentPeriodId = null;
+            
+            $('#btn-all-time').addClass('active');
+            $('#yearFilterBtn').text('Year: All').removeClass('active');
+            $('#periodFilterBtn').text('Period: All').addClass('disabled').removeClass('active');
+            $('#periodFilterList').html('<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'All\')">All</a></li>');
+            
+            loadData();
+        }
+
+        // Select Year handler
+        function selectYear(id, name) {
+            currentYearId = id;
+            currentPeriodId = null; // Reset period when year changes
+            
+            $('#btn-all-time').removeClass('active');
+            $('#yearFilterBtn').text('Year: ' + name).addClass('active');
+            $('#periodFilterBtn').text('Period: All').removeClass('active');
+            
+            if (id) {
+                // Fetch periods for selected year
+                $('#periodFilterBtn').removeClass('disabled');
+                
+                $.get('/Home/GetPeriods?yearId=' + id, function(data) {
+                    let html = '<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'All\')">All</a></li>';
+                    data.forEach(function(p) {
+                        html += `<li><a class="dropdown-item" href="#" onclick="selectPeriod(${p.id}, \'${p.name}\')">${p.name}</a></li>`;
+                    });
+                    $('#periodFilterList').html(html);
+                });
+            } else {
+                $('#periodFilterBtn').addClass('disabled');
+                $('#periodFilterList').html('<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'All\')">All</a></li>');
+            }
+            
+            loadData();
+        }
+
+        // Select Period handler
+        function selectPeriod(id, name) {
+            currentPeriodId = id;
+            
+            $('#periodFilterBtn').text('Period: ' + name);
+            if (id) {
+                $('#periodFilterBtn').addClass('active');
+            } else {
+                $('#periodFilterBtn').removeClass('active');
+            }
+            
+            loadData();
+        }
+
+        // Main data loader
+        function loadData() {
+            $.get('/Home/GetLeaderboardData', { yearId: currentYearId, periodId: currentPeriodId }, function(data) {
+                renderInitiatives(data.topInitiatives);
+                renderLecturers(data.topLecturers);
+            }).fail(function() {
+                alert("Error loading leaderboard data");
+            });
+        }
+
+        function renderInitiatives(items) {
+            if (!items || items.length === 0) {
+                $('#initiatives-table-container').html(`
+                    <div class="text-center text-muted py-5">
+                        <span class="material-icons mb-2" style="font-size: 48px; opacity: 0.3;">inbox</span>
+                        <p class="mb-0">No approved initiatives found</p>
+                    </div>`);
+                return;
+            }
+
+            let html = `
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3" style="width: 50px;">#</th>
+                            <th>Initiative</th>
+                            <th class="text-end pe-3" style="width: 100px;">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            items.forEach(item => {
+                let badgeClass = item.scorePercent >= 90 ? 'bg-success' : 
+                                 item.scorePercent >= 80 ? 'bg-primary' : 
+                                 item.scorePercent >= 70 ? 'bg-info' : 'bg-secondary';
+                
+                let rankDisplay = item.rank <= 3 ? 
+                    (item.rank === 1 ? '<span style="font-size: 1.2rem;">🥇</span>' : 
+                     item.rank === 2 ? '<span style="font-size: 1.2rem;">🥈</span>' : 
+                     '<span style="font-size: 1.2rem;">🥉</span>') : 
+                    `<span class="text-muted">${item.rank}</span>`;
+
+                let rowClass = item.rank <= 3 ? 'table-warning' : '';
+
+                html += `
+                    <tr class="${rowClass}">
+                        <td class="ps-3 fw-bold">${rankDisplay}</td>
+                        <td>
+                            <div class="fw-semibold text-truncate" style="max-width: 250px;" title="${item.title}">
+                                ${item.title}
+                            </div>
+                            <small class="text-muted">${item.authorName} • ${item.categoryName}</small>
+                        </td>
+                        <td class="text-end pe-3">
+                            <span class="badge ${badgeClass} px-2 py-1">${item.scorePercent}%</span>
+                        </td>
+                    </tr>`;
+            });
+
+            html += '</tbody></table>';
+            $('#initiatives-table-container').html(html);
+        }
+
+        function renderLecturers(items) {
+            if (!items || items.length === 0) {
+                $('#lecturers-table-container').html(`
+                    <div class="text-center text-muted py-5">
+                        <span class="material-icons mb-2" style="font-size: 48px; opacity: 0.3;">person_off</span>
+                        <p class="mb-0">No lecturers found</p>
+                    </div>`);
+                return;
+            }
+
+            let html = `
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3" style="width: 50px;">#</th>
+                            <th>Lecturer</th>
+                            <th class="text-end pe-3" style="width: 100px;">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            items.forEach(item => {
+                let rankDisplay = item.rank <= 3 ? 
+                    (item.rank === 1 ? '<span style="font-size: 1.2rem;">🥇</span>' : 
+                     item.rank === 2 ? '<span style="font-size: 1.2rem;">🥈</span>' : 
+                     '<span style="font-size: 1.2rem;">🥉</span>') : 
+                    `<span class="text-muted">${item.rank}</span>`;
+
+                let rowClass = item.rank <= 3 ? 'table-warning' : '';
+                
+                let avatarHtml = item.avatarUrl ? 
+                    `<img src="${item.avatarUrl}" class="rounded-circle me-2" width="32" height="32" style="object-fit: cover;" />` :
+                    `<div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                        ${item.fullName.charAt(0).toUpperCase()}
+                     </div>`;
+
+                html += `
+                    <tr class="${rowClass}">
+                        <td class="ps-3 fw-bold">${rankDisplay}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                ${avatarHtml}
+                                <div>
+                                    <div class="fw-semibold">${item.fullName}</div>
+                                    <small class="text-muted">${item.departmentName}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-end pe-3">
+                            <span class="badge bg-danger px-2 py-1">${item.approvedCount} initiatives</span>
+                        </td>
+                    </tr>`;
+            });
+
+            html += '</tbody></table>';
+            $('#lecturers-table-container').html(html);
+        }
+    </script>
+}

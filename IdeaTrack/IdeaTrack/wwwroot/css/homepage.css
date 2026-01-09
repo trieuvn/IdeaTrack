@@ -1,0 +1,184 @@
+/* ===============================================
+   HOMEPAGE-SPECIFIC STYLES
+   Only for pages using _Layout.cshtml (Home Controller)
+   =============================================== */
+
+/* ================= HERO SECTION (About Page) ================= */
+.hero-section {
+    background: linear-gradient(135deg, #1e3a8a, #3730a3);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+}
+
+/* ================= HERO BANNER (Homepage) ================= */
+.hero-banner {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.85), rgba(249, 115, 22, 0.85), rgba(236, 72, 153, 0.8)), url('/images/login-background.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    min-height: 400px;
+}
+
+.award-circle {
+    position: absolute;
+    right: 50px;
+    bottom: 20px;
+    width: 250px;
+    height: 250px;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    color: white;
+    text-align: center;
+}
+
+/* ================= FLOATING BUTTONS ================= */
+.floating-buttons {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-float {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+    transition: transform 0.3s;
+}
+
+.btn-float:hover {
+    transform: scale(1.1);
+    color: white;
+}
+
+/* ================= HOMEPAGE SIDEBAR ================= */
+/* White/light theme for Homepage sidebar */
+.sidebar {
+    width: 280px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 24px 16px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+    flex: 1;
+    padding: 16px 0;
+    overflow-y: auto;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    color: #4b5563;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border-left-color: #b91c1c;
+}
+
+.sidebar-nav .material-icons {
+    font-size: 20px;
+}
+
+/* User Profile Section */
+.user-profile-section {
+    padding: 16px 24px;
+    border-bottom: 1px solid #f3f4f6;
+    background: #ffffff;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f3f4f6;
+}
+
+/* Portal Button - Red accent */
+.btn-portal {
+    background-color: #b91c1c;
+    color: white !important;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+    text-decoration: none;
+}
+
+.btn-portal:hover {
+    background-color: #991b1b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(185, 28, 28, 0.2);
+    color: white;
+}
+
+/* Logout Button - Better contrast */
+.btn-logout {
+    background-color: #f9fafb;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.btn-logout:hover {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}

@@ -21,6 +21,7 @@
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/page.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/homepage.css" asp-append-version="true" />
 </head>
 
 <body>
@@ -36,14 +37,10 @@
     <div class="app-layout">
 
         <!-- SIDEBAR -->
-        <aside class="sidebar">
-
-            <!-- LOGIN -->
-            <div class="sidebar-header">
-                <div class="login-box">
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
+        <aside class="sidebar d-flex flex-column">
+            
+            <!-- U1. LOGIN / PROFILE (Moved to Top) -->
+            <partial name="_LoginPartial" />
 
             <!-- MENU -->
             <div class="sidebar-nav">
@@ -52,6 +49,10 @@
                    asp-action="Index"
                    class="@(currentController == "Home" && currentAction == "Index" ? "active" : "")">
                     <span class="material-icons">home</span> Home
+                </a>
+
+                <a href="/#leaderboard">
+                    <span class="material-icons">leaderboard</span> Leaderboard
                 </a>
 
                 <a asp-controller="Home"
@@ -67,6 +68,17 @@
                 </a>
 
             </div>
+
+            <!-- U3. PORTAL BUTTON (Fixed at Bottom) -->
+            @if (ViewBag.PortalUrl != null)
+            {
+                <div class="p-3 border-top mt-auto bg-white">
+                    <a href="@ViewBag.PortalUrl" class="btn-portal mb-0 w-100 text-decoration-none">
+                        <span class="material-icons" style="font-size: 18px;">dashboard</span>
+                        Go to @ViewBag.PortalName
+                    </a>
+                </div>
+            }
         </aside>
 
         <!-- MAIN -->

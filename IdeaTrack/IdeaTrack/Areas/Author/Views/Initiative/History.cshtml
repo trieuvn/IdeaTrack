@@ -61,49 +61,75 @@
         </div>
     </div>
 
-    <!-- History Table -->
-    <div class="card card-custom shadow-sm" style="border-radius: 15px;">
+    <!-- History Table with DataTables -->
+    <div class="card shadow-sm" style="border-radius: 15px; border: 1px solid rgba(37, 99, 235, 0.12);">
+        <div class="card-header bg-white py-3" style="border-radius: 15px 15px 0 0; border-bottom: 1px solid rgba(37, 99, 235, 0.1);">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-primary">
+                    <span class="material-icons align-middle me-2" style="font-size: 20px;">list_alt</span>
+                    Initiative List
+                </h5>
+                <a asp-controller="Initiative" asp-action="Create" class="btn btn-primary btn-sm rounded-pill px-3">
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">add</span> New Initiative
+                </a>
+            </div>
+        </div>
         <div class="card-body p-0">
             @if (Model.Any())
             {
-                <div class="table-responsive">
-                    <table class="table table-hover table-borderless align-middle mb-0">
+                <div class="table-responsive p-3">
+                    <table id="basic-datatables" class="display table table-striped table-hover align-middle" style="width:100%">
                         <thead class="table-light">
                             <tr>
-                                <th class="ps-4 py-3">Title</th>
-                                <th class="py-3">Category</th>
-                                <th class="py-3">Created Date</th>
-                                <th class="py-3">Status</th>
-                                <th class="pe-4 py-3 text-end">Actions</th>
+                                <th class="ps-3">
+                                    <span class="material-icons align-middle me-1" style="font-size: 16px;">title</span>
+                                    Title
+                                </th>
+                                <th>
+                                    <span class="material-icons align-middle me-1" style="font-size: 16px;">category</span>
+                                    Category
+                                </th>
+                                <th>
+                                    <span class="material-icons align-middle me-1" style="font-size: 16px;">event</span>
+                                    Created Date
+                                </th>
+                                <th>
+                                    <span class="material-icons align-middle me-1" style="font-size: 16px;">flag</span>
+                                    Status
+                                </th>
+                                <th class="text-end pe-3">
+                                    <span class="material-icons align-middle me-1" style="font-size: 16px;">settings</span>
+                                    Actions
+                                </th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Created Date</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </tfoot>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                var statusClass = item.Status switch
-                                {
-                                    IdeaTrack.Models.InitiativeStatus.Approved => "approved",
-                                    IdeaTrack.Models.InitiativeStatus.Rejected => "rejected",
-                                    IdeaTrack.Models.InitiativeStatus.Draft => "draft",
-                                    IdeaTrack.Models.InitiativeStatus.Pending => "pending",
-                                    _ => "pending"
-                                };
-
-                                <tr class="history-row" data-status="@statusClass">
-                                    <td class="ps-4">
-                                        <div class="fw-medium">@item.Title</div>
-                                        <div class="text-muted small text-truncate" style="max-width: 300px;">
-                                            @(string.IsNullOrEmpty(item.Description) ? "No description" : (item.Description.Length > 60 ? item.Description.Substring(0, 60) + "..." : item.Description))
+                                <tr>
+                                    <td class="ps-3">
+                                        <div class="fw-semibold text-dark">@item.Title</div>
+                                        <div class="text-muted small text-truncate" style="max-width: 280px;">
+                                            @(string.IsNullOrEmpty(item.Description) ? "No description" : (item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description))
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-light text-dark rounded-pill">
+                                        <span class="badge bg-light text-dark rounded-pill border">
                                             @(item.Category?.Name ?? "Uncategorized")
                                         </span>
                                     </td>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="material-icons text-muted me-1" style="font-size: 16px;">event</span>
+                                        <div class="d-flex align-items-center text-muted">
+                                            <span class="material-icons me-1" style="font-size: 14px;">calendar_today</span>
                                             @item.CreatedAt.ToString("dd/MM/yyyy")
                                         </div>
                                     </td>
@@ -111,43 +137,51 @@
                                         @switch (item.Status)
                                         {
                                             case IdeaTrack.Models.InitiativeStatus.Approved:
-                                                <span class="badge bg-success rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">check</span> Approved
+                                                <span class="badge bg-success rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">check_circle</span> Approved
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Rejected:
-                                                <span class="badge bg-danger rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">close</span> Rejected
+                                                <span class="badge bg-danger rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">cancel</span> Rejected
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Draft:
-                                                <span class="badge bg-secondary rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> Draft
+                                                <span class="badge bg-secondary rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">edit_note</span> Draft
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Pending:
                                             case IdeaTrack.Models.InitiativeStatus.Evaluating:
                                             case IdeaTrack.Models.InitiativeStatus.Faculty_Approved:
-                                                <span class="badge bg-warning text-dark rounded-pill">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 14px;">schedule</span> Pending
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">schedule</span> Pending
+                                                </span>
+                                                break;
+                                            case IdeaTrack.Models.InitiativeStatus.Revision_Required:
+                                                <span class="badge bg-info text-white rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">rate_review</span> Revision
                                                 </span>
                                                 break;
                                             default:
-                                                <span class="badge bg-light text-dark rounded-pill">@item.Status</span>
+                                                <span class="badge bg-light text-dark rounded-pill px-3 py-2">@item.Status</span>
                                                 break;
                                         }
                                     </td>
-                                    <td class="pe-4 text-end">
-                                        <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                            <span class="material-icons align-middle" style="font-size: 16px;">visibility</span> View
-                                        </a>
-                                        @if (item.Status == IdeaTrack.Models.InitiativeStatus.Draft)
-                                        {
-                                            <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary rounded-pill px-3 ms-1" title="Edit">
-                                                <span class="material-icons align-middle" style="font-size: 16px;">edit</span>
+                                    <td class="text-end pe-3">
+                                        <div class="btn-group" role="group">
+                                            <a asp-controller="Initiative" asp-action="Detail" asp-route-id="@item.Id" 
+                                               class="btn btn-sm btn-outline-primary rounded-start-pill" title="View Details">
+                                                <span class="material-icons" style="font-size: 16px;">visibility</span>
                                             </a>
-
-                                        }
+                                            @if (item.Status == IdeaTrack.Models.InitiativeStatus.Draft || item.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required)
+                                            {
+                                                <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@item.Id" 
+                                                   class="btn btn-sm btn-outline-secondary rounded-end-pill" title="Edit Initiative">
+                                                    <span class="material-icons" style="font-size: 16px;">edit</span>
+                                                </a>
+                                            }
+                                        </div>
                                     </td>
                                 </tr>
                             }
@@ -158,10 +192,12 @@
             else
             {
                 <div class="text-center py-5">
-                    <span class="material-icons text-muted" style="font-size: 80px;">inbox</span>
-                    <h5 class="text-muted mt-3">No initiatives found</h5>
+                    <div class="mb-3">
+                        <span class="material-icons text-muted" style="font-size: 80px;">inbox</span>
+                    </div>
+                    <h5 class="text-muted mb-2">No initiatives found</h5>
                     <p class="text-muted mb-4">Start by creating your first initiative</p>
-                    <a asp-controller="Initiative" asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                    <a asp-controller="Initiative" asp-action="Create" class="btn btn-primary rounded-pill px-4 py-2">
                         <span class="material-icons align-middle me-1">add_circle</span> Create New Initiative
                     </a>
                 </div>
@@ -171,30 +207,5 @@
 
 </main>
 
-@section Scripts {
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const tabs = document.querySelectorAll('#historyTabs .nav-link');
-        const rows = document.querySelectorAll('.history-row');
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Update active tab
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
 
-                const filter = this.dataset.filter;
-
-                // Filter rows
-                rows.forEach(row => {
-                    if (filter === 'all' || row.dataset.status === filter) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        });
-    });
-</script>
-}

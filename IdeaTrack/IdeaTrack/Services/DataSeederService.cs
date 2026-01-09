@@ -45,6 +45,7 @@ namespace IdeaTrack.Services
             
             // Expand data to 20+ rows per table for comprehensive testing
             await SeedExpandedDataAsync();
+            await SeedLeaderboardDataAsync();
 
             _logger.LogInformation("Data seeding completed!");
         }
@@ -651,6 +652,153 @@ namespace IdeaTrack.Services
             _logger.LogInformation("Ensured categories exist for all open periods");
             
             _logger.LogInformation("Expanded data seeding completed!");
+        }
+        /// <summary>
+        /// Seeds specific data for Leaderboard testing (Authors, Initiatives, Scores for 2023-2025)
+        /// </summary>
+        private async Task SeedLeaderboardDataAsync()
+        {
+            _logger.LogInformation("Seeding Leaderboard data...");
+
+            // 1. Ensure we have mock Authors
+            var authors = new List<ApplicationUser>();
+            for (int i = 1; i <= 10; i++)
+            {
+                var username = $"mock_author_{i}";
+                var user = await _userManager.FindByNameAsync(username);
+                if (user == null)
+                {
+                    user = new ApplicationUser
+                    {
+                        UserName = username,
+                        Email = $"{username}@uni.edu.vn",
+                        EmailConfirmed = true,
+                        FullName = $"Dr. Mock Author {i}",
+                        DepartmentId = await _context.Departments.Select(d => d.Id).OrderBy(r => Guid.NewGuid()).FirstOrDefaultAsync()
+                    };
+                    await _userManager.CreateAsync(user, "123456");
+                    await _userManager.AddToRolesAsync(user, new[] { "Author", "Lecturer" });
+                }
+                authors.Add(user);
+            }
+
+            // 2. Ensure Categories exist for target years
+            var targetYears = new[] { "2023-2024", "2024-2025", "2025-2026" };
+            var categories = new List<InitiativeCategory>();
+
+            foreach (var yearSuffix in targetYears)
+            {
+                var yearName = $"Academic Year {yearSuffix}";
+                var year = await _context.AcademicYears.FirstOrDefaultAsync(y => y.Name == yearName);
+                
+                // Create year if missing
+                if (year == null) 
+                {
+                    year = new AcademicYear { Name = yearName, IsCurrent = (yearSuffix == "2025-2026") };
+                    _context.AcademicYears.Add(year);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Create period if missing
+                var periodName = $"Mock Period {yearSuffix}";
+                var period = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.Name == periodName);
+                if (period == null)
+                {
+                    int startYear = int.Parse(yearSuffix.Split('-')[0]);
+                    period = new InitiativePeriod 
+                    { 
+                        Name = periodName, 
+                        AcademicYearId = year.Id,
+                        StartDate = new DateTime(startYear, 9, 1),
+                        EndDate = new DateTime(startYear + 1, 6, 30),
+                        IsActive = true
+                    };
+                    _context.InitiativePeriods.Add(period);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Create category if missing
+                var cat = await _context.InitiativeCategories.FirstOrDefaultAsync(c => c.PeriodId == period.Id);
+                if (cat == null)
+                {
+                    var board = await _context.Boards.FirstOrDefaultAsync();
+                    var template = await _context.EvaluationTemplates.FirstOrDefaultAsync();
+                    cat = new InitiativeCategory 
+                    { 
+                        Name = $"Mock Category {yearSuffix}", 
+                        PeriodId = period.Id,
+                        BoardId = board?.Id ?? 1,
+                        TemplateId = template?.Id ?? 1
+                    };
+                    _context.InitiativeCategories.Add(cat);
+                    await _context.SaveChangesAsync();
+                }
+                categories.Add(cat);
+            }
+
+            // 3. Create Initiatives with Final Results (Approved)
+            var random = new Random();
+            int createdCount = 0;
+
+            foreach (var cat in categories)
+            {
+                // Create 5-8 initiatives per period
+                int count = random.Next(5, 9);
+                for (int i = 0; i < count; i++)
+                {
+                    var author = authors[random.Next(authors.Count)];
+                    var title = $"Mock Initiative {cat.Name} #{i + 1}";
+                    
+                    if (!await _context.Initiatives.AnyAsync(x => x.Title == title))
+                    {
+                        var initiative = new Initiative
+                        {
+                            InitiativeCode = $"MOCK-{random.Next(1000, 9999)}",
+                            Title = title,
+                            Description = "Mock data for leaderboard testing",
+                            Status = InitiativeStatus.Approved,
+                            CreatorId = author.Id,
+                            DepartmentId = author.DepartmentId ?? 1,
+                            CategoryId = cat.Id,
+                            PeriodId = cat.PeriodId,
+                            SubmittedDate = DateTime.Now.AddMonths(-random.Next(1, 12))
+                        };
+                        _context.Initiatives.Add(initiative);
+                        await _context.SaveChangesAsync();
+
+                        // Add Authorship
+                        _context.InitiativeAuthorships.Add(new InitiativeAuthorship 
+                        { 
+                            InitiativeId = initiative.Id, 
+                            AuthorId = author.Id, 
+                            IsCreator = true 
+                        });
+
+                        // Add Final Result (CRITICAL for Leaderboard)
+                        decimal score = random.Next(65, 98); // Score between 65 and 98
+                        
+                        // We need a proper ChairmanId. Let's use the first available admin or creating user if no board member
+                        var chairman = await _userManager.FindByEmailAsync("council1@uni.edu.vn") 
+                                       ?? await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == "admin")
+                                       ?? author;
+
+                        _context.FinalResults.Add(new FinalResult
+                        {
+                            InitiativeId = initiative.Id,
+                            AverageScore = score,
+                            FinalScore = score,
+                            ChairmanDecision = "Approved", // Must be "Approved" to show
+                            Rank = score >= 90 ? "Excellent" : score >= 80 ? "Good" : "Fair",
+                            DecisionDate = DateTime.Now,
+                            ChairmanId = chairman.Id
+                        });
+
+                        createdCount++;
+                    }
+                }
+            }
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Seeded {createdCount} mock initiatives with scores for Leaderboard.");
         }
     }
 }

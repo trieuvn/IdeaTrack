@@ -86,6 +86,39 @@ namespace IdeaTrack.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
+        /// <summary>
+        /// Redirects the user to their role-specific profile page.
+        /// </summary>
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            // Redirect to role-specific profile page
+            if (roles.Contains("SciTech") || roles.Contains("OST_Admin"))
+            {
+                return RedirectToAction("Profile", "Port", new { area = "SciTech" });
+            }
+            if (roles.Contains("FacultyLeader") || roles.Contains("Faculty_Admin"))
+            {
+                return RedirectToAction("Profile", "Dashboard", new { area = "Faculty" });
+            }
+            if (roles.Contains("CouncilMember") || roles.Contains("Council_Member"))
+            {
+                return RedirectToAction("Profile", "Page", new { area = "Councils" });
+            }
+
+            // Default: Author portal profile
+            return RedirectToAction("Profile", "Dashboard", new { area = "Author" });
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

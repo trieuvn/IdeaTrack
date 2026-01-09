@@ -18,13 +18,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- CSS same as Home page -->
+    <!-- CSS - Shared layout + Author Portal specific -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/page.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/guildline.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/author-portal.css" asp-append-version="true" />
     
-    <!-- Additional Author CSS -->
-    <link href="@Url.Content("/css/dailyreport.css")" rel="stylesheet" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
 </head>
 
 <body>
@@ -96,6 +96,57 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    
+    <!-- DataTables Initialization (matching template basic-datatables style) -->
+    <script>
+        $(document).ready(function() {
+            if ($('#basic-datatables').length) {
+                var table = $('#basic-datatables').DataTable({
+                    "pageLength": 10,
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                    "language": {
+                        "search": "Search:",
+                        "lengthMenu": "Show _MENU_ entries",
+                        "info": "Showing _START_ to _END_ of _TOTAL_ entries",
+                        "infoEmpty": "No entries available",
+                        "infoFiltered": "(filtered from _MAX_ total entries)",
+                        "paginate": {
+                            "first": "First",
+                            "last": "Last",
+                            "next": "Next",
+                            "previous": "Previous"
+                        },
+                        "emptyTable": "No data available in table"
+                    },
+                    "order": [[2, "desc"]],
+                    "columnDefs": [
+                        { "orderable": false, "targets": 4 }
+                    ]
+                });
+                
+                // Filter tabs functionality - connect with DataTables
+                $('[data-filter]').on('click', function() {
+                    // Update active state
+                    $('[data-filter]').removeClass('active');
+                    $(this).addClass('active');
+                    
+                    var filterValue = $(this).data('filter');
+                    
+                    if (filterValue === 'all') {
+                        // Show all records
+                        table.column(3).search('').draw();
+                    } else {
+                        // Filter by status column (index 3)
+                        table.column(3).search(filterValue, false, true).draw();
+                    }
+                });
+            }
+        });
+    </script>
     
     <!-- Author specific scripts -->
     <script>
