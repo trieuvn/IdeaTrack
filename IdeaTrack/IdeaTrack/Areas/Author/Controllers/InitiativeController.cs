@@ -19,19 +19,22 @@ namespace IdeaTrack.Areas.Author.Controllers
         private readonly ILogger<InitiativeController> _logger;
         private readonly IInitiativeService _initiativeService;
         private readonly IFileService _fileService;
+        private readonly IAuditService _auditService;
 
         public InitiativeController(
             ApplicationDbContext context, 
             UserManager<ApplicationUser> userManager, 
             ILogger<InitiativeController> logger,
             IInitiativeService initiativeService,
-            IFileService fileService)
+            IFileService fileService,
+            IAuditService auditService)
         {
             _context = context;
             _userManager = userManager;
             _logger = logger;
             _initiativeService = initiativeService;
             _fileService = fileService;
+            _auditService = auditService;
         }
 
         // GET: /Author/Initiative/Detail/5
@@ -207,6 +210,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                     await _context.SaveChangesAsync();
 
                     _logger.LogInformation("Initiative {InitiativeCode} created successfully by user {UserId}", initiative.InitiativeCode, initiative.CreatorId);
+
+                    // Audit log: Record Create action
+                    await _auditService.LogAsync("Create", "Initiatives", initiative.Id, 
+                        $"Created initiative '{initiative.Title}' with code {initiative.InitiativeCode}");
 
                     // Handle file uploads using Service
                     _logger.LogInformation("[FileUpload] Checking for files. ProjectFiles is null: {IsNull}, Count: {Count}", 
@@ -472,6 +479,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                     await _context.SaveChangesAsync();
                     _logger.LogInformation("Initiative {InitiativeId} updated successfully", id);
 
+                    // Audit log: Record Update action
+                    await _auditService.LogAsync("Update", "Initiatives", id, 
+                        $"Updated initiative '{existingInitiative.Title}'");
+
                     if (action == "Submit")
                     {
                         TempData["SuccessMessage"] = "Initiative submitted successfully and pending review!";
@@ -617,6 +628,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                      _logger.LogWarning("Unauthorized delete attempt by user {UserId} on initiative {InitiativeId}", userId, id);
                      return Forbid();
                 }
+
+                // Audit log: Record Delete action BEFORE removing
+                await _auditService.LogAsync("Delete", "Initiatives", id, 
+                    $"Deleted initiative '{initiative.Title}' with code {initiative.InitiativeCode}");
 
                 _context.Initiatives.Remove(initiative);
                 await _context.SaveChangesAsync();

@@ -112,6 +112,45 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 TotalItems = totalItems
             };
 
+            // ==================== DASHBOARD STATS ====================
+            var today = DateTime.Today;
+            
+            // 1. Open Submission Periods count
+            var openPeriodsCount = _context.InitiativePeriods
+                .Count(p => p.StartDate <= today && today <= p.EndDate);
+            
+            // 2. Active Categories count
+            var activeCategoriesCount = _context.InitiativeCategories
+                .Where(c => c.Period.StartDate <= today && today <= c.Period.EndDate)
+                .Select(c => c.Id)
+                .Distinct()
+                .Count();
+            
+            // 3. Audit logs per day (last 7 days)
+            var startDate = today.AddDays(-6);
+            var auditLogsPerDay = _context.SystemAuditLogs
+                .Where(l => l.Timestamp >= startDate)
+                .AsEnumerable() // Switch to client-side for date grouping
+                .GroupBy(l => l.Timestamp.Date)
+                .Select(g => new { Date = g.Key, Count = g.Count() })
+                .ToDictionary(x => x.Date.ToString("yyyy-MM-dd"), x => x.Count);
+            
+            // Fill missing days with 0
+            var chartLabels = new List<string>();
+            var chartData = new List<int>();
+            for (int i = 6; i >= 0; i--)
+            {
+                var date = today.AddDays(-i);
+                var dateStr = date.ToString("yyyy-MM-dd");
+                chartLabels.Add(date.ToString("dd/MM"));
+                chartData.Add(auditLogsPerDay.ContainsKey(dateStr) ? auditLogsPerDay[dateStr] : 0);
+            }
+            
+            ViewBag.OpenPeriodsCount = openPeriodsCount;
+            ViewBag.ActiveCategoriesCount = activeCategoriesCount;
+            ViewBag.ChartLabels = chartLabels;
+            ViewBag.ChartData = chartData;
+
             return View(vm);
         }
 
