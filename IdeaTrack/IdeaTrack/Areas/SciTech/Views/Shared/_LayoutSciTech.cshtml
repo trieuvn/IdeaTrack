@@ -135,6 +135,11 @@
                    href="@Url.Action("Index", "User", new { area = "SciTech" })">
                     <i class="fa-solid fa-users-gear"></i> Users
                 </a>
+                
+                <a class="nav-link @(currentController == "Audit" ? "active" : "")"
+                   href="@Url.Action("Index", "Audit", new { area = "SciTech" })">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Nhật ký hệ thống
+                </a>
 
             </nav>
             
