@@ -64,11 +64,11 @@
                     <i class="bi bi-send-plus text-primary me-2"></i>Send Revision Request
                 </h5>
 
-                <form method="post" action="@Url.Action("SubmitRevision", "Dashboard", new { area = "Faculty" })">
+                <form method="post" action="@Url.Action("RequestRevision", "Dashboard", new { area = "Faculty" })">
                     @Html.AntiForgeryToken()
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Select Initiative</label>
-                        <select class="form-select bg-light" id="selectInitiative" onchange="autoFillLecturer()" name="initiativeId" required>
+                        <select class="form-select bg-light" id="selectInitiative" onchange="autoFillLecturer()" name="InitiativeId" required>
                             <option value="" data-lecturer="">-- Select --</option>
                             @if (ViewBag.DropdownList != null)
                             {
@@ -92,7 +92,7 @@
 
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Request Content / Reason</label>
-                        <textarea class="form-control" rows="5" name="content" placeholder="Enter detailed revision requirements..." required></textarea>
+                        <textarea class="form-control" rows="5" name="Comments" placeholder="Enter detailed revision requirements..." required></textarea>
                         <div class="form-text mt-2 small text-muted italic">
                             This request is mandatory before the record can be forwarded.
                         </div>
