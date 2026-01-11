@@ -313,17 +313,66 @@ namespace IdeaTrack.Services
 
         private async Task SeedReferenceFormsAsync()
         {
-            if (await _context.ReferenceForms.AnyAsync()) return;
-
             var period = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
             if (period == null) return;
 
-            _context.ReferenceForms.AddRange(
-                new ReferenceForm { PeriodId = period.Id, FileName = "Application Form.docx", Description = "Official application form", FileUrl = "https://example.com/form1.docx" },
-                new ReferenceForm { PeriodId = period.Id, FileName = "Proposal Writing Guide.pdf", Description = "Detailed guidelines", FileUrl = "https://example.com/guide.pdf" },
-                new ReferenceForm { PeriodId = period.Id, FileName = "Evaluation Criteria.pdf", Description = "Scoring criteria", FileUrl = "https://example.com/criteria.pdf" }
-            );
-            await _context.SaveChangesAsync();
+            // Ensure docs directory exists
+            var docsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "docs");
+            if (!Directory.Exists(docsPath))
+            {
+                Directory.CreateDirectory(docsPath);
+            }
+
+            // Create sample files if they don't exist
+            var sampleFiles = new[]
+            {
+                ("Form_M01_DangKy.docx", "docx", "Form M01 - Đơn đăng ký sáng kiến"),
+                ("Form_M02_MoTa.docx", "docx", "Form M02 - Mô tả chi tiết sáng kiến"),
+                ("Huong_Dan.pdf", "pdf", "Hướng dẫn viết và nộp sáng kiến"),
+                ("Tieu_Chi_Danh_Gia.pdf", "pdf", "Tiêu chí đánh giá sáng kiến")
+            };
+
+            foreach (var (fileName, fileType, formName) in sampleFiles)
+            {
+                var filePath = Path.Combine(docsPath, fileName);
+                if (!System.IO.File.Exists(filePath))
+                {
+                    // Create a simple sample file
+                    if (fileType == "docx")
+                    {
+                        // Create a simple text file renamed to docx (for demo purposes)
+                        await System.IO.File.WriteAllTextAsync(filePath, $"Sample content for {formName}");
+                    }
+                    else if (fileType == "pdf")
+                    {
+                        // Create a minimal PDF-like file for demo
+                        await System.IO.File.WriteAllTextAsync(filePath, $"%PDF-1.4\nSample {formName}");
+                    }
+                }
+            }
+
+            // Check for existing records with external URLs and update them
+            var existingForms = await _context.ReferenceForms.ToListAsync();
+            if (existingForms.Any(f => f.FileUrl.StartsWith("http")))
+            {
+                // Remove old records with external URLs
+                _context.ReferenceForms.RemoveRange(existingForms.Where(f => f.FileUrl.StartsWith("http")));
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Removed {Count} reference forms with external URLs", existingForms.Count(f => f.FileUrl.StartsWith("http")));
+            }
+
+            // Only add new records if we don't have enough local ones
+            if (!await _context.ReferenceForms.AnyAsync(f => !f.FileUrl.StartsWith("http")))
+            {
+                _context.ReferenceForms.AddRange(
+                    new ReferenceForm { PeriodId = period.Id, FormName = "Form M01 - Đơn đăng ký", FileName = "Form_M01_DangKy.docx", FileType = "docx", Description = "Đơn đăng ký sáng kiến chính thức", FileUrl = "docs/Form_M01_DangKy.docx" },
+                    new ReferenceForm { PeriodId = period.Id, FormName = "Form M02 - Mô tả sáng kiến", FileName = "Form_M02_MoTa.docx", FileType = "docx", Description = "Mẫu mô tả chi tiết sáng kiến", FileUrl = "docs/Form_M02_MoTa.docx" },
+                    new ReferenceForm { PeriodId = period.Id, FormName = "Hướng dẫn nộp sáng kiến", FileName = "Huong_Dan.pdf", FileType = "pdf", Description = "Hướng dẫn quy trình nộp sáng kiến", FileUrl = "docs/Huong_Dan.pdf" },
+                    new ReferenceForm { PeriodId = period.Id, FormName = "Tiêu chí đánh giá", FileName = "Tieu_Chi_Danh_Gia.pdf", FileType = "pdf", Description = "Tiêu chí chấm điểm sáng kiến", FileUrl = "docs/Tieu_Chi_Danh_Gia.pdf" }
+                );
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Seeded reference forms with local files");
+            }
         }
         
         /// <summary>

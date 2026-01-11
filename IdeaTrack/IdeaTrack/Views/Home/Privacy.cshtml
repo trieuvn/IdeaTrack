@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IdeaTrack.ViewModels.PrivacyViewModel
+@{
     ViewData["Title"] = "Initiative Submission Guide";
 }
 
@@ -152,6 +153,68 @@
         </div>
 
         <div class="col-lg-4">
+            <!-- Year/Period Filter Card -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-danger bg-opacity-10 p-2 rounded-3 me-3">
+                            <i class="bi bi-calendar-check text-danger fs-4"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">Select Period</h5>
+                    </div>
+                    <p class="small text-muted mb-3">Choose an academic year and period to view related documents.</p>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small text-muted text-uppercase fw-bold">Academic Year</label>
+                        <select class="form-select" id="yearSelect">
+                            @if (Model.AvailableYears.Any())
+                            {
+                                @foreach (var year in Model.AvailableYears)
+                                {
+                                    if (year.Id == Model.SelectedYearId)
+                                    {
+                                        <option value="@year.Id" selected>@year.Name @(year.IsCurrent ? "(Current)" : "")</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@year.Id">@year.Name @(year.IsCurrent ? "(Current)" : "")</option>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <option value="">No active years available</option>
+                            }
+                        </select>
+                    </div>
+                    
+                    <div class="mb-0">
+                        <label class="form-label small text-muted text-uppercase fw-bold">Initiative Period</label>
+                        <select class="form-select" id="periodSelect">
+                            @if (Model.AvailablePeriods.Any())
+                            {
+                                @foreach (var period in Model.AvailablePeriods)
+                                {
+                                    if (period.Id == Model.SelectedPeriodId)
+                                    {
+                                        <option value="@period.Id" selected>@period.Name @(period.IsActive ? "(Active)" : "")</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@period.Id">@period.Name @(period.IsActive ? "(Active)" : "")</option>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <option value="">No active periods</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support Documents Card -->
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center mb-3">
@@ -160,41 +223,81 @@
                         </div>
                         <h5 class="fw-bold mb-0">Support Documents</h5>
                     </div>
-                    <p class="small text-muted mb-4">Download the complete set of forms and detailed guides to prepare your submission offline.</p>
+                    <p class="small text-muted mb-3">
+                        @if (!string.IsNullOrEmpty(Model.SelectedPeriodName))
+                        {
+                            <span>Documents for: <strong class="text-danger">@Model.SelectedPeriodName</strong></span>
+                        }
+                        else
+                        {
+                            <span>Download forms and guides to prepare your submission.</span>
+                        }
+                    </p>
 
-                    <div class="list-group list-group-flush mb-4">
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center border-0 px-0 mb-2">
-                            <i class="bi bi-file-earmark-pdf-fill text-danger fs-4 me-3"></i>
-                            <div class="flex-grow-1">
-                                <div class="small fw-bold text-dark text-truncate">Detailed_Guidelines.pdf</div>
-                                <div class="text-muted" style="font-size: 11px;">2.4 MB</div>
+                    <div class="list-group list-group-flush mb-4" id="documentsList">
+                        @if (Model.ReferenceForms.Any())
+                        {
+                            @foreach (var form in Model.ReferenceForms)
+                            {
+                                var iconClass = form.FileType?.ToLower() switch
+                                {
+                                    "pdf" => "bi-file-earmark-pdf-fill text-danger",
+                                    "docx" or "doc" => "bi-file-earmark-word-fill text-primary",
+                                    "xlsx" or "xls" => "bi-file-earmark-excel-fill text-success",
+                                    _ => "bi-file-earmark-fill text-secondary"
+                                };
+                                
+                                <a asp-action="DownloadDocument" asp-route-id="@form.Id" class="list-group-item list-group-item-action d-flex align-items-center border-0 px-0 mb-2">
+                                    <i class="bi @iconClass fs-4 me-3"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="small fw-bold text-dark text-truncate">@form.FormName</div>
+                                        <div class="text-muted" style="font-size: 11px;">@(form.FileType?.ToUpper() ?? "FILE")</div>
+                                    </div>
+                                    <i class="bi bi-download text-muted"></i>
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="bi bi-folder-x text-muted" style="font-size: 48px;"></i>
+                                <p class="text-muted mt-2 mb-0">No documents available for this period.</p>
                             </div>
-                            <i class="bi bi-download text-muted"></i>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action d-flex align-items-center border-0 px-0 mb-2">
-                            <i class="bi bi-file-earmark-word-fill text-primary fs-4 me-3"></i>
-                            <div class="flex-grow-1">
-                                <div class="small fw-bold text-dark text-truncate">Form_M01_Registration...</div>
-                                <div class="text-muted" style="font-size: 11px;">156 KB</div>
-                            </div>
-                            <i class="bi bi-download text-muted"></i>
-                        </a>
+                        }
                     </div>
 
-                    <button class="btn btn-outline-danger w-100 rounded-pill fw-bold py-2">
-                        Download All (.zip)
-                    </button>
+                    @if (Model.ReferenceForms.Any() && Model.SelectedPeriodId.HasValue)
+                    {
+                        <a asp-action="DownloadAllDocuments" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-outline-danger w-100 rounded-pill fw-bold py-2">
+                            <i class="bi bi-file-earmark-zip me-2"></i>Download All (.zip)
+                        </a>
+                    }
                 </div>
             </div>
 
+            <!-- Current Status Card -->
             <div class="card border-0 shadow-sm rounded-4 mb-4 bg-danger bg-opacity-10">
                 <div class="card-body p-4">
                     <h6 class="fw-bold text-danger text-uppercase small mb-3">Current Status</h6>
-                    <div class="d-flex align-items-center mb-3">
-                        <span class="badge bg-success p-2 me-2 ripple-animation">●</span>
-                        <span class="fw-bold text-dark">Accepting Period 2 Submissions</span>
-                    </div>
-                    <p class="small text-muted mb-0">Deadline: <strong>30/04/2024</strong> (12 days remaining)</p>
+                    @if (Model.ActivePeriodInfo != null)
+                    {
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-success p-2 me-2 ripple-animation">●</span>
+                            <span class="fw-bold text-dark">@Model.ActivePeriodInfo.PeriodName</span>
+                        </div>
+                        <p class="small text-muted mb-0">
+                            Deadline: <strong>@Model.ActivePeriodInfo.EndDate.ToString("dd/MM/yyyy")</strong> 
+                            (@Model.ActivePeriodInfo.DaysRemaining days remaining)
+                        </p>
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-secondary p-2 me-2">●</span>
+                            <span class="fw-bold text-dark">No Active Period</span>
+                        </div>
+                        <p class="small text-muted mb-0">There is no submission period currently open.</p>
+                    }
                 </div>
             </div>
 
@@ -227,3 +330,20 @@
         </div>
     </div>
 </main>
+
+@section Scripts {
+<script>
+    document.getElementById('yearSelect').addEventListener('change', function() {
+        var yearId = this.value;
+        // Redirect to reload page with new year
+        window.location.href = '@Url.Action("Privacy")' + '?yearId=' + yearId;
+    });
+
+    document.getElementById('periodSelect').addEventListener('change', function() {
+        var periodId = this.value;
+        var yearId = document.getElementById('yearSelect').value;
+        // Redirect to reload page with selected period
+        window.location.href = '@Url.Action("Privacy")' + '?yearId=' + yearId + '&periodId=' + periodId;
+    });
+</script>
+}

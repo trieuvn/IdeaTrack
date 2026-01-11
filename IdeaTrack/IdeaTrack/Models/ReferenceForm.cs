@@ -38,7 +38,7 @@ namespace IdeaTrack.Models
         public string FormName { get; set; } = "";
         
         /// <summary>
-        /// Full URL to file in cloud storage (Supabase/Azure)
+        /// Full URL to file wwwroot
         /// </summary>
         public string FileUrl { get; set; } = "";
         
