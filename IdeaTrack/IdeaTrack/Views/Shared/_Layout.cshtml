@@ -47,11 +47,13 @@
 
                 <a asp-controller="Home"
                    asp-action="Index"
+                   id="nav-home"
                    class="@(currentController == "Home" && currentAction == "Index" ? "active" : "")">
                     <span class="material-icons">home</span> Home
                 </a>
 
-                <a href="/#leaderboard">
+                <a href="/#leaderboard-section"
+                   id="nav-leaderboard">
                     <span class="material-icons">leaderboard</span> Leaderboard
                 </a>
 
@@ -93,6 +95,47 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Only run on Home/Index page
+            if (window.location.pathname === '/' || window.location.pathname.toLowerCase() === '/home/index' || window.location.pathname.toLowerCase() === '/home') {
+                const navHome = document.getElementById('nav-home');
+                const navLeaderboard = document.getElementById('nav-leaderboard');
+                const leaderboardSection = document.getElementById('leaderboard-section');
+
+                function updateActiveState() {
+                    if (!leaderboardSection) return;
+
+                    const rect = leaderboardSection.getBoundingClientRect();
+                    // Check if leaderboard section is largely in view or scrolled past header
+                    // Use a threshold: if top of leaderboard is within top 50% of viewport
+                    const isLeaderboardActive = (rect.top <= window.innerHeight / 2);
+
+                    if (isLeaderboardActive) {
+                        navHome.classList.remove('active');
+                        navLeaderboard.classList.add('active');
+                    } else {
+                        navLeaderboard.classList.remove('active');
+                        navHome.classList.add('active');
+                    }
+                }
+
+                // Initial check
+                updateActiveState();
+
+                // Listen on scroll
+                window.addEventListener('scroll', updateActiveState);
+                
+                // Handle click on Leaderboard link to ensure smooth active update
+                if (navLeaderboard) {
+                    navLeaderboard.addEventListener('click', function() {
+                        // Allow default anchor jump, but force update state slightly delayed to handle smooth scroll
+                        setTimeout(updateActiveState, 100);
+                    });
+                }
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

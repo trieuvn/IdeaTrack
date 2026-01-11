@@ -233,8 +233,6 @@ namespace IdeaTrack.Controllers
                 return RedirectToAction(nameof(Privacy));
             }
 
-            _logger.LogInformation("Attempting to download document: {FormName}, FileUrl: {FileUrl}", form.FormName, form.FileUrl);
-
             // Handle external URLs (http/https)
             if (form.FileUrl.StartsWith("http://") || form.FileUrl.StartsWith("https://"))
             {
@@ -250,8 +248,6 @@ namespace IdeaTrack.Controllers
             // 2. Full path starting with wwwroot
             var cleanUrl = form.FileUrl.TrimStart('~').TrimStart('/').Replace('\\', '/');
             localPath = Path.Combine(wwwrootPath, cleanUrl);
-
-            _logger.LogInformation("Resolved local path: {LocalPath}", localPath);
 
             if (!System.IO.File.Exists(localPath))
             {
@@ -278,9 +274,6 @@ namespace IdeaTrack.Controllers
                 {
                     downloadFileName += "." + extension;
                 }
-
-                _logger.LogInformation("Serving file: {FileName}, ContentType: {ContentType}, Size: {Size} bytes", 
-                    downloadFileName, contentType, fileBytes.Length);
 
                 return File(fileBytes, contentType, downloadFileName);
             }
@@ -313,17 +306,35 @@ namespace IdeaTrack.Controllers
             using var memoryStream = new MemoryStream();
             using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
             {
+                var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
                 foreach (var form in forms)
                 {
                     if (string.IsNullOrEmpty(form.FileUrl)) continue;
 
                     // Handle local files
-                    if (!form.FileUrl.StartsWith("http"))
+                    if (!form.FileUrl.StartsWith("http://") && !form.FileUrl.StartsWith("https://"))
                     {
-                        var localPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", form.FileUrl.TrimStart('/'));
+                        // Use consistent path resolution logic
+                        var cleanUrl = form.FileUrl.TrimStart('~').TrimStart('/').Replace('\\', '/');
+                        var localPath = Path.Combine(wwwrootPath, cleanUrl);
+
                         if (System.IO.File.Exists(localPath))
                         {
-                            var entry = archive.CreateEntry(form.FileName ?? form.FormName);
+                            // Ensure unique entry names in zip
+                            var entryName = form.FileName ?? form.FormName;
+                            if (string.IsNullOrEmpty(Path.GetExtension(entryName)))
+                            {
+                                entryName += Path.GetExtension(localPath);
+                            }
+
+                            // Check if entry already exists
+                            if (archive.Entries.Any(e => e.FullName == entryName))
+                            {
+                                entryName = $"{Path.GetFileNameWithoutExtension(entryName)}_{Guid.NewGuid().ToString().Substring(0, 4)}{Path.GetExtension(entryName)}";
+                            }
+
+                            var entry = archive.CreateEntry(entryName);
                             using var entryStream = entry.Open();
                             using var fileStream = System.IO.File.OpenRead(localPath);
                             await fileStream.CopyToAsync(entryStream);
@@ -355,71 +366,6 @@ namespace IdeaTrack.Controllers
             return View();
         }
 
-        /*
-        /// <summary>
-        /// Admin action to reset reference forms data for testing
-        /// </summary>
-        [HttpGet]
-        public async Task<IActionResult> ResetReferenceForms()
-        {
-            try
-            {
-                // Get the first active period
-                var period = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
-                if (period == null)
-                {
-                    return Content("No active period found.");
-                }
 
-                // Delete all existing reference forms
-                var existingForms = await _context.ReferenceForms.ToListAsync();
-                if (existingForms.Any())
-                {
-                    _context.ReferenceForms.RemoveRange(existingForms);
-                    await _context.SaveChangesAsync();
-                    _logger.LogInformation("Deleted {Count} reference forms", existingForms.Count);
-                }
-
-                // Ensure docs directory exists
-                var docsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "docs");
-                if (!Directory.Exists(docsPath))
-                {
-                    Directory.CreateDirectory(docsPath);
-                }
-
-                // Create sample DOCX files (simple text content)
-                var docxContent1 = "Form M01 - Đơn đăng ký sáng kiến\n\nHọ và tên: ________________\nĐơn vị: ________________\nTên sáng kiến: ________________\n\nNội dung sáng kiến:\n________________\n________________\n________________\n\nChữ ký: ________________";
-                var docxContent2 = "Form M02 - Mô tả chi tiết sáng kiến\n\n1. Tên sáng kiến: ________________\n\n2. Lĩnh vực áp dụng: ________________\n\n3. Mô tả chi tiết:\n________________\n________________\n________________\n\n4. Hiệu quả mang lại:\n________________\n________________";
-
-                await System.IO.File.WriteAllTextAsync(Path.Combine(docsPath, "Form_M01_DangKy.docx"), docxContent1);
-                await System.IO.File.WriteAllTextAsync(Path.Combine(docsPath, "Form_M02_MoTa.docx"), docxContent2);
-
-                // Create simple PDF files (text content for testing)
-                var pdfContent1 = "%PDF-1.4\n1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n2 0 obj << /Type /Pages /Kids [] /Count 0 >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n\nHướng dẫn nộp sáng kiến - Tài liệu hướng dẫn quy trình nộp và đánh giá sáng kiến.";
-                var pdfContent2 = "%PDF-1.4\n1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n2 0 obj << /Type /Pages /Kids [] /Count 0 >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n\nTiêu chí đánh giá sáng kiến - Bảng tiêu chí chấm điểm và xếp loại sáng kiến.";
-
-                await System.IO.File.WriteAllTextAsync(Path.Combine(docsPath, "Huong_Dan.pdf"), pdfContent1);
-                await System.IO.File.WriteAllTextAsync(Path.Combine(docsPath, "Tieu_Chi_Danh_Gia.pdf"), pdfContent2);
-
-                // Add new reference forms with correct paths
-                _context.ReferenceForms.AddRange(
-                    new ReferenceForm { PeriodId = period.Id, FormName = "Form M01 - Đơn đăng ký", FileName = "Form_M01_DangKy.docx", FileType = "docx", Description = "Đơn đăng ký sáng kiến chính thức", FileUrl = "docs/Form_M01_DangKy.docx" },
-                    new ReferenceForm { PeriodId = period.Id, FormName = "Form M02 - Mô tả sáng kiến", FileName = "Form_M02_MoTa.docx", FileType = "docx", Description = "Mẫu mô tả chi tiết sáng kiến", FileUrl = "docs/Form_M02_MoTa.docx" },
-                    new ReferenceForm { PeriodId = period.Id, FormName = "Hướng dẫn nộp sáng kiến", FileName = "Huong_Dan.pdf", FileType = "pdf", Description = "Hướng dẫn quy trình nộp sáng kiến", FileUrl = "docs/Huong_Dan.pdf" },
-                    new ReferenceForm { PeriodId = period.Id, FormName = "Tiêu chí đánh giá", FileName = "Tieu_Chi_Danh_Gia.pdf", FileType = "pdf", Description = "Tiêu chí chấm điểm sáng kiến", FileUrl = "docs/Tieu_Chi_Danh_Gia.pdf" }
-                );
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Reset reference forms for period {PeriodId}: {PeriodName}", period.Id, period.Name);
-
-                return Content($"Successfully reset reference forms for period: {period.Name} (ID: {period.Id}). Created 4 documents in wwwroot/docs/");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error resetting reference forms");
-                return Content($"Error: {ex.Message}");
-            }
-        }
-        */
     }
 }
