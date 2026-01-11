@@ -2,6 +2,28 @@
 
 <main class="container py-5">
 
+    <!-- Toast Container for notifications -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <span class="material-icons align-middle me-2">check_circle</span>
+                    <span id="toastMessage">Changes saved successfully!</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <span class="material-icons align-middle me-2">error</span>
+                    <span id="errorToastMessage">An error occurred!</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero-section text-white p-5 mb-5 shadow-lg">
         <div class="row align-items-center">
@@ -9,7 +31,7 @@
                 <span class="badge rounded-pill bg-white bg-opacity-25 mb-3 p-2 px-3">
                     <span class="material-icons align-middle me-1" style="font-size: 16px;">settings</span> ACCOUNT SETTINGS
                 </span>
-                <h1 class="fw-bold display-5 mb-3">Hello, @Model.FullName!</h1>
+                <h1 class="fw-bold display-5 mb-3">Hello, <span id="displayFullName">@Model.FullName</span>!</h1>
                 <p class="fs-5 mb-0 opacity-75">
                     Manage your personal information and customize your system settings.
                 </p>
@@ -47,22 +69,19 @@
                             </div>
                         }
                     </div>
-                    <h4 class="fw-bold mb-1">@Model.FullName</h4>
-                    <p class="text-muted mb-3">@(Model.Position ?? "Lecturer")</p>
+                    <h4 class="fw-bold mb-1" id="profileFullName">@Model.FullName</h4>
+                    <p class="text-muted mb-3" id="profilePosition">@(Model.Position ?? "Lecturer")</p>
                     
-                    @if (!string.IsNullOrEmpty(Model.AcademicRank) || !string.IsNullOrEmpty(Model.Degree))
-                    {
-                        <div class="d-flex justify-content-center gap-2 mb-3">
-                            @if (!string.IsNullOrEmpty(Model.AcademicRank))
-                            {
-                                <span class="badge bg-primary rounded-pill">@Model.AcademicRank</span>
-                            }
-                            @if (!string.IsNullOrEmpty(Model.Degree))
-                            {
-                                <span class="badge bg-success rounded-pill">@Model.Degree</span>
-                            }
-                        </div>
-                    }
+                    <div class="d-flex justify-content-center gap-2 mb-3" id="profileBadges">
+                        @if (!string.IsNullOrEmpty(Model.AcademicRank))
+                        {
+                            <span class="badge bg-primary rounded-pill" id="badgeAcademicRank">@Model.AcademicRank</span>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Degree))
+                        {
+                            <span class="badge bg-success rounded-pill" id="badgeDegree">@Model.Degree</span>
+                        }
+                    </div>
 
                     <hr>
 
@@ -126,7 +145,7 @@
                                 <small class="text-muted">Update your login password</small>
                             </div>
                         </div>
-                        <button class="btn btn-outline-warning rounded-pill px-3">
+                        <button class="btn btn-outline-warning rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                             <span class="material-icons align-middle" style="font-size: 18px;">vpn_key</span> Change
                         </button>
                     </div>
@@ -200,7 +219,8 @@
                                 <small class="text-muted">Sign out of current account</small>
                             </div>
                         </div>
-                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post">
+                        <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                            @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-danger rounded-pill px-4">
                                 <span class="material-icons align-middle me-1" style="font-size: 18px;">power_settings_new</span> Logout
                             </button>
@@ -226,30 +246,58 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="editProfileForm">
                     <div class="mb-3">
                         <label class="form-label">Full Name</label>
-                        <input type="text" class="form-control" value="@Model.FullName">
+                        <input type="text" class="form-control" id="editFullName" value="@Model.FullName" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Position</label>
-                        <input type="text" class="form-control" value="@Model.Position">
+                        <input type="text" class="form-control" id="editPosition" value="@Model.Position" placeholder="e.g., Lecturer, Senior Lecturer">
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Academic Rank</label>
-                            <select class="form-select" id="academicRankSelect">
+                            <select class="form-select" id="editAcademicRank">
                                 <option value="">-- Select --</option>
-                                <option value="PGS" selected="@(Model.AcademicRank == "PGS")">PGS</option>
-                                <option value="GS" selected="@(Model.AcademicRank == "GS")">GS</option>
+                                @if (Model.AcademicRank == "PGS")
+                                {
+                                    <option value="PGS" selected>PGS</option>
+                                }
+                                else
+                                {
+                                    <option value="PGS">PGS</option>
+                                }
+                                @if (Model.AcademicRank == "GS")
+                                {
+                                    <option value="GS" selected>GS</option>
+                                }
+                                else
+                                {
+                                    <option value="GS">GS</option>
+                                }
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Degree</label>
-                            <select class="form-select" id="degreeSelect">
+                            <select class="form-select" id="editDegree">
                                 <option value="">-- Select --</option>
-                                <option value="Master" selected="@(Model.Degree == "Th?c si")">Master</option>
-                                <option value="PhD" selected="@(Model.Degree == "Ti?n si")">PhD</option>
+                                @if (Model.Degree == "ThS")
+                                {
+                                    <option value="ThS" selected>Thạc sĩ (ThS)</option>
+                                }
+                                else
+                                {
+                                    <option value="ThS">Thạc sĩ (ThS)</option>
+                                }
+                                @if (Model.Degree == "TS")
+                                {
+                                    <option value="TS" selected>Tiến sĩ (TS)</option>
+                                }
+                                else
+                                {
+                                    <option value="TS">Tiến sĩ (TS)</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -257,8 +305,202 @@
             </div>
             <div class="modal-footer border-0 pt-0">
                 <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger rounded-pill px-4">Save Changes</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4" id="btnSaveProfile" onclick="saveProfile()">
+                    <span class="spinner-border spinner-border-sm d-none" id="saveSpinner"></span>
+                    Save Changes
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">
+                    <span class="material-icons align-middle me-2 text-warning">vpn_key</span>
+                    Change Password
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm">
+                    <div class="mb-3">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" class="form-control" id="currentPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="newPassword" required minlength="6">
+                        <small class="text-muted">Minimum 6 characters</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" required>
+                        <div class="invalid-feedback" id="passwordMatchError">Passwords do not match</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning rounded-pill px-4" id="btnChangePassword" onclick="changePassword()">
+                    <span class="spinner-border spinner-border-sm d-none" id="passwordSpinner"></span>
+                    Change Password
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // Save Profile function with AJAX
+    function saveProfile() {
+        var fullName = document.getElementById('editFullName').value.trim();
+        var position = document.getElementById('editPosition').value.trim();
+        var academicRank = document.getElementById('editAcademicRank').value;
+        var degree = document.getElementById('editDegree').value;
+
+        if (!fullName) {
+            showError('Full name is required');
+            return;
+        }
+
+        // Show spinner
+        document.getElementById('saveSpinner').classList.remove('d-none');
+        document.getElementById('btnSaveProfile').disabled = true;
+
+        fetch('@Url.Action("UpdateProfile", "HomePage", new { area = "Author" })', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+            },
+            body: JSON.stringify({
+                fullName: fullName,
+                position: position,
+                academicRank: academicRank,
+                degree: degree
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('saveSpinner').classList.add('d-none');
+            document.getElementById('btnSaveProfile').disabled = false;
+
+            if (data.success) {
+                // Update UI without reload
+                document.getElementById('displayFullName').textContent = fullName;
+                document.getElementById('profileFullName').textContent = fullName;
+                document.getElementById('profilePosition').textContent = position || 'Lecturer';
+                
+                // Update badges
+                var badgesContainer = document.getElementById('profileBadges');
+                badgesContainer.innerHTML = '';
+                if (academicRank) {
+                    badgesContainer.innerHTML += '<span class="badge bg-primary rounded-pill">' + academicRank + '</span>';
+                }
+                if (degree) {
+                    badgesContainer.innerHTML += '<span class="badge bg-success rounded-pill">' + degree + '</span>';
+                }
+
+                // Close modal
+                var modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+                modal.hide();
+
+                // Show success toast
+                showSuccess('Profile updated successfully!');
+            } else {
+                showError(data.message || 'Failed to update profile');
+            }
+        })
+        .catch(error => {
+            document.getElementById('saveSpinner').classList.add('d-none');
+            document.getElementById('btnSaveProfile').disabled = false;
+            console.error('Error:', error);
+            showError('An error occurred. Please try again.');
+        });
+    }
+
+    // Change Password function with AJAX
+    function changePassword() {
+        var currentPassword = document.getElementById('currentPassword').value;
+        var newPassword = document.getElementById('newPassword').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+
+        // Validation
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            showError('All fields are required');
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            showError('New password must be at least 6 characters');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            document.getElementById('confirmPassword').classList.add('is-invalid');
+            return;
+        }
+
+        document.getElementById('confirmPassword').classList.remove('is-invalid');
+
+        // Show spinner
+        document.getElementById('passwordSpinner').classList.remove('d-none');
+        document.getElementById('btnChangePassword').disabled = true;
+
+        fetch('@Url.Action("ChangePassword", "HomePage", new { area = "Author" })', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+            },
+            body: JSON.stringify({
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('passwordSpinner').classList.add('d-none');
+            document.getElementById('btnChangePassword').disabled = false;
+
+            if (data.success) {
+                // Clear form
+                document.getElementById('changePasswordForm').reset();
+                
+                // Close modal
+                var modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+                modal.hide();
+
+                // Show success toast
+                showSuccess('Password changed successfully!');
+            } else {
+                showError(data.message || 'Failed to change password');
+            }
+        })
+        .catch(error => {
+            document.getElementById('passwordSpinner').classList.add('d-none');
+            document.getElementById('btnChangePassword').disabled = false;
+            console.error('Error:', error);
+            showError('An error occurred. Please try again.');
+        });
+    }
+
+    // Toast notification functions
+    function showSuccess(message) {
+        document.getElementById('toastMessage').textContent = message;
+        var toast = new bootstrap.Toast(document.getElementById('successToast'));
+        toast.show();
+    }
+
+    function showError(message) {
+        document.getElementById('errorToastMessage').textContent = message;
+        var toast = new bootstrap.Toast(document.getElementById('errorToast'));
+        toast.show();
+    }
+</script>
+}

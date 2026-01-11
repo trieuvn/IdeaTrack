@@ -2,6 +2,7 @@
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +14,13 @@ namespace IdeaTrack.Areas.Author.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<HomePage> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomePage(ApplicationDbContext context, ILogger<HomePage> logger)
+        public HomePage(ApplicationDbContext context, ILogger<HomePage> logger, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _logger = logger;
+            _userManager = userManager;
         }
 
 
@@ -112,20 +115,25 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             try
             {
-                // Temporarily get first user (should use authenticated user in production)
-                var user = await _context.Users
-                    .Include(u => u.Department)
-                    .FirstOrDefaultAsync();
+                // Get the authenticated user
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction("Index", "Dashboard");
+                }
+
+                // Load department info
+                await _context.Entry(user).Reference(u => u.Department).LoadAsync();
 
                 var viewModel = new SettingViewModel
                 {
-                    FullName = user?.FullName ?? "Guest",
-                    Email = user?.Email ?? "",
-                    AvatarUrl = user?.AvatarUrl,
-                    Position = user?.Position,
-                    Department = user?.Department?.Name,
-                    AcademicRank = user?.AcademicRank,
-                    Degree = user?.Degree,
+                    FullName = user.FullName ?? "Guest",
+                    Email = user.Email ?? "",
+                    AvatarUrl = user.AvatarUrl,
+                    Position = user.Position,
+                    Department = user.Department?.Name,
+                    AcademicRank = user.AcademicRank,
+                    Degree = user.Degree,
                     NotificationsEnabled = true,
                     EmailAlertsEnabled = false
                 };
@@ -147,6 +155,76 @@ namespace IdeaTrack.Areas.Author.Controllers
                 };
                 
                 return View(emptyViewModel);
+            }
+        }
+
+        // POST: /Author/HomePage/UpdateProfile (AJAX)
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return Json(new { success = false, message = "User not found" });
+                }
+
+                // Update user properties
+                user.FullName = request.FullName;
+                user.Position = request.Position;
+                user.AcademicRank = request.AcademicRank;
+                user.Degree = request.Degree;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User {UserId} updated profile successfully", user.Id);
+                    return Json(new { success = true, message = "Profile updated successfully" });
+                }
+                else
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    _logger.LogWarning("Failed to update profile for user {UserId}: {Errors}", user.Id, errors);
+                    return Json(new { success = false, message = errors });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating profile");
+                return Json(new { success = false, message = "An error occurred while updating profile" });
+            }
+        }
+
+        // POST: /Author/HomePage/ChangePassword (AJAX)
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return Json(new { success = false, message = "User not found" });
+                }
+
+                var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User {UserId} changed password successfully", user.Id);
+                    return Json(new { success = true, message = "Password changed successfully" });
+                }
+                else
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    _logger.LogWarning("Failed to change password for user {UserId}: {Errors}", user.Id, errors);
+                    return Json(new { success = false, message = errors });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error changing password");
+                return Json(new { success = false, message = "An error occurred while changing password" });
             }
         }
 
