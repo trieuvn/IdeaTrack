@@ -44,8 +44,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 InitiativeStatus.Evaluating, 
                 InitiativeStatus.Re_Evaluating, 
                 InitiativeStatus.Pending_Final, 
-                InitiativeStatus.Approved, 
-                InitiativeStatus.Rejected 
+                InitiativeStatus.Approved 
             };
 
             var query = _context.Initiatives
@@ -115,27 +114,27 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             // ==================== DASHBOARD STATS ====================
             var today = DateTime.Today;
             
-            // 1. Open Submission Periods count
-            var openPeriodsCount = _context.InitiativePeriods
-                .Count(p => p.StartDate <= today && today <= p.EndDate);
+            // 1. Calculate specific counts requested
+            var allRelevantInitiatives = _context.Initiatives
+                .Where(i => allowedStatuses.Contains(i.Status)) // Optimization: only query relevant range
+                .Select(i => i.Status)
+                .ToList(); // Determine in memory or DB? List is better for multiple counts if smallset, or use separate counts.
+                           // Actually, given constraints, separate DB counts are safer for large datasets, but efficient enough here.
             
-            // 2. Active Categories count
-            var activeCategoriesCount = _context.InitiativeCategories
-                .Where(c => c.Period.StartDate <= today && today <= c.Period.EndDate)
-                .Select(c => c.Id)
-                .Distinct()
-                .Count();
-            
-            // 3. Audit logs per day (last 7 days)
+            // Use Direct DB counts for accuracy
+            ViewBag.FacultyApprovedCount = _context.Initiatives.Count(i => i.Status == InitiativeStatus.Faculty_Approved);
+            ViewBag.EvaluatingCount = _context.Initiatives.Count(i => i.Status == InitiativeStatus.Evaluating || i.Status == InitiativeStatus.Re_Evaluating);
+            ViewBag.PendingFinalCount = _context.Initiatives.Count(i => i.Status == InitiativeStatus.Pending_Final);
+
+            // 3. Audit logs per day (last 7 days) - Keeping existing chart logic as requested 'Update Statistics *Cards*' not chart removal.
             var startDate = today.AddDays(-6);
             var auditLogsPerDay = _context.SystemAuditLogs
                 .Where(l => l.Timestamp >= startDate)
-                .AsEnumerable() // Switch to client-side for date grouping
+                .AsEnumerable()
                 .GroupBy(l => l.Timestamp.Date)
                 .Select(g => new { Date = g.Key, Count = g.Count() })
                 .ToDictionary(x => x.Date.ToString("yyyy-MM-dd"), x => x.Count);
             
-            // Fill missing days with 0
             var chartLabels = new List<string>();
             var chartData = new List<int>();
             for (int i = 6; i >= 0; i--)
@@ -146,8 +145,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 chartData.Add(auditLogsPerDay.ContainsKey(dateStr) ? auditLogsPerDay[dateStr] : 0);
             }
             
-            ViewBag.OpenPeriodsCount = openPeriodsCount;
-            ViewBag.ActiveCategoriesCount = activeCategoriesCount;
             ViewBag.ChartLabels = chartLabels;
             ViewBag.ChartData = chartData;
 
@@ -494,5 +491,165 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
         // GET: /SciTech/Port/Profile
         public IActionResult Profile() => View();
+
+        // ==================== USER MANAGEMENT ACTIONS ====================
+
+        // POST: /SciTech/Port/ExportExcelUser
+        // Export User List
+        public IActionResult ExportExcelUser(string keyword, string role, string status)
+        {
+            var query = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+                query = query.Where(u => u.FullName.Contains(keyword) || u.Email.Contains(keyword));
+
+            if (!string.IsNullOrWhiteSpace(role))
+                query = query.Where(u => u.Position == role);
+
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                switch (status)
+                {
+                    case "active": query = query.Where(u => u.IsActive); break;
+                    case "locked":
+                    case "pending": query = query.Where(u => !u.IsActive); break;
+                }
+            }
+
+            var users = query.OrderBy(u => u.Id).Select(u => new
+            {
+                u.FullName,
+                u.Email,
+                Role = u.Position,
+                Status = u.IsActive ? "Active" : "Locked"
+            }).ToList();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using var package = new ExcelPackage();
+            var ws = package.Workbook.Worksheets.Add("User_List");
+
+            ws.Cells[1, 1].Value = "USER REPORT";
+            ws.Cells[1, 1, 1, 4].Merge = true;
+            ws.Cells[1, 1].Style.Font.Bold = true;
+            ws.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+            var headers = new[] { "Full Name", "Email", "Role", "Status" };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                ws.Cells[2, i + 1].Value = headers[i];
+                ws.Cells[2, i + 1].Style.Font.Bold = true;
+            }
+
+            int row = 3;
+            foreach (var u in users)
+            {
+                ws.Cells[row, 1].Value = u.FullName;
+                ws.Cells[row, 2].Value = u.Email;
+                ws.Cells[row, 3].Value = u.Role;
+                ws.Cells[row, 4].Value = u.Status;
+                row++;
+            }
+            ws.Cells.AutoFitColumns();
+
+            return File(package.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"User_Report_{DateTime.Now:yyyyMMdd}.xlsx");
+        }
+
+        // POST: /SciTech/Port/CreateUser
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(CreateUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Invalid input data.";
+                return RedirectToAction("Index", "User");
+            }
+
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                TempData["ErrorMessage"] = "Email already exists.";
+                return RedirectToAction("Index", "User");
+            }
+
+            var user = new ApplicationUser
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                FullName = model.FullName,
+                DepartmentId = model.DepartmentId,
+                IsActive = true,
+                EmailConfirmed = true,
+                AcademicRank = model.AcademicRank,
+                Degree = model.Degree,
+                Position = model.Position
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "User");
+                TempData["SuccessMessage"] = $"User {model.FullName} created successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Error: " + string.Join(", ", result.Errors.Select(e => e.Description));
+            }
+
+            return RedirectToAction("Index", "User");
+        }
+
+        // GET: /SciTech/Port/LockUser/5
+        public async Task<IActionResult> LockUser(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user != null)
+            {
+                user.IsActive = false;
+                await _userManager.SetLockoutEnabledAsync(user, true);
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+                await _userManager.UpdateAsync(user); // Ensure IsActive is saved
+                TempData["SuccessMessage"] = "User locked successfully.";
+            }
+            return RedirectToAction("Index", "User");
+        }
+
+        // GET: /SciTech/Port/UnlockUser/5
+        public async Task<IActionResult> UnlockUser(int id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user != null)
+            {
+                user.IsActive = true;
+                await _userManager.SetLockoutEndDateAsync(user, null);
+                await _userManager.SetLockoutEnabledAsync(user, false);
+                await _userManager.UpdateAsync(user);
+                TempData["SuccessMessage"] = "User unlocked successfully.";
+            }
+            return RedirectToAction("Index", "User");
+        }
+
+        // GET: /SciTech/Port/GetUserDetail
+        [HttpGet]
+        public IActionResult GetUserDetail(int id)
+        {
+            var user = _context.Users
+                .Where(u => u.Id == id)
+                .Select(u => new
+                {
+                    fullName = u.FullName,
+                    avatarUrl = u.AvatarUrl,
+                    academicRank = u.AcademicRank,
+                    degree = u.Degree,
+                    departmentName = u.Department != null ? u.Department.Name : "N/A",
+                    position = u.Position,
+                    isActive = u.IsActive
+                })
+                .FirstOrDefault();
+
+            if (user == null) return NotFound();
+            return Json(user);
+        }
     }
 }

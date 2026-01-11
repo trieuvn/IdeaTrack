@@ -88,13 +88,9 @@
                 
                 <!-- OVERVIEW -->
                 <small class="text-uppercase text-muted fw-bold px-4 mb-2 mt-2" style="font-size: 0.7rem;">Overview</small>
-                <a class="nav-link @(currentController == "Council" && currentAction == "Index" ? "active" : "")"
-                   href="@Url.Action("Index", "Council", new { area = "SciTech" })">
-                    <i class="fa-solid fa-chart-pie"></i> Dashboard
-                </a>
                 <a class="nav-link @(currentController == "Port" && currentAction == "Index" ? "active" : "")"
                    href="@Url.Action("Index", "Port", new { area = "SciTech" })">
-                    <i class="fa-solid fa-list-check"></i> Initiatives
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
                 </a>
 
                 <!-- MANAGEMENT -->
@@ -159,39 +155,7 @@
             <header class="topbar d-flex align-items-center justify-content-between sticky-top z-3">
                 <div class="d-flex align-items-center gap-3">
                     <!-- Global Filters -->
-                    <div class="global-filter d-flex align-items-center gap-2">
-                        <i class="fa-regular fa-calendar text-muted"></i>
-                        <select class="form-select border-0 bg-transparent py-0 fw-bold text-dark" style="font-size: 0.9rem; width: auto; box-shadow: none;" onchange="window.location.reload()">
-                           @if(currentYear != null)
-                           {
-                               <option selected>@currentYear.Name (Current)</option>
-                           }
-                           else
-                           {
-                               <option selected>Select Year</option>
-                           }
-                           @foreach(var y in allYears.Where(x => !x.IsCurrent)) {
-                               <option>@y.Name</option>
-                           }
-                        </select>
-                    </div>
-
-                    <div class="global-filter d-flex align-items-center gap-2">
-                        <i class="fa-solid fa-timeline text-muted"></i>
-                        <select class="form-select border-0 bg-transparent py-0 fw-bold text-dark" style="font-size: 0.9rem; width: auto; box-shadow: none;" onchange="window.location.reload()">
-                           @if(activePeriod != null)
-                           {
-                               <option selected>@activePeriod.Name (Active)</option>
-                           }
-                           else 
-                           {
-                               <option selected>All Periods</option>
-                           }
-                            @foreach(var p in allPeriods.Where(x => !x.IsActive)) {
-                               <option>@p.Name</option>
-                           }
-                        </select>
-                    </div>
+                    <!-- Global Filters Removed as requested -->
                 </div>
 
                 <div class="d-flex align-items-center gap-4">

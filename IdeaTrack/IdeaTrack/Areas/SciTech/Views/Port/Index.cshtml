@@ -98,52 +98,32 @@
 
 <!-- STATS -->
 <div class="row g-4 mb-4">
-    <div class="col-md-3">
-        <div class="card shadow-sm">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-start border-4 border-info">
             <div class="card-body">
-                <i class="fa-solid fa-folder-open text-primary fs-4"></i>
-                <p class="text-muted small mb-1">Total Initiatives</p>
-                <h3 class="fw-bold mb-0">@Model.TotalItems</h3>
+                <i class="fa-solid fa-list-check text-info fs-4"></i>
+                <p class="text-muted small mb-1">Faculty Approved</p>
+                <h3 class="fw-bold mb-0">@ViewBag.FacultyApprovedCount</h3>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-start border-4 border-primary">
             <div class="card-body">
-                <i class="fa-solid fa-clock text-warning fs-4"></i>
-                <p class="text-muted small mb-1">Pending</p>
-                <h3 class="fw-bold mb-0">
-                    @Model.Items.Count(x => x.Status == "Pending")
-                </h3>
+                <i class="fa-solid fa-spinner text-primary fs-4"></i>
+                <p class="text-muted small mb-1">Evaluating</p>
+                <h3 class="fw-bold mb-0">@ViewBag.EvaluatingCount</h3>
             </div>
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-start border-4 border-warning">
             <div class="card-body">
-                <i class="fa-solid fa-circle-check text-success fs-4"></i>
-                <p class="text-muted small mb-1">Approved</p>
-                <h3 class="fw-bold mb-0">
-                    @Model.Items.Count(x => x.Status == "Approved")
-                </h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        @{
-            var approved = Model.Items.Count(x => x.Status == "Approved");
-            var rate = Model.TotalItems == 0
-            ? 0
-            : Math.Round((double)approved / Model.TotalItems * 100, 1);
-        }
-        <div class="card bg-primary text-white shadow-sm">
-            <div class="card-body">
-                <i class="fa-solid fa-chart-pie fs-4"></i>
-                <p class="small mb-1">Approval Rate</p>
-                <h3 class="fw-bold mb-0">@rate%</h3>
+                <i class="fa-solid fa-hourglass-half text-warning fs-4"></i>
+                <p class="text-muted small mb-1">Pending Final</p>
+                <h3 class="fw-bold mb-0">@ViewBag.PendingFinalCount</h3>
             </div>
         </div>
     </div>
@@ -174,8 +154,6 @@
             <option value="Re_Evaluating" selected="@(Model.Status == "Re_Evaluating")">Re-evaluating</option>
             <option value="Pending_Final" selected="@(Model.Status == "Pending_Final")">Pending Final</option>
             <option value="Approved" selected="@(Model.Status == "Approved")">Approved</option>
-            <option value="Rejected" selected="@(Model.Status == "Rejected")">Rejected</option>
-            <option value="Revision_Required" selected="@(Model.Status == "Revision_Required")">Revision Required</option>
         </select>
     </div>
 

@@ -359,8 +359,8 @@
 
 <script>
     function openUserModal(userId) {
-        // Fetch details from the same controller's GetUserDetail action
-        fetch(`./GetUserDetail?id=${userId}`) 
+        // Fetch details from the Port controller's GetUserDetail action
+        fetch(`@Url.Action("GetUserDetail", "Port", new { area = "SciTech" })?id=${userId}`) 
             .then(response => {
                 if (!response.ok) throw new Error("Network error or User not found");
                 return response.json();
