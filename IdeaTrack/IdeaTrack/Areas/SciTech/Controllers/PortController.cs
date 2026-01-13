@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using QuestPDF.Fluent;
+using System.Diagnostics;
 
 namespace IdeaTrack.Areas.SciTech.Controllers
 {
@@ -705,5 +706,132 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             if (user == null) return NotFound();
             return Json(user);
         }
+        [HttpGet]
+        public async Task<IActionResult> DownloadFile(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return BadRequest("File name is required.");
+
+            // 1. Làm sạch tham số đầu vào
+            var cleanedSearchName = fileName.Replace("\n", "").Replace("\r", "").Trim();
+
+            // 2. Tìm kiếm trong DB (Sử dụng Contains hoặc Equals tùy vào cách bạn lưu)
+            // Lưu ý: Nếu DB lớn, việc xử lý chuỗi trong FirstOrDefaultAsync có thể chậm.
+            var file = await _context.InitiativeFiles
+                .FirstOrDefaultAsync(f => f.FileName.Replace("\n", "").Replace("\r", "").Trim() == cleanedSearchName);
+
+            if (file == null)
+                return NotFound("Không tìm thấy thông tin file trong cơ sở dữ liệu.");
+
+            // 3. Xử lý đường dẫn vật lý (Physical Path)
+            // Lấy tên file thực tế từ cột FilePath (bỏ các ký tự dẫn đầu nếu có)
+            string actualFileName = Path.GetFileName(file.FilePath);
+
+            // Kết hợp đường dẫn tuyệt đối đến thư mục chứa file
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "initiatives");
+            var filePath = Path.Combine(uploadsFolder, actualFileName);
+
+            // 4. Kiểm tra sự tồn tại của file vật lý trên ổ cứng
+            if (!System.IO.File.Exists(filePath))
+            {
+                // Debug: Có thể log filePath ở đây để kiểm tra server đang tìm ở đâu
+                return NotFound($"File vật lý không tồn tại tại: {actualFileName}");
+            }
+
+            // 5. Xác định Content Type
+            var contentType = GetContentType(file.FileName);
+
+            // 6. Trả về file (Dùng cleanedSearchName để tên file tải về không bị xuống dòng)
+            return PhysicalFile(filePath, contentType, cleanedSearchName);
+        }
+
+        // Hàm phụ trợ để code sạch hơn
+        private string GetContentType(string fileName)
+        {
+            var extension = Path.GetExtension(fileName).ToLower().Trim();
+            return extension switch
+            {
+                ".pdf" => "application/pdf",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                _ => "application/octet-stream",
+            };
+        }
+        [HttpGet("SciTech/ViewerPage")]
+        public IActionResult ViewerPage(string file)
+        {
+            if (string.IsNullOrEmpty(file))
+                return BadRequest();
+
+            ViewBag.FileName = file;
+            return View();
+        }
+        [HttpGet("/SciTech/ViewFilePdf")]
+        public async Task<IActionResult> ViewFilePdf(string fileName)
+        {
+            var ext = Path.GetExtension(fileName).ToLower();
+            var uploadRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "initiatives");
+            var inputPath = Path.Combine(uploadRoot, fileName);
+
+            if (!System.IO.File.Exists(inputPath))
+                return NotFound();
+
+            var tempDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "temp-pdf");
+            Directory.CreateDirectory(tempDir);
+
+            var pdfFileName = Path.GetFileNameWithoutExtension(fileName) + ".pdf";
+            var pdfPath = Path.Combine(tempDir, pdfFileName);
+
+            if (!System.IO.File.Exists(pdfPath))
+            {
+                if (ext == ".pdf")
+                {
+                    System.IO.File.Copy(inputPath, pdfPath, true);
+                }
+                else
+                {
+                    await ConvertToPdf(inputPath, tempDir);
+                }
+            }
+
+            // Trả PDF trực tiếp
+            return PhysicalFile(pdfPath, "application/pdf", pdfFileName);
+        }
+
+
+
+        public async Task<string> ConvertToPdf(string inputPath, string outputDir)
+        {
+            var sofficePath = @"C:\Program Files\LibreOffice\program\soffice.exe";
+
+            if (!System.IO.File.Exists(sofficePath))
+                throw new Exception("LibreOffice (soffice.exe) not found");
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = sofficePath,
+                    Arguments = $"--headless --convert-to pdf \"{inputPath}\" --outdir \"{outputDir}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            await process.WaitForExitAsync();
+
+            return Path.Combine(
+                outputDir,
+                Path.GetFileNameWithoutExtension(inputPath) + ".pdf"
+            );
+        }
+        
+
+
     }
 }

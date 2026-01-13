@@ -45,11 +45,12 @@
                          <div class="list-group">
                              @foreach(var file in Model.Files)
                              {
-                                 <a href="@file.FileUrl" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
+                                var relativePath = file.FileUrl.Replace("/uploads/initiatives/", "");
+                                <a href="/Faculty/ViewerPage?file=@Uri.EscapeDataString(relativePath)" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center attachment-link">
                                      <i class="bi bi-file-earmark-text me-3 fs-4 text-secondary"></i>
                                      <div>
                                          <div class="fw-medium">@file.FileName</div>
-                                         <small class="text-muted">Click to view/download</small>
+                                         <small class="text-muted">Click to view</small>
                                      </div>
                                  </a>
                              }
@@ -77,11 +78,11 @@
                          <textarea name="Comments" class="form-control" rows="4" placeholder="Enter comments for approval/rejection..."></textarea>
                      </div>
                      
-                     <div class="d-grid gap-2">
-                         <button type="submit" asp-controller="Dashboard" asp-action="Accept" class="btn btn-success text-white">
+                    <div class="d-grid gap-2 review-buttons">
+                         <button type="submit" asp-controller="Dashboard" asp-action="Accept" class="btn btn-success text-white" >
                              <i class="bi bi-check-circle me-2"></i> Accept
                          </button>
-                         <button type="submit" asp-controller="Dashboard" asp-action="RequestRevision" class="btn btn-warning text-dark">
+                         <button type="submit" asp-controller="Dashboard" asp-action="RequestRevision" class="btn btn-warning text-dark" >
                              <i class="bi bi-pencil-square me-2"></i> Request Revision
                          </button>
                          <button type="submit" asp-controller="Dashboard" asp-action="Reject" class="btn btn-danger text-white">
@@ -109,3 +110,24 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const buttonsDiv = document.querySelector(".review-buttons");
+            const buttons = buttonsDiv ? buttonsDiv.querySelectorAll("button") : [];
+            const attachmentLinks = document.querySelectorAll(".attachment-link");
+
+            // Nếu có file, disable tất cả nút
+            if (attachmentLinks.length > 0) {
+                buttons.forEach(btn => btn.disabled = true);
+
+                // Khi người dùng click vào bất kỳ file nào → enable nút
+                attachmentLinks.forEach(link => {
+                    link.addEventListener("click", function () {
+                        buttons.forEach(btn => btn.disabled = false);
+                    });
+                });
+            }
+        });
+    </script>
+}

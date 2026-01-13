@@ -1,10 +1,11 @@
-﻿using IdeaTrack.Data;
+﻿using IdeaTrack.Areas.Faculty.Models;
+using IdeaTrack.Data;
 using IdeaTrack.Models;
-using IdeaTrack.Areas.Faculty.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Text;
 
@@ -434,5 +435,77 @@ namespace IdeaTrack.Areas.Faculty.Controllers
 
             return View(viewModel);
         }
+        [HttpGet("Faculty/ViewerPage")]
+        public IActionResult ViewerPage(string file)
+        {
+            if (string.IsNullOrEmpty(file))
+                return BadRequest();
+
+            ViewBag.FileName = file;
+            return View();
+        }
+        [HttpGet("/Faculty/ViewFilePdf")]
+        public async Task<IActionResult> ViewFilePdf(string fileName)
+        {
+            var ext = Path.GetExtension(fileName).ToLower();
+            var uploadRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "initiatives");
+            var inputPath = Path.Combine(uploadRoot, fileName);
+
+            if (!System.IO.File.Exists(inputPath))
+                return NotFound();
+
+            var tempDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "temp-pdf");
+            Directory.CreateDirectory(tempDir);
+
+            var pdfFileName = Path.GetFileNameWithoutExtension(fileName) + ".pdf";
+            var pdfPath = Path.Combine(tempDir, pdfFileName);
+
+            if (!System.IO.File.Exists(pdfPath))
+            {
+                if (ext == ".pdf")
+                {
+                    System.IO.File.Copy(inputPath, pdfPath, true);
+                }
+                else
+                {
+                    await ConvertToPdf(inputPath, tempDir);
+                }
+            }
+
+            // Trả PDF trực tiếp
+            return PhysicalFile(pdfPath, "application/pdf", pdfFileName);
+        }
+
+
+
+        public async Task<string> ConvertToPdf(string inputPath, string outputDir)
+        {
+            var sofficePath = @"C:\Program Files\LibreOffice\program\soffice.exe";
+
+            if (!System.IO.File.Exists(sofficePath))
+                throw new Exception("LibreOffice (soffice.exe) not found");
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = sofficePath,
+                    Arguments = $"--headless --convert-to pdf \"{inputPath}\" --outdir \"{outputDir}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            await process.WaitForExitAsync();
+
+            return Path.Combine(
+                outputDir,
+                Path.GetFileNameWithoutExtension(inputPath) + ".pdf"
+            );
+        }
+
     }
 }
