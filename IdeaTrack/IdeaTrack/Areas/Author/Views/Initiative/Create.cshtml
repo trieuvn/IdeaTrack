@@ -127,6 +127,7 @@
                     </div>
                     
                     <!-- File List -->
+                    <div id="fileMessage" class="mb-2"></div>
                     <div id="fileList" class="mt-3"></div>
                 </div>
 
@@ -209,124 +210,85 @@
     <!-- Dependent Dropdown AJAX Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const yearSelect = document.getElementById('AcademicYearId');
-            const categorySelect = document.getElementById('CategoryId');
-            
-            if (yearSelect && categorySelect) {
-                yearSelect.addEventListener('change', function() {
-                    const yearId = this.value;
-                    
-                    // Clear and disable category while loading
-                    categorySelect.innerHTML = '<option value="">-- Loading categories... --</option>';
-                    categorySelect.disabled = true;
-                    
-                    if (!yearId) {
-                        categorySelect.innerHTML = '<option value="">-- Select academic year first --</option>';
-                        categorySelect.disabled = false;
-                        return;
-                    }
-                    
-                    // AJAX call to get categories
-                    fetch('/Author/Initiative/GetCategoriesByYear?yearId=' + yearId)
-                        .then(response => response.json())
-                        .then(data => {
-                            categorySelect.innerHTML = '<option value="">-- Select category --</option>';
-                            if (data.length === 0) {
-                                categorySelect.innerHTML = '<option value="">-- No open periods in this year --</option>';
-                            } else {
-                                data.forEach(item => {
-                                    const option = document.createElement('option');
-                                    option.value = item.value;
-                                    option.textContent = item.text;
-                                    categorySelect.appendChild(option);
-                                });
-                            }
-                            categorySelect.disabled = false;
-                        })
-                        .catch(error => {
-                            console.error('Error loading categories:', error);
-                            categorySelect.innerHTML = '<option value="">-- Error loading categories --</option>';
-                            categorySelect.disabled = false;
-                        });
-                });
-            }
-        });
-    </script>
-    
-    <!-- File Upload Script -->
-    <script>
-        (function() {
             const dropZone = document.getElementById('dropZone');
             const fileInput = document.getElementById('ProjectFiles');
             const fileList = document.getElementById('fileList');
+            const fileMessage = document.getElementById('fileMessage');
             let selectedFiles = [];
-            
-            // Click to open file dialog
+
+            function showMessage(message, type = 'danger') {
+                fileMessage.innerHTML = `<div class="alert alert-${type} py-2" role="alert">${message}</div>`;
+            }
+
+            function clearMessage() {
+                fileMessage.innerHTML = '';
+            }
+
+            // Click để mở file dialog
             dropZone.addEventListener('click', () => fileInput.click());
-            
-            // Drag events
+
+            // Drag & drop
             dropZone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 dropZone.classList.add('drag-over');
             });
-            
             dropZone.addEventListener('dragleave', (e) => {
                 e.preventDefault();
                 dropZone.classList.remove('drag-over');
             });
-            
             dropZone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 dropZone.classList.remove('drag-over');
                 const files = Array.from(e.dataTransfer.files);
                 addFiles(files);
             });
-            
-            // File input change (for click to upload)
+
+            // Chọn file bằng input
             fileInput.addEventListener('change', (e) => {
                 const files = Array.from(e.target.files);
                 addFiles(files);
             });
-            
+
             function addFiles(files) {
+                clearMessage();
                 const allowedTypes = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx'];
-                
+
                 files.forEach(file => {
                     const ext = '.' + file.name.split('.').pop().toLowerCase();
-                    if (allowedTypes.includes(ext)) {
-                        // Avoid duplicates
-                        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
-                            selectedFiles.push(file);
-                        }
-                    } else {
-                        alert(`File "${file.name}" is not a supported format.`);
+                    if (!allowedTypes.includes(ext)) {
+                        showMessage(`File "${file.name}" không hợp lệ. Chỉ PDF, Word, Excel, PowerPoint được phép.`);
+                        return;
+                    }
+                    // Không thêm trùng lặp
+                    if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+                        selectedFiles.push(file);
                     }
                 });
-                
+
                 updateFileList();
                 syncWithInput();
             }
-            
+
             function removeFile(index) {
                 selectedFiles.splice(index, 1);
                 updateFileList();
                 syncWithInput();
             }
-            
+
             function updateFileList() {
                 if (selectedFiles.length === 0) {
                     fileList.innerHTML = '';
                     return;
                 }
-                
-                let html = '<div class="small text-muted mb-2"><strong>' + selectedFiles.length + '</strong> file(s) selected</div>';
-                
+
+                let html = `<div class="small text-muted mb-2"><strong>${selectedFiles.length}</strong> file(s) selected</div>`;
+
                 selectedFiles.forEach((file, index) => {
                     const size = formatFileSize(file.size);
                     const ext = file.name.split('.').pop().toLowerCase();
                     const iconClass = getFileIcon(ext);
                     const iconColor = getFileColor(ext);
-                    
+
                     html += `
                         <div class="file-item">
                             <div class="file-info">
@@ -344,59 +306,72 @@
                         </div>
                     `;
                 });
-                
+
                 fileList.innerHTML = html;
             }
-            
+
             function syncWithInput() {
                 const dt = new DataTransfer();
                 selectedFiles.forEach(file => dt.items.add(file));
                 fileInput.files = dt.files;
             }
-            
+
             function formatFileSize(bytes) {
                 if (bytes < 1024) return bytes + ' B';
                 if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
                 return (bytes / 1048576).toFixed(1) + ' MB';
             }
-            
+
             function getFileIcon(ext) {
-                switch(ext) {
+                switch(ext){
                     case 'pdf': return 'picture_as_pdf';
-                    case 'doc': case 'docx': return 'description';
-                    case 'xls': case 'xlsx': return 'table_chart';
-                    case 'ppt': case 'pptx': return 'slideshow';
+                    case 'doc':
+                    case 'docx': return 'description';
+                    case 'xls':
+                    case 'xlsx': return 'table_chart';
+                    case 'ppt':
+                    case 'pptx': return 'slideshow';
                     default: return 'insert_drive_file';
                 }
             }
-            
+
             function getFileColor(ext) {
-                switch(ext) {
+                switch(ext){
                     case 'pdf': return '#dc3545';
-                    case 'doc': case 'docx': return '#0d6efd';
-                    case 'xls': case 'xlsx': return '#198754';
-                    case 'ppt': case 'pptx': return '#fd7e14';
+                    case 'doc':
+                    case 'docx': return '#0d6efd';
+                    case 'xls':
+                    case 'xlsx': return '#198754';
+                    case 'ppt':
+                    case 'pptx': return '#fd7e14';
                     default: return '#6c757d';
                 }
             }
-            
-            // Expose removeFile to global scope for onclick
+
             window.removeFileAtIndex = removeFile;
-            
-            // CRITICAL: Sync files on form submit
+
+            // ---- Validate trước khi submit ----
             const form = document.querySelector('form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    // Ensure files are synced right before submit
-                    syncWithInput();
-                    console.log('[FileUpload] Form submitting with ' + selectedFiles.length + ' files');
-                    console.log('[FileUpload] Input files count: ' + fileInput.files.length);
-                    if (fileInput.files.length > 0) {
-                        console.log('[FileUpload] Files to upload:', Array.from(fileInput.files).map(f => f.name));
+            if(form){
+                form.addEventListener('submit', function(e){
+                    // Đồng bộ lại từ fileInput
+                    selectedFiles = Array.from(fileInput.files);
+
+                    const hasPdf = selectedFiles.some(f => f.name.toLowerCase().endsWith('.pdf'));
+                    const hasWord = selectedFiles.some(f => f.name.toLowerCase().endsWith('.doc') || f.name.toLowerCase().endsWith('.docx'));
+
+                    if(!hasPdf || !hasWord){
+                        e.preventDefault();
+                        showMessage('Bạn phải chọn ít nhất 1 file PDF và 1 file Word trước khi submit.', 'danger');
+                        return false; // chắc chắn chặn submit
                     }
+
+                    // Đồng bộ trước khi gửi
+                    syncWithInput();
                 });
             }
-        })();
+        });
     </script>
+
 }
 
