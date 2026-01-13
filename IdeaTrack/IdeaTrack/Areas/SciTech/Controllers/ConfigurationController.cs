@@ -244,5 +244,156 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(InitiativeCategory), new { periodId = targetPeriodId });
         }
+
+        // =================================================
+        // 4. CATEGORY DETAILS & SYNC
+        // =================================================
+
+        // GET: /SciTech/Configuration/CategoryDetails/5
+        public async Task<IActionResult> CategoryDetails(int id)
+        {
+            var category = await _context.InitiativeCategories
+                .Include(c => c.Board)
+                .Include(c => c.Template)
+                .Include(c => c.Period)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null) return NotFound();
+
+            ViewBag.Boards = await _context.Boards
+                .Where(b => b.IsActive)
+                .Include(b => b.Members)
+                .ToListAsync();
+            ViewBag.Templates = await _context.EvaluationTemplates
+                .Where(t => t.IsActive)
+                .ToListAsync();
+            ViewBag.InitiativeCount = await _context.Initiatives
+                .CountAsync(i => i.CategoryId == id);
+
+            return View("~/Areas/SciTech/Views/Configuration/CategoryDetails.cshtml", category);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateCategory(int id, int? boardId, int? templateId)
+        {
+            var category = await _context.InitiativeCategories.FindAsync(id);
+            if (category == null) return NotFound();
+
+            category.BoardId = boardId;
+            category.TemplateId = templateId;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Đã cập nhật thông tin danh mục!";
+            return RedirectToAction(nameof(CategoryDetails), new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SyncCategoryInitiatives(int id)
+        {
+            var category = await _context.InitiativeCategories.FindAsync(id);
+            if (category == null) return NotFound();
+
+            // Get count of affected initiatives
+            var initiativeCount = await _context.Initiatives
+                .CountAsync(i => i.CategoryId == id);
+
+            // Note: Since Initiative references Board/Template via Category,
+            // updating the Category automatically affects all linked initiatives.
+            // The sync here is just to confirm and provide feedback.
+            
+            TempData["SuccessMessage"] = $"Đã áp dụng thay đổi cho {initiativeCount} sáng kiến thuộc danh mục này!";
+            return RedirectToAction(nameof(CategoryDetails), new { id });
+        }
+
+        // =================================================
+        // 5. QUICK CREATE COUNCIL & TEMPLATE
+        // =================================================
+
+        [HttpPost]
+        public async Task<IActionResult> QuickCreateCouncil(int categoryId, string name, int? cloneFromBoardId)
+        {
+            try
+            {
+                var category = await _context.InitiativeCategories
+                    .Include(c => c.Period)
+                    .FirstOrDefaultAsync(c => c.Id == categoryId);
+                if (category == null)
+                    return Json(new { success = false, message = "Category not found" });
+
+                // Create new board
+                var newBoard = new Board
+                {
+                    BoardName = name,
+                    FiscalYear = DateTime.Now.Year,
+                    IsActive = true
+                };
+                _context.Boards.Add(newBoard);
+                await _context.SaveChangesAsync();
+
+                // Clone members if specified
+                if (cloneFromBoardId.HasValue)
+                {
+                    var sourceBoard = await _context.Boards
+                        .Include(b => b.Members)
+                        .FirstOrDefaultAsync(b => b.Id == cloneFromBoardId.Value);
+
+                    if (sourceBoard?.Members != null)
+                    {
+                        foreach (var member in sourceBoard.Members)
+                        {
+                            _context.BoardMembers.Add(new BoardMember
+                            {
+                                BoardId = newBoard.Id,
+                                UserId = member.UserId,
+                                Role = member.Role
+                            });
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                // Assign new board to category
+                category.BoardId = newBoard.Id;
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, boardId = newBoard.Id });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> QuickCreateTemplate(int categoryId, string name)
+        {
+            try
+            {
+                var category = await _context.InitiativeCategories.FindAsync(categoryId);
+                if (category == null)
+                    return Json(new { success = false, message = "Category not found" });
+
+                // Create new template (empty, no criteria yet)
+                var newTemplate = new EvaluationTemplate
+                {
+                    TemplateName = name,
+                    IsActive = true
+                };
+                _context.EvaluationTemplates.Add(newTemplate);
+                await _context.SaveChangesAsync();
+
+                // Assign new template to category
+                category.TemplateId = newTemplate.Id;
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, templateId = newTemplate.Id });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
     }
 }
