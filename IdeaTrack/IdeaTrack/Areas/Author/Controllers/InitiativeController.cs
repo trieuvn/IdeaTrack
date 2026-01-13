@@ -64,10 +64,16 @@ namespace IdeaTrack.Areas.Author.Controllers
                     return NotFound();
                 }
 
+                // Get current user for IsOwner check
+                var currentUser = await _userManager.GetUserAsync(User);
+                var userId = currentUser?.Id ?? 0;
+
                 var viewModel = new InitiativeDetailViewModel
                 {
                     Initiative = initiative,
-                    Files = initiative.Files.ToList()
+                    Files = initiative.Files.ToList(),
+                    CoAuthors = initiative.Authorships?.Where(a => !a.IsCreator).ToList() ?? new List<InitiativeAuthorship>(),
+                    IsOwner = initiative.CreatorId == userId || User.IsInRole("Admin")
                 };
 
                 // Fetch latest revision request for rejected/revision_required initiatives
@@ -105,22 +111,30 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             try
             {
-                // Load all academic years for dropdown
+                var today = DateTime.Today;
+                var currentUser = await _userManager.GetUserAsync(User);
+                
+                // Load only Academic Years that have OPEN periods
+                var yearsWithOpenPeriods = await _context.InitiativePeriods
+                    .Where(p => p.StartDate <= today && today <= p.EndDate)
+                    .Select(p => p.AcademicYearId)
+                    .Distinct()
+                    .ToListAsync();
+                
                 var academicYears = await _context.AcademicYears
+                    .Where(y => yearsWithOpenPeriods.Contains(y.Id))
                     .OrderByDescending(y => y.Name)
                     .ToListAsync();
                 
-                // Get current academic year as default selection
+                // Get current academic year as default selection (if it has open periods)
                 var currentYear = academicYears.FirstOrDefault(y => y.IsCurrent) ?? academicYears.FirstOrDefault();
                 
-                // Categories will be loaded via AJAX when user selects academic year
-                // For initial load, pre-load categories if there's a current year with open periods
+                // Load categories from open periods in selected year
                 var categories = new List<InitiativeCategory>();
                 int? activePeriodId = null;
                 
                 if (currentYear != null)
                 {
-                    var today = DateTime.Today;
                     var openPeriods = await _context.InitiativePeriods
                         .Where(p => p.AcademicYearId == currentYear.Id 
                                  && p.StartDate <= today && today <= p.EndDate)
@@ -136,6 +150,11 @@ namespace IdeaTrack.Areas.Author.Controllers
                             .ToListAsync();
                     }
                 }
+                
+                // Get user's department (auto-assign)
+                var userDepartment = currentUser?.DepartmentId != null 
+                    ? await _context.Departments.FindAsync(currentUser.DepartmentId) 
+                    : null;
 
                 var viewModel = new InitiativeCreateViewModel
                 {
@@ -143,8 +162,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                     AcademicYears = new SelectList(academicYears, "Id", "Name", currentYear?.Id),
                     SelectedAcademicYearId = currentYear?.Id,
                     Categories = new SelectList(categories, "Id", "Name"),
-                    Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name"),
-                    ActivePeriodId = activePeriodId
+                    UserDepartmentId = currentUser?.DepartmentId,
+                    UserDepartmentName = userDepartment?.Name ?? "Not Assigned",
+                    ActivePeriodId = activePeriodId,
+                    IsOwner = true
                 };
 
                 return View(viewModel);
@@ -177,11 +198,13 @@ namespace IdeaTrack.Areas.Author.Controllers
                 {
                     var initiative = viewModel.Initiative;
                     
-                    // Assign to current user or default to first user
+                    // Assign to current user
                     var currentUser = await _userManager.GetUserAsync(User);
                     if (currentUser != null)
                     {
                          initiative.CreatorId = currentUser.Id;
+                         // Auto-assign Department from current user
+                         initiative.DepartmentId = currentUser.DepartmentId ?? initiative.DepartmentId;
                     }
                     else
                     {
@@ -227,6 +250,21 @@ namespace IdeaTrack.Areas.Author.Controllers
                         JoinedAt = DateTime.Now
                     };
                     _context.InitiativeAuthorships.Add(authorship);
+                    
+                    // Add co-authors if provided
+                    if (viewModel.CoAuthorIds != null && viewModel.CoAuthorIds.Any())
+                    {
+                        foreach (var coAuthorId in viewModel.CoAuthorIds.Where(id => id != initiative.CreatorId))
+                        {
+                            _context.InitiativeAuthorships.Add(new InitiativeAuthorship
+                            {
+                                InitiativeId = initiative.Id,
+                                AuthorId = coAuthorId,
+                                IsCreator = false,
+                                JoinedAt = DateTime.Now
+                            });
+                        }
+                    }
                     await _context.SaveChangesAsync();
 
                     _logger.LogInformation("Initiative {InitiativeCode} created successfully by user {UserId}", initiative.InitiativeCode, initiative.CreatorId);
@@ -285,13 +323,31 @@ namespace IdeaTrack.Areas.Author.Controllers
             // If validation fails or error occurred, reload dropdowns
             try
             {
-                var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.IsActive);
+                var today = DateTime.Today;
+                var currentUser = await _userManager.GetUserAsync(User);
+                
+                // Reload years with open periods
+                var yearsWithOpenPeriods = await _context.InitiativePeriods
+                    .Where(p => p.StartDate <= today && today <= p.EndDate)
+                    .Select(p => p.AcademicYearId)
+                    .Distinct()
+                    .ToListAsync();
+                
+                var academicYears = await _context.AcademicYears
+                    .Where(y => yearsWithOpenPeriods.Contains(y.Id))
+                    .OrderByDescending(y => y.Name)
+                    .ToListAsync();
+                viewModel.AcademicYears = new SelectList(academicYears, "Id", "Name", viewModel.SelectedAcademicYearId);
+                
+                var activePeriod = await _context.InitiativePeriods.FirstOrDefaultAsync(p => p.StartDate <= today && today <= p.EndDate);
                 var categories = activePeriod != null
                     ? await _context.InitiativeCategories.Where(c => c.PeriodId == activePeriod.Id).ToListAsync()
-                    : await _context.InitiativeCategories.ToListAsync();
+                    : new List<InitiativeCategory>();
 
                 viewModel.Categories = new SelectList(categories, "Id", "Name", viewModel.Initiative.CategoryId);
-                viewModel.Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", viewModel.Initiative.DepartmentId);
+                viewModel.UserDepartmentId = currentUser?.DepartmentId;
+                var userDept = currentUser?.DepartmentId != null ? await _context.Departments.FindAsync(currentUser.DepartmentId) : null;
+                viewModel.UserDepartmentName = userDept?.Name ?? "Not Assigned";
                 viewModel.ActivePeriodId = activePeriod?.Id;
             }
             catch (Exception ex)
@@ -328,9 +384,17 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                 var currentUser = await _userManager.GetUserAsync(User);
                 var userId = currentUser?.Id ?? 0;
+                
+                // Check authorization (creator or co-author)
+                var authorships = await _context.InitiativeAuthorships
+                    .Include(a => a.Author)
+                    .Where(a => a.InitiativeId == id)
+                    .ToListAsync();
+                    
                 var isAuthorized = initiative.CreatorId == userId || 
-                                 (initiative.Authorships != null && initiative.Authorships.Any(a => a.AuthorId == userId)) ||
+                                 authorships.Any(a => a.AuthorId == userId) ||
                                  User.IsInRole("Admin");
+                var isOwner = initiative.CreatorId == userId || User.IsInRole("Admin");
 
                 if (!isAuthorized)
                 {
@@ -338,27 +402,39 @@ namespace IdeaTrack.Areas.Author.Controllers
                     return Forbid();
                 }
 
-                // Load all academic years for dropdown
+                var today = DateTime.Today;
+                
+                // Load only Academic Years that have OPEN periods
+                var yearsWithOpenPeriods = await _context.InitiativePeriods
+                    .Where(p => p.StartDate <= today && today <= p.EndDate)
+                    .Select(p => p.AcademicYearId)
+                    .Distinct()
+                    .ToListAsync();
+                
                 var academicYears = await _context.AcademicYears
+                    .Where(y => yearsWithOpenPeriods.Contains(y.Id))
                     .OrderByDescending(y => y.Name)
                     .ToListAsync();
                 
-                // Determine which academic year to pre-select:
-                // 1) If initiative has a category, use its period's academic year
-                // 2) Otherwise, use the current academic year
+                // Determine which academic year to pre-select
                 int? selectedYearId = null;
                 if (initiative.Category?.Period != null)
                 {
                     selectedYearId = initiative.Category.Period.AcademicYearId;
+                    // Add year if not in list (for already-submitted initiatives)
+                    if (!academicYears.Any(y => y.Id == selectedYearId))
+                    {
+                        var yearToAdd = await _context.AcademicYears.FindAsync(selectedYearId);
+                        if (yearToAdd != null) academicYears.Insert(0, yearToAdd);
+                    }
                 }
                 else
                 {
-                    selectedYearId = academicYears.FirstOrDefault(y => y.IsCurrent)?.Id;
+                    selectedYearId = academicYears.FirstOrDefault(y => y.IsCurrent)?.Id ?? academicYears.FirstOrDefault()?.Id;
                 }
                 
                 // Load categories from open periods in the selected academic year
                 var categories = new List<InitiativeCategory>();
-                var today = DateTime.Today;
                 
                 if (selectedYearId.HasValue)
                 {
@@ -379,6 +455,11 @@ namespace IdeaTrack.Areas.Author.Controllers
                 {
                     categories.Insert(0, initiative.Category);
                 }
+                
+                // Get user's department (auto-assign)
+                var userDepartment = currentUser?.DepartmentId != null 
+                    ? await _context.Departments.FindAsync(currentUser.DepartmentId) 
+                    : null;
 
                 var viewModel = new InitiativeCreateViewModel
                 {
@@ -386,9 +467,12 @@ namespace IdeaTrack.Areas.Author.Controllers
                     AcademicYears = new SelectList(academicYears, "Id", "Name", selectedYearId),
                     SelectedAcademicYearId = selectedYearId,
                     Categories = new SelectList(categories, "Id", "Name", initiative.CategoryId),
-                    Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", initiative.DepartmentId),
+                    UserDepartmentId = currentUser?.DepartmentId,
+                    UserDepartmentName = userDepartment?.Name ?? "Not Assigned",
                     ActivePeriodId = null,
-                    ExistingFiles = initiative.Files?.ToList() ?? new List<InitiativeFile>()
+                    ExistingFiles = initiative.Files?.ToList() ?? new List<InitiativeFile>(),
+                    ExistingCoAuthors = authorships.Where(a => !a.IsCreator).ToList(),
+                    IsOwner = isOwner
                 };
 
                 return View(viewModel);
@@ -544,7 +628,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                     : await _context.InitiativeCategories.ToListAsync();
 
                 viewModel.Categories = new SelectList(categories, "Id", "Name", viewModel.Initiative.CategoryId);
-                viewModel.Departments = new SelectList(await _context.Departments.ToListAsync(), "Id", "Name", viewModel.Initiative.DepartmentId);
+                var currentUser = await _userManager.GetUserAsync(User);
+                viewModel.UserDepartmentId = currentUser?.DepartmentId;
+                var userDept = currentUser?.DepartmentId != null ? await _context.Departments.FindAsync(currentUser.DepartmentId) : null;
+                viewModel.UserDepartmentName = userDept?.Name ?? "Not Assigned";
                 viewModel.ActivePeriodId = activePeriod?.Id;
             }
             catch (Exception ex)
@@ -742,6 +829,168 @@ namespace IdeaTrack.Areas.Author.Controllers
             }
         }
 
+        // ============ CATEGORY FILTER AJAX ENDPOINT ============
+
+        // GET: /Author/Initiative/GetCategoriesByYear?yearId=xxx
+        [HttpGet]
+        public async Task<IActionResult> GetCategoriesByYear(int yearId)
+        {
+            try
+            {
+                var today = DateTime.Today;
+                
+                // Get open periods for the selected academic year
+                var openPeriodIds = await _context.InitiativePeriods
+                    .Where(p => p.AcademicYearId == yearId 
+                             && p.StartDate <= today && today <= p.EndDate)
+                    .Select(p => p.Id)
+                    .ToListAsync();
+                
+                if (!openPeriodIds.Any())
+                {
+                    return Json(new List<object>());
+                }
+                
+                // Get categories from those open periods
+                var categories = await _context.InitiativeCategories
+                    .Where(c => openPeriodIds.Contains(c.PeriodId))
+                    .OrderBy(c => c.Name)
+                    .Select(c => new { value = c.Id, text = c.Name })
+                    .ToListAsync();
+                
+                return Json(categories);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error loading categories for year {YearId}", yearId);
+                return Json(new List<object>());
+            }
+        }
+
+        // ============ CO-AUTHOR AJAX ENDPOINTS ============
+
+        // GET: /Author/Initiative/SearchUsers?term=xxx
+        [HttpGet]
+        public async Task<IActionResult> SearchUsers(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term) || term.Length < 2)
+            {
+                return Json(new List<object>());
+            }
+
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                var users = await _context.Users
+                    .Include(u => u.Department)
+                    .Where(u => u.Id != currentUser!.Id && 
+                               (u.FullName.Contains(term) || u.Email!.Contains(term)))
+                    .Take(10)
+                    .Select(u => new
+                    {
+                        id = u.Id,
+                        text = u.FullName ?? u.Email,
+                        email = u.Email,
+                        department = u.Department != null ? u.Department.Name : "N/A"
+                    })
+                    .ToListAsync();
+
+                return Json(users);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error searching users with term: {Term}", term);
+                return Json(new List<object>());
+            }
+        }
+
+        // POST: /Author/Initiative/AddCoAuthor
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCoAuthor(int initiativeId, int userId)
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                var initiative = await _context.Initiatives.FindAsync(initiativeId);
+                
+                if (initiative == null)
+                    return Json(new { success = false, message = "Initiative not found" });
+                
+                // Only owner can add co-authors
+                if (initiative.CreatorId != currentUser?.Id && !User.IsInRole("Admin"))
+                    return Json(new { success = false, message = "Only the owner can add co-authors" });
+                
+                // Check if already exists
+                var exists = await _context.InitiativeAuthorships
+                    .AnyAsync(a => a.InitiativeId == initiativeId && a.AuthorId == userId);
+                
+                if (exists)
+                    return Json(new { success = false, message = "User is already a co-author" });
+                
+                // Add co-author
+                var authorship = new InitiativeAuthorship
+                {
+                    InitiativeId = initiativeId,
+                    AuthorId = userId,
+                    IsCreator = false,
+                    JoinedAt = DateTime.Now
+                };
+                _context.InitiativeAuthorships.Add(authorship);
+                await _context.SaveChangesAsync();
+                
+                var addedUser = await _context.Users.FindAsync(userId);
+                _logger.LogInformation("Co-author {UserId} added to initiative {InitiativeId}", userId, initiativeId);
+                
+                return Json(new { success = true, message = "Co-author added", userName = addedUser?.FullName ?? addedUser?.Email });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error adding co-author {UserId} to initiative {InitiativeId}", userId, initiativeId);
+                return Json(new { success = false, message = "Error adding co-author" });
+            }
+        }
+
+        // POST: /Author/Initiative/RemoveCoAuthor
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveCoAuthor(int initiativeId, int userId)
+        {
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                var initiative = await _context.Initiatives.FindAsync(initiativeId);
+                
+                if (initiative == null)
+                    return Json(new { success = false, message = "Initiative not found" });
+                
+                // Only owner can remove co-authors
+                if (initiative.CreatorId != currentUser?.Id && !User.IsInRole("Admin"))
+                    return Json(new { success = false, message = "Only the owner can remove co-authors" });
+                
+                // Can't remove the creator
+                if (initiative.CreatorId == userId)
+                    return Json(new { success = false, message = "Cannot remove the creator" });
+                
+                var authorship = await _context.InitiativeAuthorships
+                    .FirstOrDefaultAsync(a => a.InitiativeId == initiativeId && a.AuthorId == userId);
+                
+                if (authorship == null)
+                    return Json(new { success = false, message = "Co-author not found" });
+                
+                _context.InitiativeAuthorships.Remove(authorship);
+                await _context.SaveChangesAsync();
+                
+                _logger.LogInformation("Co-author {UserId} removed from initiative {InitiativeId}", userId, initiativeId);
+                return Json(new { success = true, message = "Co-author removed" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error removing co-author {UserId} from initiative {InitiativeId}", userId, initiativeId);
+                return Json(new { success = false, message = "Error removing co-author" });
+            }
+        }
+
         // POST: /Author/Initiative/CopyToDraft/5
         // Copy a rejected/completed initiative to a new draft for resubmission
         [HttpPost]
@@ -850,55 +1099,6 @@ namespace IdeaTrack.Areas.Author.Controllers
                 _logger.LogError(ex, "Error loading co-authors for initiative {Id}", id);
                 TempData["ErrorMessage"] = "Error khi tai danh sach dong tac gia.";
                 return RedirectToAction(nameof(Detail), new { id });
-            }
-        }
-
-        // POST: /Author/Initiative/AddCoAuthor
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddCoAuthor(int initiativeId, int newCoAuthorId)
-        {
-            try
-            {
-                var initiative = await _context.Initiatives
-                    .Include(i => i.Authorships)
-                    .FirstOrDefaultAsync(i => i.Id == initiativeId);
-
-                if (initiative == null)
-                {
-                    return NotFound();
-                }
-
-                // Check if already a co-author
-                if (initiative.Authorships.Any(a => a.AuthorId == newCoAuthorId))
-                {
-                    TempData["WarningMessage"] = "Nguoi dung nay da la dong tac gia.";
-                    return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
-                }
-
-                // Add new co-author
-                var authorship = new InitiativeAuthorship
-                {
-                    InitiativeId = initiativeId,
-                    AuthorId = newCoAuthorId,
-                    IsCreator = false,
-                    JoinedAt = DateTime.Now
-                };
-
-                _context.InitiativeAuthorships.Add(authorship);
-                await _context.SaveChangesAsync();
-
-                var user = await _context.Users.FindAsync(newCoAuthorId);
-                _logger.LogInformation("Added co-author {UserId} to initiative {InitiativeId}", newCoAuthorId, initiativeId);
-                TempData["SuccessMessage"] = $"Da them {user?.FullName} lam dong tac gia!";
-
-                return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error adding co-author to initiative {Id}", initiativeId);
-                TempData["ErrorMessage"] = "Error khi them dong tac gia.";
-                return RedirectToAction(nameof(CoAuthors), new { id = initiativeId });
             }
         }
 
@@ -1171,39 +1371,6 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             var categories = await GetCategoriesForPeriod(periodId);
             return Json(categories.Select(c => new { value = c.Value, text = c.Text }));
-        }
-
-        // API: Get categories by academic year (for dependent dropdown AJAX)
-        // Returns categories from all OPEN periods within the selected academic year
-        [HttpGet]
-        public async Task<IActionResult> GetCategoriesByYear(int yearId)
-        {
-            try
-            {
-                var today = DateTime.Today;
-                
-                // Get open periods for this academic year
-                var openPeriodIds = await _context.InitiativePeriods
-                    .Where(p => p.AcademicYearId == yearId 
-                             && p.StartDate <= today 
-                             && today <= p.EndDate)
-                    .Select(p => p.Id)
-                    .ToListAsync();
-                
-                // Get categories from those open periods
-                var categories = await _context.InitiativeCategories
-                    .Where(c => openPeriodIds.Contains(c.PeriodId))
-                    .OrderBy(c => c.Name)
-                    .Select(c => new { value = c.Id, text = c.Name })
-                    .ToListAsync();
-                
-                return Json(categories);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting categories for year {YearId}", yearId);
-                return Json(new List<object>());
-            }
         }
 
         private async Task<List<SelectListItem>> GetCategoriesForPeriod(int periodId)

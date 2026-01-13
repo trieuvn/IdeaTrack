@@ -3,99 +3,99 @@
     ViewData["Title"] = "Statistics";
 }
 
-<div class="container-fluid pb-5">
+<div class="container-fluid pb-3">
 
-    <!-- Hero Section - Gi?ng About.cshtml -->
-    <section class="hero-section text-white p-4 mb-4 shadow" style="border-radius: 15px; min-height: auto;">
+    <!-- Hero Section -->
+    <section class="hero-section text-white p-4 mb-3 shadow" style="border-radius: 15px; min-height: auto;">
         <div class="row">
             <div class="col-12">
-                <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-2 p-2 px-3" style="border: 1px solid rgba(0,255,255,0.2)">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">insights</span> INITIATIVE STATISTICS
+                <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-2 px-3 py-1" style="border: 1px solid rgba(0,255,255,0.2)">
+                    <span class="material-icons align-middle me-1" style="font-size: 14px;">insights</span> INITIATIVE STATISTICS
                 </span>
 
                 <h1 class="fw-bold display-6 mb-2">Innovation Metrics</h1>
 
-                <p class="fs-6 mb-0 opacity-75" style="line-height: 1.6;">
+                <p class="mb-0 opacity-75">
                     Track and analyze your initiatives. View distribution by category and approval progress.
                 </p>
             </div>
         </div>
     </section>
 
-    <!-- Stats Cards - Gi?ng style Home -->
-    <section class="row g-4 mb-5">
+    <!-- Stats Cards -->
+    <section class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card card-custom h-100 p-4 shadow-sm" style="border-radius: 15px;">
-                <div class="icon-circle bg-light-blue mb-3">
+            <div class="card card-custom h-100 p-3 shadow-sm" style="border-radius: 15px;">
+                <div class="icon-circle bg-light-blue mb-2">
                     <span class="material-icons text-primary">inventory_2</span>
                 </div>
-                <h2 class="fw-bold text-primary">@Model.TotalInitiatives</h2>
-                <p class="text-muted mb-0">Total Initiatives</p>
+                <h2 class="fw-bold text-primary mb-1">@Model.TotalInitiatives</h2>
+                <p class="text-muted small mb-0">Total Initiatives</p>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card card-custom h-100 p-4 shadow-sm" style="border-radius: 15px;">
-                <div class="icon-circle bg-light-green mb-3">
+            <div class="card card-custom h-100 p-3 shadow-sm" style="border-radius: 15px;">
+                <div class="icon-circle bg-light-green mb-2">
                     <span class="material-icons text-success">check_circle</span>
                 </div>
-                <h2 class="fw-bold text-success">@Model.MonthlyApproved</h2>
-                <p class="text-muted mb-0">Approved (this month)</p>
+                <h2 class="fw-bold text-success mb-1">@Model.MonthlyApproved</h2>
+                <p class="text-muted small mb-0">Approved (this month)</p>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card card-custom h-100 p-4 shadow-sm" style="border-radius: 15px;">
-                <div class="icon-circle bg-light-yellow mb-3">
+            <div class="card card-custom h-100 p-3 shadow-sm" style="border-radius: 15px;">
+                <div class="icon-circle bg-light-yellow mb-2">
                     <span class="material-icons text-warning">pending</span>
                 </div>
-                <h2 class="fw-bold text-warning">@Model.MonthlyPending</h2>
-                <p class="text-muted mb-0">Pending Approval</p>
+                <h2 class="fw-bold text-warning mb-1">@Model.MonthlyPending</h2>
+                <p class="text-muted small mb-0">Pending Approval</p>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card card-custom h-100 p-4 shadow-sm" style="border-radius: 15px;">
-                <div class="icon-circle mb-3">
+            <div class="card card-custom h-100 p-3 shadow-sm" style="border-radius: 15px;">
+                <div class="icon-circle mb-2">
                     <span class="material-icons" style="color: #be123c;">calendar_month</span>
                 </div>
-                <h2 class="fw-bold" style="color: #be123c;">@Model.MonthlyTotal</h2>
-                <p class="text-muted mb-0">This Month</p>
+                <h2 class="fw-bold mb-1" style="color: #be123c;">@Model.MonthlyTotal</h2>
+                <p class="text-muted small mb-0">This Month</p>
             </div>
         </div>
     </section>
 
-    <!-- Category Distribution - Card style gi?ng Home -->
-    <section class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Category Distribution -->
+    <section class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex align-items-center">
                 <span class="material-icons text-danger me-2">pie_chart</span>
                 <h4 class="fw-bold mb-0">Distribution by Category</h4>
             </div>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-3">
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
-                    <div class="card-body p-4">
+                    <div class="card-body p-3">
                         @if (Model.CategoryDistributions.Any())
                         {
                             @foreach (var cat in Model.CategoryDistributions)
                             {
-                                <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded-3" style="background-color: #f8fafc;">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <div style="width: 12px; height: 12px; border-radius: 50%; background-color: @cat.Color;"></div>
-                                        <span class="fw-medium">@cat.CategoryName</span>
+                                <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded-3" style="background-color: #f8fafc;">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width: 10px; height: 10px; border-radius: 50%; background-color: @cat.Color;"></div>
+                                        <span class="fw-medium small">@cat.CategoryName</span>
                                     </div>
                                     <div class="text-end">
-                                        <span class="fw-bold">@cat.Count</span>
-                                        <span class="text-muted small ms-2">(@cat.Percentage%)</span>
+                                        <span class="fw-bold small">@cat.Count</span>
+                                        <span class="text-muted small ms-1">(@cat.Percentage%)</span>
                                     </div>
                                 </div>
                             }
                         }
                         else
                         {
-                            <div class="text-center py-5">
-                                <span class="material-icons text-muted" style="font-size: 48px;">donut_large</span>
-                                <p class="text-muted mt-2">No distribution data</p>
+                            <div class="text-center py-4">
+                                <span class="material-icons text-muted" style="font-size: 36px;">donut_large</span>
+                                <p class="text-muted mt-2 small">No distribution data</p>
                             </div>
                         }
                     </div>
@@ -103,32 +103,32 @@
             </div>
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm h-100" style="border-radius: 15px;">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-center">
+                    <div class="card-body p-3 d-flex align-items-center justify-content-center">
                         <div class="text-center">
                             <div class="position-relative d-inline-block">
                                 <div class="rounded-circle d-flex align-items-center justify-content-center" 
-                                     style="width: 180px; height: 180px; background: conic-gradient(
-                                         @if(Model.CategoryDistributions.Any())
-                                         {
-                                             var gradientParts = new List<string>();
-                                             decimal currentDeg = 0;
-                                             foreach(var cat in Model.CategoryDistributions)
-                                             {
-                                                 var nextDeg = currentDeg + (cat.Percentage * 3.6m);
-                                                 gradientParts.Add($"{cat.Color} {currentDeg}deg {nextDeg}deg");
-                                                 currentDeg = nextDeg;
-                                             }
-                                             @string.Join(", ", gradientParts)
-                                         }
-                                         else
-                                         {
-                                             @:#e5e7eb 0deg 360deg
-                                         }
+                                     style="width: 150px; height: 150px; background: conic-gradient(
+                                          @if(Model.CategoryDistributions.Any())
+                                          {
+                                              var gradientParts = new List<string>();
+                                              decimal currentDeg = 0;
+                                              foreach(var cat in Model.CategoryDistributions)
+                                              {
+                                                  var nextDeg = currentDeg + (cat.Percentage * 3.6m);
+                                                  gradientParts.Add($"{cat.Color} {currentDeg}deg {nextDeg}deg");
+                                                  currentDeg = nextDeg;
+                                              }
+                                              @string.Join(", ", gradientParts)
+                                          }
+                                          else
+                                          {
+                                              @:#e5e7eb 0deg 360deg
+                                          }
                                      );">
                                     <div class="rounded-circle bg-white d-flex flex-column align-items-center justify-content-center" 
-                                         style="width: 120px; height: 120px;">
-                                        <span class="fs-2 fw-bold text-primary">@Model.TotalInitiatives</span>
-                                        <span class="text-muted small">Total</span>
+                                         style="width: 100px; height: 100px;">
+                                        <span class="fs-3 fw-bold text-primary">@Model.TotalInitiatives</span>
+                                        <span class="text-muted small" style="font-size: 10px;">Total</span>
                                     </div>
                                 </div>
                             </div>
@@ -139,9 +139,9 @@
         </div>
     </section>
 
-    <!-- Recent Submissions - Table hover gi?ng Index.cshtml c?a Home -->
-    <section class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Recent Submissions -->
+    <section class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex align-items-center">
                 <span class="material-icons text-danger me-2">history</span>
                 <h4 class="fw-bold mb-0">Recent Initiatives (7 days)</h4>

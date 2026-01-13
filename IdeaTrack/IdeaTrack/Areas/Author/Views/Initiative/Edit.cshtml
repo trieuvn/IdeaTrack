@@ -1,17 +1,17 @@
 ﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
 
-<main class="container py-5">
+<main class="container py-3">
 
     <!-- Hero Section -->
-    <section class="hero-section text-white p-5 mb-5 shadow-lg">
-        <div class="row">
+    <section class="hero-section text-white p-4 mb-4 shadow" style="border-radius: 15px; min-height: auto;">
+        <div class="row align-items-center">
             <div class="col-lg-8">
-                <span class="badge rounded-pill bg-info text-white mb-3 p-2 px-3">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">edit</span> EDIT INITIATIVE
+                <span class="badge rounded-pill bg-info text-white mb-2 px-3 py-1">
+                    <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> EDIT INITIATIVE
                 </span>
-                <h1 class="fw-bold display-5 mb-3">Update Initiative</h1>
-                <p class="fs-5 mb-0 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    Edit your initiative information. Initiative Code: <strong>@Model.Initiative.InitiativeCode</strong>
+                <h1 class="fw-bold display-6 mb-2">Update Initiative</h1>
+                <p class="mb-0 opacity-75">
+                    Initiative Code: <strong>@Model.Initiative.InitiativeCode</strong>
                 </p>
             </div>
         </div>
@@ -67,17 +67,16 @@
                     </div>
                 </div>
 
-                <!-- Row 2: Department & Budget -->
+                <!-- Row 2: Department (Auto-assigned) & Budget -->
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
-                        <label asp-for="Initiative.DepartmentId" class="form-label fw-medium">
+                        <label class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">business</span>
-                            Department <span class="text-danger">*</span>
+                            Department
                         </label>
-                        <select asp-for="Initiative.DepartmentId" asp-items="Model.Departments" class="form-select">
-                            <option value="">-- Select department --</option>
-                        </select>
-                        <span asp-validation-for="Initiative.DepartmentId" class="text-danger small"></span>
+                        <input type="text" class="form-control bg-light" value="@Model.UserDepartmentName" readonly />
+                        <input type="hidden" asp-for="Initiative.DepartmentId" value="@Model.UserDepartmentId" />
+                        <small class="text-muted">Auto-assigned from your profile</small>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.Budget" class="form-label fw-medium">
@@ -97,6 +96,49 @@
                     </label>
                     <input asp-for="Initiative.Title" placeholder="Enter a brief title for the initiative" class="form-control form-control-lg" />
                     <span asp-validation-for="Initiative.Title" class="text-danger small"></span>
+                </div>
+
+                <!-- Co-Authors Section -->
+                <div class="mb-4">
+                    <label class="form-label fw-medium">
+                        <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">group</span>
+                        Co-Authors
+                    </label>
+                    
+                    <!-- Existing Co-Authors -->
+                    @if (Model.ExistingCoAuthors != null && Model.ExistingCoAuthors.Any())
+                    {
+                        <div id="existingCoAuthors" class="d-flex flex-wrap gap-2 mb-3">
+                            @foreach (var coAuthor in Model.ExistingCoAuthors)
+                            {
+                                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 d-flex align-items-center gap-2" data-author-id="@coAuthor.AuthorId">
+                                    <span class="material-icons" style="font-size: 16px;">person</span>
+                                    @(coAuthor.Author?.FullName ?? coAuthor.Author?.Email)
+                                    @if (Model.IsOwner)
+                                    {
+                                        <button type="button" class="btn-close btn-close-sm" style="font-size: 10px;" 
+                                                onclick="removeExistingCoAuthor(@Model.Initiative.Id, @coAuthor.AuthorId, this)"></button>
+                                    }
+                                </span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-2">No co-authors yet.</p>
+                    }
+                    
+                    <!-- Add New Co-Authors (Owner only) -->
+                    @if (Model.IsOwner)
+                    {
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-light"><span class="material-icons" style="font-size: 18px;">search</span></span>
+                            <input type="text" id="coAuthorSearch" class="form-control" placeholder="Search by name or email to add..." autocomplete="off" />
+                        </div>
+                        <div id="searchResults" class="list-group mb-2" style="max-height: 200px; overflow-y: auto;"></div>
+                        <div id="selectedCoAuthors" class="d-flex flex-wrap gap-2"></div>
+                        <div id="coAuthorInputs"></div>
+                    }
                 </div>
 
                 <!-- Description -->
@@ -468,6 +510,128 @@
                 });
             }
         })();
+    </script>
+    
+    <!-- Co-Author Management Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const initiativeId = @Model.Initiative.Id;
+            const coAuthorSearch = document.getElementById('coAuthorSearch');
+            const searchResults = document.getElementById('searchResults');
+            const selectedCoAuthors = document.getElementById('selectedCoAuthors');
+            const coAuthorInputs = document.getElementById('coAuthorInputs');
+            let selectedAuthors = [];
+            let searchTimeout;
+
+            // Remove existing co-author via AJAX
+            window.removeExistingCoAuthor = function(initId, userId, btn) {
+                if (!confirm('Remove this co-author?')) return;
+                
+                fetch('/Author/Initiative/RemoveCoAuthor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: `initiativeId=${initId}&userId=${userId}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.closest('span').remove();
+                    } else {
+                        alert(data.message || 'Error removing co-author');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error removing co-author');
+                });
+            };
+
+            if (coAuthorSearch) {
+                coAuthorSearch.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    const term = this.value.trim();
+                    
+                    if (term.length < 2) {
+                        searchResults.innerHTML = '';
+                        return;
+                    }
+
+                    searchTimeout = setTimeout(() => {
+                        fetch(`/Author/Initiative/SearchUsers?term=${encodeURIComponent(term)}`)
+                            .then(res => res.json())
+                            .then(users => {
+                                searchResults.innerHTML = '';
+                                users.forEach(user => {
+                                    if (!selectedAuthors.find(a => a.id === user.id)) {
+                                        const item = document.createElement('button');
+                                        item.type = 'button';
+                                        item.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+                                        item.innerHTML = `
+                                            <div>
+                                                <strong>${user.text}</strong>
+                                                <small class="text-muted d-block">${user.email} • ${user.department}</small>
+                                            </div>
+                                            <span class="material-icons text-success">add_circle</span>
+                                        `;
+                                        item.onclick = () => addCoAuthorViaAjax(user);
+                                        searchResults.appendChild(item);
+                                    }
+                                });
+                                if (users.length === 0) {
+                                    searchResults.innerHTML = '<div class="list-group-item text-muted">No users found</div>';
+                                }
+                            });
+                    }, 300);
+                });
+            }
+
+            function addCoAuthorViaAjax(user) {
+                fetch('/Author/Initiative/AddCoAuthor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: `initiativeId=${initiativeId}&userId=${user.id}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        // Add badge to existing section
+                        const existingDiv = document.getElementById('existingCoAuthors') || createExistingDiv();
+                        const badge = document.createElement('span');
+                        badge.className = 'badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 d-flex align-items-center gap-2';
+                        badge.dataset.authorId = user.id;
+                        badge.innerHTML = `
+                            <span class="material-icons" style="font-size: 16px;">person</span>
+                            ${user.text}
+                            <button type="button" class="btn-close btn-close-sm" style="font-size: 10px;" 
+                                    onclick="removeExistingCoAuthor(${initiativeId}, ${user.id}, this)"></button>
+                        `;
+                        existingDiv.appendChild(badge);
+                        coAuthorSearch.value = '';
+                        searchResults.innerHTML = '';
+                    } else {
+                        alert(data.message || 'Error adding co-author');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Error adding co-author');
+                });
+            }
+
+            function createExistingDiv() {
+                const div = document.createElement('div');
+                div.id = 'existingCoAuthors';
+                div.className = 'd-flex flex-wrap gap-2 mb-3';
+                coAuthorSearch.parentElement.before(div);
+                return div;
+            }
+        });
     </script>
 }
 
