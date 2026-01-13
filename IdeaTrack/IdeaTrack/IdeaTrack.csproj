@@ -35,6 +35,7 @@
     <Folder Include="Areas\Faculty\Data\" />
     <Folder Include="Areas\Faculty\Models\" />
     <Folder Include="Areas\SciTech\Data\" />
+    <Folder Include="wwwroot\temp-pdf\" />
   </ItemGroup>
 
 </Project>
