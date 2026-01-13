@@ -278,11 +278,15 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             
             var memberScores = assignments.Select(a => new MemberScoreVM
             {
+                MemberId = a.MemberId,
                 MemberName = a.Member.FullName,
                 Role = "Member", 
                 Scores = a.EvaluationDetails.ToDictionary(d => d.Criteria.CriteriaName, d => d.ScoreGiven),
                 TotalScore = a.EvaluationDetails.Sum(d => d.ScoreGiven),
-                IsCompleted = a.Status == AssignmentStatus.Completed
+                IsCompleted = a.Status == AssignmentStatus.Completed,
+                Strengths = a.Strengths,
+                Limitations = a.Limitations,
+                Recommendations = a.Recommendations
             }).ToList();
 
             if (completed > 0)
@@ -303,8 +307,21 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 FinalStatus = initiative.FinalResult?.ChairmanDecision ?? "Pending",
                 Rank = initiative.FinalResult?.Rank ?? "N/A",
                 MemberScores = memberScores,
-                Status = initiative.Status.ToString()
+                Status = initiative.Status.ToString(),
+                ConsolidatedStrengths = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Strengths)).Select(m => $"- {m.MemberName}: {m.Strengths}")),
+                ConsolidatedLimitations = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Limitations)).Select(m => $"- {m.MemberName}: {m.Limitations}")),
+                ConsolidatedRecommendations = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Recommendations)).Select(m => $"- {m.MemberName}: {m.Recommendations}"))
             };
+
+            // RANK CALCULATION (Threshold-based)
+            if (string.IsNullOrEmpty(vm.Rank) || vm.Rank == "N/A")
+            {
+                if (averageScore >= 90) vm.Rank = "Xuất sắc";
+                else if (averageScore >= 80) vm.Rank = "Tốt";
+                else if (averageScore >= 70) vm.Rank = "Khá";
+                else if (averageScore >= 50) vm.Rank = "Đạt";
+                else vm.Rank = "Không đạt";
+            }
 
             return View(vm);
         }
@@ -484,6 +501,43 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             TempData["SuccessMessage"] = $"Successfully {(decision == "Approve" ? "Approved" : "Rejected")} this initiative!";
             return RedirectToAction("Index");
+        }
+
+        // POST: /SciTech/Port/RestartEvaluation
+        // Reset scores and set status to Re_Evaluating
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestartEvaluation(int id)
+        {
+            var initiative = await _context.Initiatives
+                .Include(i => i.Assignments)
+                .ThenInclude(a => a.EvaluationDetails)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (initiative == null) return NotFound();
+
+            // Reset Assignments
+            var currentAssignments = initiative.Assignments.Where(a => a.RoundNumber == initiative.CurrentRound).ToList();
+            foreach (var assign in currentAssignments)
+            {
+                assign.Status = AssignmentStatus.Assigned; // Reset status
+                assign.Strengths = null;
+                assign.Limitations = null;
+                assign.Recommendations = null;
+                assign.Decision = null;
+                assign.DecisionDate = null;
+                assign.ReviewComment = null;
+                
+                // Remove scores? Or just reset them. Removing details is cleaner.
+                _context.EvaluationDetails.RemoveRange(assign.EvaluationDetails);
+            }
+
+            initiative.Status = InitiativeStatus.Re_Evaluating;
+            
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Evaluation has been restarted. Scores are reset.";
+            return RedirectToAction("Result", new { id });
         }
 
         // GET: /SciTech/Port/Follow

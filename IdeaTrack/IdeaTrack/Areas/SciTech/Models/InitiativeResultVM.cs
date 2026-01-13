@@ -18,15 +18,24 @@ namespace IdeaTrack.Areas.SciTech.Models
         public string FinalStatus { get; set; }
         public string Rank { get; set; }
 
+        public string ConsolidatedStrengths { get; set; }
+        public string ConsolidatedLimitations { get; set; }
+        public string ConsolidatedRecommendations { get; set; }
+
         public List<MemberScoreVM> MemberScores { get; set; } = new List<MemberScoreVM>();
     }
 
     public class MemberScoreVM
     {
+        public int MemberId { get; set; }
         public string MemberName { get; set; }
         public string Role { get; set; }
         public bool IsCompleted { get; set; }
         public decimal TotalScore { get; set; }
         public Dictionary<string, decimal> Scores { get; set; } = new Dictionary<string, decimal>();
+
+        public string Strengths { get; set; }
+        public string Limitations { get; set; }
+        public string Recommendations { get; set; }
     }
 }
