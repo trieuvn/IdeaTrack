@@ -705,5 +705,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             if (user == null) return NotFound();
             return Json(user);
         }
+
     }
 }
