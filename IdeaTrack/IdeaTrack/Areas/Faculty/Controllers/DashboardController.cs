@@ -33,6 +33,9 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         // ==========================================
         // 1. DASHBOARD LIST (INDEX)
         // ==========================================
+        // ==========================================
+        // 1. DASHBOARD LIST (INDEX)
+        // ==========================================
         public async Task<IActionResult> Index(string searchString, string statusFilter, int pageNumber = 1)
         {
             var deptId = await GetCurrentUserDepartmentId();
@@ -40,20 +43,12 @@ namespace IdeaTrack.Areas.Faculty.Controllers
 
             int pageSize = 5;
 
-            // 1. Base Query - Filter explicitly for Faculty Workflow statuses AND Current Dept
-            var allowedStatuses = new[] 
-            { 
-                InitiativeStatus.Pending, 
-                InitiativeStatus.Faculty_Approved, 
-                InitiativeStatus.Rejected, 
-                InitiativeStatus.Revision_Required 
-            };
-
+            // 1. Base Query - Everything EXCEPT Draft for Faculty View
             var query = _context.Initiatives
                 .Include(i => i.Creator)
                 .Include(i => i.Category)
                 .Include(i => i.Department)
-                .Where(i => i.DepartmentId == deptId && allowedStatuses.Contains(i.Status))
+                .Where(i => i.DepartmentId == deptId && i.Status != InitiativeStatus.Draft)
                 .AsQueryable();
 
             // 2. Apply Search
@@ -62,10 +57,17 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 query = query.Where(s => s.Title.Contains(searchString) || s.InitiativeCode.Contains(searchString) || s.Creator.FullName.Contains(searchString));
             }
 
-            // 3. Apply Status Filter (if specific one selected)
-            if (!string.IsNullOrEmpty(statusFilter) && Enum.TryParse(typeof(InitiativeStatus), statusFilter, out var status))
+            // 3. Apply Status Filter
+            if (!string.IsNullOrEmpty(statusFilter))
             {
-                query = query.Where(s => s.Status == (InitiativeStatus)status);
+                if (statusFilter == "Evaluation")
+                {
+                    query = query.Where(s => s.Status == InitiativeStatus.Evaluating || s.Status == InitiativeStatus.Re_Evaluating);
+                }
+                else if (Enum.TryParse(typeof(InitiativeStatus), statusFilter, out var status))
+                {
+                    query = query.Where(s => s.Status == (InitiativeStatus)status);
+                }
             }
 
             // 4. Sorting
@@ -81,15 +83,21 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            // 6. Dynamic Statistics (Count directly from DB based on allowed workflow, restricted to Dept)
+            // 6. Dynamic Statistics (Count directly from DB, restricted to Dept, Excluding Draft)
+            // Note: We use the base condition (Dept + No Draft) for all counts
             var baseStatsQuery = _context.Initiatives
-                .Where(i => i.DepartmentId == deptId && allowedStatuses.Contains(i.Status));
+                .Where(i => i.DepartmentId == deptId && i.Status != InitiativeStatus.Draft);
             
             var viewModel = new FacultyDashboardVM
             {
                 PendingCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Pending),
-                ApprovedCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved),
+                FacultyApprovedCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved),
+                EvaluationCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Evaluating || i.Status == InitiativeStatus.Re_Evaluating),
+                PendingFinalCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Pending_Final),
+                ApprovedCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Approved),
                 RejectedCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Rejected),
+                RevisionRequiredCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Revision_Required),
+                
                 TotalInitiatives = await baseStatsQuery.CountAsync(), 
                 Initiatives = initiatives.Select(i => new FacultyInitiativeItem
                 {
@@ -109,6 +117,8 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             ViewBag.PageSize = pageSize;
             ViewBag.CurrentSearch = searchString;
             ViewBag.CurrentStatus = statusFilter;
+
+            // Pass statuses list for dropdown (handled in View, but good to know)
 
             return View(viewModel);
         }
@@ -300,16 +310,24 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         // ==========================================
         // 7. STATISTICS PAGE (PROGRESS)
         // ==========================================
-        public async Task<IActionResult> Progress(string searchString)
+        // ==========================================
+        // 7. STATISTICS PAGE (PROGRESS)
+        // ==========================================
+        public async Task<IActionResult> Progress(string searchString, int? yearId, int? periodId, int? categoryId)
         {
             var deptId = await GetCurrentUserDepartmentId();
             if (deptId == null) return RedirectToAction("Index");
 
+            // Base Query: Dept Only + Exclude Draft
             var query = _context.Initiatives
                 .Include(i => i.Creator)
-                .Where(i => i.DepartmentId == deptId) // Strict Filter
+                .Include(i => i.Category)
+                    .ThenInclude(c => c.Period)
+                        .ThenInclude(p => p.AcademicYear)
+                .Where(i => i.DepartmentId == deptId && i.Status != InitiativeStatus.Draft)
                 .AsQueryable();
 
+            // 1. Search
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(i => i.Creator.FullName.Contains(searchString)
@@ -317,30 +335,75 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                                       || i.InitiativeCode.Contains(searchString));
             }
 
-            var recentInitiatives = await query
+            // 2. Filters
+            if (yearId.HasValue)
+            {
+                query = query.Where(i => i.Category.Period.AcademicYearId == yearId.Value);
+            }
+            if (periodId.HasValue)
+            {
+                query = query.Where(i => i.Category.PeriodId == periodId.Value);
+            }
+            if (categoryId.HasValue)
+            {
+                query = query.Where(i => i.CategoryId == categoryId.Value);
+            }
+
+            var initiatives = await query
                 .OrderByDescending(i => i.CreatedAt)
-                .Take(10)
+                .Take(50) // Limit to 50 for performance on chart page
                 .ToListAsync();
 
             ViewBag.CurrentSearch = searchString;
 
-            // Stats restricted to Dept
-            var allData = _context.Initiatives.Where(i => i.DepartmentId == deptId).AsQueryable();
+            // Stats restricted to Dept + Filtered Data (Wait, usually charts show aggregate of filtered data)
+            // But per request "Đảm bảo khi chọn lọc, danh sách sáng kiến bên dưới sẽ cập nhật chính xác theo điều kiện."
+            // Implicitly charts should probably update too? The requirement says "Chart data..." well it says "danh sách sáng kiến bên dưới".
+            // However existing code recalculates PieData from `allData`. 
+            // If I filter by "Year 2024", showing pie chart for "All Time" is confusing.
+            // I will apply filters to the STATS too.
+            
+            var statsQuery = _context.Initiatives
+                .Include(i => i.Category).ThenInclude(c => c.Period)
+                .Where(i => i.DepartmentId == deptId && i.Status != InitiativeStatus.Draft)
+                .AsQueryable();
 
-            int countPending = await allData.CountAsync(i => i.Status == InitiativeStatus.Pending);
-            int countApproved = await allData.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved || i.Status == InitiativeStatus.Approved);
-            int countRevision = await allData.CountAsync(i => i.Status == InitiativeStatus.Revision_Required);
+            if (yearId.HasValue) statsQuery = statsQuery.Where(i => i.Category.Period.AcademicYearId == yearId.Value);
+            if (periodId.HasValue) statsQuery = statsQuery.Where(i => i.Category.PeriodId == periodId.Value);
+            if (categoryId.HasValue) statsQuery = statsQuery.Where(i => i.CategoryId == categoryId.Value);
+            // Search string usually doesn't affect high-level stats/charts in dashboards, but filters DO.
+            
+            int countPending = await statsQuery.CountAsync(i => i.Status == InitiativeStatus.Pending);
+            int countApproved = await statsQuery.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved); // Just forwarded? Or Approved final?
+            // Existing code: countApproved = Faculty_Approved OR Approved.
+            // New logic: "Evaluation" group.
+            int countForwarded = await statsQuery.CountAsync(i => i.Status == InitiativeStatus.Faculty_Approved);
+             // Pie chart usually shows workflow status. Current view has "Pending", "Forwarded", "Revision".
+             // I will stick to existing pie chart categories or update them?
+             // User said: "Logic Trạng thái (Status): ... gộp hai trạng thái evaluating và re_evaluating ... Evaluation"
+             // I should probably update the Pie Chart to match the new groups? 
+             // "Submissions per Day" (Trend) and "Status Distribution" (Pie)
+             // I'll keep simple: Pending, Faculty Approved, Revision, Evaluation, Final Approved/Rejected
+             // But existing view only had 3 slices. I will expand it to match Dashboard groups?
+             // Or just use the counts I requested in DashboardVM?
+             // Let's count them all for flexibility.
+             
+            int countEvaluation = await statsQuery.CountAsync(i => i.Status == InitiativeStatus.Evaluating || i.Status == InitiativeStatus.Re_Evaluating);
+            int countRevision = await statsQuery.CountAsync(i => i.Status == InitiativeStatus.Revision_Required);
+            
+            // For the Pie Chart, let's show: Pending, Approved (Faculty), Evaluation, Revision
+            ViewBag.PieData = new List<int> { countPending, countForwarded, countEvaluation, countRevision };
+            ViewBag.PieLabels = new List<string> { "Pending Review", "Forwarded (R&D)", "Under Evaluation", "Revision Required" };
 
-            ViewBag.PieData = new List<int> { countPending, countApproved, countRevision };
-
+            // Trend Data
             var today = DateTime.Today;
             var trendData = new List<int>();
             var trendLabels = new List<string>();
 
-            for (int i = 4; i >= 0; i--)
+            for (int i = 6; i >= 0; i--) // Last 7 days
             {
                 var date = today.AddDays(-i);
-                int count = await allData.CountAsync(x => x.CreatedAt.Date == date);
+                int count = await statsQuery.CountAsync(x => x.CreatedAt.Date == date);
                 trendData.Add(count);
                 trendLabels.Add(date.ToString("dd/MM"));
             }
@@ -348,7 +411,30 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             ViewBag.TrendData = trendData;
             ViewBag.TrendLabels = trendLabels;
 
-            return View(recentInitiatives);
+            // Populate Dropdowns
+            var years = await _context.AcademicYears.OrderByDescending(y => y.Name).ToListAsync();
+            
+            var periodQ = _context.InitiativePeriods.AsQueryable();
+            if (yearId.HasValue) periodQ = periodQ.Where(p => p.AcademicYearId == yearId.Value);
+            var periods = await periodQ.OrderByDescending(p => p.StartDate).ToListAsync();
+
+            var catQ = _context.InitiativeCategories.AsQueryable();
+            if (periodId.HasValue) catQ = catQ.Where(c => c.PeriodId == periodId.Value);
+            else if (yearId.HasValue) catQ = catQ.Where(c => c.Period.AcademicYearId == yearId.Value);
+            var categories = await catQ.OrderBy(c => c.Name).ToListAsync();
+
+            var viewModel = new FacultyProgressVM
+            {
+                Initiatives = initiatives,
+                SelectedYearId = yearId,
+                SelectedPeriodId = periodId,
+                SelectedCategoryId = categoryId,
+                Years = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(years, "Id", "Name", yearId),
+                Periods = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(periods, "Id", "Name", periodId),
+                Categories = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categories, "Id", "Name", categoryId)
+            };
+
+            return View(viewModel);
         }
 
         // ==========================================

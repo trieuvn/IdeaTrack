@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<IdeaTrack.Models.Initiative>
 
-<main class="container py-5">
+<main class="container pb-5 pt-2">
 
     <!-- Hero Section -->
     <section class="hero-section text-white p-4 mb-4 shadow" style="border-radius: 15px; min-height: auto;">
@@ -49,6 +49,12 @@
                     <button class="nav-link rounded-pill" data-filter="draft" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">edit_note</span>
                         Draft <span class="badge bg-secondary ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Draft)</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link rounded-pill" data-filter="revision" type="button">
+                        <span class="material-icons align-middle me-1" style="font-size: 16px;">rate_review</span>
+                        Revision <span class="badge bg-info ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">

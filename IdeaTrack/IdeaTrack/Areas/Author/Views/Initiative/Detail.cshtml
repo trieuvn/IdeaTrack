@@ -1,6 +1,6 @@
 ﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeDetailViewModel
 
-<main class="container py-5">
+<main class="container pb-5 pt-2">
 
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
@@ -12,40 +12,45 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section text-white p-5 mb-5 shadow-lg">
+    <section class="hero-section text-white p-4 mb-4 shadow" style="border-radius: 15px; min-height: auto;">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <div class="d-flex align-items-center gap-2 mb-3">
+                <div class="d-flex align-items-center gap-2 mb-2">
                     @switch (Model.Initiative.Status)
                     {
                         case IdeaTrack.Models.InitiativeStatus.Approved:
-                            <span class="badge rounded-pill bg-success p-2 px-3">
+                            <span class="badge rounded-pill bg-success px-3 py-1">
                                 <span class="material-icons align-middle me-1" style="font-size: 14px;">check_circle</span> APPROVED
                             </span>
                             break;
                         case IdeaTrack.Models.InitiativeStatus.Rejected:
-                            <span class="badge rounded-pill bg-danger p-2 px-3">
+                            <span class="badge rounded-pill bg-danger px-3 py-1">
                                 <span class="material-icons align-middle me-1" style="font-size: 14px;">cancel</span> REJECTED
                             </span>
                             break;
                         case IdeaTrack.Models.InitiativeStatus.Draft:
-                            <span class="badge rounded-pill bg-secondary p-2 px-3">
+                            <span class="badge rounded-pill bg-secondary px-3 py-1">
                                 <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> DRAFT
                             </span>
                             break;
+                        case IdeaTrack.Models.InitiativeStatus.Revision_Required:
+                            <span class="badge rounded-pill bg-warning text-dark px-3 py-1">
+                                <span class="material-icons align-middle me-1" style="font-size: 14px;">rate_review</span> REVISION REQUIRED
+                            </span>
+                            break;
                         default:
-                            <span class="badge rounded-pill bg-warning text-dark p-2 px-3">
+                            <span class="badge rounded-pill bg-warning text-dark px-3 py-1">
                                 <span class="material-icons align-middle me-1" style="font-size: 14px;">pending</span> PENDING
                             </span>
                             break;
                     }
-                    <span class="badge rounded-pill bg-white bg-opacity-25 p-2 px-3">@Model.Initiative.InitiativeCode</span>
+                    <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-1">@Model.Initiative.InitiativeCode</span>
                 </div>
-                <h1 class="fw-bold display-5 mb-3">@Model.Initiative.Title</h1>
-                <p class="fs-5 mb-0 opacity-75">
-                    <span class="material-icons align-middle me-1" style="font-size: 18px;">calendar_today</span> @Model.Initiative.CreatedAt.ToString("dd/MM/yyyy")
+                <h1 class="fw-bold display-6 mb-2">@Model.Initiative.Title</h1>
+                <p class="mb-0 opacity-75">
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">calendar_today</span> @Model.Initiative.CreatedAt.ToString("dd/MM/yyyy")
                     <span class="mx-2">•</span>
-                    <span class="material-icons align-middle me-1" style="font-size: 18px;">category</span> @(Model.Initiative.Category?.Name ?? "N/A")
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">category</span> @(Model.Initiative.Category?.Name ?? "N/A")
                 </p>
             </div>
             <div class="col-lg-4 d-none d-lg-flex justify-content-end align-items-center">
@@ -119,6 +124,45 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Co-Authors Card -->
+            <div class="card card-custom shadow-sm mb-4" style="border-radius: 15px;">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0">
+                        <span class="material-icons align-middle me-2 text-success">group</span>
+                        Authors
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Creator -->
+                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                        <span class="material-icons text-warning me-3" style="font-size: 24px;">stars</span>
+                        <div>
+                            <div class="fw-medium">@(Model.Initiative.Creator?.FullName ?? "N/A")</div>
+                            <div class="small text-muted">Creator • @(Model.Initiative.Creator?.Department?.Name ?? "")</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Co-Authors -->
+                    @if (Model.CoAuthors.Any())
+                    {
+                        @foreach (var coAuthor in Model.CoAuthors)
+                        {
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons text-muted me-3" style="font-size: 20px;">person</span>
+                                <div>
+                                    <div class="fw-medium">@(coAuthor.Author?.FullName ?? coAuthor.Author?.Email)</div>
+                                    <div class="small text-muted">Co-author • @(coAuthor.Author?.Department?.Name ?? "")</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-0">No co-authors.</p>
+                    }
                 </div>
             </div>
 
@@ -228,6 +272,131 @@
                 </div>
             </div>
 
+            <!-- Final Evaluation Result (for Approved initiatives) -->
+            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved && Model.FinalResult != null)
+            {
+                <div class="card shadow-sm mb-4 border-success" style="border-radius: 15px; border-width: 2px;">
+                    <div class="card-header bg-success bg-opacity-10 border-0 pt-4 px-4">
+                        <h5 class="fw-bold mb-0 text-success">
+                            <span class="material-icons align-middle me-2">emoji_events</span>
+                            Final Evaluation Result
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Score Display -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <div class="text-center p-3 bg-light rounded-3">
+                                    <div class="small text-muted mb-1">Average Score</div>
+                                    <div class="display-6 fw-bold text-primary">@Model.FinalResult.AverageScore.ToString("F1")</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center p-3 bg-light rounded-3">
+                                    <div class="small text-muted mb-1">Final Score</div>
+                                    <div class="display-6 fw-bold text-success">@((Model.FinalResult.FinalScore ?? Model.FinalResult.AverageScore).ToString("F1"))</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Rank & Decision -->
+                        <div class="d-flex align-items-center justify-content-center mb-4">
+                            @{
+                                var rankBadgeClass = Model.FinalResult.Rank switch
+                                {
+                                    "Xuất sắc" => "bg-warning text-dark",
+                                    "Tốt" => "bg-success",
+                                    "Khá" => "bg-info",
+                                    "Đạt" => "bg-secondary",
+                                    _ => "bg-light text-dark"
+                                };
+                            }
+                            <span class="badge @rankBadgeClass rounded-pill px-4 py-2 fs-6">
+                                <span class="material-icons align-middle me-1" style="font-size: 16px;">military_tech</span>
+                                @(Model.FinalResult.Rank ?? "N/A")
+                            </span>
+                        </div>
+
+                        <!-- Details -->
+                        <div class="small text-muted">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons me-2" style="font-size: 16px;">gavel</span>
+                                <span>Decision: <strong class="text-success">@(Model.FinalResult.ChairmanDecision ?? "Approved")</strong></span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="material-icons me-2" style="font-size: 16px;">event</span>
+                                <span>Decision Date: @Model.FinalResult.DecisionDate.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="material-icons me-2" style="font-size: 16px;">person</span>
+                                <span>Chairman: <strong>@(Model.FinalResult.Chairman?.FullName ?? "N/A")</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Revision/Rejection Reason Alert -->
+            @if (Model.LatestRevisionRequest != null)
+            {
+                var isRejected = Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected;
+                var alertClass = isRejected ? "border-danger bg-danger" : "border-warning bg-warning";
+                var iconColor = isRejected ? "text-danger" : "text-warning";
+                var title = isRejected ? "Rejection Reason" : "Revision Required";
+                
+                <div class="card shadow-sm mb-4 @(isRejected ? "border-danger" : "border-warning")" style="border-radius: 15px; border-width: 2px;">
+                    <div class="card-header @(isRejected ? "bg-danger bg-opacity-10" : "bg-warning bg-opacity-25") border-0 pt-4 px-4">
+                        <h5 class="fw-bold mb-0 @iconColor">
+                            <span class="material-icons align-middle me-2">@(isRejected ? "cancel" : "rate_review")</span>
+                            @title
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="mb-3" style="line-height: 1.7;">@Model.LatestRevisionRequest.RequestContent</p>
+                        <div class="small text-muted">
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="material-icons me-2" style="font-size: 16px;">person</span>
+                                <span>By: <strong>@(Model.LatestRevisionRequest.Requester?.FullName ?? "Admin")</strong></span>
+                            </div>
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="material-icons me-2" style="font-size: 16px;">event</span>
+                                <span>Date: @Model.LatestRevisionRequest.RequestedDate.ToString("dd/MM/yyyy HH:mm")</span>
+                            </div>
+                            @if (Model.LatestRevisionRequest.Deadline.HasValue)
+                            {
+                                <div class="d-flex align-items-center">
+                                    <span class="material-icons me-2" style="font-size: 16px;">schedule</span>
+                                    <span>Deadline: <strong class="text-danger">@Model.LatestRevisionRequest.Deadline.Value.ToString("dd/MM/yyyy")</strong></span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Create Draft Copy Action -->
+            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected || 
+                 Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required)
+            {
+                <div class="card card-custom shadow-sm mb-4" style="border-radius: 15px;">
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+                        <h5 class="fw-bold mb-0">
+                            <span class="material-icons align-middle me-2 text-info">content_copy</span>
+                            Resubmit Initiative
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="text-muted small mb-3">Create a new draft copy from this initiative to make corrections and resubmit.</p>
+                        <form asp-controller="Initiative" asp-action="CopyToDraft" asp-route-id="@Model.Initiative.Id" method="post" onsubmit="return confirm('This will create a new draft copy. Continue?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-info btn-lg rounded-pill shadow-sm fw-bold w-100 text-white">
+                                <span class="material-icons align-middle me-1">content_copy</span> Create Draft Copy
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+
             <!-- Danger Zone -->
             <!-- Actions Card (Edit/Submit) -->
             @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Draft)
@@ -241,22 +410,29 @@
                     </div>
                     <div class="card-body p-4">
                         <div class="d-flex gap-2">
-                             <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@Model.Initiative.Id" class="btn btn-outline-primary btn-lg rounded-pill shadow-sm fw-bold w-50">
+                             <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@Model.Initiative.Id" class="btn btn-outline-primary btn-lg rounded-pill shadow-sm fw-bold @(Model.IsOwner ? "w-50" : "w-100")">
                                 <span class="material-icons align-middle me-1">edit</span> Edit
                             </a>
-                            <form asp-controller="Initiative" asp-action="SubmitInitiative" asp-route-id="@Model.Initiative.Id" method="post" class="w-50" onsubmit="return confirm('Are you sure you want to submit this initiative?');">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold w-100">
-                                    <span class="material-icons align-middle me-1">send</span> Submit
-                                </button>
-                            </form>
+                            @if (Model.IsOwner)
+                            {
+                                <form asp-controller="Initiative" asp-action="SubmitInitiative" asp-route-id="@Model.Initiative.Id" method="post" class="w-50" onsubmit="return confirm('Are you sure you want to submit this initiative?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold w-100">
+                                        <span class="material-icons align-middle me-1">send</span> Submit
+                                    </button>
+                                </form>
+                            }
                         </div>
+                        @if (!Model.IsOwner)
+                        {
+                            <p class="text-muted small mt-2 mb-0"><span class="material-icons align-middle" style="font-size: 14px;">info</span> Only the owner can submit this initiative.</p>
+                        }
                     </div>
                 </div>
             }
 
-            <!-- Danger Zone -->
-            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Draft)
+            <!-- Danger Zone (Owner only) -->
+            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Draft && Model.IsOwner)
             {
                 <div class="card border-danger shadow-sm" style="border-radius: 15px;">
                     <div class="card-body p-4">
