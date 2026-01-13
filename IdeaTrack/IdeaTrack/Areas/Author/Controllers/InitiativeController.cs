@@ -831,6 +831,7 @@ namespace IdeaTrack.Areas.Author.Controllers
 
         // ============ CATEGORY FILTER AJAX ENDPOINT ============
 
+        /*
         // GET: /Author/Initiative/GetCategoriesByYear?yearId=xxx
         [HttpGet]
         public async Task<IActionResult> GetCategoriesByYear(int yearId)
@@ -866,6 +867,7 @@ namespace IdeaTrack.Areas.Author.Controllers
                 return Json(new List<object>());
             }
         }
+        */
 
         // ============ CO-AUTHOR AJAX ENDPOINTS ============
 

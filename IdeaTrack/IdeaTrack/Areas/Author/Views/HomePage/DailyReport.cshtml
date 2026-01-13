@@ -22,6 +22,72 @@
         </div>
     </section>
 
+    <!-- Filter Section -->
+    <section class="card border-0 shadow-sm mb-4" style="border-radius: 15px;">
+        <div class="card-body p-4">
+            <form method="get" asp-action="DailyReport" class="row g-3">
+                <!-- Status -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-muted small">Status</label>
+                    <select name="status" asp-items="Model.Statuses" class="form-select rounded-pill">
+                        <option value="">-- All Statuses --</option>
+                    </select>
+                </div>
+                
+                <!-- Category -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-muted small">Category</label>
+                    <select name="categoryId" asp-items="Model.Categories" class="form-select rounded-pill">
+                        <option value="">-- All Categories --</option>
+                    </select>
+                </div>
+
+                <!-- Year -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-muted small">Year</label>
+                    <select name="yearId" asp-items="Model.Years" class="form-select rounded-pill" onchange="this.form.submit()">
+                        <option value="">-- All Years --</option>
+                    </select>
+                </div>
+
+                <!-- Period -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-muted small">Period</label>
+                    <select name="periodId" asp-items="Model.Periods" class="form-select rounded-pill">
+                        <option value="">-- All Periods --</option>
+                    </select>
+                </div>
+
+                <!-- Date Range From -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-muted small">From Date</label>
+                    <input type="date" name="fromDate" value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" class="form-control rounded-pill" />
+                </div>
+
+                <!-- Date Range To -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-muted small">To Date</label>
+                    <input type="date" name="toDate" value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" class="form-control rounded-pill" />
+                </div>
+
+                <!-- Buttons -->
+                <div class="col-md-6 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 flex-grow-1">
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">filter_alt</span> Apply Filter
+                    </button>
+                    
+                    <a asp-action="DailyReport" class="btn btn-outline-secondary rounded-pill px-3" title="Clear Filters">
+                        <span class="material-icons align-middle" style="font-size: 18px;">refresh</span>
+                    </a>
+
+                    <button type="submit" asp-action="ExportDailyReport" class="btn btn-outline-danger rounded-pill px-4 flex-grow-1">
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">file_download</span> Export Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
     <!-- Stats Cards -->
     <section class="row g-3 mb-4">
         <div class="col-md-3">
