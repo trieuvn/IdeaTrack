@@ -104,19 +104,19 @@ namespace IdeaTrack.Controllers
             // Redirect to role-specific profile page
             if (roles.Contains("SciTech") || roles.Contains("OST_Admin"))
             {
-                return RedirectToAction("Profile", "Port", new { area = "SciTech" });
+                return RedirectToAction("Index", "Port", new { area = "SciTech" });
             }
             if (roles.Contains("FacultyLeader") || roles.Contains("Faculty_Admin"))
             {
-                return RedirectToAction("Profile", "Dashboard", new { area = "Faculty" });
+                return RedirectToAction("Index", "Dashboard", new { area = "Faculty" });
             }
             if (roles.Contains("CouncilMember") || roles.Contains("Council_Member"))
             {
-                return RedirectToAction("Profile", "Page", new { area = "Councils" });
+                return RedirectToAction("Index", "Page", new { area = "Councils" });
             }
 
             // Default: Author portal profile
-            return RedirectToAction("Profile", "Dashboard", new { area = "Author" });
+            return RedirectToAction("Index", "Dashboard", new { area = "Author" });
         }
 
         [HttpPost]

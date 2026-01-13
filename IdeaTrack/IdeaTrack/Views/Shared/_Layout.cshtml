@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
@@ -22,15 +25,79 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/page.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/homepage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/support-cards.css" asp-append-version="true" />
 </head>
 
 <body>
 
     <!-- HEADER -->
     <header class="app-header">
-        <div class="app-title">
-            <img src="/images/logo-uef.png" height="32" class="me-2" />
-            <span>IdeaTrack</span>
+        <div class="d-flex align-items-center">
+            <button id="sidebar-toggle" class="btn btn-link text-white me-3">
+                <span class="material-icons">menu</span>
+            </button>
+            <div class="app-title">
+                <span class="material-icons me-2" style="color: #fbbf24;">lightbulb</span>
+                <span>INITIATIVE PORTAL</span>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div class="position-relative">
+                <button class="btn btn-link text-white position-relative">
+                    <span class="material-icons">notifications</span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        3
+                        <span class="visually-hidden">unread notifications</span>
+                    </span>
+                </button>
+            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                var user = await UserManager.GetUserAsync(User);
+                var fullName = user?.FullName ?? User.Identity?.Name ?? "User";
+                var userId = user?.Id.ToString() ?? "N/A";
+                <div class="dropdown">
+                    <button class="btn btn-link text-white" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">
+                        <div class="user-avatar-small bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                            <span class="material-icons text-primary" style="font-size: 20px;">person</span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end user-dropdown-glass" aria-labelledby="userDropdown">
+                        <div class="user-info-row">
+                            <span class="material-icons">badge</span>
+                            <span>Name: <strong>@fullName</strong></span>
+                        </div>
+                        <div class="user-info-row">
+                            <span class="material-icons">person</span>
+                            <span>Account: <strong>@userId</strong></span>
+                        </div>
+                        <hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);">
+                        <a class="dropdown-item user-menu-item" asp-controller="Account" asp-action="Profile">
+                            <span class="material-icons">account_circle</span>
+                            Profile
+                        </a>
+                        <a class="dropdown-item user-menu-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">
+                            <span class="material-icons">lock</span>
+                            Change Password
+                        </a>
+                        <hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);">
+                        <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                            <button type="submit" class="dropdown-item user-menu-item text-danger">
+                                <span class="material-icons">logout</span>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login" class="header-avatar-link">
+                    <div class="user-avatar-small bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                        <span class="material-icons text-primary" style="font-size: 20px;">person</span>
+                    </div>
+                </a>
+            }
         </div>
     </header>
 
@@ -52,8 +119,10 @@
                     <span class="material-icons">home</span> Home
                 </a>
 
-                <a href="/#leaderboard-section"
-                   id="nav-leaderboard">
+                <a asp-controller="Home"
+                   asp-action="Leaderboard"
+                   id="nav-leaderboard"
+                   class="@(currentController == "Home" && currentAction == "Leaderboard" ? "active" : "")">
                     <span class="material-icons">leaderboard</span> Leaderboard
                 </a>
 
@@ -71,16 +140,18 @@
 
             </div>
 
-            <!-- U3. PORTAL BUTTON (Fixed at Bottom) -->
-            @if (ViewBag.PortalUrl != null)
-            {
-                <div class="p-3 border-top mt-auto bg-white">
-                    <a href="@ViewBag.PortalUrl" class="btn-portal mb-0 w-100 text-decoration-none">
-                        <span class="material-icons" style="font-size: 18px;">dashboard</span>
-                        Go to @ViewBag.PortalName
+            <!-- ONLINE SUPPORT (Fixed at Bottom) -->
+            <div class="online-support-sidebar mt-auto">
+                <h6 class="fw-bold mb-2 text-dark">Online Support</h6>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="https://www.facebook.com/uef.edu.vn" target="_blank" class="support-icon-link" title="Hotline">
+                        <i class="bi bi-headphones" style="font-size: 1.5rem; color: #2563eb;"></i>
+                    </a>
+                    <a href="mailto:support@uef.edu.vn" class="support-icon-link" title="Email">
+                        <i class="bi bi-envelope-fill" style="font-size: 1.5rem; color: #2563eb;"></i>
                     </a>
                 </div>
-            }
+            </div>
         </aside>
 
         <!-- MAIN -->
@@ -96,43 +167,15 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Only run on Home/Index page
-            if (window.location.pathname === '/' || window.location.pathname.toLowerCase() === '/home/index' || window.location.pathname.toLowerCase() === '/home') {
-                const navHome = document.getElementById('nav-home');
-                const navLeaderboard = document.getElementById('nav-leaderboard');
-                const leaderboardSection = document.getElementById('leaderboard-section');
-
-                function updateActiveState() {
-                    if (!leaderboardSection) return;
-
-                    const rect = leaderboardSection.getBoundingClientRect();
-                    // Check if leaderboard section is largely in view or scrolled past header
-                    // Use a threshold: if top of leaderboard is within top 50% of viewport
-                    const isLeaderboardActive = (rect.top <= window.innerHeight / 2);
-
-                    if (isLeaderboardActive) {
-                        navHome.classList.remove('active');
-                        navLeaderboard.classList.add('active');
-                    } else {
-                        navLeaderboard.classList.remove('active');
-                        navHome.classList.add('active');
-                    }
-                }
-
-                // Initial check
-                updateActiveState();
-
-                // Listen on scroll
-                window.addEventListener('scroll', updateActiveState);
-                
-                // Handle click on Leaderboard link to ensure smooth active update
-                if (navLeaderboard) {
-                    navLeaderboard.addEventListener('click', function() {
-                        // Allow default anchor jump, but force update state slightly delayed to handle smooth scroll
-                        setTimeout(updateActiveState, 100);
-                    });
-                }
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('hidden');
+                });
             }
         });
     </script>
