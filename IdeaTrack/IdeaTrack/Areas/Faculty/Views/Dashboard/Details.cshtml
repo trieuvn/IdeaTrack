@@ -45,11 +45,12 @@
                          <div class="list-group">
                              @foreach(var file in Model.Files)
                              {
-                                 <a href="@file.FileUrl" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
+                                var relativePath = file.FileUrl.Replace("/uploads/initiatives/", "");
+                                 <a href="/Faculty/ViewerPage?file=@Uri.EscapeDataString(relativePath)" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
                                      <i class="bi bi-file-earmark-text me-3 fs-4 text-secondary"></i>
                                      <div>
                                          <div class="fw-medium">@file.FileName</div>
-                                         <small class="text-muted">Click to view/download</small>
+                                         <small class="text-muted">Click to view</small>
                                      </div>
                                  </a>
                              }

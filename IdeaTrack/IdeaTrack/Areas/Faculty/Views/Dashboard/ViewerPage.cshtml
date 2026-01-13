@@ -13,7 +13,6 @@
     <link href="@Url.Content("~/dflip/css/themify-icons.min.css")" rel="stylesheet" />
     <link rel="icon" type="image/x-icon" href="@Url.Content("~/icons/document.ico")" />
 
-
     <style>
         body {
             margin: 0;
@@ -44,7 +43,7 @@
                 if(ext === "pdf"){
                     pdfUrl = `/uploads/initiatives/${file}`;
                 } else {
-                    const res = await fetch(`/SciTech/ViewFilePdf?fileName=${encodeURIComponent(file)}`);
+                    const res = await fetch(`/Faculty/ViewFilePdf?fileName=${encodeURIComponent(file)}`);
                     if(!res.ok) throw new Error("Lỗi server khi tạo PDF");
                     const data = await res.json();
                     if(!data.url) throw new Error("Không tạo được PDF");

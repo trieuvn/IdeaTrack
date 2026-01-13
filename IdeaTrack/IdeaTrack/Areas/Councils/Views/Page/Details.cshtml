@@ -472,7 +472,10 @@
                                 </div>
                                 <span class="file-name" title="@f.FileName">@f.FileName</span>
                             </div>
-                            <a href="@f.FilePath" target="_blank" class="btn btn-sm btn-outline-secondary">
+                            @{
+                                var relativePath = f.FilePath.Replace("/uploads/initiatives/", "");
+                            }
+                            <a href="/Councils/ViewerPage?file=@Uri.EscapeDataString(relativePath)" target="_blank" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-eye"></i>
                             </a>
                         </div>
