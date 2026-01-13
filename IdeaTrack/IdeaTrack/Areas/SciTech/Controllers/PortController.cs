@@ -126,6 +126,10 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             ViewBag.FacultyApprovedCount = _context.Initiatives.Count(i => i.Status == InitiativeStatus.Faculty_Approved);
             ViewBag.EvaluatingCount = _context.Initiatives.Count(i => i.Status == InitiativeStatus.Evaluating || i.Status == InitiativeStatus.Re_Evaluating);
             ViewBag.PendingFinalCount = _context.Initiatives.Count(i => i.Status == InitiativeStatus.Pending_Final);
+            
+            // New Dashboard Stats
+            ViewBag.OpenPeriodsCount = _context.InitiativePeriods.Count(p => p.IsActive);
+            ViewBag.TotalInitiativesCount = _context.Initiatives.Count();
 
             // 3. Audit logs per day (last 7 days) - Keeping existing chart logic as requested 'Update Statistics *Cards*' not chart removal.
             var startDate = today.AddDays(-6);

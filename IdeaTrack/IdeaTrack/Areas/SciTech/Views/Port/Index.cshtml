@@ -45,31 +45,31 @@
 
 <!-- ==================== DASHBOARD SECTION ==================== -->
 <div class="row g-4 mb-4">
-    <!-- Info Card: Open Periods -->
+    <!-- Info Card: Total Initiatives -->
     <div class="col-md-3">
-        <div class="card bg-gradient shadow-sm border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;">
             <div class="card-body text-white">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-1 small text-white-50">Đợt Nộp Đang Mở</p>
-                        <h2 class="fw-bold mb-0">@ViewBag.OpenPeriodsCount</h2>
+                        <p class="mb-1 small text-white">Tổng Số Sáng Kiến</p>
+                        <h2 class="fw-bold mb-0">@ViewBag.TotalInitiativesCount</h2>
                     </div>
-                    <i class="fa-solid fa-calendar-check fs-1 opacity-50"></i>
+                    <i class="fa-solid fa-lightbulb fs-1 opacity-50"></i>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Info Card: Active Categories -->
+    <!-- Info Card: Open Periods -->
     <div class="col-md-3">
-        <div class="card bg-gradient shadow-sm border-0" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+        <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;">
             <div class="card-body text-white">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="mb-1 small text-white-50">Danh Mục Đang Mở</p>
-                        <h2 class="fw-bold mb-0">@ViewBag.ActiveCategoriesCount</h2>
+                        <p class="mb-1 small text-white">Đợt Đang Mở</p>
+                        <h2 class="fw-bold mb-0">@ViewBag.OpenPeriodsCount</h2>
                     </div>
-                    <i class="fa-solid fa-tags fs-1 opacity-50"></i>
+                    <i class="fa-solid fa-calendar-check fs-1 opacity-50"></i>
                 </div>
             </div>
         </div>
