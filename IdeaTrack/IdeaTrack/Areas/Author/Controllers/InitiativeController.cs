@@ -70,6 +70,26 @@ namespace IdeaTrack.Areas.Author.Controllers
                     Files = initiative.Files.ToList()
                 };
 
+                // Fetch latest revision request for rejected/revision_required initiatives
+                if (initiative.Status == InitiativeStatus.Revision_Required || 
+                    initiative.Status == InitiativeStatus.Rejected)
+                {
+                    viewModel.LatestRevisionRequest = await _context.RevisionRequests
+                        .Include(r => r.Requester)
+                        .Where(r => r.InitiativeId == id)
+                        .OrderByDescending(r => r.RequestedDate)
+                        .FirstOrDefaultAsync();
+                }
+
+                // Fetch FinalResult for approved initiatives
+                if (initiative.Status == InitiativeStatus.Approved)
+                {
+                    viewModel.FinalResult = await _context.FinalResults
+                        .Include(f => f.Chairman)
+                        .Where(f => f.InitiativeId == id)
+                        .FirstOrDefaultAsync();
+                }
+
                 return View(viewModel);
             }
             catch (Exception ex)
