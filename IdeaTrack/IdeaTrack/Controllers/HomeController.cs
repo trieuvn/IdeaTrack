@@ -303,50 +303,47 @@ namespace IdeaTrack.Controllers
             var period = await _context.InitiativePeriods.FindAsync(periodId);
             var zipFileName = $"Documents_{period?.Name ?? "Period"}.zip".Replace(" ", "_");
 
-            using var memoryStream = new MemoryStream();
-            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+            var memoryStream = new MemoryStream(); // không dùng 'using' để giữ stream mở
+
+            var addedEntries = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, leaveOpen: true))
             {
                 var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
                 foreach (var form in forms)
                 {
                     if (string.IsNullOrEmpty(form.FileUrl)) continue;
-
-                    // Handle local files
                     if (!form.FileUrl.StartsWith("http://") && !form.FileUrl.StartsWith("https://"))
                     {
-                        // Use consistent path resolution logic
-                        var cleanUrl = form.FileUrl.TrimStart('~').TrimStart('/').Replace('\\', '/');
+                        var cleanUrl = form.FileUrl.TrimStart('~').TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
                         var localPath = Path.Combine(wwwrootPath, cleanUrl);
 
-                        if (System.IO.File.Exists(localPath))
-                        {
-                            // Ensure unique entry names in zip
-                            var entryName = form.FileName ?? form.FormName;
-                            if (string.IsNullOrEmpty(Path.GetExtension(entryName)))
-                            {
-                                entryName += Path.GetExtension(localPath);
-                            }
+                        if (!System.IO.File.Exists(localPath)) continue;
 
-                            // Check if entry already exists
-                            if (archive.Entries.Any(e => e.FullName == entryName))
-                            {
-                                entryName = $"{Path.GetFileNameWithoutExtension(entryName)}_{Guid.NewGuid().ToString().Substring(0, 4)}{Path.GetExtension(entryName)}";
-                            }
+                        var entryName = form.FileName ?? form.FormName;
+                        if (string.IsNullOrEmpty(Path.GetExtension(entryName)))
+                            entryName += Path.GetExtension(localPath);
 
-                            var entry = archive.CreateEntry(entryName);
-                            using var entryStream = entry.Open();
-                            using var fileStream = System.IO.File.OpenRead(localPath);
-                            await fileStream.CopyToAsync(entryStream);
-                        }
+                        while (addedEntries.Contains(entryName))
+                            entryName = $"{Path.GetFileNameWithoutExtension(entryName)}_{Guid.NewGuid().ToString().Substring(0, 4)}{Path.GetExtension(entryName)}";
+
+                        addedEntries.Add(entryName);
+
+                        var entry = archive.CreateEntry(entryName, CompressionLevel.Fastest);
+                        using var entryStream = entry.Open();
+                        using var fileStream = System.IO.File.OpenRead(localPath);
+                        await fileStream.CopyToAsync(entryStream);
                     }
-                    // For external URLs, we skip adding them to ZIP (too complex)
                 }
             }
 
+            // Reset stream position sau khi ZipArchive đã dispose
             memoryStream.Position = 0;
-            return File(memoryStream.ToArray(), "application/zip", zipFileName);
+
+            return File(memoryStream, "application/zip", zipFileName);
         }
+
 
         private string GetContentType(string fileType)
         {
@@ -366,6 +363,106 @@ namespace IdeaTrack.Controllers
             return View();
         }
 
+        [HttpGet("/viewer/{*fileName}")]
+        public async Task<IActionResult> ViewFilePdf(string fileName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                    return BadRequest("Filename is empty");
+
+                var ext = Path.GetExtension(fileName).ToLower();
+
+                var uploadRoot = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "docs"
+                );
+
+                var inputPath = Path.Combine(uploadRoot, fileName);
+
+                if (!System.IO.File.Exists(inputPath))
+                    return NotFound("File not found in wwwroot");
+
+                // 📂 Thư mục PDF tạm
+                var tempDir = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "temp-pdf"
+                );
+
+                Directory.CreateDirectory(tempDir);
+
+                foreach (var file in Directory.GetFiles(tempDir, "*.pdf"))
+                {
+                    System.IO.File.Delete(file);
+                }
+
+                var pdfFileName = Path.GetFileNameWithoutExtension(fileName) + ".pdf";
+                var pdfPath = Path.Combine(tempDir, pdfFileName);
+
+                if (!System.IO.File.Exists(pdfPath))
+                {
+                    if (ext == ".pdf")
+                    {
+                        System.IO.File.Copy(inputPath, pdfPath, true);
+                    }
+                    else
+                    {
+                        await ConvertToPdf(inputPath, tempDir);
+                    }
+                }
+
+                return Json(new
+                {
+                    url = "/temp-pdf/" + pdfFileName
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+
+        public async Task<string> ConvertToPdf(string inputPath, string outputDir)
+        {
+            var sofficePath = @"C:\Program Files\LibreOffice\program\soffice.exe";
+
+            if (!System.IO.File.Exists(sofficePath))
+                throw new Exception("LibreOffice (soffice.exe) not found");
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = sofficePath,
+                    Arguments = $"--headless --convert-to pdf \"{inputPath}\" --outdir \"{outputDir}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            await process.WaitForExitAsync();
+
+            return Path.Combine(
+                outputDir,
+                Path.GetFileNameWithoutExtension(inputPath) + ".pdf"
+            );
+        }
+        [HttpGet("/viewer-page")]
+        public IActionResult ViewerPage(string file)
+        {
+            if (string.IsNullOrEmpty(file))
+                return BadRequest();
+
+            ViewBag.FileName = file;
+            return View();
+        }
 
     }
 }
