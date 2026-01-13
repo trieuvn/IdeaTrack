@@ -363,7 +363,7 @@ namespace IdeaTrack.Controllers
             return View();
         }
 
-        [HttpGet("/viewer/{*fileName}")]
+        [HttpGet("viewer/{*fileName}")]
         public async Task<IActionResult> ViewFilePdf(string fileName)
         {
             try
@@ -454,7 +454,7 @@ namespace IdeaTrack.Controllers
                 Path.GetFileNameWithoutExtension(inputPath) + ".pdf"
             );
         }
-        [HttpGet("/viewer-page")]
+        [HttpGet("viewer-page")]
         public IActionResult ViewerPage(string file)
         {
             if (string.IsNullOrEmpty(file))
