@@ -1,0 +1,58 @@
+@model IdeaTrack.Models.SystemAuditLog
+
+@{
+    ViewData["Title"] = "Audit Log Details";
+    Layout = "~/Areas/SciTech/Views/Shared/_LayoutSciTech.cshtml";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold text-primary">
+                <i class="fas fa-info-circle me-2"></i>Audit Log Details
+            </h5>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left me-1"></i>Back to List
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label text-muted small">User</label>
+                    <p class="fw-medium">@(Model.User != null ? Model.User.FullName : "Unknown") (@Model.UserId)</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label text-muted small">Action</label>
+                    <p>
+                        <span class="badge bg-secondary">@Model.Action</span>
+                    </p>
+                </div>
+                
+                <div class="col-md-4">
+                    <label class="form-label text-muted small">Target Table</label>
+                    <p class="font-monospace">@Model.TargetTable</p>
+                </div>
+                 <div class="col-md-4">
+                    <label class="form-label text-muted small">Target ID</label>
+                    <p class="font-monospace">@Model.TargetId</p>
+                </div>
+                 <div class="col-md-4">
+                    <label class="form-label text-muted small">IP Address</label>
+                    <p class="font-monospace">@Model.IpAddress</p>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label text-muted small">Timestamp</label>
+                    <p>@Model.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label text-muted small">Details</label>
+                    <div class="bg-light p-3 rounded border font-monospace" style="white-space: pre-wrap; word-break: break-all;">
+                        @Model.Details
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
