@@ -584,14 +584,14 @@
                 @if (!isViewOnly)
                 {
                     <div class="action-footer">
-                        <button type="submit" name="SubmitAction" value="SaveDraft" class="btn-save-draft">
+                        <button type="submit" class="btn-save-draft">
                             <i class="bi bi-save me-2"></i>Save Draft
                         </button>
-                        <button type="submit" name="SubmitAction" value="Submit" class="btn-submit"
-                                onclick="return confirm('Submit your evaluation? You cannot modify after submitting.');">
+                        <button type="button" id="btnSubmitFinal" class="btn-submit">
                             <i class="bi bi-send-fill me-2"></i>Submit Final
                         </button>
                     </div>
+
                 }
             </form>
         </div>
@@ -599,32 +599,135 @@
 </div>
 
 @section Scripts {
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        calculateTotal();
-    });
-    
-    document.addEventListener('input', function (e) {
-        if (e.target.classList.contains('score-input')) {
+    <script>
+        // ======= Hidden input để gửi action =======
+        const gradingForm = document.getElementById('gradingForm');
+        let hiddenActionInput = document.createElement('input');
+        hiddenActionInput.type = 'hidden';
+        hiddenActionInput.id = 'hiddenSubmitAction';
+        hiddenActionInput.name = 'SubmitAction';
+        hiddenActionInput.value = 'SaveDraft'; // mặc định là SaveDraft
+        gradingForm.appendChild(hiddenActionInput);
+
+        // ======= Submit Final Button =======
+        document.getElementById('btnSubmitFinal').addEventListener('click', function () {
             calculateTotal();
-            
-            // Validation
-            const max = parseFloat(e.target.getAttribute('max'));
-            const val = parseFloat(e.target.value);
-            if (val > max || val < 0) {
-                e.target.style.borderColor = 'var(--danger)';
-            } else {
-                e.target.style.borderColor = 'var(--border-color)';
+            const total = Number(document.getElementById('totalScore').innerText);
+
+            if (total <= 0) {
+                showConfirmPopup("Total score must be greater than 0 before submitting.", null, true);
+                return;
+            }
+
+            showConfirmPopup("Submit your evaluation? You cannot modify after submitting.", function () {
+                // Set hidden input thành "Submit" trước khi gửi form
+                hiddenActionInput.value = 'Submit';
+                gradingForm.submit();
+            });
+        });
+
+        // ======= Save Draft Buttons =======
+        document.querySelectorAll('button[name="SubmitAction"][value="SaveDraft"]').forEach(btn => {
+            btn.addEventListener('click', function () {
+                hiddenActionInput.value = 'SaveDraft';
+            });
+        });
+
+        // ======= Tính tổng điểm =======
+              document.addEventListener('DOMContentLoaded', function () {
+            calculateTotal();
+        });
+
+        document.addEventListener('input', function (e) {
+            if (e.target.classList.contains('score-input')) {
+                calculateTotal();
+
+                // Validation
+                const max = parseFloat(e.target.getAttribute('max'));
+                const val = parseFloat(e.target.value);
+                if (val > max || val < 0) {
+                    e.target.style.borderColor = 'var(--danger)';
+                } else {
+                    e.target.style.borderColor = 'var(--border-color)';
+                }
+            }
+        });
+
+        function calculateTotal() {
+            let total = 0;
+            document.querySelectorAll('.score-input').forEach(input => {
+                total += Number(input.value) || 0;
+            });
+            document.getElementById('totalScore').innerText = total.toFixed(1);
+        }
+
+        // ======= Popup xác nhận =======
+        function showConfirmPopup(message, onConfirm = null, isWarning = false) {
+            // Xóa popup cũ nếu có
+            const old = document.getElementById('confirmPopup');
+            if (old) old.remove();
+
+            const popup = document.createElement('div');
+            popup.id = 'confirmPopup';
+            popup.innerHTML = `
+                <div class="popup-overlay"></div>
+                <div class="popup-box">
+                    <div class="popup-content">
+                        <i class="bi ${isWarning ? "bi-exclamation-triangle-fill" : "bi-send-fill"}"
+                           style="font-size:1.8rem; color:white;
+                           background: ${isWarning ? "#dc3545" : "linear-gradient(135deg, var(--brand-primary), var(--brand-medium))"};
+                           border-radius:50%; padding:0.5rem;"></i>
+                        <p style="margin-top:1rem;">${message}</p>
+                        <div style="display:flex; justify-content:center; gap:0.75rem; margin-top:1.5rem;">
+                            <button class="btn-cancel">Cancel</button>
+                            ${!isWarning ? '<button class="btn-confirm">Submit</button>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            // Cancel
+            popup.querySelector('.btn-cancel').addEventListener('click', () => popup.remove());
+
+            // Confirm
+            if (!isWarning && onConfirm) {
+                popup.querySelector('.btn-confirm').addEventListener('click', () => {
+                    onConfirm();
+                    popup.remove();
+                });
             }
         }
-    });
 
-    function calculateTotal() {
-        let total = 0;
-        document.querySelectorAll('.score-input').forEach(input => {
-            total += Number(input.value) || 0;
-        });
-        document.getElementById('totalScore').innerText = total.toFixed(1);
-    }
-</script>
+        // ======= Popup Styles =======
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .popup-overlay {
+                position: fixed; top:0; left:0; width:100%; height:100%;
+                background: rgba(0,0,0,0.4); z-index: 9998;
+            }
+            .popup-box {
+                position: fixed; top:50%; left:50%; transform: translate(-50%, -50%);
+                background: var(--bg-card); border-radius: var(--radius-md);
+                padding: 2rem; max-width: 360px; width: 90%; z-index:9999;
+                box-shadow:0 4px 20px rgba(0,0,0,0.25); text-align:center;
+                animation: popupFade 0.3s ease-out;
+            }
+            .popup-content p { margin-top:1rem; font-weight:500; color: var(--text-primary);}
+            .btn-cancel, .btn-confirm {
+                padding:0.5rem 1.25rem; border-radius: var(--radius-sm); font-weight:600; cursor:pointer; border:none; transition:0.2s;
+            }
+            .btn-cancel { background: var(--bg-main); color: var(--text-primary); }
+            .btn-cancel:hover { background: var(--border-color); }
+            .btn-confirm { background: linear-gradient(135deg, var(--brand-primary), var(--brand-medium)); color:white; }
+            .btn-confirm:hover { transform: translateY(-1px); box-shadow:0 4px 12px rgba(190,18,60,0.35); }
+
+            @@keyframes popupFade {
+                0% { opacity:0; transform: translate(-50%, -55%);}
+                100% { opacity:1; transform: translate(-50%, -50%);}
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 }
+

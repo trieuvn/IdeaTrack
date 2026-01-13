@@ -331,14 +331,16 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             return View(vm);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitGrading(GradingVM vm)
         {
+            // 1. Get current user
             var userId = await GetCurrentUserId();
-            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
+            if (userId == 0)
+                return RedirectToAction("Login", "Account", new { area = "" });
 
+            // 2. Load assignment with template and existing evaluation details
             var assignment = await _db.InitiativeAssignments
                 .Include(a => a.Template)
                     .ThenInclude(t => t.CriteriaList)
@@ -347,35 +349,38 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             if (assignment == null)
                 return NotFound();
-            
-            // Check if assignment is locked (already submitted)
+
+            // 3. Check if already submitted (locked)
             if (assignment.Status == AssignmentStatus.Completed)
             {
                 TempData["ErrorMessage"] = "You cannot edit this evaluation as it has already been submitted and locked.";
                 return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
             }
 
+            // 4. Build criteria dictionary
             var templateCriteria = assignment.Template.CriteriaList
                 .ToDictionary(c => c.Id, c => c);
 
             if (vm.CriteriaItems == null)
                 vm.CriteriaItems = new();
 
+            // 5. Validate scores
             foreach (var item in vm.CriteriaItems)
             {
                 if (!templateCriteria.TryGetValue(item.CriteriaId, out var criteria))
                 {
-                    ModelState.AddModelError(string.Empty, "Tieu chi khong hop le.");
+                    ModelState.AddModelError(string.Empty, "Invalid criteria.");
                     continue;
                 }
 
                 if (item.ScoreGiven < 0 || item.ScoreGiven > criteria.MaxScore)
                 {
                     ModelState.AddModelError($"CriteriaItems[{vm.CriteriaItems.IndexOf(item)}].ScoreGiven",
-                        $"Diem phai tu 0 den {criteria.MaxScore}.");
+                        $"Score must be between 0 and {criteria.MaxScore}.");
                 }
             }
 
+            // 6. If validation fails, reload data and return view
             if (!ModelState.IsValid)
             {
                 var hydrated = await _db.InitiativeAssignments
@@ -403,6 +408,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 return View("Details", vm);
             }
 
+            // 7. Update or insert evaluation details
             var existing = assignment.EvaluationDetails.ToDictionary(d => d.CriteriaId, d => d);
 
             foreach (var item in vm.CriteriaItems)
@@ -427,43 +433,37 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 }
             }
 
+            // 8. Update feedback
             assignment.ReviewComment = vm.GeneralComment;
             assignment.Strengths = vm.Strengths;
             assignment.Limitations = vm.Limitations;
             assignment.Recommendations = vm.Recommendations;
 
-            if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
-            {
-                assignment.Status = AssignmentStatus.Completed;
+            // 9. Set status
+            bool isFinalSubmit = string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase);
+            assignment.Status = isFinalSubmit ? AssignmentStatus.Completed : AssignmentStatus.InProgress;
+            if (isFinalSubmit)
                 assignment.DecisionDate = DateTime.Now;
-            }
-            else
-            {
-                assignment.Status = AssignmentStatus.InProgress;
-            }
 
+            // 10. Save changes
             await _db.SaveChangesAsync();
-            
-            // If submitting, check if all members have completed and calculate average
-            if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
+
+            // 11. If submitting final, calculate average score for initiative round
+            if (isFinalSubmit)
             {
                 await CheckAndCalculateAverageScore(assignment.InitiativeId, assignment.RoundNumber);
             }
-            
-            TempData["SuccessMessage"] = string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase)
+
+            // 12. Set success message
+            TempData["SuccessMessage"] = isFinalSubmit
                 ? "Evaluation submitted successfully! Your scores have been locked."
                 : "Draft saved successfully!";
 
-            if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
-            {
-                // After submitting, return to assigned list
-                return RedirectToAction(nameof(AssignedInitiatives), new { status = "Assigned" });
-            }
-
-            // Return to the details page after saving draft
+            // 13. Always redirect back to Details page (draft or final)
             return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
         }
-        
+
+
         /// <summary>
         /// Check if all council members have completed their evaluations and calculate average score
         /// </summary>
