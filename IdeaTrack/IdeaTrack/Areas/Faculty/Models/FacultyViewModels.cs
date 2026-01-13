@@ -39,7 +39,7 @@ namespace IdeaTrack.Areas.Faculty.Models
         public string ProposerName { get; set; }
         public decimal Budget { get; set; }
         public DateTime SubmittedDate { get; set; }
-        public string Status { get; set; }
+        public InitiativeStatus Status { get; set; }
         public InitiativeCategory Category { get; set; }
         public List<InitiativeFileVM> Files { get; set; }
     }

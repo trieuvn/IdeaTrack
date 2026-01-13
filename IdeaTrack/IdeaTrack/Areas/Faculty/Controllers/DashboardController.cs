@@ -157,7 +157,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 ProposerName = initiative.Creator?.FullName ?? "Unknown",
                 Budget = initiative.Budget,
                 SubmittedDate = initiative.SubmittedDate ?? DateTime.MinValue,
-                Status = initiative.Status.ToString(),
+                Status = initiative.Status,
                 Category = initiative.Category,
                 Files = initiative.Files?.Select(f => new InitiativeFileVM 
                 { 

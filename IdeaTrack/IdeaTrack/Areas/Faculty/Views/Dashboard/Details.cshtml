@@ -66,31 +66,36 @@
 
         <div class="col-lg-4">
             <!-- Sidebar / Actions -->
-             <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
-                 <h5 class="fw-bold mb-3">Review Action</h5>
-                 <p class="text-muted small">Faculty Head Review</p>
-                 
-                 <form method="post">
-                     <input type="hidden" name="InitiativeId" value="@Model.Id" />
+             @if (Model.Status == IdeaTrack.Models.InitiativeStatus.Pending || 
+                  Model.Status == IdeaTrack.Models.InitiativeStatus.Faculty_Approved || 
+                  Model.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
+             {
+                 <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+                     <h5 class="fw-bold mb-3">Review Action</h5>
+                     <p class="text-muted small">Faculty Head Review</p>
                      
-                     <div class="mb-3">
-                         <label class="form-label fw-medium">Comments</label>
-                         <textarea name="Comments" class="form-control" rows="4" placeholder="Enter comments for approval/rejection..."></textarea>
-                     </div>
-                     
-                    <div class="d-grid gap-2 review-buttons">
-                         <button type="submit" asp-controller="Dashboard" asp-action="Accept" class="btn btn-success text-white" >
-                             <i class="bi bi-check-circle me-2"></i> Accept
-                         </button>
-                         <button type="submit" asp-controller="Dashboard" asp-action="RequestRevision" class="btn btn-warning text-dark" >
-                             <i class="bi bi-pencil-square me-2"></i> Request Revision
-                         </button>
-                         <button type="submit" asp-controller="Dashboard" asp-action="Reject" class="btn btn-danger text-white">
-                             <i class="bi bi-x-circle me-2"></i> Reject
-                         </button>
-                     </div>
-                 </form>
-             </div>
+                     <form method="post">
+                         <input type="hidden" name="InitiativeId" value="@Model.Id" />
+                         
+                         <div class="mb-3">
+                             <label class="form-label fw-medium">Comments</label>
+                             <textarea name="Comments" class="form-control" rows="4" placeholder="Enter comments for approval/rejection..."></textarea>
+                         </div>
+                         
+                        <div class="d-grid gap-2 review-buttons">
+                             <button type="submit" asp-controller="Dashboard" asp-action="Accept" class="btn btn-success text-white" >
+                                 <i class="bi bi-check-circle me-2"></i> Accept
+                             </button>
+                             <button type="submit" asp-controller="Dashboard" asp-action="RequestRevision" class="btn btn-warning text-dark" >
+                                 <i class="bi bi-pencil-square me-2"></i> Request Revision
+                             </button>
+                             <button type="submit" asp-controller="Dashboard" asp-action="Reject" class="btn btn-danger text-white">
+                                 <i class="bi bi-x-circle me-2"></i> Reject
+                             </button>
+                         </div>
+                     </form>
+                 </div>
+             }
 
              <div class="card border-0 shadow-sm p-4 rounded-4">
                  <h5 class="fw-bold mb-3">Information</h5>
