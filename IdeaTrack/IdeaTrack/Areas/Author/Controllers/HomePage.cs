@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace IdeaTrack.Areas.Author.Controllers
 {
@@ -324,5 +325,6 @@ namespace IdeaTrack.Areas.Author.Controllers
         {
             return _context.Initiatives.Any(e => e.Id == id);
         }
+        
     }
 }

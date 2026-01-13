@@ -162,9 +162,26 @@
                                                     <div class="small text-muted">@((file.FileSize / 1024.0).ToString("F1")) KB</div>
                                                 </div>
                                             </div>
-                                            <a href="@file.FilePath" download class="btn btn-sm btn-outline-primary rounded-pill">
-                                                <span class="material-icons" style="font-size: 18px;">download</span>
-                                            </a>
+                                            
+                                            <div class="d-flex align-items-center gap-1">
+                                                <a href="@file.FilePath"
+                                                   download
+                                                   class="btn btn-sm btn-outline-primary rounded-pill d-flex align-items-center justify-content-center"
+                                                   title="Download">
+                                                    <span class="material-icons" style="font-size: 18px;">download</span>
+                                                </a>
+
+                                                @{
+                                                    var relativePath = file.FilePath.Replace("/uploads/initiatives/", "");
+                                                }
+                                                <a href="/Author/ViewerPage?file=@Uri.EscapeDataString(relativePath)"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer"
+                                                   class="btn btn-sm btn-outline-success rounded-pill d-flex align-items-center justify-content-center"
+                                                   title="View">
+                                                    <span class="material-icons" style="font-size: 18px;">remove_red_eye</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
