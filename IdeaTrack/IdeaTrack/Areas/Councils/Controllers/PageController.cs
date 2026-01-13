@@ -1,6 +1,7 @@
 ﻿using IdeaTrack.Areas.Councils.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using IdeaTrack.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,55 @@ namespace IdeaTrack.Areas.Councils.Controllers
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public PageController(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+        private readonly GeminiService _gemini;
+        private readonly IWebHostEnvironment _env;
+        public class AiSummaryRequest
+        {
+            public string File { get; set; }
+        }
+        public PageController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, GeminiService gemini, IWebHostEnvironment env)
         {
             _db = db;
             _userManager = userManager;
+            _gemini = gemini;
+            _env = env;
         }
+        [HttpPost("/Councils/Page/GetAiSummary")]
+        public async Task<IActionResult> GetAiSummary([FromBody] AiSummaryRequest req)
+        {
+            if (req == null || string.IsNullOrWhiteSpace(req.File))
+                return BadRequest("Invalid file");
+
+            // Giải pháp: Kiểm tra xem file có chứa đường dẫn temp-pdf không
+            string path;
+            if (req.File.Contains("temp-pdf"))
+            {
+                // Nếu là file tạm từ ViewFilePdf
+                path = Path.Combine(_env.WebRootPath, req.File.Replace("/", "\\"));
+            }
+            else
+            {
+                // Nếu là file gốc
+                path = Path.Combine(_env.WebRootPath, "uploads", "initiatives", req.File);
+            }
+
+            if (!System.IO.File.Exists(path))
+                return NotFound($"File not found at: {path}");
+
+            var text = PdfHelper.ExtractText(path);
+
+            if (text.Length > 12000)
+                text = text[..12000];
+
+            var summary = await _gemini.SummarizeAsync(text);
+
+            return Json(new
+            {
+                success = true,
+                summary
+            });
+        }
+
 
         private async Task<int> GetCurrentUserId()
         {
@@ -691,12 +735,27 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 else
                     await ConvertToPdf(inputPath, tempDir);
             }
-
+            foreach (var file in Directory.GetFiles(tempDir, "*.pdf"))
+            {
+                if (!Path.GetFileName(file)
+                    .Equals(pdfName, StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                    catch
+                    {
+                        // ignore: file đang bị lock
+                    }
+                }
+            }
             return Json(new
             {
                 url = $"/temp-pdf/{pdfName}"
             });
         }
+
 
 
 
@@ -728,5 +787,6 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 Path.GetFileNameWithoutExtension(inputPath) + ".pdf"
             );
         }
+
     }
 }

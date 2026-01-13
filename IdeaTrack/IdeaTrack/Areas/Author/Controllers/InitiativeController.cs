@@ -1234,7 +1234,21 @@ namespace IdeaTrack.Areas.Author.Controllers
                 else
                     await ConvertToPdf(inputPath, tempDir);
             }
-
+            foreach (var file in Directory.GetFiles(tempDir, "*.pdf"))
+            {
+                if (!Path.GetFileName(file)
+                    .Equals(pdfName, StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                    catch
+                    {
+                        // ignore: file đang bị lock
+                    }
+                }
+            }
             return Json(new
             {
                 url = $"/temp-pdf/{pdfName}"

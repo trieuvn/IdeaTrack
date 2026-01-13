@@ -478,6 +478,12 @@
                             <a href="/Councils/ViewerPage?file=@Uri.EscapeDataString(relativePath)" target="_blank" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-eye"></i>
                             </a>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-info btn-ai-summary"
+                                    data-file="@relativePath"
+                                    title="AI Summary">
+                                <i class="bi bi-stars"></i>
+                            </button>
                         </div>
                     }
                 }
@@ -485,6 +491,16 @@
                 {
                     <p class="text-muted small mb-0">No attachments</p>
                 }
+                
+            </div>
+            <div id="aiSummaryPanel" class="ai-summary-box d-none">
+                <h6>
+                    <i class="bi bi-stars me-1 text-info"></i>
+                    AI Summary
+                </h6>
+                <div id="aiSummaryContent" class="ai-summary-content">
+                    <!-- dynamic -->
+                </div>
             </div>
         </div>
 
@@ -610,21 +626,24 @@
         gradingForm.appendChild(hiddenActionInput);
 
         // ======= Submit Final Button =======
-        document.getElementById('btnSubmitFinal').addEventListener('click', function () {
-            calculateTotal();
-            const total = Number(document.getElementById('totalScore').innerText);
+                const btnSubmitFinal = document.getElementById('btnSubmitFinal');
+        if (btnSubmitFinal) {
+            btnSubmitFinal.addEventListener('click', function () {
+                calculateTotal();
+                const total = Number(document.getElementById('totalScore').innerText);
 
-            if (total <= 0) {
-                showConfirmPopup("Total score must be greater than 0 before submitting.", null, true);
-                return;
-            }
+                if (total <= 0) {
+                    showConfirmPopup("Total score must be greater than 0 before submitting.", null, true);
+                    return;
+                }
 
-            showConfirmPopup("Submit your evaluation? You cannot modify after submitting.", function () {
-                // Set hidden input thành "Submit" trước khi gửi form
-                hiddenActionInput.value = 'Submit';
-                gradingForm.submit();
+                showConfirmPopup("Submit your evaluation? You cannot modify after submitting.", function () {
+                    hiddenActionInput.value = 'Submit';
+                    gradingForm.submit();
+                });
             });
-        });
+        }
+
 
         // ======= Save Draft Buttons =======
         document.querySelectorAll('button[name="SubmitAction"][value="SaveDraft"]').forEach(btn => {
@@ -729,5 +748,114 @@
         `;
         document.head.appendChild(style);
     </script>
+    <script>
+                document.querySelectorAll('.btn-ai-summary').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                let file = this.dataset.file;
+                if (!file) return;
+
+                const panel = document.getElementById('aiSummaryPanel');
+                const content = document.getElementById('aiSummaryContent');
+
+                // Hiện panel + loading
+                panel.classList.remove('d-none');
+                content.innerHTML = `
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="spinner-border spinner-border-sm text-info"></div>
+                        <span>AI is summarizing this document...</span>
+                    </div>
+                `;
+
+                try {
+                    // Kiểm tra extension
+                    const ext = file.split('.').pop().toLowerCase();
+                    if (ext !== 'pdf') {
+                        // Nếu không phải PDF → fetch GET ViewFilePdf để chuyển sang PDF
+                        const resPdf = await fetch(`/Councils/ViewFilePdf?fileName=${encodeURIComponent(file)}`);
+                        if (!resPdf.ok) throw new Error("Failed to convert to PDF");
+
+                        const dataPdf = await resPdf.json();
+                        if (!dataPdf.url) throw new Error("PDF conversion failed");
+
+                        // Lấy đường dẫn PDF
+                        file = dataPdf.url.replace(/^\/+/, ''); // loại bỏ / đầu nếu cần
+                    }
+
+                    // Gửi tới AI Summary
+                    const resSummary = await fetch('@Url.Action("GetAiSummary", "Page", new { area = "Councils" })', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ file: file })
+            })
+
+                    if (!resSummary.ok) throw new Error("AI error");
+
+                    const dataSummary = await resSummary.json();
+                    if (!dataSummary.success) throw new Error("No summary");
+
+                    // Hiển thị kết quả
+                    content.innerHTML = `
+                        <div style="white-space: pre-line; line-height:1.6;">
+                            ${dataSummary.summary}
+                        </div>
+                    `;
+
+                } catch (err) {
+                    console.error(err);
+                    content.innerHTML = `
+                        <div class="text-danger">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            Failed to generate AI summary.
+                        </div>
+                    `;
+                }
+            });
+        });
+    </script>
+
 }
 
+<style>
+    /* ===== AI SUMMARY BOX ===== */
+    .ai-summary-box {
+        margin-top: 1rem;
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 0.75rem;
+    }
+
+        .ai-summary-box h6 {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+    /* Nội dung scroll */
+    .ai-summary-content {
+        max-height: 160px; /* 👈 chỉnh nhỏ / to tại đây */
+        overflow-y: auto;
+        font-size: 0.8rem;
+        line-height: 1.5;
+        color: var(--text-secondary);
+        padding-right: 4px;
+    }
+
+        /* Scrollbar đẹp */
+        .ai-summary-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .ai-summary-content::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 6px;
+        }
+
+            .ai-summary-content::-webkit-scrollbar-thumb:hover {
+                background: var(--brand-primary);
+            }
+</style>
