@@ -2,53 +2,15 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-@if (SignInManager.IsSignedIn(User))
+@* Only show login button when not signed in - no profile section when signed in *@
+@if (!SignInManager.IsSignedIn(User))
 {
-    <div class="user-profile-section">
-        <!-- 1. Profile Section -->
-        <div class="user-info">
-            @{
-                var currentUser = await UserManager.GetUserAsync(User);
-                var avatarUrl = currentUser?.AvatarUrl;
-                var displayName = currentUser?.FullName ?? User.Identity?.Name ?? "User";
-            }
-            @if (!string.IsNullOrEmpty(avatarUrl))
-            {
-                <img src="@avatarUrl" class="user-avatar" alt="Avatar" />
-            }
-            else
-            {
-                <div class="user-avatar d-flex align-items-center justify-content-center bg-danger text-white fw-bold">
-                    @displayName.Substring(0, 1).ToUpper()
-                </div>
-            }
-            <div class="d-flex flex-column">
-                <span class="fw-bold text-dark" style="font-size: 0.95rem;">@displayName</span>
-                <a asp-controller="Account" asp-action="Profile" class="text-secondary text-decoration-none small">
-                    View Profile
-                </a>
-            </div>
-        </div>
-
-
-
-        <!-- 3. Logout Button -->
-        <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
-            <button type="submit" class="btn-logout">
-                <span class="material-icons" style="font-size: 18px;">logout</span>
-                Sign Out
-            </button>
-        </form>
-    </div>
-}
-else
-{
-    <div class="p-3 mt-auto">
+    <div class="sidebar-header">
         <a asp-area="Identity"
            asp-page="/Account/Login"
            class="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2 py-2">
             <span class="material-icons">login</span>
-            Login
+            UEF I.D Login
         </a>
     </div>
 }

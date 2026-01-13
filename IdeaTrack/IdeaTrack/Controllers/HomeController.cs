@@ -74,14 +74,6 @@ namespace IdeaTrack.Controllers
                 }
             }
             
-            // Fetch leaderboard data for all users (public) - default is all-time
-            var leaderboard = await _leaderboardService.GetLeaderboardDataAsync(5);
-            ViewBag.Leaderboard = leaderboard;
-            
-            // Pass filter options
-            ViewBag.AvailableYears = await _leaderboardService.GetAvailableYearsAsync();
-            ViewBag.AvailablePeriods = await _leaderboardService.GetAvailablePeriodsAsync();
-            
             return View();
         }
 
@@ -103,6 +95,22 @@ namespace IdeaTrack.Controllers
         {
             var periods = await _leaderboardService.GetAvailablePeriodsAsync(yearId);
             return Json(periods);
+        }
+
+        /// <summary>
+        /// Leaderboard page - shows top initiatives and lecturers
+        /// </summary>
+        public async Task<IActionResult> Leaderboard()
+        {
+            // Fetch leaderboard data (default is all-time, top 10)
+            var leaderboard = await _leaderboardService.GetLeaderboardDataAsync(10);
+            ViewBag.Leaderboard = leaderboard;
+            
+            // Pass filter options
+            ViewBag.AvailableYears = await _leaderboardService.GetAvailableYearsAsync();
+            ViewBag.AvailablePeriods = await _leaderboardService.GetAvailablePeriodsAsync();
+            
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

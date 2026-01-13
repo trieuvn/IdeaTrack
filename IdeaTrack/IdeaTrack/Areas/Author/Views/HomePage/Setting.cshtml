@@ -25,26 +25,26 @@
     </div>
 
     <!-- Hero Section -->
-    <section class="hero-section text-white p-5 mb-5 shadow-lg">
+    <section class="hero-section text-white p-4 mb-4 shadow" style="border-radius: 15px; min-height: auto;">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <span class="badge rounded-pill bg-white bg-opacity-25 mb-3 p-2 px-3">
+                <span class="badge rounded-pill bg-white bg-opacity-25 mb-2 p-2 px-3">
                     <span class="material-icons align-middle me-1" style="font-size: 16px;">settings</span> ACCOUNT SETTINGS
                 </span>
-                <h1 class="fw-bold display-5 mb-3">Hello, <span id="displayFullName">@Model.FullName</span>!</h1>
-                <p class="fs-5 mb-0 opacity-75">
+                <h1 class="fw-bold display-6 mb-2">Hello, <span id="displayFullName">@Model.FullName</span>!</h1>
+                <p class="fs-6 mb-0 opacity-75">
                     Manage your personal information and customize your system settings.
                 </p>
             </div>
             <div class="col-lg-4 d-none d-lg-flex justify-content-end">
-                <div class="bg-white bg-opacity-15 rounded-circle p-4" style="backdrop-filter: blur(10px);">
+                <div class="bg-white bg-opacity-15 rounded-circle p-3" style="backdrop-filter: blur(10px);">
                     @if (!string.IsNullOrEmpty(Model.AvatarUrl))
                     {
-                        <img src="@Model.AvatarUrl" class="rounded-circle" width="100" height="100" alt="Avatar">
+                        <img src="@Model.AvatarUrl" class="rounded-circle" width="80" height="80" alt="Avatar">
                     }
                     else
                     {
-                        <span class="material-icons text-white" style="font-size: 100px;">account_circle</span>
+                        <span class="material-icons text-white" style="font-size: 80px;">account_circle</span>
                     }
                 </div>
             </div>

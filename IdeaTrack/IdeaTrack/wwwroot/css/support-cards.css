@@ -1,0 +1,105 @@
+/* Support Document Cards with Decorative Backgrounds */
+.support-card {
+    overflow: hidden !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.support-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Inner content container with glassmorphism effect - fills entire card */
+.support-card-inner {
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 24px 32px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.support-card-inner .icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Brown Card Background */
+.support-card-brown {
+    background: linear-gradient(135deg, #7c2d12 0%, #451a03 100%) !important;
+}
+
+/* Blue Card Background */
+.support-card-blue {
+    background: linear-gradient(135deg, #596fb8 0%, #1e3a8a 100%) !important;
+}
+
+/* Green Card Background with leaf decoration */
+.support-card-green {
+    background: linear-gradient(135deg, #15803d 0%, #14532d 100%) !important;
+}
+
+/* Leaf decoration image for green card - using multiply blend to remove white bg */
+.support-card-green::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/images/leaf-decoration.png');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    mix-blend-mode: multiply;
+    opacity: 0.6;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Similar decoration for brown card */
+.support-card-brown::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Similar decoration for blue card */
+.support-card-blue::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/images/blue-decoration.jpg');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    mix-blend-mode: multiply;
+    opacity: 0.5;
+    z-index: 1;
+    pointer-events: none;
+}
