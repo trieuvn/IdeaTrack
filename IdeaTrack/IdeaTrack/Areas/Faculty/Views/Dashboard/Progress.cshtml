@@ -1,20 +1,54 @@
 ﻿@using IdeaTrack.Models
-@model IEnumerable<IdeaTrack.Models.Initiative>
+@using IdeaTrack.Areas.Faculty.Models
+@model FacultyProgressVM
 
 @{
     ViewData["Title"] = "Progress Statistics";
 
-    var pieData = ViewBag.PieData as List<int> ?? new List<int> { 0, 0, 0 };
-    var trendData = ViewBag.TrendData as List<int> ?? new List<int> { 0, 0, 0, 0, 0 };
-    var trendLabels = ViewBag.TrendLabels as List<string> ?? new List<string> { "", "", "", "", "" };
+    var pieData = ViewBag.PieData as List<int> ?? new List<int> { 0, 0, 0, 0 };
+    var trendData = ViewBag.TrendData as List<int> ?? new List<int> { 0, 0, 0, 0, 0, 0, 0 };
+    var trendLabels = ViewBag.TrendLabels as List<string> ?? new List<string> { "", "", "", "", "", "", "" };
 
     double total = pieData.Sum();
     double pctPending = total > 0 ? Math.Round((pieData[0] / total) * 100, 1) : 0;
-    double pctApproved = total > 0 ? Math.Round((pieData[1] / total) * 100, 1) : 0;
-    double pctRevision = total > 0 ? Math.Round((pieData[2] / total) * 100, 1) : 0;
+    double pctForwarded = total > 0 ? Math.Round((pieData[1] / total) * 100, 1) : 0;
+    double pctEvaluation = total > 0 ? Math.Round((pieData[2] / total) * 100, 1) : 0;
+    double pctRevision = total > 0 ? Math.Round((pieData[3] / total) * 100, 1) : 0;
 }
 
 <div class="container-fluid px-4 py-4 bg-light">
+    <!-- Filter Section (New) -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-3">
+             <form method="get" action="@Url.Action("Progress")" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted">Academic Year</label>
+                    <select name="yearId" asp-items="Model.Years" class="form-select border-0 bg-light rounded-pill" onchange="this.form.submit()">
+                        <option value="">-- All Years --</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted">Period</label>
+                    <select name="periodId" asp-items="Model.Periods" class="form-select border-0 bg-light rounded-pill" onchange="this.form.submit()">
+                         <option value="">-- All Periods --</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted">Category</label>
+                    <select name="categoryId" asp-items="Model.Categories" class="form-select border-0 bg-light rounded-pill">
+                         <option value="">-- All Categories --</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 flex-grow-1"><i class="bi bi-filter me-2"></i>Filter</button>
+                    <a href="@Url.Action("Progress")" class="btn btn-outline-secondary rounded-pill px-3" title="Clear Filters"><i class="bi bi-arrow-counterclockwise"></i></a>
+                </div>
+                <!-- Maintain search string if user searches separately -->
+                <input type="hidden" name="searchString" value="@ViewBag.CurrentSearch" />
+            </form>
+        </div>
+    </div>
+
     <div class="row g-4">
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -38,10 +72,14 @@
                             <div class="fw-bold">@pctPending%</div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="small fw-medium"><i class="bi bi-circle-fill text-success me-2"></i>Forwarded to R&D</div>
-                            <div class="fw-bold">@pctApproved%</div>
+                            <div class="small fw-medium"><i class="bi bi-circle-fill text-info me-2"></i>Forwarded (R&D)</div>
+                            <div class="fw-bold">@pctForwarded%</div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
+                            <div class="small fw-medium"><i class="bi bi-circle-fill text-secondary me-2"></i>Evaluation</div>
+                            <div class="fw-bold">@pctEvaluation%</div>
+                        </div>
+                         <div class="d-flex justify-content-between align-items-center">
                             <div class="small fw-medium"><i class="bi bi-circle-fill text-danger me-2"></i>Revision Required</div>
                             <div class="fw-bold">@pctRevision%</div>
                         </div>
@@ -57,6 +95,11 @@
 
                     <div class="d-flex gap-2 align-items-center">
                         <form method="get" action="@Url.Action("Progress")" class="d-flex gap-2">
+                             <!-- Keep filters -->
+                            <input type="hidden" name="yearId" value="@Model.SelectedYearId" />
+                            <input type="hidden" name="periodId" value="@Model.SelectedPeriodId" />
+                            <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
+                            
                             <div class="input-group input-group-sm border rounded-pill px-2">
                                 <span class="input-group-text bg-transparent border-0"><i class="bi bi-search text-muted"></i></span>
                                 <input type="text" name="searchString" value="@ViewBag.CurrentSearch"
@@ -83,17 +126,53 @@
                                 </tr>
                             </thead>
                             <tbody class="small">
-                                @if (Model != null && Model.Any())
+                                @if (Model.Initiatives != null && Model.Initiatives.Any())
                                 {
-                                    foreach (var item in Model)
+                                    foreach (var item in Model.Initiatives)
                                     {
                                         string badgeClass = "bg-secondary-subtle text-secondary";
                                         string statusLabel = item.Status.ToString();
                                         string dotColor = "bg-secondary";
 
-                                        if (item.Status == InitiativeStatus.Pending) { badgeClass = "bg-warning-subtle text-warning"; statusLabel = "Pending Review"; dotColor = "bg-warning"; }
-                                        else if (item.Status == InitiativeStatus.Faculty_Approved) { badgeClass = "bg-success-subtle text-success"; statusLabel = "Forwarded to R&D"; dotColor = "bg-success"; }
-                                        else if (item.Status == InitiativeStatus.Revision_Required) { badgeClass = "bg-danger-subtle text-danger"; statusLabel = "Revision Required"; dotColor = "bg-danger"; }
+                                        switch (item.Status)
+                                        {
+                                            case InitiativeStatus.Pending:
+                                                badgeClass = "bg-warning-subtle text-warning";
+                                                statusLabel = "Pending Review";
+                                                dotColor = "bg-warning";
+                                                break;
+                                            case InitiativeStatus.Faculty_Approved:
+                                                badgeClass = "bg-info-subtle text-info";
+                                                statusLabel = "Forwarded to R&D";
+                                                dotColor = "bg-info";
+                                                break;
+                                            case InitiativeStatus.Evaluating:
+                                            case InitiativeStatus.Re_Evaluating:
+                                                badgeClass = "bg-secondary-subtle text-dark";
+                                                statusLabel = "Evaluation";
+                                                dotColor = "bg-secondary";
+                                                break;
+                                            case InitiativeStatus.Pending_Final:
+                                                badgeClass = "bg-primary-subtle text-primary";
+                                                statusLabel = "Pending Final";
+                                                dotColor = "bg-primary";
+                                                break;
+                                            case InitiativeStatus.Approved:
+                                                badgeClass = "bg-success-subtle text-success";
+                                                statusLabel = "Approved";
+                                                dotColor = "bg-success";
+                                                break;
+                                            case InitiativeStatus.Rejected:
+                                                badgeClass = "bg-danger-subtle text-danger";
+                                                statusLabel = "Rejected";
+                                                dotColor = "bg-danger";
+                                                break;
+                                            case InitiativeStatus.Revision_Required:
+                                                badgeClass = "bg-danger-subtle text-danger border border-danger";
+                                                statusLabel = "Revision Required";
+                                                dotColor = "bg-danger";
+                                                break;
+                                        }
 
                                         <tr>
                                             <td class="ps-4">
@@ -111,7 +190,7 @@
                                 }
                                 else
                                 {
-                                    <tr><td colspan="4" class="text-center py-4 text-muted">No initiatives found.</td></tr>
+                                    <tr><td colspan="4" class="text-center py-4 text-muted">No initiatives found matching your criteria.</td></tr>
                                 }
                             </tbody>
                         </table>
@@ -154,10 +233,11 @@
         new Chart(ctxStatus, {
             type: 'doughnut',
             data: {
-                labels: ['Pending', 'Forwarded', 'Revision'],
+                labels: ['Pending', 'Forwarded', 'Evaluation', 'Revision'],
                 datasets: [{
                     data: @Html.Raw(Json.Serialize(pieData)),
-                    backgroundColor: ['#ffc107', '#198754', '#dc3545'],
+                    // Colors: Warning(Yellow), Info(Cyan), Secondary(Gray), Danger(Red)
+                    backgroundColor: ['#ffc107', '#0dcaf0', '#6c757d', '#dc3545'],
                     borderWidth: 0,
                     hoverOffset: 4
                 }]
