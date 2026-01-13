@@ -173,7 +173,7 @@
 
                                 <li class="list-group-item d-flex justify-content-between">
                                     <span><i class="fas @iconClass @textColor me-2"></i>@file.FileName</span>
-                                    <a href="@Url.Action("DownloadFile", "Port", new { fileName = file.FileName })" class="text-decoration-none">
+                                    <a href="@Url.Action("DownloadFile", "Port", new { fileName = Uri.EscapeDataString(file.FileName) })" class="text-decoration-none">
                                         <i class="fas fa-download me-1 text-primary"></i>Download
                                     </a>
                                 </li>
