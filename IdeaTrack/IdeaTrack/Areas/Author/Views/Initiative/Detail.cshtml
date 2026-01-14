@@ -432,12 +432,9 @@
                             </a>
                             @if (Model.IsOwner)
                             {
-                                <form asp-controller="Initiative" asp-action="SubmitInitiative" asp-route-id="@Model.Initiative.Id" method="post" class="w-50" onsubmit="return confirm('Are you sure you want to submit this initiative?');">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold w-100">
-                                        <span class="material-icons align-middle me-1">send</span> Submit
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold w-50" data-bs-toggle="modal" data-bs-target="#submitModal">
+                                    <span class="material-icons align-middle me-1">send</span> Submit
+                                </button>
                             }
                         </div>
                         @if (!Model.IsOwner)
@@ -456,12 +453,9 @@
                         <h6 class="fw-bold text-danger mb-3">
                             <span class="material-icons align-middle me-1">warning</span> Danger Zone
                         </h6>
-                        <form asp-controller="Initiative" asp-action="Delete" asp-route-id="@Model.Initiative.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this initiative?');">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-outline-danger w-100 rounded-pill">
-                                <span class="material-icons align-middle me-1" style="font-size: 18px;">delete</span> Delete Initiative
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-outline-danger w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">delete</span> Delete Initiative
+                        </button>
                     </div>
                 </div>
             }
@@ -469,3 +463,75 @@
     </div>
 
 </main>
+
+<!-- SUBMIT CONFIRMATION MODAL -->
+@if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Draft && Model.IsOwner)
+{
+    <div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 15px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="submitModalLabel">
+                        <span class="material-icons align-middle me-2 text-primary">send</span>
+                        Confirm Submission
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <span class="material-icons text-primary" style="font-size: 64px;">task_alt</span>
+                    </div>
+                    <p class="text-center mb-0">Are you sure you want to <strong>submit</strong> this initiative for review?</p>
+                    <p class="text-center text-muted small mt-2">Once submitted, you won't be able to edit it until it's reviewed.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0 justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">close</span> Cancel
+                    </button>
+                    <form asp-controller="Initiative" asp-action="SubmitInitiative" asp-route-id="@Model.Initiative.Id" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- DELETE CONFIRMATION MODAL -->
+@if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Draft && Model.IsOwner)
+{
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 15px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-danger" id="deleteModalLabel">
+                        <span class="material-icons align-middle me-2">warning</span>
+                        Confirm Deletion
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <span class="material-icons text-danger" style="font-size: 64px;">delete_forever</span>
+                    </div>
+                    <p class="text-center mb-0">Are you sure you want to <strong class="text-danger">permanently delete</strong> this initiative?</p>
+                    <p class="text-center text-muted small mt-2">This action cannot be undone. All files and data will be lost.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0 justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">close</span> Cancel
+                    </button>
+                    <form asp-controller="Initiative" asp-action="Delete" asp-route-id="@Model.Initiative.Id" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">delete</span> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

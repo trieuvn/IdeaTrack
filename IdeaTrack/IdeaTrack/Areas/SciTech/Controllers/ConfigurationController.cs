@@ -269,6 +269,12 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .ToListAsync();
             ViewBag.InitiativeCount = await _context.Initiatives
                 .CountAsync(i => i.CategoryId == id);
+            
+            // Load ReferenceForms via the Period relationship
+            ViewBag.ReferenceForms = await _context.Set<ReferenceForm>()
+                .Where(f => f.PeriodId == category.PeriodId)
+                .OrderByDescending(f => f.UploadedAt)
+                .ToListAsync();
 
             return View("~/Areas/SciTech/Views/Configuration/CategoryDetails.cshtml", category);
         }
@@ -394,6 +400,85 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+
+        // =================================================
+        // 6. REFERENCE FORM MANAGEMENT (via Period)
+        // =================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadReferenceForm(int categoryId, string formName, IFormFile file)
+        {
+            var category = await _context.InitiativeCategories
+                .Include(c => c.Period)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+            
+            if (category == null)
+                return NotFound();
+
+            if (file == null || file.Length == 0)
+            {
+                TempData["ErrorMessage"] = "Vui lòng chọn file để tải lên!";
+                return RedirectToAction(nameof(CategoryDetails), new { id = categoryId });
+            }
+
+            // Create uploads directory if not exists
+            var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "reference-forms");
+            if (!Directory.Exists(uploadsDir))
+                Directory.CreateDirectory(uploadsDir);
+
+            // Generate unique filename
+            var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+            var filePath = Path.Combine(uploadsDir, fileName);
+
+            // Save file
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Create ReferenceForm record (using PeriodId from category)
+            var referenceForm = new ReferenceForm
+            {
+                FormName = formName,
+                FileName = file.FileName,
+                FileUrl = $"/uploads/reference-forms/{fileName}",
+                FileType = Path.GetExtension(file.FileName).ToLower(),
+                PeriodId = category.PeriodId,
+                UploadedAt = DateTime.Now
+            };
+
+            _context.Add(referenceForm);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Đã tải lên file \"{file.FileName}\" thành công!";
+            return RedirectToAction(nameof(CategoryDetails), new { id = categoryId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteReferenceForm(int id, int categoryId)
+        {
+            var form = await _context.Set<ReferenceForm>().FindAsync(id);
+            if (form == null)
+                return NotFound();
+
+            // Delete file from disk
+            if (!string.IsNullOrEmpty(form.FileUrl))
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", form.FileUrl.TrimStart('/'));
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
+            _context.Remove(form);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Đã xóa file thành công!";
+            return RedirectToAction(nameof(CategoryDetails), new { id = categoryId });
         }
     }
 }

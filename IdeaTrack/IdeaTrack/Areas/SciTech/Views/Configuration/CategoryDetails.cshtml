@@ -4,6 +4,7 @@
     var boards = ViewBag.Boards as List<IdeaTrack.Models.Board>;
     var templates = ViewBag.Templates as List<IdeaTrack.Models.EvaluationTemplate>;
     var initiativeCount = (int?)ViewBag.InitiativeCount ?? 0;
+    var referenceForms = ViewBag.ReferenceForms as List<IdeaTrack.Models.ReferenceForm> ?? new List<IdeaTrack.Models.ReferenceForm>();
 }
 
 <style>
@@ -30,6 +31,14 @@
     {
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
             <i class="fa-solid fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
+    @if(TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="fa-solid fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
@@ -111,6 +120,66 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- Reference Forms Card -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <h6 class="fw-bold mb-0 text-uppercase small">
+                        <i class="fa-solid fa-file-alt me-2 text-success"></i>Biểu mẫu hướng dẫn
+                    </h6>
+                    <button type="button" class="btn btn-sm btn-success rounded-3" data-bs-toggle="modal" data-bs-target="#uploadFormModal">
+                        <i class="fa-solid fa-upload me-1"></i>Tải lên
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if(referenceForms.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach(var form in referenceForms)
+                            {
+                                var fileIcon = form.FileType switch
+                                {
+                                    ".pdf" => "fa-file-pdf text-danger",
+                                    ".docx" or ".doc" => "fa-file-word text-primary",
+                                    ".xlsx" or ".xls" => "fa-file-excel text-success",
+                                    ".pptx" or ".ppt" => "fa-file-powerpoint text-warning",
+                                    _ => "fa-file text-secondary"
+                                };
+                                
+                                <div class="list-group-item d-flex align-items-center justify-content-between px-0">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fa-solid @fileIcon me-3" style="font-size: 24px;"></i>
+                                        <div>
+                                            <div class="fw-medium">@form.FormName</div>
+                                            <div class="small text-muted">@form.FileName • @form.UploadedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <a href="@form.FileUrl" download class="btn btn-sm btn-outline-primary" title="Tải xuống">
+                                            <i class="fa-solid fa-download"></i>
+                                        </a>
+                                        <form asp-action="DeleteReferenceForm" method="post" style="display: inline;" onsubmit="return confirm('Bạn có chắc muốn xóa file này?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@form.Id" />
+                                            <input type="hidden" name="categoryId" value="@Model.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4 text-muted">
+                            <i class="fa-solid fa-folder-open mb-3" style="font-size: 48px;"></i>
+                            <p class="mb-0">Chưa có biểu mẫu nào. Nhấn "Tải lên" để thêm mới.</p>
+                        </div>
+                    }
                 </div>
             </div>
 
@@ -278,6 +347,52 @@
                     <i class="fa-solid fa-plus me-1"></i>Tạo Mẫu chấm điểm
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Reference Form Modal -->
+<div class="modal fade" id="uploadFormModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-header bg-success-subtle py-3 border-0 rounded-top-4">
+                <h6 class="modal-title fw-bold text-success-emphasis">
+                    <i class="fa-solid fa-upload me-2"></i>Tải lên biểu mẫu hướng dẫn
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="UploadReferenceForm" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="categoryId" value="@Model.Id" />
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Tên hiển thị</label>
+                        <input type="text" name="formName" class="form-control" required
+                               placeholder="Ví dụ: Mẫu đề xuất sáng kiến" />
+                        <small class="text-muted">Tên hiển thị cho người dùng (không phải tên file)</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-muted">Chọn file</label>
+                        <input type="file" name="file" class="form-control" required
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+                        <small class="text-muted">Hỗ trợ: PDF, Word, Excel, PowerPoint</small>
+                    </div>
+                    
+                    <div class="alert alert-info small mb-0">
+                        <i class="fa-solid fa-info-circle me-1"></i>
+                        File sẽ được lưu vào hệ thống và có thể tải xuống bởi tất cả các danh mục trong cùng kỳ sáng kiến.
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-times me-1"></i>Hủy
+                    </button>
+                    <button type="submit" class="btn btn-success rounded-3">
+                        <i class="fa-solid fa-upload me-1"></i>Tải lên
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
