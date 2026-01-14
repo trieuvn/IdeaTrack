@@ -269,14 +269,12 @@
                         @if (Model.Status == InitiativeStatus.Faculty_Approved)
                         {
                             <!-- ACCEPT & ASSIGN (For Faculty Approved) -->
-                            <button type="submit" asp-action="ApproveInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id"
-                                    class="btn btn-success" onclick="return confirm('Confirm accept and assign this initiative?');">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#acceptAssignModal">
                                 <i class="fas fa-check-circle me-1"></i>Accept & Assign
                             </button>
                             
                             <!-- REJECT (For Faculty Approved) -->
-                            <button type="submit" asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id"
-                                    class="btn btn-danger" onclick="return confirm('Confirm reject this initiative?');">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">
                                 <i class="fas fa-times-circle me-1"></i>Reject
                             </button>
                         }
@@ -284,19 +282,16 @@
                         @if (Model.Status == InitiativeStatus.Evaluating)
                         {
                             <!-- RE-EVALUATE -->
-                            <button type="submit" asp-action="RequestReEvaluation" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id"
-                                    class="btn btn-warning text-white" onclick="return confirm('Confirm request next round re-evaluation?');">
+                            <button type="button" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#reEvaluateModal">
                                 <i class="fas fa-sync-alt me-1"></i>Request Re-evaluation
                             </button>
 
                              <!-- FINAL DECISION (Approve/Reject) -->
-                            <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Approve" asp-route-id="@Model.Id"
-                                    class="btn btn-outline-success fw-bold" onclick="return confirm('Confirm FINAL APPROVAL?');">
+                            <button type="button" class="btn btn-outline-success fw-bold" data-bs-toggle="modal" data-bs-target="#finalApproveModal">
                                 <i class="fas fa-award me-1"></i>Final Approve
                             </button>
 
-                            <button type="submit" asp-action="MakeFinalDecision" asp-route-decision="Reject" asp-route-id="@Model.Id"
-                                    class="btn btn-outline-danger fw-bold" onclick="return confirm('Confirm FINAL REJECTION?');">
+                            <button type="button" class="btn btn-outline-danger fw-bold" data-bs-toggle="modal" data-bs-target="#finalRejectModal">
                                 <i class="fas fa-times-circle me-1"></i>Final Reject
                             </button>
 
@@ -305,8 +300,7 @@
                                 <i class="fas fa-undo me-1"></i>Request Revision
                             </button>
                             
-                            <button type="submit" asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id"
-                                    id="btnReject" class="btn btn-danger d-none" onclick="return validateReject();">
+                            <button type="button" id="btnReject" class="btn btn-danger d-none" data-bs-toggle="modal" data-bs-target="#sendRevisionModal">
                                 <i class="fas fa-paper-plane me-1"></i>Send Revision Request
                             </button>
                         }
@@ -317,30 +311,249 @@
     </div>
 </div>
 
+<!-- ============ CONFIRMATION MODALS ============ -->
+
+<!-- Accept & Assign Modal -->
+<div class="modal fade" id="acceptAssignModal" tabindex="-1" aria-labelledby="acceptAssignModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="acceptAssignModalLabel">
+                    <i class="fas fa-check-circle me-2"></i>Accept & Assign Initiative
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to <strong>accept</strong> this initiative and assign it to a council for evaluation?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <form asp-action="ApproveInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="requestContent" id="modalAcceptContent" />
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check me-1"></i>Confirm Accept
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal (For Faculty Approved) -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="rejectModalLabel">
+                    <i class="fas fa-times-circle me-2"></i>Reject Initiative
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to <strong>reject</strong> this initiative? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <form asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="requestContent" id="modalRejectContent" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-check me-1"></i>Confirm Reject
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Re-Evaluate Modal -->
+<div class="modal fade" id="reEvaluateModal" tabindex="-1" aria-labelledby="reEvaluateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="reEvaluateModalLabel">
+                    <i class="fas fa-sync-alt me-2"></i>Request Re-evaluation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to request a <strong>next round of re-evaluation</strong> for this initiative?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <form asp-action="RequestReEvaluation" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="requestContent" id="modalReEvalContent" />
+                    <button type="submit" class="btn btn-warning text-white">
+                        <i class="fas fa-check me-1"></i>Confirm Re-evaluation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Final Approve Modal -->
+<div class="modal fade" id="finalApproveModal" tabindex="-1" aria-labelledby="finalApproveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="finalApproveModalLabel">
+                    <i class="fas fa-award me-2"></i>Final Approval
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-trophy fa-3x text-success"></i>
+                </div>
+                <p class="mb-0 text-center">This will <strong>FINALLY APPROVE</strong> the initiative. This is the last step in the approval process.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <form asp-action="MakeFinalDecision" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id" asp-route-decision="Approve" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="requestContent" id="modalFinalApproveContent" />
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check me-1"></i>Confirm Final Approve
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Final Reject Modal -->
+<div class="modal fade" id="finalRejectModal" tabindex="-1" aria-labelledby="finalRejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="finalRejectModalLabel">
+                    <i class="fas fa-times-circle me-2"></i>Final Rejection
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <i class="fas fa-ban fa-3x text-danger"></i>
+                </div>
+                <p class="mb-0 text-center">This will <strong>FINALLY REJECT</strong> the initiative. This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <form asp-action="MakeFinalDecision" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id" asp-route-decision="Reject" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="requestContent" id="modalFinalRejectContent" />
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-check me-1"></i>Confirm Final Reject
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Send Revision Request Modal -->
+<div class="modal fade" id="sendRevisionModal" tabindex="-1" aria-labelledby="sendRevisionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="modal-title" id="sendRevisionModalLabel">
+                    <i class="fas fa-paper-plane me-2"></i>Send Revision Request
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to send a <strong>revision request</strong> to the author?</p>
+                <div id="revisionValidationError" class="alert alert-danger mt-3 d-none">
+                    <i class="fas fa-exclamation-triangle me-1"></i>
+                    <span id="revisionErrorText"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Cancel
+                </button>
+                <form asp-action="RejectInitiative" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id" method="post" style="display:inline;" id="revisionForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="requestContent" id="modalRevisionContent" />
+                    <input type="hidden" name="deadline" id="modalRevisionDeadline" />
+                    <button type="button" class="btn btn-primary" onclick="submitRevisionRequest()">
+                        <i class="fas fa-paper-plane me-1"></i>Confirm Send
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    document.getElementById("btnShowDeadline").addEventListener("click", function() {
-        var wrapper = document.getElementById("deadlineWrapper");
-        var btnReject = document.getElementById("btnReject");
-        
-        if (wrapper.classList.contains("d-none")) {
-            wrapper.classList.remove("d-none");
-            btnReject.classList.remove("d-none");
-            this.classList.add("d-none"); // Hide "Show" button
-        }
+    // Show deadline input when clicking Request Revision
+    var btnShowDeadline = document.getElementById("btnShowDeadline");
+    if (btnShowDeadline) {
+        btnShowDeadline.addEventListener("click", function() {
+            var wrapper = document.getElementById("deadlineWrapper");
+            var btnReject = document.getElementById("btnReject");
+            
+            if (wrapper.classList.contains("d-none")) {
+                wrapper.classList.remove("d-none");
+                btnReject.classList.remove("d-none");
+                this.classList.add("d-none");
+            }
+        });
+    }
+
+    // Copy notes to modal hidden inputs when modals open
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        modal.addEventListener('show.bs.modal', function() {
+            var content = document.getElementById('requestContent').value;
+            var deadline = document.getElementById('deadline') ? document.getElementById('deadline').value : '';
+            
+            // Update all hidden inputs in modals
+            var hiddenInputs = this.querySelectorAll('input[name="requestContent"]');
+            hiddenInputs.forEach(function(input) {
+                input.value = content;
+            });
+            
+            var deadlineInputs = this.querySelectorAll('input[name="deadline"]');
+            deadlineInputs.forEach(function(input) {
+                input.value = deadline;
+            });
+        });
     });
 
-    function validateReject() {
+    // Validate and submit revision request
+    function submitRevisionRequest() {
         var content = document.getElementById("requestContent").value;
         var deadline = document.getElementById("deadline").value;
+        var errorDiv = document.getElementById("revisionValidationError");
+        var errorText = document.getElementById("revisionErrorText");
         
         if (!content || !content.trim()) {
-            alert("Please enter revision request content!");
-            return false;
+            errorDiv.classList.remove("d-none");
+            errorText.textContent = "Please enter revision request content!";
+            return;
         }
         if (!deadline) {
-            alert("Please select a deadline!");
-            return false;
+            errorDiv.classList.remove("d-none");
+            errorText.textContent = "Please select a deadline!";
+            return;
         }
-        return confirm('Confirm send revision request to author?');
+        
+        // Copy values and submit
+        document.getElementById("modalRevisionContent").value = content;
+        document.getElementById("modalRevisionDeadline").value = deadline;
+        document.getElementById("revisionForm").submit();
     }
 </script>
