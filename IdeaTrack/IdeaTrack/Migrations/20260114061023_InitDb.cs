@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IdeaTrack.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate_V2 : Migration
+    public partial class InitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -409,6 +409,7 @@ namespace IdeaTrack.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SubmittedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CurrentRound = table.Column<int>(type: "int", nullable: false),
+                    HidePersonalInfo = table.Column<bool>(type: "bit", nullable: false),
                     CreatorId = table.Column<int>(type: "int", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
@@ -491,6 +492,9 @@ namespace IdeaTrack.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     Decision = table.Column<bool>(type: "bit", nullable: true),
                     ReviewComment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Strengths = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Limitations = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Recommendations = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DecisionDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
