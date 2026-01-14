@@ -110,6 +110,21 @@
                     <p class="fw-semibold mb-0"><i class="fas @deptIcon @deptColor me-1"></i>@Model.DepartmentName</p>
                 </div>
 
+                @if (Model.CoAuthors != null && Model.CoAuthors.Any())
+                {
+                    <div class="col-12">
+                        <small class="text-muted">Co-authors</small>
+                        <div class="d-flex flex-wrap gap-2 mt-1">
+                            @foreach (var coauthor in Model.CoAuthors)
+                            {
+                                <span class="badge bg-light text-dark border">
+                                    <i class="fas fa-user me-1"></i>@coauthor.FullName
+                                </span>
+                            }
+                        </div>
+                    </div>
+                }
+
                 <div class="col-md-6">
                     <small class="text-muted">Category</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-brain me-1 text-info"></i>@Model.Category</p>

@@ -24,6 +24,7 @@ namespace IdeaTrack.Areas.SciTech.Models
         public bool HidePersonalInfo { get; set; }
 
         public List<MemberScoreVM> MemberScores { get; set; } = new List<MemberScoreVM>();
+        public List<CoAuthorVM> CoAuthors { get; set; } = new List<CoAuthorVM>();
     }
 
     public class MemberScoreVM

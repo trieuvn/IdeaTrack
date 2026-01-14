@@ -17,6 +17,13 @@
             Code: <span class="fw-semibold">@Model.InitiativeCode</span>
             | Title: <span class="fw-semibold">@Model.Title</span>
             | Proposer: <span class="fw-semibold">@Model.ProposerName</span>
+            @if (Model.CoAuthors != null && Model.CoAuthors.Any())
+            {
+                <span class="ms-2">
+                    <i class="fa-solid fa-users text-muted"></i>
+                    Co-authors: @string.Join(", ", Model.CoAuthors.Select(c => c.FullName))
+                </span>
+            }
         </p>
     </div>
 

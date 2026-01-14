@@ -97,7 +97,8 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     SubmittedDate = i.SubmittedDate ?? i.CreatedAt,
                     Status = i.Status.ToString(),
                     PeriodName = i.Period != null ? i.Period.Name : "N/A",
-                    AcademicYear = i.Period != null && i.Period.AcademicYear != null ? i.Period.AcademicYear.Name : "N/A"
+                    AcademicYear = i.Period != null && i.Period.AcademicYear != null ? i.Period.AcademicYear.Name : "N/A",
+                    MemberCount = _context.Set<InitiativeAuthorship>().Count(a => a.InitiativeId == i.Id)
                 })
                 .ToList();
 
@@ -257,6 +258,8 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Include(i => i.Department)
                 .Include(i => i.Category)
                 .Include(i => i.FinalResult)
+                .Include(i => i.Authorships)
+                    .ThenInclude(a => a.Author)
                 .Include(i => i.Assignments)
                     .ThenInclude(a => a.Member)
                 .Include(i => i.Assignments)
@@ -316,7 +319,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 ConsolidatedStrengths = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Strengths)).Select(m => $"- {m.MemberName}: {m.Strengths}")),
                 ConsolidatedLimitations = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Limitations)).Select(m => $"- {m.MemberName}: {m.Limitations}")),
                 ConsolidatedRecommendations = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Recommendations)).Select(m => $"- {m.MemberName}: {m.Recommendations}")),
-                HidePersonalInfo = initiative.HidePersonalInfo
+                HidePersonalInfo = initiative.HidePersonalInfo,
+                CoAuthors = initiative.Authorships?
+                    .Where(a => !a.IsCreator)
+                    .Select(a => new CoAuthorVM
+                    {
+                        FullName = a.Author?.FullName ?? "N/A",
+                        IsCreator = a.IsCreator
+                    }).ToList() ?? new List<CoAuthorVM>()
             };
 
             // RANK CALCULATION (Threshold-based)
@@ -341,6 +351,8 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Include(i => i.Department)
                 .Include(i => i.Category)
                 .Include(i => i.Files)
+                .Include(i => i.Authorships)
+                    .ThenInclude(a => a.Author)
                 .FirstOrDefault(i => i.Id == id);
 
             if (initiative == null) return NotFound();
@@ -378,7 +390,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     FileName = f.FileName,
                     FilePath = f.FilePath,
                     FileType = f.FileType
-                }).ToList()
+                }).ToList(),
+                CoAuthors = initiative.Authorships?
+                    .Where(a => !a.IsCreator)
+                    .Select(a => new CoAuthorVM
+                    {
+                        FullName = a.Author?.FullName ?? "N/A",
+                        IsCreator = a.IsCreator
+                    }).ToList() ?? new List<CoAuthorVM>()
             };
 
             return View(vm);
