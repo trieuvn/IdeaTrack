@@ -19,6 +19,10 @@ namespace IdeaTrack.Areas.SciTech.Models
         public string Password { get; set; }
 
         public bool IsActive { get; set; } = false;
+
+        [Required]
+        public string SelectedRole { get; set; }
+
         [Required]
         public string Position { get; set; }
         [Required]
