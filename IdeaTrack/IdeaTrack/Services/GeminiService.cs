@@ -6,15 +6,22 @@ namespace IdeaTrack.Services
 {
     public class GeminiService
     {
-        private readonly HttpClient _http = new();
+        private readonly HttpClient _http;
+        private readonly List<string> _apiKeys;
 
-        // ⚠️ Demo only – đưa sang appsettings.json khi production
-        private readonly string _apiKey;
-        public GeminiService(IConfiguration configuration)
+        public GeminiService(IConfiguration configuration, HttpClient httpClient)
         {
-            _apiKey = configuration["Gemini:ApiKey"]
-                      ?? throw new Exception("Gemini API key is missing");
+            _http = httpClient;
+
+            _apiKeys = configuration
+                .GetSection("Gemini:ApiKeys")
+                .Get<List<string>>()
+                ?? throw new Exception("Gemini API keys are missing");
+
+            if (_apiKeys.Count < 2)
+                throw new Exception("Cần ít nhất 2 Gemini API key để dự phòng");
         }
+
         private const int MIN_WORDS = 380;
         private const int MAX_WORDS = 420;
 
@@ -31,7 +38,7 @@ NGUYÊN TẮC BẮT BUỘC:
 - Được phép diễn giải học thuật dựa trên nội dung gốc.
 - PHẢI KẾT THÚC BẰNG CÂU HOÀN CHỈNH.
 
-NỘI DUNG CẦN LÀM RÕ (trình bày thành đoạn văn):
+NỘI DUNG CẦN LÀM RÕ:
 1. Mục tiêu tổng quát của chương trình/tài liệu.
 2. Đối tượng đào tạo và nhu cầu thực tiễn.
 3. Định hướng nội dung và cấu trúc.
@@ -54,13 +61,11 @@ NỘI DUNG TÀI LIỆU:
             if (CountWords(content) < 40)
                 return "Nội dung tài liệu quá ngắn, không đủ dữ liệu để tạo bản tóm tắt 400 từ.";
 
-            // 1️⃣ Sinh bản tóm tắt ban đầu
             string summary = await CallGeminiAsync(SUMMARY_PROMPT + "\n" + content);
 
-            // 2️⃣ Nếu chưa đủ 380 từ → mở rộng có ngữ cảnh
             if (CountWords(summary) < MIN_WORDS)
             {
-                string expandPrompt = $@"
+                var expandPrompt = $@"
 NỘI DUNG GỐC:
 {content}
 
@@ -74,99 +79,97 @@ YÊU CẦU:
 - Không thêm thông tin ngoài tài liệu.
 - PHẢI KẾT THÚC BẰNG CÂU HOÀN CHỈNH.
 ";
-
                 summary = await CallGeminiAsync(expandPrompt);
             }
 
-            // 3️⃣ Giới hạn tối đa 420 từ – KHÔNG cắt dở câu
             return EnforceWordLimitBySentence(summary, MAX_WORDS);
         }
 
+        // ================= Gemini call + fallback =================
         private async Task<string> CallGeminiAsync(string prompt)
         {
-            var url =
-                $"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={_apiKey}";
-
-            var body = new
+            foreach (var apiKey in _apiKeys)
             {
-                contents = new[]
+                var url =
+                    $"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={apiKey}";
+
+                var body = new
                 {
-                    new
+                    contents = new[]
                     {
-                        parts = new[]
+                        new
                         {
-                            new { text = prompt }
+                            parts = new[]
+                            {
+                                new { text = prompt }
+                            }
                         }
+                    },
+                    generationConfig = new
+                    {
+                        temperature = 0.6,
+                        maxOutputTokens = 1600
                     }
-                },
-                generationConfig = new
+                };
+
+                var response = await _http.PostAsync(
+                    url,
+                    new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
+                );
+
+                var raw = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
                 {
-                    temperature = 0.6,
-                    maxOutputTokens = 1600
+                    using var doc = JsonDocument.Parse(raw);
+                    var text = doc.RootElement
+                        .GetProperty("candidates")[0]
+                        .GetProperty("content")
+                        .GetProperty("parts")[0]
+                        .GetProperty("text")
+                        .GetString();
+
+                    if (!string.IsNullOrWhiteSpace(text))
+                        return text;
                 }
-            };
 
-            var json = JsonSerializer.Serialize(body);
+                if (response.StatusCode is
+                    System.Net.HttpStatusCode.TooManyRequests or
+                    System.Net.HttpStatusCode.Forbidden or
+                    System.Net.HttpStatusCode.InternalServerError)
+                {
+                    continue;
+                }
 
-            var response = await _http.PostAsync(
-                url,
-                new StringContent(json, Encoding.UTF8, "application/json")
-            );
-
-            var raw = await response.Content.ReadAsStringAsync();
-
-            if (!response.IsSuccessStatusCode)
                 return $"[Gemini API ERROR] {response.StatusCode}: {raw}";
-
-            using var doc = JsonDocument.Parse(raw);
-
-            if (!doc.RootElement.TryGetProperty("candidates", out var candidates))
-                return "[Gemini API ERROR] No candidates returned.";
-
-            var text = candidates[0]
-                .GetProperty("content")
-                .GetProperty("parts")[0]
-                .GetProperty("text")
-                .GetString();
-
-            return string.IsNullOrWhiteSpace(text)
-                ? "[Gemini API ERROR] Empty response."
-                : text;
-        }
-
-        // ✅ Đếm từ ổn định cho tiếng Việt
-        private int CountWords(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text)) return 0;
-            return Regex.Matches(text, @"\b\p{L}+\b").Count;
-        }
-
-        // ✅ Giới hạn từ nhưng chỉ cắt theo CÂU
-        private string EnforceWordLimitBySentence(string text, int maxWords)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return text;
-
-            var sentences = Regex.Split(text, @"(?<=[\.!\?])\s+");
-            var result = new StringBuilder();
-            int wordCount = 0;
-
-            foreach (var sentence in sentences)
-            {
-                int sentenceWords = CountWords(sentence);
-                if (wordCount + sentenceWords > maxWords)
-                    break;
-
-                result.Append(sentence).Append(" ");
-                wordCount += sentenceWords;
             }
 
-            var finalText = result.ToString().Trim();
+            return "[Gemini API ERROR] All API keys exhausted (quota or invalid).";
+        }
 
-            if (!Regex.IsMatch(finalText, @"[\.!\?]$"))
-                finalText += ".";
+        // ================= Utils =================
 
-            return finalText;
+        private int CountWords(string text) =>
+            string.IsNullOrWhiteSpace(text)
+                ? 0
+                : Regex.Matches(text, @"\b\p{L}+\b").Count;
+
+        private string EnforceWordLimitBySentence(string text, int maxWords)
+        {
+            var sentences = Regex.Split(text, @"(?<=[\.!\?])\s+");
+            var sb = new StringBuilder();
+            int count = 0;
+
+            foreach (var s in sentences)
+            {
+                int w = CountWords(s);
+                if (count + w > maxWords) break;
+                sb.Append(s).Append(" ");
+                count += w;
+            }
+
+            var result = sb.ToString().Trim();
+            return Regex.IsMatch(result, @"[\.!\?]$") ? result : result + ".";
         }
     }
 }

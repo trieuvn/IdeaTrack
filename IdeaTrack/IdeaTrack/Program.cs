@@ -38,7 +38,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders()
 .AddErrorDescriber<CustomIdentityErrorDescriber>();
-builder.Services.AddScoped<GeminiService>();
+builder.Services.AddHttpClient<GeminiService>();
 // Register Business Services
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
 // Register Business Services

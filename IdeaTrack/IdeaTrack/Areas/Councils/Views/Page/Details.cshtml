@@ -643,23 +643,41 @@
         gradingForm.appendChild(hiddenActionInput);
 
         // ======= Submit Final Button =======
-                const btnSubmitFinal = document.getElementById('btnSubmitFinal');
+               const btnSubmitFinal = document.getElementById('btnSubmitFinal');
+
         if (btnSubmitFinal) {
             btnSubmitFinal.addEventListener('click', function () {
-                calculateTotal();
-                const total = Number(document.getElementById('totalScore').innerText);
 
-                if (total <= 0) {
-                    showConfirmPopup("Total score must be greater than 0 before submitting.", null, true);
+                let hasZeroScore = false;
+
+                document.querySelectorAll('.score-input').forEach(input => {
+                    const val = Number(input.value) || 0;
+                    if (val === 0) {
+                        hasZeroScore = true;
+                        input.style.borderColor = 'var(--danger)';
+                    }
+                });
+
+                if (hasZeroScore) {
+                    showConfirmPopup(
+                        "Each evaluation criteria must have a score greater than 0.",
+                        null,
+                        true
+                    );
                     return;
                 }
 
-                showConfirmPopup("Submit your evaluation? You cannot modify after submitting.", function () {
-                    hiddenActionInput.value = 'Submit';
-                    gradingForm.submit();
-                });
+                // OK → xác nhận submit
+                showConfirmPopup(
+                    "Submit your evaluation? You cannot modify after submitting.",
+                    function () {
+                        hiddenActionInput.value = 'Submit';
+                        gradingForm.submit();
+                    }
+                );
             });
         }
+
 
 
         // ======= Save Draft Buttons =======

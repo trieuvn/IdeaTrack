@@ -298,6 +298,16 @@
                                 </select>
                             </div>
                             <div class="mb-3">
+                                <label class="form-label fw-bold">Role</label>
+                                <select name="SelectedRole" class="form-select" required>
+                                    <option value="">-- Select Role --</option>
+                                    @foreach (var r in ViewBag.AllRoles as List<string> ?? new List<string>())
+                                    {
+                                        <option value="@r">@r</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label fw-bold">Position</label>
                                 <input name="Position" class="form-control" placeholder="e.g. Head of Dept, Lecturer..." />
                             </div>

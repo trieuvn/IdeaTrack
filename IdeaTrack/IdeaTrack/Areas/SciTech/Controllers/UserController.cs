@@ -24,7 +24,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         }
 
         // GET: /SciTech/User
-        public IActionResult Index(
+        public async Task<IActionResult> Index(
             string keyword,
             string role,
             string status,
@@ -41,10 +41,12 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     u.Email.Contains(keyword));
             }
 
-            // Filter by role
+            // Filter by role (Identity role)
             if (!string.IsNullOrWhiteSpace(role))
             {
-                query = query.Where(u => u.Position == role);
+                query = query.Where(u =>
+                    _context.UserRoles.Any(ur =>
+                        ur.UserId == u.Id && _context.Roles.Any(r => r.Id == ur.RoleId && r.Name == role)));
             }
 
             // Filter by status
@@ -63,47 +65,63 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             }
 
             // Pagination
-            int totalUsers = query.Count();
+            int totalUsers = await query.CountAsync();
 
-            var users = query
+            var pageUsers = await query
                 .OrderBy(u => u.Id)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(u => new UserViewModel
+                .ToListAsync();
+
+            var users = new List<UserViewModel>(pageUsers.Count);
+            foreach (var u in pageUsers)
+            {
+                var roles = await _userManager.GetRolesAsync(u);
+                var displayRole = roles.FirstOrDefault() ?? string.Empty;
+
+                var lastLogin = await _context.SystemAuditLogs
+                    .Where(l => l.UserId == u.Id && l.Action == "Login")
+                    .OrderByDescending(l => l.Timestamp)
+                    .Select(l => (DateTime?)l.Timestamp)
+                    .FirstOrDefaultAsync();
+
+                var loginCount = await _context.SystemAuditLogs
+                    .CountAsync(l => l.UserId == u.Id && l.Action == "Login");
+
+                users.Add(new UserViewModel
                 {
                     Id = u.Id,
                     FullName = u.FullName,
                     Email = u.Email,
                     IsActive = u.IsActive,
-                    Role = u.Position,
-                    LastLogin = _context.SystemAuditLogs
-                        .Where(l => l.UserId == u.Id && l.Action == "Login")
-                        .OrderByDescending(l => l.Timestamp)
-                        .Select(l => l.Timestamp)
-                        .FirstOrDefault(),
-                    LoginCount = _context.SystemAuditLogs
-                        .Count(l => l.UserId == u.Id && l.Action == "Login")
-                })
-                .ToList();
+                    Role = displayRole,
+                    LastLogin = lastLogin,
+                    LastActive = null,
+                    LoginCount = loginCount
+                });
+            }
 
             // Dashboard stats
-            ViewBag.TotalUsers = _context.Users.Count();
+            ViewBag.TotalUsers = await _context.Users.CountAsync();
 
-            var activeUsers = _context.Users.Count(u => u.IsActive);
+            var activeUsers = await _context.Users.CountAsync(u => u.IsActive);
             ViewBag.ActiveUsers = activeUsers;
             ViewBag.ActivePercent = ViewBag.TotalUsers == 0 ? 0 : (activeUsers * 100 / ViewBag.TotalUsers);
 
             var since = DateTime.Now.AddHours(-24);
-            ViewBag.RecentLogins = _context.SystemAuditLogs
-                .Count(l => l.Action == "Login" && l.Timestamp >= since);
+            ViewBag.RecentLogins = await _context.SystemAuditLogs
+                .CountAsync(l => l.Action == "Login" && l.Timestamp >= since);
 
-            ViewBag.PendingUsers = _context.Users.Count(u => !u.IsActive);
+            ViewBag.PendingUsers = await _context.Users.CountAsync(u => !u.IsActive);
 
-            // Role list
-            ViewBag.Roles = _context.Users
-                .Select(u => u.Position)
-                .Distinct()
-                .ToList();
+            // Role list (Identity)
+            ViewBag.Roles = await _context.Roles
+                .OrderBy(r => r.Name)
+                .Select(r => r.Name!)
+                .ToListAsync();
+
+            // Roles for Create User modal
+            ViewBag.AllRoles = ViewBag.Roles;
 
             // Pagination info
             ViewBag.Page = page;
@@ -116,7 +134,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             ViewBag.Keyword = keyword;
             ViewBag.Role = role;
             ViewBag.Status = status;
-            ViewBag.Departments = new SelectList(_context.Departments.OrderBy(d => d.Name).ToList(), "Id", "Name");
+            ViewBag.Departments = new SelectList(await _context.Departments.OrderBy(d => d.Name).ToListAsync(), "Id", "Name");
 
             return View("~/Areas/SciTech/Views/Port/User.cshtml", users);
         }
@@ -220,7 +238,15 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "User");
+                // Assign selected Identity role
+                var selectedRole = (model.SelectedRole ?? string.Empty).Trim();
+                if (!string.IsNullOrEmpty(selectedRole))
+                {
+                    if (await _context.Roles.AnyAsync(r => r.Name == selectedRole))
+                    {
+                        await _userManager.AddToRoleAsync(user, selectedRole);
+                    }
+                }
                 TempData["SuccessMessage"] = "Successfully created new user " + model.FullName + "!";
                 return RedirectToAction(nameof(Index));
             }
@@ -244,10 +270,12 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     u.Email.Contains(keyword));
             }
 
-            // Filter by role
+            // Filter by role (Identity role)
             if (!string.IsNullOrWhiteSpace(role))
             {
-                query = query.Where(u => u.Position == role);
+                query = query.Where(u =>
+                    _context.UserRoles.Any(ur =>
+                        ur.UserId == u.Id && _context.Roles.Any(r => r.Id == ur.RoleId && r.Name == role)));
             }
 
             // Filter by status
@@ -265,13 +293,17 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 }
             }
 
+            // Export uses a simple join to get a role name (first role per user)
             var users = query
                 .OrderBy(u => u.Id)
                 .Select(u => new
                 {
                     u.FullName,
                     u.Email,
-                    Role = u.Position,
+                    Role = (from ur in _context.UserRoles
+                            join r in _context.Roles on ur.RoleId equals r.Id
+                            where ur.UserId == u.Id
+                            select r.Name).FirstOrDefault(),
                     Status = u.IsActive ? "Active" : "Locked"
                 })
                 .ToList();
