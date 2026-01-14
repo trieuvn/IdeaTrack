@@ -1400,7 +1400,9 @@ namespace IdeaTrack.Areas.Author.Controllers
         [HttpGet("/Author/ViewFilePdf")]
         public async Task<IActionResult> ViewFilePdf(string fileName)
         {
-            var ext = Path.GetExtension(fileName).ToLower();
+            if (string.IsNullOrWhiteSpace(fileName))
+                return BadRequest();
+
             var uploadRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "initiatives");
             var inputPath = Path.Combine(uploadRoot, fileName);
 
@@ -1410,23 +1412,36 @@ namespace IdeaTrack.Areas.Author.Controllers
             var tempDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "temp-pdf");
             Directory.CreateDirectory(tempDir);
 
-            var pdfFileName = Path.GetFileNameWithoutExtension(fileName) + ".pdf";
-            var pdfPath = Path.Combine(tempDir, pdfFileName);
+            var pdfName = Path.GetFileNameWithoutExtension(fileName) + ".pdf";
+            var pdfPath = Path.Combine(tempDir, pdfName);
 
             if (!System.IO.File.Exists(pdfPath))
             {
+                var ext = Path.GetExtension(fileName).ToLower();
                 if (ext == ".pdf")
-                {
                     System.IO.File.Copy(inputPath, pdfPath, true);
-                }
                 else
-                {
                     await ConvertToPdf(inputPath, tempDir);
+            }
+            foreach (var file in Directory.GetFiles(tempDir, "*.pdf"))
+            {
+                if (!Path.GetFileName(file)
+                    .Equals(pdfName, StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                    catch
+                    {
+                        // ignore: file đang bị lock
+                    }
                 }
             }
-
-            // Trả PDF trực tiếp
-            return PhysicalFile(pdfPath, "application/pdf", pdfFileName);
+            return Json(new
+            {
+                url = $"/temp-pdf/{pdfName}"
+            });
         }
 
 
