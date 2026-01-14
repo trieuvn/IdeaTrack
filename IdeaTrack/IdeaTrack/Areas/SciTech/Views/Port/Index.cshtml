@@ -210,7 +210,13 @@
                                 <div class="badge bg-light text-dark border">@item.AcademicYear</div>
                                 <div class="small text-muted mt-1">@item.PeriodName</div>
                             </td>
-                            <td>@item.ProposerName</td>
+                            <td>
+                                <div>@item.ProposerName</div>
+                                @if (item.MemberCount > 1)
+                                {
+                                    <small class="text-muted">(@item.MemberCount members)</small>
+                                }
+                            </td>
                             <td>@item.DepartmentName</td>
                             <td>
                                 @{

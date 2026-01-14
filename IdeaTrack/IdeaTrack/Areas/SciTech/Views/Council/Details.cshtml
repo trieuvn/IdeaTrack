@@ -50,11 +50,11 @@
                     <div class="row g-4 mb-3">
                         <div class="col-md-6">
                             <label class="small text-muted">Proposer</label>
-                            <div class="fw-medium">@Model.ProposerName</div>
+                            <div class="fw-medium">@(Model.HidePersonalInfo ? "Anonymous Author" : Model.ProposerName)</div>
                         </div>
                         <div class="col-md-6">
                             <label class="small text-muted">Department</label>
-                            <div class="fw-medium">@Model.DepartmentName</div>
+                            <div class="fw-medium">@(Model.HidePersonalInfo ? "Anonymous Department" : Model.DepartmentName)</div>
                         </div>
                         <div class="col-md-6">
                             <label class="small text-muted">Category</label>

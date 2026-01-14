@@ -93,6 +93,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 Status = i.Status,
                 SubmittedDate = i.SubmittedDate ?? i.CreatedAt,
                 Budget = i.Budget,
+                HidePersonalInfo = i.HidePersonalInfo,
                 Files = i.Files.Select(f => new InitiativeFileVM 
                 { 
                     FileName = f.FileName 

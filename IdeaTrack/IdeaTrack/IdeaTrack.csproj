@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-IdeaTrack-4ba63b21-b0bd-4e64-b87c-d9f1c150ceac</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <NoWarn>CS8601;CS8602;CS8604;CS8618;CS8765</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

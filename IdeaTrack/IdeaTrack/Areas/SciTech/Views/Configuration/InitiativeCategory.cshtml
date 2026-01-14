@@ -115,7 +115,10 @@
                                     }
                                 </td>
                                 <td class="text-end pe-4">
-                                    <button class="btn btn-sm btn-light text-danger rounded-circle" onclick="deleteCat(@item.Id)">
+                                    <a href="@Url.Action("CategoryDetails", "Configuration", new { area = "SciTech", id = item.Id })" class="btn btn-sm btn-light text-primary rounded-circle me-1" title="Xem chi tiết">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-light text-danger rounded-circle" onclick="deleteCat(@item.Id)" title="Xóa">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </td>

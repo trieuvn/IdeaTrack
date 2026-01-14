@@ -133,13 +133,15 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-circle sm bg-secondary-subtle text-secondary me-2">
-                                            @item.Creator?.FullName.Substring(0, 1)
+                                            @(item.HidePersonalInfo ? "?" : item.Creator?.FullName.Substring(0, 1))
                                         </div>
-                                        <span>@item.Creator?.FullName</span>
+                                        <span>@(item.HidePersonalInfo ? "Anonymous Author" : item.Creator?.FullName)</span>
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="badge bg-light text-dark border">@item.Department?.Name</span>
+                                    <span class="badge bg-light text-dark border">
+                                        @(item.HidePersonalInfo ? "Anonymous Dept" : item.Department?.Name)
+                                    </span>
                                 </td>
                                 <td>@(item.SubmittedDate?.ToString("dd/MM/yyyy") ?? item.CreatedAt.ToString("dd/MM/yyyy"))</td>
                                 <td>

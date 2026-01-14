@@ -309,7 +309,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 SubmitAction = "SaveDraft",
                 RoundNumber = assignment.RoundNumber,
                 IsLocked = assignment.Status == AssignmentStatus.Completed,
-                HasPreviousRounds = hasPreviousRounds
+                HasPreviousRounds = hasPreviousRounds,
+                HidePersonalInfo = assignment.Initiative.HidePersonalInfo
             };
 
             vm.CriteriaItems = assignment.Template.CriteriaList
@@ -402,7 +403,9 @@ namespace IdeaTrack.Areas.Councils.Controllers
                                       ?? string.Empty;
                     vm.DepartmentName = hydrated.Initiative.Department?.Name ?? string.Empty;
                     vm.DueDate = hydrated.DueDate;
+                    vm.DueDate = hydrated.DueDate;
                     vm.Files = hydrated.Initiative.Files?.ToList() ?? new();
+                    vm.HidePersonalInfo = hydrated.Initiative.HidePersonalInfo;
                 }
 
                 return View("Details", vm);
@@ -630,8 +633,9 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 Limitations = assignment.Limitations,
                 Recommendations = assignment.Recommendations,
                 RoundNumber = assignment.RoundNumber,
-                IsLocked = true, // Always locked in view mode
-                HasPreviousRounds = false
+
+                HasPreviousRounds = false,
+                HidePersonalInfo = assignment.Initiative.HidePersonalInfo
             };
 
             vm.CriteriaItems = assignment.Template.CriteriaList

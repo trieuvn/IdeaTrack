@@ -24,7 +24,8 @@ namespace IdeaTrack.Areas.Faculty.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string InitiativeCode { get; set; }
-        public string ProposerName { get; set; }
+        public string ProposerName { get; set; }  // Primary author name
+        public int MemberCount { get; set; }       // Total number of authors
         public InitiativeCategory Category { get; set; }
         public InitiativeStatus Status { get; set; }
         public DateTime SubmittedDate { get; set; }
@@ -36,10 +37,11 @@ namespace IdeaTrack.Areas.Faculty.Models
         public string Title { get; set; }
         public string InitiativeCode { get; set; }
         public string Description { get; set; }
-        public string ProposerName { get; set; }
+        public string ProposerName { get; set; }  // Primary author name
+        public List<string> Authors { get; set; } = new List<string>(); // All authors names
         public decimal Budget { get; set; }
         public DateTime SubmittedDate { get; set; }
-        public string Status { get; set; }
+        public InitiativeStatus Status { get; set; }
         public InitiativeCategory Category { get; set; }
         public List<InitiativeFileVM> Files { get; set; }
     }
