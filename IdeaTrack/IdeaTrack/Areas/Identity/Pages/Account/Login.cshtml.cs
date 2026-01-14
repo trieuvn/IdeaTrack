@@ -65,7 +65,7 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
             /// Username or Email for login
             /// </summary>
             [Required(ErrorMessage = "Please enter username or email")]
-            [Display(Name = "Name dang nhap hoac Email")]
+            [Display(Name = "Username or Email")]
             public string UsernameOrEmail { get; set; }
 
             /// <summary>
@@ -79,7 +79,7 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
             /// <summary>
             /// Remember me
             /// </summary>
-            [Display(Name = "Ghi nho dang nhap?")]
+            [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
 
@@ -128,7 +128,7 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
 
                 if (user == null)
                 {
-                    ModelState.AddModelError(string.Empty, "Tai khoan khong ton tai.");
+                    ModelState.AddModelError(string.Empty, "Account does not exist.");
                     return Page();
                 }
 
@@ -165,7 +165,7 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Sai mat khau.");
+                    ModelState.AddModelError(string.Empty, "Incorrect password.");
                     return Page();
                 }
             }
