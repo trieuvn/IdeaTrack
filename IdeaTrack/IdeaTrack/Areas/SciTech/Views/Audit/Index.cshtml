@@ -1,12 +1,7 @@
 ﻿@model List<IdeaTrack.Services.AuditLogEntry>
 @{
     ViewData["Title"] = "System Audit Log";
-    Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
-    var tables = ViewBag.Tables as List<string> ?? new List<string>();
-    var selectedTable = ViewBag.SelectedTable as string;
-    var currentPage = (int)ViewBag.CurrentPage;
-    var totalPages = (int)ViewBag.TotalPages;
-    var totalCount = (int)ViewBag.TotalCount;
+    Layout = "~/Areas/SciTech/Views/Shared/_LayoutSciTech.cshtml";
 }
 
 <div class="container-fluid py-4">
@@ -19,128 +14,122 @@
         </a>
     </div>
 
-    <!-- Filters -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <form method="get" class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label">Table</label>
-                    <select name="table" class="form-select">
-                        <option value="">All</option>
-                        @foreach (var t in tables)
-                        {
-                            <option value="@t" selected="@(t == selectedTable)">@t</option>
-                        }
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Target ID</label>
-                    <input type="number" name="targetId" class="form-control" value="@ViewBag.SelectedTargetId" placeholder="ID">
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">User ID</label>
-                    <input type="number" name="userId" class="form-control" value="@ViewBag.SelectedUserId" placeholder="User ID">
-                </div>
-                <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary me-2">
-                        <i class="fas fa-search me-1"></i>Filter
-                    </button>
-                    <a asp-action="Index" class="btn btn-outline-secondary">
-                        <i class="fas fa-times me-1"></i>Clear Filters
-                    </a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Results -->
+    <!-- Multi-Filter DataTable -->
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-light">
-            <span class="text-muted">Total: <strong>@totalCount</strong> records</span>
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2 text-primary"></i>Nhật Ký Hệ Thống (Multi-Filter)</h5>
         </div>
-        <div class="card-body p-0">
-            @if (Model.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover table-sm mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 150px">Timestamp</th>
-                                <th>User</th>
-                                <th>Action</th>
-                                <th>Table</th>
-                                <th style="width: 80px">ID</th>
-                                <th>IP</th>
-                                <th style="width: 80px"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var log in Model)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        <small>@log.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")</small>
-                                    </td>
-                                    <td>
-                                        <a asp-action="Index" asp-route-userId="@log.UserId">@log.UserName</a>
-                                    </td>
-                                    <td>
-                                        <span class="badge @GetActionBadgeClass(log.Action)">@log.Action</span>
-                                    </td>
-                                    <td>
-                                        <code>@log.TargetTable</code>
-                                    </td>
-                                    <td>
-                                        <a asp-action="Index" asp-route-table="@log.TargetTable" asp-route-targetId="@log.TargetId">
-                                            @log.TargetId
-                                        </a>
-                                    </td>
-                                    <td><small class="text-muted">@log.IpAddress</small></td>
-                                    <td>
-                                        @if (!string.IsNullOrEmpty(log.Details))
-                                        {
-                                            <a asp-action="Details" asp-route-id="@log.Id" class="btn btn-sm btn-outline-info">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else
-            {
-                <div class="text-center py-5 text-muted">
-                    <i class="fas fa-clipboard-check fa-4x mb-3"></i>
-                    <p>No records found</p>
-                </div>
-            }
-        </div>
-
-        <!-- Pagination -->
-        @if (totalPages > 1)
-        {
-            <div class="card-footer">
-                <nav>
-                    <ul class="pagination pagination-sm justify-content-center mb-0">
-                        @for (int i = Math.Max(1, currentPage - 3); i <= Math.Min(totalPages, currentPage + 3); i++)
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="multi-filter-select" class="display table table-striped table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Người Dùng</th>
+                            <th>Hành Động</th>
+                            <th>Bảng</th>
+                            <th>ID</th>
+                            <th>Thời Gian</th>
+                            <th>IP</th>
+                            <th>Chi Tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Model)
                         {
-                            <li class="page-item @(i == currentPage ? "active" : "")">
-                                <a class="page-link" asp-action="Index" 
-                                   asp-route-table="@selectedTable" 
-                                   asp-route-targetId="@ViewBag.SelectedTargetId"
-                                   asp-route-userId="@ViewBag.SelectedUserId"
-                                   asp-route-page="@i">@i</a>
-                            </li>
+                            <tr>
+                                <td>@log.UserName</td>
+                                <td>
+                                    <span class="badge @GetActionBadgeClass(log.Action)">@log.Action</span>
+                                </td>
+                                <td><code>@log.TargetTable</code></td>
+                                <td>@log.TargetId</td>
+                                <td data-order="@log.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")">
+                                    @log.Timestamp.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td><small class="text-muted">@log.IpAddress</small></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(log.Details))
+                                    {
+                                        <a asp-action="Details" asp-route-id="@log.Id" class="btn btn-sm btn-outline-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
                         }
-                    </ul>
-                </nav>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Người Dùng</th>
+                            <th>Hành Động</th>
+                            <th>Bảng</th>
+                            <th>ID</th>
+                            <th>Thời Gian</th>
+                            <th>IP</th>
+                            <th>Chi Tiết</th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
-        }
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
+    
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#multi-filter-select').DataTable({
+                pageLength: 15,
+                order: [[4, 'desc']], // Sort by Timestamp descending
+                initComplete: function() {
+                    this.api()
+                        .columns([0, 1, 2]) // Only add filters to User, Action, Table columns
+                        .every(function() {
+                            var column = this;
+                            var select = $('<select class="form-select form-select-sm"><option value="">Tất cả</option></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function() {
+                                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                    column.search(val ? '^' + val + '$' : '', true, false).draw();
+                                });
+
+                            column.data()
+                                .unique()
+                                .sort()
+                                .each(function(d, j) {
+                                    // Extract text content for badge columns
+                                    var text = $('<div>').html(d).text().trim();
+                                    if (text) {
+                                        select.append('<option value="' + text + '">' + text + '</option>');
+                                    }
+                                });
+                        });
+                },
+                language: {
+                    search: "Tìm kiếm:",
+                    lengthMenu: "Hiển thị _MENU_ dòng",
+                    info: "Đang hiển thị _START_ đến _END_ của _TOTAL_ mục",
+                    infoEmpty: "Không có dữ liệu",
+                    infoFiltered: "(lọc từ _MAX_ mục)",
+                    paginate: {
+                        first: "Đầu",
+                        last: "Cuối",
+                        next: "Sau",
+                        previous: "Trước"
+                    },
+                    emptyTable: "Không có dữ liệu trong bảng"
+                }
+            });
+        });
+    </script>
+}
 
 @functions {
     string GetActionBadgeClass(string action)
@@ -151,7 +140,7 @@
             "update" => "bg-primary",
             "delete" => "bg-danger",
             "approve" => "bg-info",
-            "reject" => "bg-warning",
+            "reject" => "bg-warning text-dark",
             "submit" => "bg-secondary",
             _ => "bg-secondary"
         };

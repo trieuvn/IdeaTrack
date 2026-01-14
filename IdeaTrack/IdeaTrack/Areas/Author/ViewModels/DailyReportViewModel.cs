@@ -1,7 +1,7 @@
-﻿namespace IdeaTrack.Areas.Author.ViewModels
-{
-    using IdeaTrack.Models;
+﻿using IdeaTrack.Models;
 
+namespace IdeaTrack.Areas.Author.ViewModels
+{
     public class DailyReportViewModel
     {
         public int TotalInitiatives { get; set; }
@@ -14,6 +14,20 @@
         public int MonthlyTotal { get; set; }
         public int MonthlyApproved { get; set; }
         public int MonthlyPending { get; set; }
+
+        // Filters
+        public InitiativeStatus? SelectedStatus { get; set; }
+        public int? SelectedCategoryId { get; set; }
+        public int? SelectedYearId { get; set; }
+        public int? SelectedPeriodId { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+
+        // Filter Lists
+        public Microsoft.AspNetCore.Mvc.Rendering.SelectList? Statuses { get; set; }
+        public Microsoft.AspNetCore.Mvc.Rendering.SelectList? Categories { get; set; }
+        public Microsoft.AspNetCore.Mvc.Rendering.SelectList? Years { get; set; }
+        public Microsoft.AspNetCore.Mvc.Rendering.SelectList? Periods { get; set; }
     }
 
     public class CategoryDistribution

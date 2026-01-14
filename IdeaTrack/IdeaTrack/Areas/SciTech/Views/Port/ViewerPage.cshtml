@@ -1,0 +1,90 @@
+﻿@{
+    Layout = null;
+    var fileName = ViewBag.FileName as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Xem tài liệu</title>
+
+    <link href="@Url.Content("~/dflip/css/dflip.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/dflip/css/themify-icons.min.css")" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/icons/document.ico")" />
+
+
+    <style>
+        body {
+            margin: 0;
+            background: #f5f5f5;
+        }
+
+        #flipbookContainer {
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="flipbookContainer"></div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="@Url.Content("~/dflip/js/dflip.min.js")"></script>
+
+    <script>
+        (async function() {
+            try {
+                const file = "@Uri.EscapeDataString(fileName)";
+                if(!file){ alert("Không có file"); return; }
+
+                const ext = file.split('.').pop().toLowerCase();
+                let pdfUrl = "";
+
+                if(ext === "pdf"){
+                    pdfUrl = `/uploads/initiatives/${file}`;
+                } else {
+                    const res = await fetch(`/SciTech/ViewFilePdf?fileName=${encodeURIComponent(file)}`);
+                    if(!res.ok) throw new Error("Lỗi server khi tạo PDF");
+                    const data = await res.json();
+                    if(!data.url) throw new Error("Không tạo được PDF");
+                    pdfUrl = data.url;
+                }
+
+                // chờ file tồn tại (quan trọng nếu vừa convert xong)
+                async function waitForFile(url, retries=10, interval=300){
+                    for(let i=0;i<retries;i++){
+                        try{
+                            const r = await fetch(url,{method:'HEAD'});
+                            if(r.ok) return true;
+                        }catch{}
+                        await new Promise(r=>setTimeout(r, interval));
+                    }
+                    return false;
+                }
+
+                const exists = await waitForFile(pdfUrl);
+                if(!exists) throw new Error("File PDF chưa sẵn sàng");
+
+                const container = document.getElementById("flipbookContainer");
+                container.innerHTML = `
+                    <div class="_df_book"
+                         height="100vh"
+                         webgl="true"
+                         backgroundcolor="#f5f5f5"
+                         source="${pdfUrl}">
+                    </div>
+                `;
+
+                // ép DFlip parse DOM
+                setTimeout(()=>{ if(window.DFLIP && DFLIP.parseBooks) DFLIP.parseBooks(); },0);
+
+            } catch(err){
+                console.error(err);
+                alert("Lỗi khi mở tài liệu: "+err.message);
+            }
+        })();
+    </script>
+
+</body>
+</html>

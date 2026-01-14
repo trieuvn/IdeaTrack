@@ -1,0 +1,162 @@
+@model List<IdeaTrack.Models.AcademicYear>
+
+@{
+    ViewData["Title"] = "Academic Year Management";
+}
+
+<style>
+    .font-display { font-family: 'Space Grotesk', sans-serif; }
+    .btn-brand { background-color: #b91c1c; color: white; border: none; }
+    .btn-brand:hover { background-color: #991b1b; color: white; }
+    .bg-brand-light { background-color: #fef2f2; color: #b91c1c; }
+</style>
+
+<div class="container-fluid px-5 py-4">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h1 class="font-display fw-bold mb-1" style="font-size: 2.5rem;">Academic Years</h1>
+            <p class="text-secondary mb-0">Manage the academic calendar year structure.</p>
+        </div>
+        <button class="btn btn-brand px-4 py-2 rounded-3 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createYearModal">
+            <i class="fa-solid fa-plus"></i> New Academic Year
+        </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body">
+                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Current Year</small>
+                    <div class="d-flex align-items-center gap-2 mt-2">
+                        <div class="p-2 rounded-circle bg-success-subtle text-success">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <h4 class="fw-bold mb-0">
+                            @(Model.FirstOrDefault(y => y.IsCurrent)?.Name ?? "None Set")
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-body">
+                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Total Years</small>
+                    <h2 class="fw-bold text-dark mt-1">@Model.Count</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3">Academic Year Name</th>
+                            <th>Status</th>
+                            <th>Created Date</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold">@item.Name</td>
+                                <td>
+                                    @if (item.IsCurrent)
+                                    {
+                                        <span class="badge bg-success-subtle text-success rounded-pill px-3">
+                                            <i class="fa-solid fa-circle-check me-1"></i> Current Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-secondary border rounded-pill px-3">History</span>
+                                    }
+                                </td>
+                                <td class="text-muted small">@item.CreatedAt.ToString("dd MMM yyyy")</td>
+                                <td class="text-end pe-4">
+                                    <div class="dropdown">
+                                        <button class="btn btn-light btn-sm rounded-circle" data-bs-toggle="dropdown">
+                                            <i class="fa-solid fa-ellipsis-vertical text-muted"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                            @if (!item.IsCurrent)
+                                            {
+                                                 <li>
+                                                    <button class="dropdown-item" onclick="setAsCurrent(@item.Id)">
+                                                        <i class="fa-solid fa-check text-success me-2"></i> Set as Current
+                                                    </button>
+                                                </li>
+                                            }
+                                            <li>
+                                                <button class="dropdown-item text-danger" onclick="deleteYear(@item.Id)">
+                                                    <i class="fa-solid fa-trash me-2"></i> Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Modal -->
+<div class="modal fade" id="createYearModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">New Academic Year</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CreateYear" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">Display Name</label>
+                        <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g. Academic Year 2026-2027" required>
+                    </div>
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" name="isCurrent" value="true" id="isCurrentCheck">
+                        <label class="form-check-label" for="isCurrentCheck">
+                            Set as Current Active Year
+                        </label>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-brand btn-lg">Create Year</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setAsCurrent(id) {
+        if(!confirm('Set this as the Current Active Year?')) return;
+        fetch('/SciTech/Configuration/SetCurrentYear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'id=' + id
+        }).then(res => res.ok ? window.location.reload() : alert('Error'));
+    }
+
+    function deleteYear(id) {
+        if(!confirm('Delete this year? This cannot be undone.')) return;
+        fetch('/SciTech/Configuration/DeleteYear', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'id=' + id
+        }).then(res => res.ok ? window.location.reload() : res.text().then(alert));
+    }
+</script>

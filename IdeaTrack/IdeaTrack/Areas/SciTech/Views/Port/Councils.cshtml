@@ -12,7 +12,7 @@
         <div class="card shadow-sm border-0 h-100">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
                 <h6 class="fw-bold mb-0 text-uppercase small">Council List</h6>
-                <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="openBoardModal()" style="width: 120px;">
+                <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="openBoardModal()" style="width: 150px;">
                     <i class="fa-solid fa-plus me-1"></i> Create new
                 </button>
             </div>
@@ -30,7 +30,7 @@
                     @foreach (var board in Model.Boards)
                     {
                         var isActive = board.Id == Model.SelectedBoardId;
-                        <a href="/SciTech/Port/Councils/@board.Id" class="text-decoration-none board-item-link">
+                        <a href="@Url.Action("ManageBoards", "Council", new { area = "SciTech", id = board.Id })" class="text-decoration-none board-item-link">
                             <div class="card-item p-3 rounded-3 border transition-all @(isActive ? "active-card" : "hover-light")">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div class="board-title @(isActive ? "text-primary fw-bold" : "text-dark fw-semibold")">
@@ -68,10 +68,10 @@
                             </div>
                         </div>
                         <div class="d-flex gap-2">
-                            <button class="btn btn-outline-danger btn-sm rounded-pill" style=" width: 100px; " onclick="deleteBoard(@Model.SelectedBoard.Id)">
+                            <button class="btn btn-outline-danger btn-sm rounded-pill" style="width: 110px;" onclick="deleteBoard(@Model.SelectedBoard.Id)">
                                 <i class="fa-solid fa-trash me-1"></i> Delete
                             </button>
-                            <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="openAddMemberModal(@Model.SelectedBoard.Id)" style="width: 120px;">
+                            <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="openAddMemberModal(@Model.SelectedBoard.Id)" style="width: 150px;">
                                 <i class="fa-solid fa-user-plus me-1"></i> Add Member
                             </button>
                         </div>
@@ -208,12 +208,12 @@
     // 0. API ROUTES (AREA STANDARD)
     // ===============================
     const API = {
-        deleteBoard: '@Url.Action("DeleteBoard", "Port", new { area = "SciTech" })',
-        addMember: '@Url.Action("AddMember", "Port", new { area = "SciTech" })',
-        removeMember: '@Url.Action("RemoveMember", "Port", new { area = "SciTech" })',
-        searchUsers: '@Url.Action("SearchUsers", "Port", new { area = "SciTech" })',
-        saveBoard: '@Url.Action("SaveBoard", "Port", new { area = "SciTech" })',
-        updateRole: '@Url.Action("UpdateMemberRole", "Port", new { area = "SciTech" })'
+        deleteBoard: '@Url.Action("DeleteBoard", "Council", new { area = "SciTech" })',
+        addMember: '@Url.Action("AddMember", "Council", new { area = "SciTech" })',
+        removeMember: '@Url.Action("RemoveMember", "Council", new { area = "SciTech" })',
+        searchUsers: '@Url.Action("SearchUsers", "Council", new { area = "SciTech" })',
+        saveBoard: '@Url.Action("SaveBoard", "Council", new { area = "SciTech" })',
+        updateRole: '@Url.Action("UpdateMemberRole", "Council", new { area = "SciTech" })'
     };
 
     // ===============================
@@ -242,7 +242,7 @@
         $.post(API.deleteBoard, { id })
             .done(res => {
                 if (res.success) {
-                    location.href = '@Url.Action("Councils", "Port", new { area = "SciTech" })';
+                    location.href = '@Url.Action("ManageBoards", "Council", new { area = "SciTech" })';
                 } else {
                     alert(res.message || 'Cannot delete council');
                 }

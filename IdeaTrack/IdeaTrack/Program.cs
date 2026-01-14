@@ -38,12 +38,13 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders()
 .AddErrorDescriber<CustomIdentityErrorDescriber>();
-
+builder.Services.AddScoped<GeminiService>();
 // Register Business Services
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
 // Register Business Services
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<DataSeederService>();
 builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
 builder.Services.AddHttpContextAccessor();

@@ -1,94 +1,726 @@
 ﻿@model IdeaTrack.Areas.Councils.Models.DashboardVM
 
 @{
-    ViewData["Title"] = "Council Workspace";
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
+    var today = DateTime.Now.ToString("dddd, MMMM dd, yyyy");
 }
 
-<div class="container-fluid py-4">
-    <div class="row">
-        <!-- Sidebar/Stats -->
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm rounded-4 mb-4 text-white bg-dark">
-                <div class="card-body p-4">
-                     <h4 class="fw-bold mb-1">Council Workspace</h4>
-                     <p class="opacity-75 small">Review assigned initiatives</p>
-                     
-                     <hr class="border-secondary" />
-                     
-                     <div class="d-flex justify-content-between mb-2">
-                         <span>Pending</span>
-                         <span class="badge bg-warning text-dark">@Model.PendingCount</span>
-                     </div>
-                     <div class="d-flex justify-content-between">
-                         <span>Completed</span>
-                         <span class="badge bg-success">@Model.CompletedCount</span>
-                     </div>
-                </div>
-            </div>
-            
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white border-0 fw-bold py-3">
-                    Recent Activity
-                </div>
-                <div class="list-group list-group-flush">
-                    @if (Model.RecentActivityList != null && Model.RecentActivityList.Any())
-                    {
-                        @foreach (var act in Model.RecentActivityList)
-                        {
-                            <div class="list-group-item">
-                                <small class="text-muted d-block">@act.Timestamp.ToString("dd/MM HH:mm")</small>
-                                <span>@act.Description</span>
+@section Styles {
+<style>
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-header h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+    
+    .page-header .date {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+    }
+    
+    /* Stats Cards Row */
+    .stats-row {
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Progress Card */
+    .progress-card .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+    
+    .progress-card .progress-header h6 {
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-primary);
+    }
+    
+    .progress-card .progress-percent {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+    }
+    
+    .progress-card .progress-message {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-top: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    /* Content Grid */
+    .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 1.5rem;
+    }
+    
+    /* Section Header */
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .section-header h5 {
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-primary);
+    }
+    
+    .section-header a {
+        font-size: 0.85rem;
+        color: var(--brand-primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .section-header a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Task Cards */
+    .task-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        transition: all 0.2s;
+    }
+    
+    .task-card:hover {
+        box-shadow: var(--shadow-md);
+        border-color: var(--brand-primary);
+        transform: translateY(-2px);
+    }
+    
+    .task-card .task-category {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-medium));
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        border-radius: 9999px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    
+    .task-card h6 {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0.75rem 0 0.5rem;
+        line-height: 1.4;
+    }
+    
+    .task-card .task-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+    }
+    
+    .task-card .task-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .task-card .due-warning {
+        background: var(--warning-light);
+        color: #b45309;
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    /* Score Display */
+    .task-score {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.625rem 0.875rem;
+        background: var(--brand-light);
+        border-radius: var(--radius-md);
+        margin-bottom: 0.875rem;
+        border: 1px solid rgba(190, 18, 60, 0.15);
+    }
+    
+    .task-score .label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+    
+    .task-score .value {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+    }
+    
+    .task-score .value.pending {
+        color: var(--text-muted);
+        font-weight: 500;
+        font-style: italic;
+    }
+    
+    .btn-start-review {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.65rem 1rem;
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-medium));
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    
+    .btn-start-review:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(190,18,60,0.35);
+        color: white;
+    }
+    
+    /* Right Sidebar */
+    .right-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+    
+    /* Activity Card */
+    .activity-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+    }
+    
+    .activity-card h5 {
+        font-weight: 600;
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .activity-item {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--success-light);
+        color: var(--success);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.85rem;
+    }
+    
+    .activity-content {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .activity-content p {
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        margin: 0;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .activity-content .meta {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+    
+    .activity-content .score {
+        color: var(--success);
+        font-weight: 600;
+    }
+    
+    /* Quick Links Widget */
+    .quick-links-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+    }
+    
+    .quick-links-card h5 {
+        font-weight: 600;
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .quick-links-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+    
+    .quick-link-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 0.75rem;
+        background: var(--brand-light);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+    
+    .quick-link-item:hover {
+        border-color: var(--brand-primary);
+        background: #fff5f5;
+        transform: translateY(-2px);
+    }
+    
+    .quick-link-item i {
+        font-size: 1.5rem;
+        color: var(--brand-primary);
+    }
+    
+    .quick-link-item span {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-align: center;
+    }
+    
+    /* Completion Chart Widget */
+    .completion-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        padding: 1.25rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+    }
+    
+    .completion-card h5 {
+        font-weight: 600;
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .donut-chart-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    
+    .donut-chart {
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+    
+    .donut-chart svg {
+        transform: rotate(-90deg);
+    }
+    
+    .donut-chart .chart-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+    
+    .donut-chart .chart-center .percent {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        line-height: 1;
+    }
+    
+    .donut-chart .chart-center .label {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+    }
+    
+    .chart-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+    
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+    
+    .legend-dot.completed { background: var(--brand-primary); }
+    .legend-dot.pending { background: #e2e8f0; }
+    
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 2.5rem 1.5rem;
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+    }
+    
+    .empty-state i {
+        font-size: 2.5rem;
+        color: #d1d5db;
+        margin-bottom: 0.75rem;
+    }
+    
+    .empty-state h6 {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 0.25rem;
+    }
+    
+    .empty-state p {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+    
+    @@media (max-width: 1024px) {
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+}
+
+<div class="page-inner">
+    <!-- Page Header -->
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h3>Welcome back, @Model.UserFullName</h3>
+            <p class="date">@today</p>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="row stats-row">
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="icon-big icon-primary">
+                                <i class="bi bi-folder-fill"></i>
                             </div>
-                        }
-                    }
-                    else
-                    {
-                        <div class="p-3 text-muted small">No recent activity</div>
-                    }
+                        </div>
+                        <div class="col ps-0">
+                            <div class="numbers">
+                                <p class="card-category">Total Assigned</p>
+                                <h4 class="card-title">@Model.TotalAssigned</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Main List -->
-        <div class="col-md-9">
-             <h4 class="fw-bold mb-4">Assigned Initiatives</h4>
-             
-             @if (Model.Assignments != null && Model.Assignments.Any())
-             {
-                 <div class="row g-4">
-                     @foreach (var item in Model.Assignments)
-                     {
-                         <div class="col-md-6 col-lg-4">
-                             <div class="card h-100 border-0 shadow-sm rounded-4 initiative-card">
-                                 <div class="card-body p-4 d-flex flex-column">
-                                     <div class="mb-3">
-                                         <span class="badge bg-light text-primary border border-primary mb-2">@item.CategoryName</span>
-                                         <h5 class="fw-bold line-clamp-2">@item.Title</h5>
-                                         <small class="text-muted">Code: @item.InitiativeCode</small>
-                                     </div>
-                                     
-                                     <div class="mt-auto pt-3 border-top">
-                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                             <small class="text-muted">Assigned @item.TimeAgo</small>
-                                         </div>
-                                         <a href="/Councils/Page/Details/@item.AssignmentId" class="btn btn-primary w-100 rounded-pill">
-                                             Start Review
-                                         </a>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     }
-                 </div>
-             }
-             else
-             {
-                 <div class="text-center py-5">
-                     <img src="/images/empty_state.svg" style="height: 150px; opacity: 0.5" class="mb-3" />
-                     <h5 class="text-muted">You're all caught up!</h5>
-                     <p class="text-muted small">No pending initiatives assigned to you.</p>
-                 </div>
-             }
+        
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="icon-big icon-success">
+                                <i class="bi bi-check-circle-fill"></i>
+                            </div>
+                        </div>
+                        <div class="col ps-0">
+                            <div class="numbers">
+                                <p class="card-category">Completed</p>
+                                <h4 class="card-title">@Model.CompletedCount</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="icon-big icon-warning">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                        </div>
+                        <div class="col ps-0">
+                            <div class="numbers">
+                                <p class="card-category">Pending Scoring</p>
+                                <h4 class="card-title">@Model.PendingCount</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Progress Card -->
+    <div class="card progress-card mb-4">
+        <div class="card-body">
+            <div class="progress-header">
+                <h6><i class="bi bi-graph-up-arrow me-2"></i>Overall Progress</h6>
+                <span class="progress-percent">@Model.ProgressPercentage%</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: @Model.ProgressPercentage%"></div>
+            </div>
+            <p class="progress-message">
+                @if (Model.ProgressPercentage >= 100)
+                {
+                    <i class="bi bi-trophy-fill text-warning"></i>
+                    <span>Excellent! You've completed all assigned reviews.</span>
+                }
+                else if (Model.ProgressPercentage >= 50)
+                {
+                    <i class="bi bi-lightning-fill text-primary"></i>
+                    <span>Great progress! Keep up the momentum to finish all reviews.</span>
+                }
+                else if (Model.PendingCount > 0)
+                {
+                    <i class="bi bi-clock text-muted"></i>
+                    <span>You have @Model.PendingCount initiatives awaiting your expert review.</span>
+                }
+                else
+                {
+                    <i class="bi bi-inbox text-muted"></i>
+                    <span>No initiatives assigned yet. Check back later!</span>
+                }
+            </p>
+        </div>
+    </div>
+    
+    <!-- Content Grid -->
+    <div class="content-grid">
+        <!-- Up Next -->
+        <div>
+            <div class="section-header">
+                <h5><i class="bi bi-list-task me-2"></i>Up Next</h5>
+                <a asp-action="AssignedInitiatives">View All <i class="bi bi-arrow-right"></i></a>
+            </div>
+            
+            @if (Model.Assignments != null && Model.Assignments.Any())
+            {
+                @foreach (var item in Model.Assignments)
+                {
+                    <div class="task-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <span class="task-category">@item.CategoryName</span>
+                            @if (item.IsDueSoon)
+                            {
+                                <span class="due-warning">
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+                                    Due Soon
+                                </span>
+                            }
+                        </div>
+                        <h6>@item.Title</h6>
+                        <div class="task-meta">
+                            <span><i class="bi bi-hash"></i> @item.InitiativeCode</span>
+                            <span><i class="bi bi-clock"></i> @item.TimeAgo</span>
+                            @if (item.DueDate.HasValue)
+                            {
+                                <span><i class="bi bi-calendar-event"></i> Due @item.DueDate.Value.ToString("MMM dd")</span>
+                            }
+                        </div>
+                        
+                        <!-- Score Display -->
+                        <div class="task-score">
+                            <span class="label"><i class="bi bi-star-fill"></i> Score</span>
+                            @if (item.Score.HasValue)
+                            {
+                                <span class="value">@item.Score.Value.ToString("0.#") / @item.MaxScore.ToString("0")</span>
+                            }
+                            else
+                            {
+                                <span class="value pending">Not scored yet</span>
+                            }
+                        </div>
+                        
+                        <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-start-review">
+                            <i class="bi bi-play-circle-fill"></i>
+                            @(item.Score.HasValue ? "Continue Review" : "Start Review")
+                        </a>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="bi bi-check2-all"></i>
+                    <h6>You're all caught up!</h6>
+                    <p>No pending initiatives at the moment.</p>
+                </div>
+            }
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <!-- Recent Activity -->
+            <div class="activity-card">
+                <h5><i class="bi bi-activity"></i> Recent Activity</h5>
+                
+                @if (Model.RecentActivityList != null && Model.RecentActivityList.Any())
+                {
+                    @foreach (var act in Model.RecentActivityList.Take(4))
+                    {
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="bi bi-check2"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p title="@act.Title">@act.Title</p>
+                                <span class="meta">
+                                    @act.TimeAgo
+                                    @if (act.Score.HasValue)
+                                    {
+                                        <span class="score ms-1">• @act.Score.Value.ToString("0.#") / @act.MaxScore pts</span>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    
+                    <div class="mt-3 text-center">
+                        <a asp-action="History" style="font-size: 0.85rem; color: var(--brand-primary);">
+                            View History <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-3">
+                        <i class="bi bi-inbox text-muted" style="font-size: 1.5rem;"></i>
+                        <p class="text-muted small mt-2 mb-0">No recent activity</p>
+                    </div>
+                }
+            </div>
+            
+            <!-- Completion Chart -->
+            <div class="completion-card">
+                <h5><i class="bi bi-pie-chart-fill"></i> Task Overview</h5>
+                <div class="donut-chart-container">
+                    <div class="donut-chart">
+                        @{
+                            var circleRadius = 40;
+                            var circumference = 2 * Math.PI * circleRadius;
+                            var completedOffset = circumference - (circumference * Model.ProgressPercentage / 100);
+                        }
+                        <svg width="100" height="100" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="@circleRadius" fill="none" stroke="#e2e8f0" stroke-width="12"/>
+                            <circle cx="50" cy="50" r="@circleRadius" fill="none" stroke="var(--brand-primary)" stroke-width="12"
+                                    stroke-dasharray="@circumference" stroke-dashoffset="@completedOffset.ToString("0.#")"
+                                    stroke-linecap="round"/>
+                        </svg>
+                        <div class="chart-center">
+                            <div class="percent">@Model.ProgressPercentage%</div>
+                            <div class="label">Done</div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <span class="legend-dot completed"></span>
+                            <span>Completed (@Model.CompletedCount)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot pending"></span>
+                            <span>Pending (@Model.PendingCount)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div class="quick-links-card">
+                <h5><i class="bi bi-lightning-fill"></i> Quick Links</h5>
+                <div class="quick-links-grid">
+                    <a href="#" class="quick-link-item">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                        <span>Scoring Guidelines</span>
+                    </a>
+                    <a href="#" class="quick-link-item">
+                        <i class="bi bi-question-circle-fill"></i>
+                        <span>FAQs</span>
+                    </a>
+                    <a href="#" class="quick-link-item">
+                        <i class="bi bi-file-earmark-text-fill"></i>
+                        <span>Templates</span>
+                    </a>
+                    <a href="#" class="quick-link-item">
+                        <i class="bi bi-headset"></i>
+                        <span>Support</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

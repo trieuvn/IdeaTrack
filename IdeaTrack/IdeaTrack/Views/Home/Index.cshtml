@@ -1,4 +1,5 @@
-﻿@{
+﻿@using IdeaTrack.ViewModels
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -13,101 +14,132 @@
                     <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-2">Deadline: 30/06/2026</span>
                 </div>
 
-                <h1 class="display-3 fw-black mb-0" style="letter-spacing: -1px; line-height: 1;">ACADEMIC</h1>
-                <h1 class="display-3 fw-black mb-3" style="letter-spacing: -1px; line-height: 1;">INITIATIVES 2026</h1>
+                <h1 class="display-2 fw-bold mb-0" style="letter-spacing: -2px; line-height: 0.95; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">INNOVATION</h1>
+                <h1 class="display-2 fw-bold mb-3" style="letter-spacing: -2px; line-height: 0.95; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">AWARDS 2026</h1>
 
-                <p class="fs-4 fw-light opacity-90 mb-5">
-                    Sparking Innovation - Elevating Education Quality
+                <p class="fs-5 fw-light opacity-90 mb-4" style="letter-spacing: 0.5px;">
+                    Sparking Creativity - Elevating Teaching Quality
                 </p>
 
-                <div class="d-flex gap-3">
-                    <a asp-controller="Account" asp-action="Login" asp-area="Identity" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
-                        <span class="material-icons align-middle me-1">rocket_launch</span> Submit Initiative
-                    </a>
+                <div class="d-flex gap-3 flex-wrap">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                         <a asp-controller="Initiative" asp-action="Create" asp-area="Author" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
+                            <span class="material-icons align-middle me-1">rocket_launch</span> Submit Now
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" asp-area="Identity" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
+                            <span class="material-icons align-middle me-1">rocket_launch</span> Submit Now
+                        </a>
+                    }
+                    
                     <a href="/Home/Privacy" class="btn btn-outline-light btn-lg px-4 rounded-3 bg-white bg-opacity-10">
-                        <span class="material-icons align-middle me-1">info</span> Guidelines
+                        <span class="material-icons align-middle me-1">info</span> Learn More
                     </a>
                 </div>
             </div>
         </div>
 
         <div class="award-circle d-none d-lg-flex">
-            <span class="material-icons text-warning mb-2" style="font-size: 50px;">emoji_events</span>
-            <div class="fw-bold text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">Innovation</div>
-            <div class="fw-bold text-uppercase" style="font-size: 0.9rem; letter-spacing: 1px;">Awards</div>
-            <div class="display-6 fw-bold text-warning">2026</div>
+            <span class="material-icons mb-2" style="font-size: 50px; color: #fbbf24;">emoji_events</span>
+            <div class="fw-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">INNOVATION</div>
+            <div class="fw-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">AWARDS</div>
+            <div class="display-6 fw-bold" style="color: #fbbf24;">2026</div>
         </div>
     </div>
+
 
     <div class="row g-4 mb-5">
         <div class="col-md-4">
             <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
                 <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-                     style="width: 60px; height: 60px; background-color: #fce7f3; border-radius: 50%;">
-                    <span class="material-icons" style="color: #be123c;">psychology</span>
+                     style="width: 70px; height: 70px; background-color: #fce7f3; border-radius: 50%;">
+                    <span class="material-icons" style="color: #be123c; font-size: 2rem;">lightbulb</span>
                 </div>
-                <h5 class="fw-bold">New Mindset</h5>
-                <p class="text-muted small px-3">Encouraging lecturers to propose NEW solutions, improving teaching and management methods.</p>
+                <h5 class="fw-bold">Innovation Mindset</h5>
+                <p class="text-muted small px-3">Encouraging creative thinking to propose innovative solutions and improve teaching methods.</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
                 <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-                     style="width: 60px; height: 60px; background-color: #dbeafe; border-radius: 50%;">
-                    <span class="material-icons" style="color: #1d4ed8;">trending_up</span>
+                     style="width: 70px; height: 70px; background-color: #dbeafe; border-radius: 50%;">
+                    <span class="material-icons" style="color: #1d4ed8; font-size: 2rem;">trending_up</span>
                 </div>
-                <h5 class="fw-bold">Enhance Efficiency</h5>
-                <p class="text-muted small px-3">Optimizing workflows, saving resources, and enhancing training quality at UEF.</p>
+                <h5 class="fw-bold">Improve Efficiency</h5>
+                <p class="text-muted small px-3">Optimizing workflows, saving resources, and enhancing the quality of education at UEF.</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 15px;">
                 <div class="mx-auto mb-3 d-flex align-items-center justify-content-center"
-                     style="width: 60px; height: 60px; background-color: #fef3c7; border-radius: 50%;">
-                    <span class="material-icons" style="color: #b45309;">military_tech</span>
+                     style="width: 70px; height: 70px; background-color: #fef3c7; border-radius: 50%;">
+                    <span class="material-icons" style="color: #b45309; font-size: 2rem;">emoji_events</span>
                 </div>
                 <h5 class="fw-bold">Recognition & Rewards</h5>
-                <p class="text-muted small px-3">Valuable initiatives will be recognized, certified, and rewarded accordingly.</p>
+                <p class="text-muted small px-3">Innovative ideas will be recognized, certified, and rewarded with appropriate incentives.</p>
             </div>
         </div>
     </div>
 
+
+    <!-- DOCUMENTS & SUPPORT SECTION -->
     <div class="mb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <span class="material-icons text-danger me-2">menu_book</span>
-                <h4 class="fw-bold mb-0">Documents & Support</h4>
+                <h4 class="fw-bold mb-0">Support Documents</h4>
             </div>
-            <a href="#" class="text-danger text-decoration-none fw-bold small">View All <span class="material-icons fs-6 align-middle">arrow_forward</span></a>
+            <a href="/Home/Privacy" class="text-danger text-decoration-none fw-bold small">View All <span class="material-icons fs-6 align-middle">arrow_forward</span></a>
         </div>
 
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #450a0a, #111827);">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                        <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">description</span>
-                        <h5 class="fw-bold mb-1">Registration Forms</h5>
-                        <p class="small opacity-75">Download necessary forms</p>
+                <a href="/Home/Privacy" class="text-decoration-none">
+                    <div class="card border-0 text-white overflow-hidden shadow h-100 support-card support-card-brown" style="border-radius: 15px; min-height: 180px; position: relative;">
+                        <div class="card-body d-flex align-items-center justify-content-center p-4" style="z-index: 2;">
+                            <div class="support-card-inner">
+                                <div class="icon-wrapper mb-3">
+                                    <span class="material-icons" style="font-size: 2rem; color: #fbbf24;">description</span>
+                                </div>
+                                <h5 class="fw-bold mb-2">Registration Forms</h5>
+                                <p class="small opacity-75 mb-0">Download necessary application forms</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-4">
-                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #1e3a8a, #0f172a);">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                        <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">insights</span>
-                        <h5 class="fw-bold mb-1">Approval Process</h5>
-                        <p class="small opacity-75">Steps from idea to execution</p>
+                <a href="/Home/Privacy" class="text-decoration-none">
+                    <div class="card border-0 text-white overflow-hidden shadow h-100 support-card support-card-blue" style="border-radius: 15px; min-height: 180px; position: relative;">
+                        <div class="card-body d-flex align-items-center justify-content-center p-4" style="z-index: 2;">
+                            <div class="support-card-inner">
+                                <div class="icon-wrapper mb-3">
+                                    <span class="material-icons" style="font-size: 2rem; color: #fbbf24;">insights</span>
+                                </div>
+                                <h5 class="fw-bold mb-2">Review Process</h5>
+                                <p class="small opacity-75 mb-0">Steps from idea to implementation</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-4">
-                <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #14532d, #064e3b);">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
-                        <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">inventory_2</span>
-                        <h5 class="fw-bold mb-1">Initiative Bank</h5>
-                        <p class="small opacity-75">Browse past initiatives</p>
+                <a href="/Home/Privacy" class="text-decoration-none">
+                    <div class="card border-0 text-white overflow-hidden shadow h-100 support-card support-card-green" style="border-radius: 15px; min-height: 180px; position: relative;">
+                        <div class="card-body d-flex align-items-center justify-content-center p-4" style="z-index: 2;">
+                            <div class="support-card-inner">
+                                <div class="icon-wrapper mb-3">
+                                    <span class="material-icons" style="font-size: 2rem; color: #fbbf24;">inventory_2</span>
+                                </div>
+                                <h5 class="fw-bold mb-2">Innovation Bank</h5>
+                                <p class="small opacity-75 mb-0">Browse exemplary initiatives</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>

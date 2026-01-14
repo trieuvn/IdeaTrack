@@ -45,11 +45,12 @@
                          <div class="list-group">
                              @foreach(var file in Model.Files)
                              {
-                                 <a href="@file.FileUrl" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center">
+                                var relativePath = file.FileUrl.Replace("/uploads/initiatives/", "");
+                                <a href="/Faculty/ViewerPage?file=@Uri.EscapeDataString(relativePath)" target="_blank" class="list-group-item list-group-item-action d-flex align-items-center attachment-link">
                                      <i class="bi bi-file-earmark-text me-3 fs-4 text-secondary"></i>
                                      <div>
                                          <div class="fw-medium">@file.FileName</div>
-                                         <small class="text-muted">Click to view/download</small>
+                                         <small class="text-muted">Click to view</small>
                                      </div>
                                  </a>
                              }
@@ -65,37 +66,56 @@
 
         <div class="col-lg-4">
             <!-- Sidebar / Actions -->
-             <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
-                 <h5 class="fw-bold mb-3">Review Action</h5>
-                 <p class="text-muted small">Faculty Head Review</p>
-                 
-                 <form method="post">
-                     <input type="hidden" name="InitiativeId" value="@Model.Id" />
+             @if (Model.Status == IdeaTrack.Models.InitiativeStatus.Pending || 
+                  Model.Status == IdeaTrack.Models.InitiativeStatus.Faculty_Approved || 
+                  Model.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
+             {
+                 <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
+                     <h5 class="fw-bold mb-3">Review Action</h5>
+                     <p class="text-muted small">Faculty Head Review</p>
                      
-                     <div class="mb-3">
-                         <label class="form-label fw-medium">Comments</label>
-                         <textarea name="Comments" class="form-control" rows="4" placeholder="Enter comments for approval/rejection..."></textarea>
-                     </div>
-                     
-                     <div class="d-grid gap-2">
-                         <button type="submit" asp-controller="Dashboard" asp-action="Accept" class="btn btn-success text-white">
-                             <i class="bi bi-check-circle me-2"></i> Accept
-                         </button>
-                         <button type="submit" asp-controller="Dashboard" asp-action="RequestRevision" class="btn btn-warning text-dark">
-                             <i class="bi bi-pencil-square me-2"></i> Request Revision
-                         </button>
-                         <button type="submit" asp-controller="Dashboard" asp-action="Reject" class="btn btn-danger text-white">
-                             <i class="bi bi-x-circle me-2"></i> Reject
-                         </button>
-                     </div>
-                 </form>
-             </div>
+                     <form method="post">
+                         <input type="hidden" name="InitiativeId" value="@Model.Id" />
+                         
+                         <div class="mb-3">
+                             <label class="form-label fw-medium">Comments</label>
+                             <textarea name="Comments" class="form-control" rows="4" placeholder="Enter comments for approval/rejection..."></textarea>
+                         </div>
+                         
+                        <div class="d-grid gap-2 review-buttons">
+                             <button type="submit" asp-controller="Dashboard" asp-action="Accept" class="btn btn-success text-white" >
+                                 <i class="bi bi-check-circle me-2"></i> Accept
+                             </button>
+                             <button type="submit" asp-controller="Dashboard" asp-action="RequestRevision" class="btn btn-warning text-dark" >
+                                 <i class="bi bi-pencil-square me-2"></i> Request Revision
+                             </button>
+                             <button type="submit" asp-controller="Dashboard" asp-action="Reject" class="btn btn-danger text-white">
+                                 <i class="bi bi-x-circle me-2"></i> Reject
+                             </button>
+                         </div>
+                     </form>
+                 </div>
+             }
 
              <div class="card border-0 shadow-sm p-4 rounded-4">
                  <h5 class="fw-bold mb-3">Information</h5>
                  <div class="mb-3">
-                     <label class="small text-muted d-block">Author</label>
-                     <div class="fw-medium">@Model.ProposerName</div>
+                     <label class="small text-muted d-block">Authors (@Model.Authors.Count member@(Model.Authors.Count > 1 ? "s" : ""))</label>
+                     @if(Model.Authors != null && Model.Authors.Any())
+                     {
+                         <ul class="list-unstyled mb-0">
+                             @foreach(var author in Model.Authors)
+                             {
+                                 <li class="fw-medium">
+                                     <i class="bi bi-person-fill text-primary me-1"></i>@author
+                                 </li>
+                             }
+                         </ul>
+                     }
+                     else
+                     {
+                         <div class="fw-medium">@Model.ProposerName</div>
+                     }
                  </div>
                  <div class="mb-3">
                      <label class="small text-muted d-block">Submitted Date</label>
@@ -109,3 +129,24 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const buttonsDiv = document.querySelector(".review-buttons");
+            const buttons = buttonsDiv ? buttonsDiv.querySelectorAll("button") : [];
+            const attachmentLinks = document.querySelectorAll(".attachment-link");
+
+            // Nếu có file, disable tất cả nút
+            if (attachmentLinks.length > 0) {
+                buttons.forEach(btn => btn.disabled = true);
+
+                // Khi người dùng click vào bất kỳ file nào → enable nút
+                attachmentLinks.forEach(link => {
+                    link.addEventListener("click", function () {
+                        buttons.forEach(btn => btn.disabled = false);
+                    });
+                });
+            }
+        });
+    </script>
+}

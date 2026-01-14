@@ -86,6 +86,39 @@ namespace IdeaTrack.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
+        /// <summary>
+        /// Redirects the user to their role-specific profile page.
+        /// </summary>
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            // Redirect to role-specific profile page
+            if (roles.Contains("SciTech") || roles.Contains("OST_Admin"))
+            {
+                return RedirectToAction("Index", "Port", new { area = "SciTech" });
+            }
+            if (roles.Contains("FacultyLeader") || roles.Contains("Faculty_Admin"))
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Faculty" });
+            }
+            if (roles.Contains("CouncilMember") || roles.Contains("Council_Member"))
+            {
+                return RedirectToAction("Index", "Page", new { area = "Councils" });
+            }
+
+            // Default: Author portal profile
+            return RedirectToAction("Index", "Dashboard", new { area = "Author" });
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -136,12 +169,71 @@ namespace IdeaTrack.Controllers
             }
             else
             {
-                // If the user does not have an account, ask them to create one.
-                _logger.LogInformation("No existing account for external login. Redirecting to ExternalRegister.");
-                ViewData["ReturnUrl"] = returnUrl;
-                ViewBag.Roles = new SelectList(AvailableRoles);
+                // If the user does not have an account, automatically create one with Author role
+                _logger.LogInformation("No existing account for external login. Auto-creating user with Author role.");
+                
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalRegister", new ExternalRegisterViewModel { Email = email, ReturnUrl = returnUrl });
+                var fullName = info.Principal.FindFirstValue(ClaimTypes.Name) ?? email;
+                
+                // Check if email is available
+                if (string.IsNullOrEmpty(email))
+                {
+                    _logger.LogWarning("Email not provided by external provider.");
+                    TempData["ErrorMessage"] = "Email not provided by external provider. Please try another login method.";
+                    return RedirectToAction("HiddenRegister");
+                }
+                
+                // Check if user already exists with this email
+                var existingUser = await _userManager.FindByEmailAsync(email);
+                if (existingUser != null)
+                {
+                    // Link the external login to existing account
+                    var addLoginResult = await _userManager.AddLoginAsync(existingUser, info);
+                    if (addLoginResult.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(existingUser, isPersistent: false);
+                        _logger.LogInformation("Linked {Provider} provider to existing account for {Email}.", info.LoginProvider, email);
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        _logger.LogError("Failed to link external login to existing account: {Errors}", 
+                            string.Join(", ", addLoginResult.Errors.Select(e => e.Description)));
+                        TempData["ErrorMessage"] = "Failed to link external login to your account.";
+                        return RedirectToAction("HiddenRegister");
+                    }
+                }
+                
+                // Create new user
+                var user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true, // Trust email from Google
+                    FullName = fullName
+                };
+                
+                var createResult = await _userManager.CreateAsync(user);
+                if (createResult.Succeeded)
+                {
+                    var addLoginResult = await _userManager.AddLoginAsync(user, info);
+                    if (addLoginResult.Succeeded)
+                    {
+                        // Assign default role: Author
+                        const string defaultRole = "Author";
+                        await EnsureRoleExistsAsync(defaultRole);
+                        await _userManager.AddToRoleAsync(user, defaultRole);
+                        
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        _logger.LogInformation("User created an account using {Provider} provider with default role Author.", info.LoginProvider);
+                        return RedirectToLocal(returnUrl);
+                    }
+                }
+                
+                _logger.LogError("Failed to create user account: {Errors}", 
+                    string.Join(", ", createResult.Errors.Select(e => e.Description)));
+                TempData["ErrorMessage"] = "Failed to create user account. Please try again.";
+                return RedirectToAction("HiddenRegister");
             }
         }
 

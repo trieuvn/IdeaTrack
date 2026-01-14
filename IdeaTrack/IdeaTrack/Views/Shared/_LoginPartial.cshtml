@@ -2,38 +2,15 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-@if (SignInManager.IsSignedIn(User))
+@* Only show login button when not signed in - no profile section when signed in *@
+@if (!SignInManager.IsSignedIn(User))
 {
-    <div class="d-flex align-items-center justify-content-between">
-        <div class="text-start">
-            <div class="fw-semibold small text-white">
-                @User.Identity?.Name
-            </div>
-            <a asp-area="Identity"
-               asp-page="/Account/Manage/Index"
-               class="text-warning text-decoration-none small">
-                My Profile
-            </a>
-        </div>
-
-        <form asp-area=""
-              asp-controller="Account"
-              asp-action="Logout"
-              asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })"
-              method="post">
-            <button type="submit"
-                    class="btn btn-sm btn-outline-light">
-                <span class="material-icons fs-6 align-middle">logout</span>
-            </button>
-        </form>
+    <div class="sidebar-header">
+        <a asp-area="Identity"
+           asp-page="/Account/Login"
+           class="btn btn-danger w-100 fw-bold d-flex align-items-center justify-content-center gap-2 py-2">
+            <span class="material-icons">login</span>
+            UEF I.D Login
+        </a>
     </div>
-}
-else
-{
-    <a asp-area="Identity"
-       asp-page="/Account/Login"
-       class="btn btn-warning w-100 fw-bold">
-        <span class="material-icons align-middle me-1">login</span>
-        Login
-    </a>
 }

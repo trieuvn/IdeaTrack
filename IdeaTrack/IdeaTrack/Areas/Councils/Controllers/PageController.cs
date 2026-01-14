@@ -1,9 +1,12 @@
 ﻿using IdeaTrack.Areas.Councils.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using IdeaTrack.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace IdeaTrack.Areas.Councils.Controllers
@@ -14,22 +17,77 @@ namespace IdeaTrack.Areas.Councils.Controllers
     public class PageController : Controller
     {
         private readonly ApplicationDbContext _db;
-
-        public PageController(ApplicationDbContext db)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly GeminiService _gemini;
+        private readonly IWebHostEnvironment _env;
+        public class AiSummaryRequest
+        {
+            public string File { get; set; }
+        }
+        public PageController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, GeminiService gemini, IWebHostEnvironment env)
         {
             _db = db;
+            _userManager = userManager;
+            _gemini = gemini;
+            _env = env;
+        }
+        [HttpPost("/Councils/Page/GetAiSummary")]
+        public async Task<IActionResult> GetAiSummary([FromBody] AiSummaryRequest req)
+        {
+            if (req == null || string.IsNullOrWhiteSpace(req.File))
+                return BadRequest("Invalid file");
+
+            // Giải pháp: Kiểm tra xem file có chứa đường dẫn temp-pdf không
+            string path;
+            if (req.File.Contains("temp-pdf"))
+            {
+                // Nếu là file tạm từ ViewFilePdf
+                path = Path.Combine(_env.WebRootPath, req.File.Replace("/", "\\"));
+            }
+            else
+            {
+                // Nếu là file gốc
+                path = Path.Combine(_env.WebRootPath, "uploads", "initiatives", req.File);
+            }
+
+            if (!System.IO.File.Exists(path))
+                return NotFound($"File not found at: {path}");
+
+            var text = PdfHelper.ExtractText(path);
+
+            if (text.Length > 12000)
+                text = text[..12000];
+
+            var summary = await _gemini.SummarizeAsync(text);
+
+            return Json(new
+            {
+                success = true,
+                summary
+            });
         }
 
-        private int GetCurrentUserIdForTest() => 1;
+
+        private async Task<int> GetCurrentUserId()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            return user?.Id ?? 0;
+        }
 
         public async Task<IActionResult> Index()
         {
-            var userId = GetCurrentUserIdForTest();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account", new { area = "" });
+            
+            var userId = user.Id;
             var now = DateTime.Now;
+            
+            // Only show initiatives that are in Evaluating or Re_Evaluating status
+            var allowedStatuses = new[] { InitiativeStatus.Evaluating, InitiativeStatus.Re_Evaluating };
 
             var baseQuery = _db.InitiativeAssignments
                 .AsNoTracking()
-                .Where(a => a.MemberId == userId);
+                .Where(a => a.MemberId == userId && allowedStatuses.Contains(a.Initiative.Status));
 
             var totalAssigned = await baseQuery.CountAsync();
             var completed = await baseQuery.CountAsync(a => a.Status == AssignmentStatus.Completed);
@@ -37,11 +95,13 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             var vm = new DashboardVM
             {
+                UserFullName = user.FullName ?? user.UserName ?? "Expert",
                 TotalAssigned = totalAssigned,
                 CompletedCount = completed,
                 PendingCount = pending,
                 ProgressPercentage = totalAssigned == 0 ? 0 : (int)Math.Round((decimal)completed / totalAssigned * 100, 0, MidpointRounding.AwayFromZero)
             };
+
 
             vm.Assignments = await baseQuery
                 .Where(a => a.Status != AssignmentStatus.Completed)
@@ -88,9 +148,30 @@ namespace IdeaTrack.Areas.Councils.Controllers
             return View(vm);
         }
 
+        // ============ PROFILE PAGE ============
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login", "Account", new { area = "" });
+
+            // Load department if available
+            if (user.DepartmentId.HasValue)
+            {
+                user = await _db.Users
+                    .Include(u => u.Department)
+                    .FirstOrDefaultAsync(u => u.Id == user.Id) ?? user;
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            ViewBag.UserRoles = string.Join(", ", roles);
+            return View(user);
+        }
+
         public async Task<IActionResult> AssignedInitiatives(string? keyword, string status = "Assigned", string sortOrder = "Deadline", int page = 1)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
 
             var vm = new AssignedListVM
             {
@@ -100,11 +181,16 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 CurrentPage = page <= 0 ? 1 : page
             };
 
+            // Only show initiatives that are in Evaluating or Re_Evaluating status
+            var allowedStatuses = new[] { InitiativeStatus.Evaluating, InitiativeStatus.Re_Evaluating };
+
             var query = _db.InitiativeAssignments
                 .AsNoTracking()
-                .Where(a => a.MemberId == userId)
+                .Where(a => a.MemberId == userId && allowedStatuses.Contains(a.Initiative.Status))
                 .Include(a => a.Initiative)
                     .ThenInclude(i => i.Category)
+                .Include(a => a.Initiative)
+                    .ThenInclude(i => i.Period)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(vm.Keyword))
@@ -142,6 +228,7 @@ namespace IdeaTrack.Areas.Councils.Controllers
             if (vm.CurrentPage > vm.TotalPages) vm.CurrentPage = vm.TotalPages;
 
             vm.Items = await query
+                .Include(a => a.EvaluationDetails)
                 .Skip((vm.CurrentPage - 1) * vm.PageSize)
                 .Take(vm.PageSize)
                 .Select(a => new AssignedListItem
@@ -153,7 +240,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
                     CategoryName = a.Initiative.Category.Name,
                     AssignedDate = a.AssignedDate,
                     DueDate = a.DueDate,
-                    Status = a.Status
+                    Status = a.Status,
+                    FinalScore = a.EvaluationDetails.Select(d => (decimal?)d.ScoreGiven).Sum()
                 })
                 .ToListAsync();
 
@@ -163,7 +251,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
         public async Task<IActionResult> History(string? keyword, string sortOrder = "Newest", int page = 1)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
 
             var vm = new AssignedListVM
             {
@@ -210,7 +299,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
                     CategoryName = a.Initiative.Category.Name,
                     AssignedDate = a.AssignedDate,
                     DueDate = a.DueDate,
-                    Status = a.Status
+                    Status = a.Status,
+                    FinalScore = a.EvaluationDetails.Select(d => (decimal?)d.ScoreGiven).Sum()
                 })
                 .ToListAsync();
 
@@ -220,7 +310,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
 
             var assignment = await _db.InitiativeAssignments
                 .AsNoTracking()
@@ -256,10 +347,14 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 DueDate = assignment.DueDate,
                 Files = assignment.Initiative.Files?.ToList() ?? new(),
                 GeneralComment = assignment.ReviewComment,
+                Strengths = assignment.Strengths,
+                Limitations = assignment.Limitations,
+                Recommendations = assignment.Recommendations,
                 SubmitAction = "SaveDraft",
                 RoundNumber = assignment.RoundNumber,
                 IsLocked = assignment.Status == AssignmentStatus.Completed,
-                HasPreviousRounds = hasPreviousRounds
+                HasPreviousRounds = hasPreviousRounds,
+                HidePersonalInfo = assignment.Initiative.HidePersonalInfo
             };
 
             vm.CriteriaItems = assignment.Template.CriteriaList
@@ -281,13 +376,16 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             return View(vm);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitGrading(GradingVM vm)
         {
-            var userId = GetCurrentUserIdForTest();
+            // 1. Get current user
+            var userId = await GetCurrentUserId();
+            if (userId == 0)
+                return RedirectToAction("Login", "Account", new { area = "" });
 
+            // 2. Load assignment with template and existing evaluation details
             var assignment = await _db.InitiativeAssignments
                 .Include(a => a.Template)
                     .ThenInclude(t => t.CriteriaList)
@@ -296,35 +394,38 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             if (assignment == null)
                 return NotFound();
-            
-            // Check if assignment is locked (already submitted)
+
+            // 3. Check if already submitted (locked)
             if (assignment.Status == AssignmentStatus.Completed)
             {
-                TempData["ErrorMessage"] = "Ban khong the chinh sua vi ket qua da duoc nop va khoa.";
+                TempData["ErrorMessage"] = "You cannot edit this evaluation as it has already been submitted and locked.";
                 return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
             }
 
+            // 4. Build criteria dictionary
             var templateCriteria = assignment.Template.CriteriaList
                 .ToDictionary(c => c.Id, c => c);
 
             if (vm.CriteriaItems == null)
                 vm.CriteriaItems = new();
 
+            // 5. Validate scores
             foreach (var item in vm.CriteriaItems)
             {
                 if (!templateCriteria.TryGetValue(item.CriteriaId, out var criteria))
                 {
-                    ModelState.AddModelError(string.Empty, "Tieu chi khong hop le.");
+                    ModelState.AddModelError(string.Empty, "Invalid criteria.");
                     continue;
                 }
 
                 if (item.ScoreGiven < 0 || item.ScoreGiven > criteria.MaxScore)
                 {
                     ModelState.AddModelError($"CriteriaItems[{vm.CriteriaItems.IndexOf(item)}].ScoreGiven",
-                        $"Diem phai tu 0 den {criteria.MaxScore}.");
+                        $"Score must be between 0 and {criteria.MaxScore}.");
                 }
             }
 
+            // 6. If validation fails, reload data and return view
             if (!ModelState.IsValid)
             {
                 var hydrated = await _db.InitiativeAssignments
@@ -346,12 +447,15 @@ namespace IdeaTrack.Areas.Councils.Controllers
                                       ?? string.Empty;
                     vm.DepartmentName = hydrated.Initiative.Department?.Name ?? string.Empty;
                     vm.DueDate = hydrated.DueDate;
+                    vm.DueDate = hydrated.DueDate;
                     vm.Files = hydrated.Initiative.Files?.ToList() ?? new();
+                    vm.HidePersonalInfo = hydrated.Initiative.HidePersonalInfo;
                 }
 
                 return View("Details", vm);
             }
 
+            // 7. Update or insert evaluation details
             var existing = assignment.EvaluationDetails.ToDictionary(d => d.CriteriaId, d => d);
 
             foreach (var item in vm.CriteriaItems)
@@ -376,32 +480,96 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 }
             }
 
+            // 8. Update feedback
             assignment.ReviewComment = vm.GeneralComment;
+            assignment.Strengths = vm.Strengths;
+            assignment.Limitations = vm.Limitations;
+            assignment.Recommendations = vm.Recommendations;
 
-            if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
-            {
-                assignment.Status = AssignmentStatus.Completed;
+            // 9. Set status
+            bool isFinalSubmit = string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase);
+            assignment.Status = isFinalSubmit ? AssignmentStatus.Completed : AssignmentStatus.InProgress;
+            if (isFinalSubmit)
                 assignment.DecisionDate = DateTime.Now;
+
+            // 10. Save changes
+            await _db.SaveChangesAsync();
+
+            // 11. If submitting final, calculate average score for initiative round
+            if (isFinalSubmit)
+            {
+                await CheckAndCalculateAverageScore(assignment.InitiativeId, assignment.RoundNumber);
+            }
+
+            // 12. Set success message
+            TempData["SuccessMessage"] = isFinalSubmit
+                ? "Evaluation submitted successfully! Your scores have been locked."
+                : "Draft saved successfully!";
+
+            // 13. Always redirect back to Details page (draft or final)
+            return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
+        }
+
+
+        /// <summary>
+        /// Check if all council members have completed their evaluations and calculate average score
+        /// </summary>
+        private async Task CheckAndCalculateAverageScore(int initiativeId, int roundNumber)
+        {
+            // Get all assignments for this initiative in the current round
+            var assignments = await _db.InitiativeAssignments
+                .Include(a => a.EvaluationDetails)
+                .Where(a => a.InitiativeId == initiativeId && a.RoundNumber == roundNumber)
+                .ToListAsync();
+            
+            if (!assignments.Any())
+                return;
+            
+            // Check if all assignments are completed
+            var allCompleted = assignments.All(a => a.Status == AssignmentStatus.Completed);
+            
+            if (!allCompleted)
+                return;
+            
+            // Calculate average score from all members
+            var memberScores = assignments
+                .Select(a => a.EvaluationDetails.Sum(d => d.ScoreGiven))
+                .ToList();
+            
+            if (!memberScores.Any())
+                return;
+            
+            var averageScore = memberScores.Average();
+            
+            // Get the initiative to update status
+            var initiative = await _db.Initiatives
+                .Include(i => i.FinalResult)
+                .FirstOrDefaultAsync(i => i.Id == initiativeId);
+            
+            if (initiative == null)
+                return;
+            
+            // Create or update FinalResult
+            if (initiative.FinalResult == null)
+            {
+                initiative.FinalResult = new FinalResult
+                {
+                    InitiativeId = initiativeId,
+                    AverageScore = averageScore,
+                    DecisionDate = DateTime.Now,
+                    ChairmanId = 1 // Will be set when Chairman makes final decision
+                };
+                _db.Set<FinalResult>().Add(initiative.FinalResult);
             }
             else
             {
-                assignment.Status = AssignmentStatus.InProgress;
+                initiative.FinalResult.AverageScore = averageScore;
             }
-
-            await _db.SaveChangesAsync();
             
-            TempData["SuccessMessage"] = string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase)
-                ? "Da nop ket qua cham diem thanh cong! Diem so da duoc khoa."
-                : "Da luu ban nhap thanh cong!";
-
-            if (string.Equals(vm.SubmitAction, "Submit", StringComparison.OrdinalIgnoreCase))
-            {
-                // Sau khi nop ket qua, quay ve danh sach
-                return RedirectToAction(nameof(AssignedInitiatives), new { status = "Assigned" });
-            }
-
-            // Return to the details page after saving draft
-            return RedirectToAction(nameof(Details), new { id = vm.AssignmentId });
+            // Update initiative status to Pending_Final (all evaluations complete)
+            initiative.Status = InitiativeStatus.Pending_Final;
+            
+            await _db.SaveChangesAsync();
         }
 
         public IActionResult CouncilChair()
@@ -417,7 +585,8 @@ namespace IdeaTrack.Areas.Councils.Controllers
         [HttpGet]
         public async Task<IActionResult> RoundHistory(int initiativeId)
         {
-            var userId = GetCurrentUserIdForTest();
+            var userId = await GetCurrentUserId();
+            if (userId == 0) return RedirectToAction("Login", "Account", new { area = "" });
             
             var initiative = await _db.Initiatives
                 .AsNoTracking()
@@ -504,9 +673,13 @@ namespace IdeaTrack.Areas.Councils.Controllers
                 DueDate = assignment.DueDate,
                 Files = assignment.Initiative.Files?.ToList() ?? new(),
                 GeneralComment = assignment.ReviewComment,
+                Strengths = assignment.Strengths,
+                Limitations = assignment.Limitations,
+                Recommendations = assignment.Recommendations,
                 RoundNumber = assignment.RoundNumber,
-                IsLocked = true, // Always locked in view mode
-                HasPreviousRounds = false
+
+                HasPreviousRounds = false,
+                HidePersonalInfo = assignment.Initiative.HidePersonalInfo
             };
 
             vm.CriteriaItems = assignment.Template.CriteriaList
@@ -531,5 +704,93 @@ namespace IdeaTrack.Areas.Councils.Controllers
             
             return View("Details", vm);
         }
+        [HttpGet("/Councils/ViewerPage")]
+        public IActionResult ViewerPage(string file)
+        {
+            if (string.IsNullOrEmpty(file))
+                return BadRequest();
+
+            ViewBag.FileName = file;
+            return View();
+        }
+        [HttpGet("/Councils/ViewFilePdf")]
+        public async Task<IActionResult> ViewFilePdf(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+                return BadRequest();
+
+            var uploadRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "initiatives");
+            var inputPath = Path.Combine(uploadRoot, fileName);
+
+            if (!System.IO.File.Exists(inputPath))
+                return NotFound();
+
+            var tempDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "temp-pdf");
+            Directory.CreateDirectory(tempDir);
+
+            var pdfName = Path.GetFileNameWithoutExtension(fileName) + ".pdf";
+            var pdfPath = Path.Combine(tempDir, pdfName);
+
+            if (!System.IO.File.Exists(pdfPath))
+            {
+                var ext = Path.GetExtension(fileName).ToLower();
+                if (ext == ".pdf")
+                    System.IO.File.Copy(inputPath, pdfPath, true);
+                else
+                    await ConvertToPdf(inputPath, tempDir);
+            }
+            foreach (var file in Directory.GetFiles(tempDir, "*.pdf"))
+            {
+                if (!Path.GetFileName(file)
+                    .Equals(pdfName, StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                    catch
+                    {
+                        // ignore: file đang bị lock
+                    }
+                }
+            }
+            return Json(new
+            {
+                url = $"/temp-pdf/{pdfName}"
+            });
+        }
+
+
+
+
+        public async Task<string> ConvertToPdf(string inputPath, string outputDir)
+        {
+            var sofficePath = @"C:\Program Files\LibreOffice\program\soffice.exe";
+
+            if (!System.IO.File.Exists(sofficePath))
+                throw new Exception("LibreOffice (soffice.exe) not found");
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = sofficePath,
+                    Arguments = $"--headless --convert-to pdf \"{inputPath}\" --outdir \"{outputDir}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            await process.WaitForExitAsync();
+
+            return Path.Combine(
+                outputDir,
+                Path.GetFileNameWithoutExtension(inputPath) + ".pdf"
+            );
+        }
+
     }
 }

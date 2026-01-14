@@ -415,6 +415,9 @@ namespace IdeaTrack.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("HidePersonalInfo")
+                        .HasColumnType("bit");
+
                     b.Property<string>("InitiativeCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -474,8 +477,14 @@ namespace IdeaTrack.Migrations
                     b.Property<int>("InitiativeId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Limitations")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MemberId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Recommendations")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReviewComment")
                         .HasColumnType("nvarchar(max)");
@@ -489,6 +498,9 @@ namespace IdeaTrack.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("Strengths")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TemplateId")
                         .HasColumnType("int");
@@ -652,6 +664,9 @@ namespace IdeaTrack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -676,6 +691,8 @@ namespace IdeaTrack.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("PeriodId");
 
@@ -1077,11 +1094,17 @@ namespace IdeaTrack.Migrations
 
             modelBuilder.Entity("IdeaTrack.Models.ReferenceForm", b =>
                 {
+                    b.HasOne("IdeaTrack.Models.InitiativeCategory", "Category")
+                        .WithMany("ReferenceForms")
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("IdeaTrack.Models.InitiativePeriod", "Period")
                         .WithMany("ReferenceForms")
                         .HasForeignKey("PeriodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("Period");
                 });
@@ -1223,6 +1246,8 @@ namespace IdeaTrack.Migrations
             modelBuilder.Entity("IdeaTrack.Models.InitiativeCategory", b =>
                 {
                     b.Navigation("Initiatives");
+
+                    b.Navigation("ReferenceForms");
                 });
 
             modelBuilder.Entity("IdeaTrack.Models.InitiativePeriod", b =>

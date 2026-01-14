@@ -1,0 +1,136 @@
+@using IdeaTrack.Models
+@using IdeaTrack.Areas.SciTech.Models
+@model InitiativeDetailVM
+
+@{
+    ViewData["Title"] = "Review Initiative";
+    string statusBadgeClass = Model.Status switch
+    {
+        InitiativeStatus.Faculty_Approved => "bg-warning text-dark",
+        InitiativeStatus.Evaluating => "bg-primary text-white",
+        InitiativeStatus.Pending_Final => "bg-success text-white",
+        InitiativeStatus.Approved => "bg-success text-white",
+        InitiativeStatus.Revision_Required => "bg-info text-dark",
+        InitiativeStatus.Rejected => "bg-danger text-white",
+        _ => "bg-secondary text-white"
+    };
+}
+
+<div class="container py-4">
+    <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Council">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Review Initiative</li>
+        </ol>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge @statusBadgeClass">@Model.Status</span>
+                <span class="text-muted small">@Model.SubmittedDate.ToString("dd/MM/yyyy HH:mm")</span>
+            </div>
+            <h2 class="fw-bold mb-1">@Model.Title</h2>
+            <p class="text-muted mb-0">
+                Code: <span class="fw-mono text-dark">@Model.InitiativeCode</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- LEFT: INFO -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light fw-bold">
+                    <i class="fas fa-info-circle me-1 text-primary"></i> Initiative Details
+                </div>
+                <div class="card-body">
+                    <div class="row g-4 mb-3">
+                        <div class="col-md-6">
+                            <label class="small text-muted">Proposer</label>
+                            <div class="fw-medium">@(Model.HidePersonalInfo ? "Anonymous Author" : Model.ProposerName)</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted">Department</label>
+                            <div class="fw-medium">@(Model.HidePersonalInfo ? "Anonymous Department" : Model.DepartmentName)</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted">Category</label>
+                            <div class="fw-medium">@Model.Category</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted">Budget</label>
+                            <div class="fw-bold text-success">@Model.Budget.ToString("N0") VND</div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Description</h6>
+                    <div class="text-secondary" style="white-space: pre-wrap;">@Model.Description</div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="fas fa-paperclip me-1 text-secondary"></i> Attachments
+                </div>
+                <div class="card-body">
+                    @if (Model.Files != null && Model.Files.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var file in Model.Files)
+                            {
+                                <a href="@Url.Action("DownloadFile", "Port", new { fileName = file.FileName })" class="list-group-item list-group-item-action d-flex align-items-center">
+                                    <i class="fas fa-file me-3 text-primary"></i>
+                                    <div>
+                                        <div class="fw-medium">@file.FileName</div>
+                                        <small class="text-muted">Click to download</small>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">No files attached.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: ACTIONS -->
+        <div class="col-lg-4">
+            <div class="card shadow border-primary position-sticky" style="top: 20px;">
+                <div class="card-header fw-bold text-primary bg-primary bg-opacity-10">
+                    <i class="fas fa-gavel me-1"></i> Council Decision
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Review Comments</label>
+                            <textarea name="comments" rows="5" class="form-control" placeholder="Enter reason for rejection or revision requirements..."></textarea>
+                            <div class="form-text text-muted">Required for Rejection/Revision. Optional for Approval.</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" asp-controller="Council" asp-action="Approve" class="btn btn-success text-white py-2" onclick="return confirm('Confirm Approve this initiative? It will be marked as Council Approved.');">
+                                <i class="fas fa-check-circle me-2"></i>Approve
+                            </button>
+                            
+                            <button type="submit" asp-controller="Council" asp-action="RequestRevision" class="btn btn-warning text-dark py-2">
+                                <i class="fas fa-undo me-2"></i>Request Revision
+                            </button>
+
+                            <button type="submit" asp-controller="Council" asp-action="Reject" class="btn btn-danger text-white py-2" onclick="return confirm('Are you sure you want to REJECT this initiative?');">
+                                <i class="fas fa-times-circle me-2"></i>Reject
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

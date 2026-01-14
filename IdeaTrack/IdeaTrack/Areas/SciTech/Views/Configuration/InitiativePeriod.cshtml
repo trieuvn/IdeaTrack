@@ -1,0 +1,204 @@
+@model List<IdeaTrack.Models.InitiativePeriod>
+
+@{
+    ViewData["Title"] = "Initiative Periods";
+    var years = ViewBag.Years as List<IdeaTrack.Models.AcademicYear>;
+    var selectedYearId = (int?)ViewBag.SelectedYearId;
+}
+
+<style>
+    .font-display { font-family: 'Space Grotesk', sans-serif; }
+    .btn-brand { background-color: #b91c1c; color: white; border: none; }
+    .btn-brand:hover { background-color: #991b1b; color: white; }
+    .card-period { transition: transform 0.2s, border-color 0.2s; }
+    .card-period:hover { transform: translateY(-3px); border-color: #b91c1c; }
+    .bg-brand-subtle { background-color: #fff1f2; color: #881337; }
+</style>
+
+<div class="container-fluid px-5 py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 gap-3">
+        <div>
+            <h1 class="font-display fw-bold mb-1" style="font-size: 2.5rem;">Initiative Periods</h1>
+            <p class="text-secondary mb-0">Manage submission windows for each academic year.</p>
+        </div>
+        
+        <div class="d-flex gap-2 align-items-center bg-white p-2 rounded-3 shadow-sm border flex-wrap">
+            
+            <!-- Year Filter -->
+            <div class="d-flex align-items-center border-end pe-3 me-2">
+                <span class="text-muted small fw-bold ps-2 text-uppercase me-2">Year:</span>
+                <select class="form-select border-0 bg-transparent fw-bold p-0" style="width: auto; cursor: pointer;" 
+                        onchange="updateFilters('yearId', this.value)">
+                    @if(years != null)
+                    {
+                        foreach(var y in years)
+                        {
+                            <!option value="@y.Id" @(y.Id == selectedYearId ? "selected" : "")>@y.Name</!option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="d-flex align-items-center me-2">
+                <span class="text-muted small fw-bold text-uppercase me-2">Status:</span>
+                <select class="form-select border-0 bg-transparent fw-bold p-0 text-primary" style="width: auto; cursor: pointer;"
+                        onchange="updateFilters('status', this.value)">
+                    <option value="All" selected="@((string)ViewBag.SelectedStatus == "All")">All Periods</option>
+                    <option value="Open" selected="@((string)ViewBag.SelectedStatus == "Open")">Open Only</option>
+                    <option value="Closed" selected="@((string)ViewBag.SelectedStatus == "Closed")">Closed Only</option>
+                </select>
+            </div>
+
+            <button class="btn btn-brand px-3 py-2 rounded-3 ms-2" data-bs-toggle="modal" data-bs-target="#createPeriodModal">
+                <i class="fa-solid fa-plus me-1"></i> New Period
+            </button>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <div class="bg-light rounded-circle d-inline-flex p-4 mb-3">
+                <i class="fa-regular fa-calendar-xmark fa-3x text-secondary"></i>
+            </div>
+            <h4 class="text-muted">No periods found match your filters.</h4>
+            <p class="text-secondary">Try adjusting the year or status filter, or create a new one.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var period in Model)
+            {
+                bool isOpen = DateTime.Now >= period.StartDate && DateTime.Now <= period.EndDate;
+                
+                <div class="col-md-6 col-xl-4">
+                    <div class="card h-100 card-period border rounded-4 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                @if (isOpen)
+                                {
+                                    <div class="badge bg-success-subtle text-success rounded-pill px-3 py-2 border border-success-subtle">
+                                        <i class="fa-solid fa-circle fa-2xs me-1"></i> Open Now
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="badge bg-light text-secondary rounded-pill px-3 py-2 border">
+                                        <i class="fa-solid fa-lock fa-2xs me-1"></i> Closed
+                                    </div>
+                                }
+
+                                <div class="dropdown">
+                                    <button class="btn btn-light btn-sm rounded-circle" data-bs-toggle="dropdown">
+                                        <i class="fa-solid fa-ellipsis text-muted"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                                        <li>
+                                            <a class="dropdown-item" href="@Url.Action("InitiativeCategory", new { periodId = period.Id })">
+                                                <i class="fa-solid fa-folder-tree me-2 text-primary"></i> Manage Categories
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <button class="dropdown-item text-danger" onclick="deletePeriod(@period.Id)">
+                                                <i class="fa-solid fa-trash me-2"></i> Delete
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <h5 class="fw-bold mb-1">@period.Name</h5>
+                            <p class="text-muted small mb-3">@period.Description</p>
+                            
+                            <div class="bg-light rounded-3 p-3 d-flex align-items-center gap-3">
+                                <div>
+                                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Starts</small>
+                                    <span class="fw-semibold @(isOpen ? "text-success" : "")">@period.StartDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="vr"></div>
+                                <div>
+                                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Ends</small>
+                                    <span class="fw-semibold @(isOpen ? "text-success" : "")">@period.EndDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="badge bg-brand-subtle rounded-pill">
+                                    <i class="fa-solid fa-layer-group me-1"></i> @period.Categories.Count Categories
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Create Modal -->
+<div class="modal fade" id="createPeriodModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">New Period for @years?.FirstOrDefault(y => y.Id == selectedYearId)?.Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CreatePeriod" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="yearId" value="@selectedYearId" />
+                    <!-- Hidden status so redirect keeps it? logic in controller handles redirect -->
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">Period Name</label>
+                        <input type="text" name="name" class="form-control" required placeholder="e.g. Research Batch 1">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">Description</label>
+                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="row g-2 mb-4">
+                        <div class="col-6">
+                            <label class="form-label text-muted small fw-bold">Start Date</label>
+                            <input type="date" name="startDate" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-muted small fw-bold">End Date</label>
+                            <input type="date" name="endDate" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-brand btn-lg">Create Period</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateFilters(key, value) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set(key, value);
+        // Reset page if needed, or keep
+        if(key === 'yearId') {
+             // If year changes, maybe reset status? Optional.
+        }
+        window.location.search = urlParams.toString();
+    }
+
+    function deletePeriod(id) {
+        if(!confirm('Delete this period? This cannot be undone.')) return;
+        fetch('/SciTech/Configuration/DeletePeriod', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'id=' + id
+        }).then(res => res.ok ? window.location.reload() : res.text().then(alert));
+    }
+</script>

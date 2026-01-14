@@ -4,16 +4,20 @@ namespace IdeaTrack.Areas.Councils.Models
 {
     public class DashboardVM
     {
+        // User Info for Header
+        public string UserFullName { get; set; } = "Expert";
+        
         // KPI Cards
         public int TotalAssigned { get; set; }
         public int CompletedCount { get; set; }
         public int PendingCount { get; set; }
         public int ProgressPercentage { get; set; } // Logic: (Completed/Total)*100
 
-        // Danh sach Up Next & Recent Activity
+        // Up Next & Recent Activity lists
         public List<DashboardItem> Assignments { get; set; } = new();
         public List<DashboardItem> RecentActivityList { get; set; } = new();
     }
+
 
     public class DashboardItem
     {
@@ -21,13 +25,14 @@ namespace IdeaTrack.Areas.Councils.Models
         public string InitiativeCode { get; set; }
         public string Title { get; set; }
         public string CategoryName { get; set; }
-        public DateTime Timestamp { get; set; } // Ngay giao hoac Ngay cham
-        public DateTime? DueDate { get; set; }  // Add cai nay de tinh han chot
+        public DateTime Timestamp { get; set; } // Assigned date or Score date
+        public DateTime? DueDate { get; set; }  // For deadline calculation
         public decimal? Score { get; set; }
+        public decimal MaxScore { get; set; } = 100; // Default max score
         public AssignmentStatus Status { get; set; } // Add cai nay de check trang thai nut bam
         public string Description { get; set; } // For Recent Activity
 
-        // Logic hien thi thoi gian "Ago"
+        // Time ago display logic
         public string TimeAgo 
         {
             get 
@@ -40,7 +45,7 @@ namespace IdeaTrack.Areas.Councils.Models
             }
         }
 
-        // Logic nghiep vu: Warning han chot (Yeu cau trong anh)
+        // Business logic: Deadline warning
         public bool IsDueSoon => Status != AssignmentStatus.Completed 
                                  && DueDate.HasValue 
                                  && (DueDate.Value - DateTime.Now).TotalDays <= 7;

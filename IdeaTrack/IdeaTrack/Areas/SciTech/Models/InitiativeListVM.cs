@@ -9,5 +9,8 @@
         public string DepartmentName { get; set; }
         public DateTime? SubmittedDate { get; set; }
         public string Status { get; set; }
+        public string PeriodName { get; set; }
+        public string AcademicYear { get; set; }
+        public int MemberCount { get; set; }
     }
 }

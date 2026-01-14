@@ -1,146 +1,408 @@
 ﻿@model IdeaTrack.Areas.Councils.Models.RoundHistoryVM
 @{
-    ViewData["Title"] = "Grading History";
-    Layout = "~/Areas/Councils/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Round Grading History";
+    Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
 }
 
+<style>
+    /* Page-specific styles */
+    .page-header-section {
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+        border-radius: var(--radius-xl);
+        padding: 2rem 2.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .page-header-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+    }
+    
+    .page-header-section h4 {
+        color: #fff;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        font-size: 1.75rem;
+    }
+    
+    .page-header-section p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0;
+    }
+    
+    .btn-back {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        padding: 0.625rem 1.25rem;
+        border-radius: var(--radius-md);
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-back:hover {
+        background: rgba(255, 255, 255, 0.25);
+        color: #fff;
+    }
+    
+    /* Initiative Info Card */
+    .initiative-info-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    
+    .initiative-code-badge {
+        background: var(--brand-primary);
+        color: #fff;
+        padding: 0.75rem 1.25rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.875rem;
+        font-family: 'SF Mono', Monaco, monospace;
+    }
+    
+    .initiative-details h5 {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+    
+    .initiative-details span {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    /* Round Card */
+    .round-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    
+    .round-header {
+        background: var(--bg-light);
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .round-header i {
+        font-size: 1.25rem;
+        color: var(--brand-primary);
+    }
+    
+    .round-header h5 {
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-primary);
+    }
+    
+    .round-card .table {
+        margin-bottom: 0;
+    }
+    
+    .round-card .table thead {
+        background: var(--bg-light);
+    }
+    
+    .round-card .table thead th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        padding: 0.875rem 1.25rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .round-card .table tbody td {
+        padding: 1rem 1.25rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .round-card .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .round-card .table tbody tr:hover {
+        background: rgba(69, 10, 10, 0.02);
+    }
+    
+    .member-name {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .member-name i {
+        color: var(--brand-primary);
+    }
+    
+    .member-name span {
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+    
+    .date-text {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+    
+    .score-display {
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--success);
+    }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: var(--radius-full);
+        font-size: 0.8125rem;
+        font-weight: 500;
+    }
+    
+    .status-badge.success { background: var(--success-light); color: var(--success); }
+    .status-badge.info { background: var(--info-light); color: var(--info); }
+    .status-badge.warning { background: var(--warning-light); color: var(--warning); }
+    .status-badge.secondary { background: var(--bg-light); color: var(--text-secondary); }
+    
+    .btn-view-sm {
+        background: transparent;
+        color: var(--brand-primary);
+        border: 1px solid var(--brand-primary);
+        padding: 0.375rem 0.75rem;
+        border-radius: var(--radius-md);
+        font-size: 0.8125rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-view-sm:hover {
+        background: var(--brand-primary);
+        color: #fff;
+    }
+    
+    /* Round Summary Footer */
+    .round-summary {
+        background: var(--bg-light);
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .summary-stat {
+        text-align: center;
+    }
+    
+    .summary-stat .value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+    
+    .summary-stat .value.primary { color: var(--brand-primary); }
+    .summary-stat .value.success { color: var(--success); }
+    
+    .summary-stat .label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--text-muted);
+        opacity: 0.5;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+</style>
+
 <div class="container-fluid py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">
-                <i class="fas fa-history me-2"></i>Round Grading History
-            </h4>
-            <a asp-action="AssignedInitiatives" class="btn btn-light btn-sm">
-                <i class="fas fa-arrow-left me-1"></i>Back
+    <!-- Page Header -->
+    <div class="page-header-section">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h4><i class="bi bi-clock-history me-2"></i>Round Grading History</h4>
+                <p>View all grading rounds and scores for this initiative.</p>
+            </div>
+            <a asp-action="AssignedInitiatives" class="btn-back">
+                <i class="bi bi-arrow-left"></i>Back to Initiatives
             </a>
         </div>
-        
-        <div class="card-body">
-            <div class="mb-4">
-                <h5>
-                    <span class="badge bg-secondary">@Model.InitiativeCode</span>
-                    @Model.InitiativeTitle
-                </h5>
-                <p class="text-muted mb-0">
-                    Current Round: <strong>@Model.CurrentRound</strong>
-                </p>
-            </div>
+    </div>
 
-            @if (Model.Rounds.Any())
-            {
-                @foreach (var roundGroup in Model.Rounds.GroupBy(r => r.RoundNumber).OrderBy(g => g.Key))
-                {
-                    <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">
-                                <i class="fas fa-layer-group me-1"></i>Round @roundGroup.Key
-                            </h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Member</th>
-                                            <th>Assigned Date</th>
-                                            <th>Completed Date</th>
-                                            <th>Total Score</th>
-                                            <th>Status</th>
-                                            <th style="width: 100px">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in roundGroup)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <i class="fas fa-user me-1 text-primary"></i>
-                                                    @item.MemberName
-                                                </td>
-                                                <td>@item.AssignedDate.ToString("dd/MM/yyyy")</td>
-                                                <td>
-                                                    @if (item.CompletedDate.HasValue)
-                                                    {
-                                                        @item.CompletedDate.Value.ToString("dd/MM/yyyy HH:mm")
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="text-muted">-</span>
-                                                    }
-                                                </td>
-                                                <td>
-                                                    @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
-                                                    {
-                                                        <span class="fw-bold text-success">@item.TotalScore.ToString("F1")</span>
-                                                    }
-                                                    else
-                                                    {
-                                                        <span class="text-muted">-</span>
-                                                    }
-                                                </td>
-                                                <td>
-                                                    @switch (item.Status)
-                                                    {
-                                                        case IdeaTrack.Models.AssignmentStatus.Assigned:
-                                                            <span class="badge bg-warning">Assigned</span>
-                                                            break;
-                                                        case IdeaTrack.Models.AssignmentStatus.InProgress:
-                                                            <span class="badge bg-info">In Progress</span>
-                                                            break;
-                                                        case IdeaTrack.Models.AssignmentStatus.Completed:
-                                                            <span class="badge bg-success">Completed</span>
-                                                            break;
-                                                        default:
-                                                            <span class="badge bg-secondary">@item.Status</span>
-                                                            break;
-                                                    }
-                                                </td>
-                                                <td>
-                                                    @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
-                                                    {
-                                                        <a asp-action="ViewPastAssignment" asp-route-id="@item.AssignmentId" 
-                                                           class="btn btn-sm btn-outline-primary" title="View Details">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                    }
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <!-- Round Summary -->
-                            @{
-                                var completedItems = roundGroup.Where(r => r.Status == IdeaTrack.Models.AssignmentStatus.Completed).ToList();
-                                if (completedItems.Any())
-                                {
-                                    var avgScore = completedItems.Average(r => r.TotalScore);
-                                    <div class="p-3 bg-light border-top">
-                                        <div class="row text-center">
-                                            <div class="col">
-                                                <div class="h5 mb-0 text-primary">@completedItems.Count/@roundGroup.Count()</div>
-                                                <small class="text-muted">Completed</small>
-                                            </div>
-                                            <div class="col">
-                                                <div class="h5 mb-0 text-success">@avgScore.ToString("F2")</div>
-                                                <small class="text-muted">Avg Score</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="text-center py-5 text-muted">
-                    <i class="fas fa-clipboard-list fa-4x mb-3"></i>
-                    <p>No grading data available</p>
-                </div>
-            }
+    <!-- Initiative Info -->
+    <div class="initiative-info-card">
+        <div class="initiative-code-badge">@Model.InitiativeCode</div>
+        <div class="initiative-details">
+            <h5>@Model.InitiativeTitle</h5>
+            <span><i class="bi bi-layers me-1"></i>Current Round: <strong>@Model.CurrentRound</strong></span>
         </div>
     </div>
+
+    <!-- Rounds -->
+    @if (Model.Rounds.Any())
+    {
+        @foreach (var roundGroup in Model.Rounds.GroupBy(r => r.RoundNumber).OrderBy(g => g.Key))
+        {
+            <div class="round-card">
+                <div class="round-header">
+                    <i class="bi bi-layers-half"></i>
+                    <h5>Round @roundGroup.Key</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Assigned Date</th>
+                                <th>Completed Date</th>
+                                <th>Total Score</th>
+                                <th>Status</th>
+                                <th style="width: 100px">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in roundGroup)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="member-name">
+                                            <i class="bi bi-person-circle"></i>
+                                            <span>@item.MemberName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="date-text">@item.AssignedDate.ToString("dd/MM/yyyy")</span>
+                                    </td>
+                                    <td>
+                                        @if (item.CompletedDate.HasValue)
+                                        {
+                                            <span class="date-text">@item.CompletedDate.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
+                                        {
+                                            <span class="score-display">@item.TotalScore.ToString("F1")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">—</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @switch (item.Status)
+                                        {
+                                            case IdeaTrack.Models.AssignmentStatus.Assigned:
+                                                <span class="status-badge warning"><i class="bi bi-clock"></i>Assigned</span>
+                                                break;
+                                            case IdeaTrack.Models.AssignmentStatus.InProgress:
+                                                <span class="status-badge info"><i class="bi bi-pencil"></i>In Progress</span>
+                                                break;
+                                            case IdeaTrack.Models.AssignmentStatus.Completed:
+                                                <span class="status-badge success"><i class="bi bi-check-circle"></i>Completed</span>
+                                                break;
+                                            default:
+                                                <span class="status-badge secondary">@item.Status</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
+                                        {
+                                            <a asp-action="ViewPastAssignment" asp-route-id="@item.AssignmentId" class="btn-view-sm" title="View Details">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Round Summary -->
+                @{
+                    var completedItems = roundGroup.Where(r => r.Status == IdeaTrack.Models.AssignmentStatus.Completed).ToList();
+                    if (completedItems.Any())
+                    {
+                        var avgScore = completedItems.Average(r => r.TotalScore);
+                        <div class="round-summary">
+                            <div class="row text-center">
+                                <div class="col">
+                                    <div class="summary-stat">
+                                        <div class="value primary">@completedItems.Count/@roundGroup.Count()</div>
+                                        <div class="label">Completed</div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="summary-stat">
+                                        <div class="value success">@avgScore.ToString("F2")</div>
+                                        <div class="label">Average Score</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div class="round-card">
+            <div class="empty-state">
+                <i class="bi bi-clipboard-data"></i>
+                <p>No grading data available for this initiative.</p>
+            </div>
+        </div>
+    }
 </div>

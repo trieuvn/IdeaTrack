@@ -1,94 +1,636 @@
-﻿<header class="page-header">
-        <div class="breadcrumb">Dashboard / Initiatives / <strong>Final Approval</strong></div>
-        <div class="page-title">
-            <div class="title-left">
-                <h1>Project Phoenix</h1>
-                <span class="badge-pending">PENDING DECISION</span>
-            </div>
-            <p class="subtitle">Review aggregated evaluation scores, assign the final global rank, and record the board's official decision for this initiative.</p>
-        </div>
-    </header>
+﻿@{
+    ViewData["Title"] = "Council Chair - Final Approval";
+    Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
+}
 
-    <section class="content-grid">
+<style>
+    /* Page-specific styles */
+    .page-header-section {
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+        border-radius: var(--radius-xl);
+        padding: 2rem 2.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .page-header-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+    }
+    
+    .page-header-section h4 {
+        color: #fff;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        font-size: 1.75rem;
+    }
+    
+    .page-header-section p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0;
+        max-width: 600px;
+    }
+    
+    .status-pending {
+        background: rgba(234, 179, 8, 0.2);
+        color: #fbbf24;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-full);
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Content Grid */
+    .content-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+    
+    @@media (max-width: 1024px) {
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Card Base */
+    .content-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+    
+    .content-card .card-header {
+        background: var(--bg-light);
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .content-card .card-header i,
+    .content-card .card-header .material-icons {
+        font-size: 1.25rem;
+        color: var(--brand-primary);
+    }
+    
+    .content-card .card-header h5 {
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+    
+    .content-card .card-body {
+        padding: 1.5rem;
+    }
+    
+    /* Initiative Summary */
+    .initiative-description {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+    }
+    
+    .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+    
+    @@media (max-width: 768px) {
+        .meta-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    .meta-item {
+        background: var(--bg-light);
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        text-align: center;
+    }
+    
+    .meta-item span {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        margin-bottom: 0.25rem;
+    }
+    
+    .meta-item strong {
+        font-size: 0.9375rem;
+        color: var(--text-primary);
+    }
+    
+    /* Score Verification */
+    .progress-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .progress-item label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .progress-item label span {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    
+    .progress-bar-custom {
+        height: 10px;
+        background: var(--bg-light);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+    }
+    
+    .progress-bar-custom .fill {
+        height: 100%;
+        border-radius: var(--radius-full);
+        transition: width 0.5s ease;
+    }
+    
+    .progress-bar-custom .fill.blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .progress-bar-custom .fill.green { background: linear-gradient(135deg, #10b981, #059669); }
+    
+    .total-score-box {
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+        color: #fff;
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        text-align: center;
+        margin-top: 1.5rem;
+    }
+    
+    .total-score-box p {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.9;
+        margin-bottom: 0.5rem;
+    }
+    
+    .total-score-box .score-value {
+        font-size: 3rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .rank-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.375rem 0.75rem;
+        border-radius: var(--radius-full);
+        font-size: 0.8125rem;
+        font-weight: 500;
+    }
+    
+    .score-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+        margin-top: 1.5rem;
+        font-size: 0.8125rem;
+        color: var(--text-muted);
+    }
+    
+    .score-footer .material-icons {
+        font-size: 1rem;
+        vertical-align: middle;
+        margin-right: 0.25rem;
+    }
+    
+    .footer-link {
+        color: var(--brand-primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .footer-link:hover {
+        text-decoration: underline;
+    }
+    
+    /* Documents Grid */
+    .docs-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .doc-item {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        padding: 1rem 1.25rem;
+        border-radius: var(--radius-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+    
+    .doc-item:hover {
+        border-color: var(--brand-primary);
+        background: rgba(69, 10, 10, 0.02);
+    }
+    
+    .doc-info .doc-name {
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.125rem;
+    }
+    
+    .doc-info .doc-meta {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+    
+    .doc-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .doc-actions .btn {
+        padding: 0.375rem 0.625rem;
+        border-radius: var(--radius-sm);
+    }
+    
+    /* Committee List */
+    .committee-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .committee-member {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: var(--bg-light);
+        border-radius: var(--radius-md);
+        border-left: 4px solid transparent;
+    }
+    
+    .committee-member.scored {
+        border-left-color: var(--success);
+    }
+    
+    .committee-member.pending {
+        border-left-color: var(--warning);
+    }
+    
+    .committee-member .avatar img {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    .member-main {
+        flex: 1;
+    }
+    
+    .member-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .member-header strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    
+    .member-header .role {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        background: var(--bg-card);
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--radius-sm);
+    }
+    
+    .member-status {
+        font-size: 0.8125rem;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+    
+    .member-status.done {
+        color: var(--success);
+    }
+    
+    .member-status.waiting {
+        color: var(--warning);
+    }
+    
+    .member-status .material-icons {
+        font-size: 1rem;
+    }
+    
+    /* Decision Console */
+    .decision-console .input-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    .decision-console .input-group > label {
+        display: block;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .decision-console .input-group .mandatory {
+        color: var(--danger);
+        font-size: 0.75rem;
+        margin-left: 0.5rem;
+    }
+    
+    .input-wrapper {
+        position: relative;
+    }
+    
+    .input-wrapper input {
+        width: 100%;
+        padding: 0.75rem 3rem 0.75rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        transition: all 0.2s ease;
+    }
+    
+    .input-wrapper input:focus {
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(69, 10, 10, 0.1);
+        outline: none;
+    }
+    
+    .input-wrapper .input-suffix {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.875rem;
+    }
+    
+    .decision-buttons {
+        display: flex;
+        gap: 0.75rem;
+    }
+    
+    .btn-decision {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-md);
+        background: var(--bg-card);
+        color: var(--text-secondary);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-decision:hover {
+        border-color: var(--brand-primary);
+        color: var(--brand-primary);
+    }
+    
+    .btn-decision.active {
+        border-color: var(--success);
+        background: var(--success-light);
+        color: var(--success);
+    }
+    
+    .btn-decision.reject.active {
+        border-color: var(--danger);
+        background: var(--danger-light);
+        color: var(--danger);
+    }
+    
+    .btn-decision .material-icons {
+        font-size: 1.25rem;
+    }
+    
+    .decision-console textarea {
+        width: 100%;
+        padding: 0.875rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        font-size: 0.9375rem;
+        min-height: 120px;
+        resize: vertical;
+        transition: all 0.2s ease;
+    }
+    
+    .decision-console textarea:focus {
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(69, 10, 10, 0.1);
+        outline: none;
+    }
+    
+    .char-count {
+        display: block;
+        text-align: right;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.375rem;
+    }
+    
+    .btn-confirm {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+        margin-top: 1.5rem;
+    }
+    
+    .btn-confirm:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(69, 10, 10, 0.3);
+    }
+    
+    .btn-confirm .material-icons {
+        font-size: 1.25rem;
+    }
+    
+    .audit-note {
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="page-header-section">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <h4><i class="bi bi-award me-2"></i>Project Phoenix</h4>
+                    <span class="status-pending">Pending Decision</span>
+                </div>
+                <p>Review aggregated evaluation scores, assign the final global rank, and record the board's official decision.</p>
+            </div>
+            <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0" style="background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; border-radius: var(--radius-md);">
+                    <li class="breadcrumb-item"><a href="#" style="color: rgba(255,255,255,0.7);">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="#" style="color: rgba(255,255,255,0.7);">Initiatives</a></li>
+                    <li class="breadcrumb-item active" style="color: #fff;">Final Approval</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="content-grid">
         <!-- LEFT PANEL -->
         <div class="left-panel">
-
             <!-- Initiative Summary -->
-            <section class="card">
-                <div class="section-title"><span class="material-icons">info</span> Initiative Summary</div>
-                <p class="description">
-                    Project Phoenix aims to modernize our core legacy banking infrastructure by migrating to a cloud-native architecture. This initiative is expected to reduce operational costs by 25% and improve system uptime to 99.99%.
-                </p>
-                <div class="meta-grid">
-                    <div class="meta-item"><span>BUDGET</span><strong>$1.2M</strong></div>
-                    <div class="meta-item"><span>TIMELINE</span><strong>Q4 2024</strong></div>
-                    <div class="meta-item"><span>LEAD</span><strong>Dr. A. Smith</strong></div>
-                    <div class="meta-item"><span>DEPT</span><strong>Innovation</strong></div>
+            <div class="content-card">
+                <div class="card-header">
+                    <span class="material-icons">info</span>
+                    <h5>Initiative Summary</h5>
                 </div>
-            </section>
+                <div class="card-body">
+                    <p class="initiative-description">
+                        Project Phoenix aims to modernize our core legacy banking infrastructure by migrating to a cloud-native architecture. This initiative is expected to reduce operational costs by 25% and improve system uptime to 99.99%.
+                    </p>
+                    <div class="meta-grid">
+                        <div class="meta-item">
+                            <span>Budget</span>
+                            <strong>$1.2M</strong>
+                        </div>
+                        <div class="meta-item">
+                            <span>Timeline</span>
+                            <strong>Q4 2024</strong>
+                        </div>
+                        <div class="meta-item">
+                            <span>Lead</span>
+                            <strong>Dr. A. Smith</strong>
+                        </div>
+                        <div class="meta-item">
+                            <span>Dept</span>
+                            <strong>Innovation</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Score Verification -->
-            <section class="card">
-                <div class="section-title"><span class="material-icons">bar_chart</span> Score Verification</div>
-                <div class="score-container">
+            <div class="content-card">
+                <div class="card-header">
+                    <span class="material-icons">bar_chart</span>
+                    <h5>Score Verification</h5>
+                </div>
+                <div class="card-body">
                     <div class="progress-group">
                         <div class="progress-item">
                             <label>Technical Feasibility <span>85/100</span></label>
-                            <div class="progress-bar"><div class="fill blue" style="width:85%"></div></div>
+                            <div class="progress-bar-custom">
+                                <div class="fill blue" style="width: 85%"></div>
+                            </div>
                         </div>
                         <div class="progress-item">
                             <label>Financial Impact <span>92/100</span></label>
-                            <div class="progress-bar"><div class="fill green" style="width:92%"></div></div>
+                            <div class="progress-bar-custom">
+                                <div class="fill green" style="width: 92%"></div>
+                            </div>
                         </div>
                         <div class="progress-item">
                             <label>Strategic Fit <span>88/100</span></label>
-                            <div class="progress-bar"><div class="fill blue" style="width:88%"></div></div>
+                            <div class="progress-bar-custom">
+                                <div class="fill blue" style="width: 88%"></div>
+                            </div>
                         </div>
                     </div>
+                    
                     <div class="total-score-box">
-                        <p>TOTAL WEIGHTED SCORE</p>
+                        <p>Total Weighted Score</p>
                         <div class="score-value">89.5</div>
-                        <span class="rank-badge">? Top 5%</span>
+                        <span class="rank-badge">🏆 Top 5%</span>
+                    </div>
+                    
+                    <div class="score-footer">
+                        <span><span class="material-icons">history</span> Last calculated: Oct 24, 2024 by System</span>
+                        <a href="#" class="footer-link">View detailed breakdown</a>
                     </div>
                 </div>
-                <div class="score-footer">
-                    <span><span class="material-icons">history</span> Last calculated: Oct 24, 2024 by System</span>
-                    <a href="#" class="footer-link">View detailed score breakdown</a>
-                </div>
-            </section>
+            </div>
 
             <!-- Supporting Documents -->
-            <div class="section-title" style="margin: 24px 0 16px 0;">
-                <span class="material-icons">folder</span> Supporting Documents
-            </div>
-            <div class="docs-grid">
-                <!-- PDF -->
-                <div class="doc-item card-mini d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <i class="fa-solid fa-file-pdf text-danger fs-4"></i>
-                        <div class="doc-info ms-2">
-                            <p class="doc-name mb-0">Full_Evaluation_Report.pdf</p>
-                            <p class="doc-meta mb-0 text-muted">2.4 MB  Added yesterday</p>
-                        </div>
-                    </div>
-                    <div class="doc-actions d-flex gap-1">
-                        <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-download"></i></button>
-                        <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-trash"></i></button>
-                    </div>
+            <div class="content-card">
+                <div class="card-header">
+                    <span class="material-icons">folder</span>
+                    <h5>Supporting Documents</h5>
                 </div>
-
-                <!-- Excel -->
-                <div class="doc-item card-mini d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <i class="fa-solid fa-file-excel text-success fs-4"></i>
-                        <div class="doc-info ms-2">
-                            <p class="doc-name mb-0">Financial_Model_v3.xlsx</p>
-                            <p class="doc-meta mb-0 text-muted">850 KB  Added Oct 20</p>
+                <div class="card-body">
+                    <div class="docs-grid">
+                        <div class="doc-item">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="fa-solid fa-file-pdf text-danger fs-4"></i>
+                                <div class="doc-info">
+                                    <p class="doc-name mb-0">Full_Evaluation_Report.pdf</p>
+                                    <p class="doc-meta mb-0">2.4 MB • Added yesterday</p>
+                                </div>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-download"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-trash"></i></button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="doc-actions d-flex gap-1">
-                        <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-download"></i></button>
-                        <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-trash"></i></button>
+                        <div class="doc-item">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="fa-solid fa-file-excel text-success fs-4"></i>
+                                <div class="doc-info">
+                                    <p class="doc-name mb-0">Financial_Model_v3.xlsx</p>
+                                    <p class="doc-meta mb-0">850 KB • Added Oct 20</p>
+                                </div>
+                            </div>
+                            <div class="doc-actions">
+                                <button class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-download"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,34 +638,44 @@
 
         <!-- RIGHT PANEL -->
         <aside class="right-panel">
-
             <!-- Review Committee -->
-            <div class="review-team card">
-                <div class="section-title"><span class="material-icons">groups</span> Review Committee</div>
-                <div class="committee-list">
-                    <!-- ÐÃ CH?M -->
-                    <div class="committee-member scored">
-                        <div class="avatar"><img src="https://i.pravatar.cc/80?img=15"></div>
-                        <div class="member-main">
-                            <div class="member-header">
-                                <strong>PGS. TS. Nguy?n Van A</strong>
-                                <span class="role">Council Chair</span>
+            <div class="content-card">
+                <div class="card-header">
+                    <span class="material-icons">groups</span>
+                    <h5>Review Committee</h5>
+                </div>
+                <div class="card-body">
+                    <div class="committee-list">
+                        <!-- Scored Member -->
+                        <div class="committee-member scored">
+                            <div class="avatar">
+                                <img src="https://i.pravatar.cc/80?img=15" alt="Avatar">
                             </div>
-                            <div class="member-status done">
-                                <span class="material-icons">check_circle</span> Scored: <strong>92</strong>
+                            <div class="member-main">
+                                <div class="member-header">
+                                    <strong>PGS. TS. Nguyễn Văn A</strong>
+                                    <span class="role">Council Chair</span>
+                                </div>
+                                <div class="member-status done">
+                                    <span class="material-icons">check_circle</span>
+                                    Scored: <strong>92</strong>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- CHUA CH?M -->
-                    <div class="committee-member pending">
-                        <div class="avatar"><img src="https://i.pravatar.cc/80?img=22"></div>
-                        <div class="member-main">
-                            <div class="member-header">
-                                <strong>ThS. Tr?n Th? B</strong>
-                                <span class="role">Secretary</span>
+                        <!-- Pending Member -->
+                        <div class="committee-member pending">
+                            <div class="avatar">
+                                <img src="https://i.pravatar.cc/80?img=22" alt="Avatar">
                             </div>
-                            <div class="member-status waiting">
-                                <span class="material-icons">hourglass_top</span> Not scored yet
+                            <div class="member-main">
+                                <div class="member-header">
+                                    <strong>ThS. Trần Thị B</strong>
+                                    <span class="role">Secretary</span>
+                                </div>
+                                <div class="member-status waiting">
+                                    <span class="material-icons">hourglass_top</span>
+                                    Not scored yet
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -131,86 +683,65 @@
             </div>
 
             <!-- Decision Console -->
-            <div class="decision-console card">
-                <div class="section-title"><span class="material-icons">gavel</span> Decision Console</div>
-                <div class="input-group">
-                    <label>Assign Final Score</label>
-                    <div class="input-wrapper">
-                        <input type="number" placeholder="e.g. 89.5" min="0" max="100" step="0.1">
-                        <span class="input-suffix">/ 100</span>
+            <div class="content-card decision-console">
+                <div class="card-header">
+                    <span class="material-icons">gavel</span>
+                    <h5>Decision Console</h5>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <label>Assign Final Score</label>
+                        <div class="input-wrapper">
+                            <input type="number" placeholder="e.g. 89.5" min="0" max="100" step="0.1">
+                            <span class="input-suffix">/ 100</span>
+                        </div>
                     </div>
-                </div>
-                <div class="input-group">
-                    <label>Board Decision</label>
-                    <div class="decision-buttons d-flex gap-2">
-                        <button class="btn-decision active">
-                            <span class="material-icons">check_circle</span> Approve
-                        </button>
-                        <button class="btn-decision">
-                            <span class="material-icons">cancel</span> Reject
-                        </button>
+                    
+                    <div class="input-group">
+                        <label>Board Decision</label>
+                        <div class="decision-buttons">
+                            <button class="btn-decision active" onclick="selectDecision(this, 'approve')">
+                                <span class="material-icons">check_circle</span>
+                                Approve
+                            </button>
+                            <button class="btn-decision reject" onclick="selectDecision(this, 'reject')">
+                                <span class="material-icons">cancel</span>
+                                Reject
+                            </button>
+                        </div>
                     </div>
+                    
+                    <div class="input-group">
+                        <label>Reason for Decision <span class="mandatory">Mandatory</span></label>
+                        <textarea placeholder="Provide a detailed rationale for the selected decision..." oninput="updateCharCount(this)"></textarea>
+                        <span class="char-count">0/500 characters</span>
+                    </div>
+                    
+                    <button class="btn-confirm">
+                        Confirm Decision
+                        <span class="material-icons">arrow_forward</span>
+                    </button>
+                    <p class="audit-note">This action is final and will be recorded in the audit log.</p>
                 </div>
-                <div class="input-group">
-                    <label>Reason for Decision <span class="mandatory">Mandatory</span></label>
-                    <textarea placeholder="Provide a detailed rationale for the selected decision..."></textarea>
-                    <span class="char-count">0/500 characters</span>
-                </div>
-                <button class="btn-confirm">Confirm <span class="material-icons" style="transform:translateY(5px);">arrow_forward</span></button>
-                <p class="audit-note">This action is final and will be recorded in the audit log.</p>
             </div>
-
         </aside>
-    </section>
+    </div>
 </div>
 
-<style>
-    .content-grid {
-        display: flex;
-        gap: 2rem;
-    }
-
-    .left-panel {
-        flex: 2;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .right-panel {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .docs-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .doc-item {
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-        .doc-item:hover {
-            background-color: #f8f9fa;
+@section Scripts {
+    <script>
+        function selectDecision(button, type) {
+            // Remove active from all buttons
+            document.querySelectorAll('.btn-decision').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Add active to clicked button
+            button.classList.add('active');
         }
-
-    .doc-info p {
-        margin: 0;
-    }
-
-    .doc-actions button {
-        padding: 0.25rem 0.5rem;
-    }
-
-    .decision-buttons button {
-        flex: 1;
-    }
-</style>
+        
+        function updateCharCount(textarea) {
+            const count = textarea.value.length;
+            textarea.nextElementSibling.textContent = `${count}/500 characters`;
+        }
+    </script>
+}

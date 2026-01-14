@@ -1,22 +1,28 @@
-﻿body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f8f9fa;
+﻿/* Faculty Leader Main CSS - Synced with Homepage Design */
+/* Primary Brand Color: #b91c1c (matching Homepage) */
+
+body {
+    font-family: 'Roboto', 'Inter', sans-serif;
+    background-color: #f3f4f6;
     margin: 0;
 }
 
-.header {
-    background-color: white;
-    border-bottom: 1px solid #eceef0;
-    padding: 0 2rem;
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+/* ============ HEADER ============ */
+body>header.header,
+header.header {
+    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+    border-bottom: none !important;
+    padding: 0 2rem !important;
+    height: 70px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    box-shadow: 0 2px 8px rgba(185, 28, 28, 0.25) !important;
 }
 
 /* Left Section */
@@ -30,29 +36,30 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #212529;
+    color: #ffffff;
     text-decoration: none;
 }
 
 .logo-icon {
     font-size: 1.5rem;
-    color: #007bff;
+    color: #fbbf24;
 }
 
 .logo-text {
     font-weight: 700;
     font-size: 1.25rem;
     white-space: nowrap;
+    color: #ffffff;
 }
 
 .logo-sub {
-    color: #868e96;
+    color: rgba(255, 255, 255, 0.75);
     font-weight: 400;
     font-size: 1rem;
     margin-left: 4px;
 }
 
-/* Navigation */
+/* ============ NAVIGATION ============ */
 .nav-custom {
     display: flex;
     list-style: none;
@@ -61,38 +68,40 @@
     height: 70px;
 }
 
-    .nav-custom .nav-link {
-        display: flex;
-        align-items: center;
-        padding: 0 1rem;
-        color: #6c757d;
-        font-weight: 500;
-        text-decoration: none;
-        height: 100%;
-        position: relative;
-        transition: color 0.2s;
-    }
+.nav-custom .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    text-decoration: none;
+    height: 100%;
+    position: relative;
+    transition: color 0.2s, background-color 0.2s;
+}
 
-        .nav-custom .nav-link:hover {
-            color: #007bff;
-        }
+.nav-custom .nav-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
-        .nav-custom .nav-link.active {
-            color: #212529;
-            font-weight: 600;
-        }
+.nav-custom .nav-link.active {
+    color: #ffffff;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.15);
+}
 
-            .nav-custom .nav-link.active::after {
-                content: "";
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 3px;
-                background-color: #007bff;
-            }
+.nav-custom .nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #fbbf24;
+}
 
-/* Right Section */
+/* ============ RIGHT SECTION ============ */
 .header-right {
     display: flex;
     align-items: center;
@@ -100,7 +109,7 @@
 }
 
 .notification-btn {
-    background: #f1f3f5;
+    background: rgba(255, 255, 255, 0.15);
     border: none;
     width: 40px;
     height: 40px;
@@ -108,14 +117,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #495057;
+    color: #ffffff;
     cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.notification-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
 .divider {
     width: 1px;
     height: 32px;
-    background-color: #dee2e6;
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 .user-profile {
@@ -128,7 +142,7 @@
 .avatar-wrapper {
     position: relative;
     padding: 2px;
-    border: 2px solid #007bff;
+    border: 2px solid #fbbf24;
     border-radius: 50%;
     display: flex;
 }
@@ -149,19 +163,21 @@
 .user-name {
     font-weight: 600;
     font-size: 0.95rem;
-    color: #212529;
+    color: #ffffff;
 }
 
 .user-role {
     font-size: 0.8rem;
-    color: #868e96;
+    color: rgba(255, 255, 255, 0.75);
 }
 
+/* ============ MAIN CONTENT ============ */
 main {
     margin-top: 70px;
     padding: 2rem;
 }
 
+/* ============ BACKGROUND UTILITIES ============ */
 .bg-blue-light {
     background-color: #eef6ff !important;
 }
@@ -182,11 +198,23 @@ main {
     background-color: #fff5f5 !important;
 }
 
+.bg-orange-light {
+    background-color: #fff4e6 !important;
+}
+
+.bg-light-gray {
+    background-color: #f1f4f8 !important;
+}
+
+.bg-warning-subtle {
+    background-color: #fff9eb !important;
+}
+
 .text-purple {
     color: #8a70d6 !important;
 }
 
-/* Stat Icon Style */
+/* ============ STAT ICONS ============ */
 .stat-icon {
     width: 48px;
     height: 48px;
@@ -199,16 +227,16 @@ main {
 
 /* File Icon Style in Table */
 .file-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
 }
 
-/* Custom Badge */
+/* ============ CUSTOM BADGE ============ */
 .badge-custom {
     padding: 6px 14px;
     border-radius: 50px;
@@ -216,56 +244,22 @@ main {
     font-weight: 500;
 }
 
-/* Table Style Adjustments */
+/* ============ TABLE STYLING ============ */
 .table thead th {
     border-top: none;
     background-color: #fcfcfd;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    color: #6b7280;
 }
 
 .table tbody tr:hover {
-    background-color: #f8faff;
+    background-color: #fef2f2;
 }
 
-.btn-info {
-    background-color: #00a9e0;
-    border-color: #00a9e0;
-}
-
-.pagination .page-link {
-    border: none;
-    color: #6c757d;
-    margin: 0 2px;
-    border-radius: 4px;
-}
-
-.pagination .page-item.active .page-link {
-    background-color: #e3f2fd;
-    color: #0d6efd;
-    font-weight: bold;
-    border: 1px solid #90caf9;
-}
-/* Color Palette */
-.bg-light-gray {
-    background-color: #f1f4f8 !important;
-}
-
-.bg-blue-light {
-    background-color: #eef6ff !important;
-}
-
-.bg-orange-light {
-    background-color: #fff4e6 !important;
-}
-
-.bg-red-light {
-    background-color: #fff1f1 !important;
-}
-
-.text-warning {
-    color: #f59e0b !important;
-}
-
-/* Custom Elements */
+/* ============ ICON BOX ============ */
 .icon-box {
     width: 38px;
     height: 38px;
@@ -276,38 +270,98 @@ main {
     flex-shrink: 0;
 }
 
-.badge-custom {
-    padding: 4px 12px;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 700;
+/* Avatar Circle */
+.avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
 }
 
+/* ============ BUTTONS ============ */
+.btn-primary {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+}
+
+.btn-primary:hover {
+    background-color: #991b1b;
+    border-color: #991b1b;
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #7f1d1d;
+    border-color: #7f1d1d;
+}
+
+.btn-outline-primary {
+    color: #b91c1c;
+    border-color: #b91c1c;
+}
+
+.btn-outline-primary:hover {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+    color: #ffffff;
+}
+
+.btn-info {
+    background-color: #0891b2;
+    border-color: #0891b2;
+}
+
+/* ============ FORM CONTROLS ============ */
+.form-control,
+.form-select {
+    border: 1px solid #e5e7eb;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(185, 28, 28, 0.15);
+    border-color: #b91c1c;
+}
+
+/* ============ COMMENT BOX ============ */
 .comment-box {
     position: relative;
     line-height: 1.5;
 }
 
-.form-control, .form-select {
-    border: 1px solid #dee2e6;
-    padding: 0.6rem 0.75rem;
-}
-
-    .form-control:focus {
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
-        border-color: #0d6efd;
-    }
-
+/* ============ BUTTON GROUP ============ */
 .btn-group .btn {
     border: none;
     padding: 5px 15px;
 }
 
-    .btn-group .btn.active {
-        background-color: #fff !important;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+.btn-group .btn.active {
+    background-color: #fff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
+/* ============ PAGINATION ============ */
+.pagination .page-link {
+    border: none;
+    color: #6c757d;
+    margin: 0 2px;
+    border-radius: 4px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    font-weight: bold;
+    border: 1px solid #fca5a5;
+}
+
+/* ============ UTILITIES ============ */
 .italic {
     font-style: italic;
 }
@@ -316,48 +370,29 @@ main {
     border-radius: 1rem !important;
 }
 
-
-
-/* Color & Utilities */
-.bg-purple-light {
-    background-color: #f8f5ff !important;
-}
-
-.text-purple {
-    color: #8a70d6 !important;
-}
-
-.bg-warning-subtle {
-    background-color: #fff9eb !important;
-}
-
-.italic {
-    font-style: italic;
-}
-
 .transition {
     transition: all 0.2s;
 }
 
 .hover-shadow:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* Timeline Design */
+/* ============ TIMELINE DESIGN ============ */
 .timeline {
     position: relative;
     padding-left: 20px;
 }
 
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 4px;
-        top: 5px;
-        height: 90%;
-        width: 2px;
-        background: #e9ecef;
-    }
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 5px;
+    height: 90%;
+    width: 2px;
+    background: #e9ecef;
+}
 
 .timeline-item {
     position: relative;
@@ -380,26 +415,38 @@ main {
     left: -22px;
 }
 
-/* Icons and Cards */
-.file-icon {
-    width: 45px;
-    height: 45px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-}
-
-.rounded-4 {
-    border-radius: 1rem !important;
-}
-
-.btn-info {
-    background-color: #00a9e0;
-    border-color: #00a9e0;
+/* ============ CARDS ============ */
+.card {
+    border-radius: 12px;
 }
 
 textarea.form-control {
     background-color: #fcfcfd;
+}
+
+/* ============ BORDER UTILITIES ============ */
+.border-primary {
+    border-color: #b91c1c !important;
+}
+
+/* Text colors for brand */
+.text-primary {
+    color: #b91c1c !important;
+}
+
+a.text-primary:hover {
+    color: #991b1b !important;
+}
+
+/* Header logout button - light theme */
+.header .btn-outline-danger {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: transparent;
+}
+
+.header .btn-outline-danger:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+    color: #ffffff;
 }

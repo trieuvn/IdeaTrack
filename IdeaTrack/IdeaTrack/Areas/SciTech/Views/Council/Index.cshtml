@@ -1,0 +1,183 @@
+@model IEnumerable<IdeaTrack.Models.Initiative>
+
+@{
+    ViewData["Title"] = "Council Dashboard";
+}
+
+<div class="container py-4">
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Council Dashboard</h2>
+            <p class="text-muted mb-0">Manage and approve initiatives passed by Faculty.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="@Url.Action("ManageBoards", "Council", new { Area = "SciTech" })" class="btn btn-outline-secondary">
+                <i class="fas fa-users-cog me-1"></i>Manage Boards
+            </a>
+        </div>
+    </div>
+
+    <!-- STATS CARDS -->
+    <div class="row g-4 mb-4">
+        <!-- Awaiting -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-start border-4 border-warning h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1 text-uppercase fw-bold">Awaiting Council</p>
+                            <h2 class="fw-bold mb-0 text-warning">@ViewBag.CountAwaiting</h2>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 p-3 rounded-circle text-warning">
+                            <i class="fas fa-hourglass-half fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approved -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-start border-4 border-success h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1 text-uppercase fw-bold">Approved by Council</p>
+                            <h2 class="fw-bold mb-0 text-success">@ViewBag.CountApproved</h2>
+                        </div>
+                        <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success">
+                            <i class="fas fa-check-circle fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rejected/Revision -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-start border-4 border-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1 text-uppercase fw-bold">Rejected / Revision</p>
+                            <h2 class="fw-bold mb-0 text-danger">@ViewBag.CountRejected</h2>
+                        </div>
+                        <div class="bg-danger bg-opacity-10 p-3 rounded-circle text-danger">
+                            <i class="fas fa-times-circle fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH & FILTER -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-center">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" name="searchString" class="form-control border-start-0 ps-0" 
+                               placeholder="Search by initiative status code, title..." value="@ViewBag.SearchString">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- INITIATIVE LIST TABLE -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0">Initiatives List</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Code</th>
+                        <th>Title</th>
+                        <th>Proposer</th>
+                        <th>Department</th>
+                        <th>Submitted Date</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="fas fa-folder-open fs-1 d-block mb-3 opacity-25"></i>
+                                No initiatives found matching the criteria.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-semibold text-primary">@item.InitiativeCode</td>
+                                <td>
+                                    <div class="fw-medium text-dark text-truncate" style="max-width: 250px;" title="@item.Title">
+                                        @item.Title
+                                    </div>
+                                    <small class="text-muted text-uppercase" style="font-size: 0.75rem;">@item.Category?.Name</small>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle sm bg-secondary-subtle text-secondary me-2">
+                                            @(item.HidePersonalInfo ? "?" : item.Creator?.FullName.Substring(0, 1))
+                                        </div>
+                                        <span>@(item.HidePersonalInfo ? "Anonymous Author" : item.Creator?.FullName)</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        @(item.HidePersonalInfo ? "Anonymous Dept" : item.Department?.Name)
+                                    </span>
+                                </td>
+                                <td>@(item.SubmittedDate?.ToString("dd/MM/yyyy") ?? item.CreatedAt.ToString("dd/MM/yyyy"))</td>
+                                <td>
+                                    @switch (item.Status)
+                                    {
+                                        case IdeaTrack.Models.InitiativeStatus.Faculty_Approved:
+                                            <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Awaiting Council</span>
+                                            break;
+                                        case IdeaTrack.Models.InitiativeStatus.Evaluating:
+                                            <span class="badge bg-primary"><i class="fas fa-spinner fa-spin me-1"></i>Evaluating</span>
+                                            break;
+                                        case IdeaTrack.Models.InitiativeStatus.Pending_Final:
+                                        case IdeaTrack.Models.InitiativeStatus.Approved:
+                                            <span class="badge bg-success"><i class="fas fa-check me-1"></i>Approved</span>
+                                            break;
+                                        case IdeaTrack.Models.InitiativeStatus.Revision_Required:
+                                            <span class="badge bg-info text-dark"><i class="fas fa-undo me-1"></i>Revision</span>
+                                            break;
+                                        case IdeaTrack.Models.InitiativeStatus.Rejected:
+                                            <span class="badge bg-danger"><i class="fas fa-times me-1"></i>Rejected</span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary">@item.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                    <td class="text-end pe-4">
+                                        <a asp-area="SciTech" asp-controller="Port" asp-action="Result" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-chart-bar me-1"></i>View Result
+                                        </a>
+                                    </td>
+                                </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -4,7 +4,7 @@ namespace IdeaTrack.Areas.Councils.Models
 {
     public class GradingVM
     {
-        // --- PHAN 1: THONG TIN HIEN THI (READ-ONLY) ---
+        // --- PART 1: DISPLAY INFORMATION (READ-ONLY) ---
         public int AssignmentId { get; set; }
         public string InitiativeTitle { get; set; } = string.Empty;
         public string InitiativeCode { get; set; } = string.Empty;
@@ -13,38 +13,45 @@ namespace IdeaTrack.Areas.Councils.Models
         public string Description { get; set; } = string.Empty;
         public DateTime? DueDate { get; set; }
         
-        // Information vong cham
+        // Evaluation round information
         public int RoundNumber { get; set; } = 1;
         public bool IsLocked { get; set; } = false; // True if already submitted
         
-        // Danh sach file dinh kem de tai ve
+        // Attached files for download
         public List<InitiativeFile> Files { get; set; } = new();
 
-        // --- PHAN 2: FORM CHAM DIEM (INPUT) ---
-        // Danh sach cac dong cham diem
+        // --- PART 2: GRADING FORM (INPUT) ---
+        // List of grading criteria
         public List<GradingItem> CriteriaItems { get; set; } = new();
         public decimal MaxTotalScore => CriteriaItems.Sum(c => c.MaxScore);
 
-        public string? GeneralComment { get; set; } // Nhan xet chung
+        public string? GeneralComment { get; set; } // Overall comment
+        
+        // Detailed Feedback
+        public string? Strengths { get; set; }
+        public string? Limitations { get; set; }
+        public string? Recommendations { get; set; }
 
-        // Gia tri tu form: "SaveDraft" | "Submit"
+        // Form action: "SaveDraft" | "Submit"
         public string SubmitAction { get; set; } = "SaveDraft";
         
-        // Co vong truoc do hay khong
+        // Whether there are previous rounds
         public bool HasPreviousRounds { get; set; } = false;
+
+        public bool HidePersonalInfo { get; set; } // Add this
     }
 
     public class GradingItem
     {
-        // Information tieu chi (Lay tu Template)
+        // Criteria information (from Template)
         public int CriteriaId { get; set; }
         public string CriteriaName { get; set; } = "";
         public string Description { get; set; } = "";
         public decimal MaxScore { get; set; }
 
-        // Diem nguoi dung nhap vao
+        // User-entered score
         public decimal ScoreGiven { get; set; }
-        public string? Note { get; set; } // Nhan xet tung phan
+        public string? Note { get; set; } // Per-criterion notes
     }
     
     /// <summary>

@@ -1,77 +1,424 @@
 ﻿@model IdeaTrack.Areas.Councils.Models.AssignedListVM
+@{
+    ViewData["Title"] = "Assigned Initiatives";
+    Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
+    var pendingCount = Model.Items.Count(i => i.Status != IdeaTrack.Models.AssignmentStatus.Completed);
+    var completedCount = Model.Items.Count(i => i.Status == IdeaTrack.Models.AssignmentStatus.Completed);
+}
 
-    <div class="dashboard-container">
-        <nav class="breadcrumb">Dashboard &nbsp; <span></span> &nbsp; Assigned Initiatives</nav>
-        <div class="header-main">
+<style>
+    /* Page Header */
+    .page-header-section {
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+        border-radius: var(--radius-xl);
+        padding: 2rem 2.5rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .page-header-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+    }
+    
+    .page-header-section h4 {
+        color: #fff;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        font-size: 1.75rem;
+    }
+    
+    .page-header-section p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0;
+    }
+    
+    .header-stats {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .stat-pill {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        padding: 0.625rem 1.25rem;
+        border-radius: var(--radius-full);
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .stat-pill.warning {
+        background: rgba(234, 179, 8, 0.25);
+    }
+    
+    .stat-pill.success {
+        background: rgba(16, 185, 129, 0.25);
+    }
+    
+    /* Filter Card */
+    .filter-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--border-color);
+    }
+    
+    .filter-card .form-control {
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        padding: 0.625rem 1rem;
+        transition: all 0.2s ease;
+    }
+    
+    .filter-card .form-control:focus {
+        border-color: var(--brand-primary);
+        box-shadow: 0 0 0 3px rgba(69, 10, 10, 0.1);
+    }
+    
+    .filter-card .input-group-text {
+        background: var(--bg-light);
+        border: 1px solid var(--border-color);
+        border-right: none;
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+        color: var(--text-secondary);
+    }
+    
+    .filter-card .input-group .form-control {
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    
+    /* Filter Tabs */
+    .filter-tabs {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .filter-tab {
+        padding: 0.5rem 1.25rem;
+        border-radius: var(--radius-md);
+        font-weight: 500;
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        background: var(--bg-light);
+    }
+    
+    .filter-tab:hover {
+        border-color: var(--brand-primary);
+        color: var(--brand-primary);
+    }
+    
+    .filter-tab.active {
+        background: var(--brand-primary);
+        color: #fff;
+        border-color: var(--brand-primary);
+    }
+    
+    /* Enhanced Table Card */
+    .table-card {
+        background: var(--bg-card);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+    }
+    
+    .table-card .table {
+        margin-bottom: 0;
+    }
+    
+    .table-card .table thead {
+        background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+    }
+    
+    .table-card .table thead th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.75px;
+        color: var(--text-secondary);
+        padding: 1rem 1.25rem;
+        border-bottom: 2px solid var(--border-color);
+        white-space: nowrap;
+    }
+    
+    .table-card .table tbody td {
+        padding: 1rem 1.25rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.15s ease;
+    }
+    
+    .table-card .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .table-card .table tbody tr {
+        transition: all 0.15s ease;
+    }
+    
+    .table-card .table tbody tr:hover {
+        background: linear-gradient(90deg, rgba(190,18,60,0.03) 0%, rgba(255,255,255,0) 100%);
+    }
+    
+    .table-card .table tbody tr:hover td:first-child {
+        border-left: 3px solid var(--brand-primary);
+        padding-left: calc(1.25rem - 3px);
+    }
+    
+    .initiative-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+    
+    .initiative-category {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+    }
+    
+    .code-badge {
+        color: var(--brand-primary);
+        font-family: 'SF Mono', Monaco, monospace;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        background: var(--brand-light);
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--radius-sm);
+    }
+    
+    .date-text {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+    
+    .date-text.danger {
+        color: var(--danger);
+        font-weight: 600;
+    }
+    
+    /* Score Column */
+    .score-display {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .score-value {
+        font-weight: 700;
+        font-size: 0.9375rem;
+        color: var(--brand-primary);
+    }
+    
+    .score-max {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+    
+    .score-pending {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+        font-style: italic;
+    }
+    
+    /* Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.375rem 0.875rem;
+        border-radius: var(--radius-full);
+        font-size: 0.8125rem;
+        font-weight: 500;
+    }
+    
+    .status-badge.success {
+        background: var(--success-light);
+        color: var(--success);
+    }
+    
+    .status-badge.info {
+        background: var(--info-light);
+        color: var(--info);
+    }
+    
+    .status-badge.warning {
+        background: var(--warning-light);
+        color: var(--warning);
+    }
+    
+    /* Action Buttons */
+    .btn-action {
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.8125rem;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        text-decoration: none;
+    }
+    
+    .btn-action.primary {
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-medium));
+        color: #fff;
+        border: none;
+        box-shadow: 0 2px 4px rgba(190,18,60,0.2);
+    }
+    
+    .btn-action.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(190,18,60,0.35);
+        color: #fff;
+    }
+    
+    .btn-action.outline-success {
+        background: transparent;
+        color: var(--success);
+        border: 1.5px solid var(--success);
+    }
+    
+    .btn-action.outline-success:hover {
+        background: var(--success);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+    
+    /* Empty State */
+    .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--success);
+        opacity: 0.7;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-state p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+    
+    /* Pagination */
+    .pagination-wrapper {
+        padding: 1.25rem 1.5rem;
+        background: linear-gradient(180deg, #f8fafc, #fff);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .pagination .page-link {
+        border-radius: var(--radius-md);
+        margin: 0 0.125rem;
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        padding: 0.5rem 0.875rem;
+        transition: all 0.2s ease;
+    }
+    
+    .pagination .page-link:hover {
+        background: var(--brand-primary);
+        color: #fff;
+        border-color: var(--brand-primary);
+        transform: translateY(-1px);
+    }
+    
+    .pagination .page-item.active .page-link {
+        background: var(--brand-primary);
+        border-color: var(--brand-primary);
+        color: #fff;
+    }
+    
+    .pagination .page-item.disabled .page-link {
+        background: var(--bg-light);
+        color: var(--text-muted);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="page-header-section">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h1 class="page-title">Assigned Initiatives</h1>
-                <p class="subtitle">Track and evaluate your assigned initiatives.</p>
+                <h4><i class="bi bi-list-task me-2"></i>Assigned Initiatives</h4>
+                <p>Track and evaluate initiatives assigned to you for review.</p>
             </div>
-            <div class="header-actions">
-                <form method="get" action="/Councils/Page/AssignedInitiatives" style="display:inline-flex;gap:8px;">
+            <div class="header-stats">
+                <div class="stat-pill warning">
+                    <i class="bi bi-hourglass-split"></i>
+                    <span>@pendingCount Pending</span>
+                </div>
+                <div class="stat-pill success">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>@completedCount Completed</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-card">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <form method="get" class="input-group">
                     <input type="hidden" name="status" value="@Model.Status" />
-                    <div class="search-box">
-                        <span class="material-icons">search</span>
-                        <input type="text" name="keyword" value="@Model.Keyword" placeholder="Search initiatives...">
-                    </div>
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Search initiatives by name or code...">
                 </form>
             </div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card progress-card">
-                <div class="stat-header">
-                    <div class="progress-icon"><span class="material-icons">sync</span></div>
-                    <div>
-                        <h4 style="transform:translateY(12px);">Evaluation Progress</h4>
-                        <p>@Model.TotalCount initiatives total</p>
-                    </div>
-                    <div class="stat-value"></div>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 25%;background-color:var(--primary-blue);"></div>
-                </div>
-            </div>
-
-            <div class="stat-card info-card">
-                <h4>Current View</h4>
-                <div class="big-number">@Model.Items.Count <span>initiatives</span></div>
-                <div class="warning-text">
-                    <span class="material-icons">info</span> @Model.Status filter active
+            <div class="col-md-7 d-flex gap-2 justify-content-end">
+                <div class="filter-tabs">
+                    <a href="/Councils/Page/AssignedInitiatives?status=All&keyword=@Model.Keyword" 
+                       class="filter-tab @(Model.Status == "All" ? "active" : "")">
+                        <i class="bi bi-grid-3x3-gap me-1"></i>All
+                    </a>
+                    <a href="/Councils/Page/AssignedInitiatives?status=Assigned&keyword=@Model.Keyword" 
+                       class="filter-tab @(Model.Status == "Assigned" ? "active" : "")">
+                        <i class="bi bi-clock me-1"></i>Pending
+                    </a>
+                    <a href="/Councils/Page/AssignedInitiatives?status=Completed&keyword=@Model.Keyword" 
+                       class="filter-tab @(Model.Status == "Completed" ? "active" : "")">
+                        <i class="bi bi-check2-circle me-1"></i>Completed
+                    </a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="table-card">
-            <div class="table-filters">
-                <div class="tabs">
-                    <a href="/Councils/Page/AssignedInitiatives?status=All&keyword=@Model.Keyword&sortOrder=@Model.SortOrder" class="tab @(Model.Status == "All" ? "active" : "")">All Initiatives</a>
-                    <a href="/Councils/Page/AssignedInitiatives?status=Assigned&keyword=@Model.Keyword&sortOrder=@Model.SortOrder" class="tab @(Model.Status == "Assigned" ? "active" : "")">Assigned</a>
-                    <a href="/Councils/Page/AssignedInitiatives?status=Completed&keyword=@Model.Keyword&sortOrder=@Model.SortOrder" class="tab @(Model.Status == "Completed" ? "active" : "")">Completed</a>
-                </div>
-                <div class="sort-section">
-                    <form method="get" action="/Councils/Page/AssignedInitiatives" style="display:inline;">
-                        <input type="hidden" name="status" value="@Model.Status" />
-                        <input type="hidden" name="keyword" value="@Model.Keyword" />
-                        Sort by:
-                        <select name="sortOrder" onchange="this.form.submit()" style="border:none;background:transparent;font-weight:700;cursor:pointer;">
-                            <option value="Deadline" @(Model.SortOrder == "Deadline" ? "selected" : "")>Deadline</option>
-                            <option value="Newest" @(Model.SortOrder == "Newest" ? "selected" : "")>Date Assigned (Newest)</option>
-                        </select>
-                        <span class="material-icons">expand_more</span>
-                    </form>
-            </div>
-            </div>
-
-            <table class="custom-table">
+    <!-- Results Table -->
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>INITIATIVE TITLE</th>
+                        <th>Initiative</th>
                         <th>ID</th>
-                        <th>DATE ASSIGNED</th>
-                        <th>DUE DATE</th>
-                        <th>STATUS</th>
-                        <th>ACTION</th>
+                        <th>Score</th>
+                        <th>Date Assigned</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -79,58 +426,124 @@
                     {
                         foreach (var item in Model.Items)
                         {
-                        <tr>
-                        <td><strong>@item.Title</strong></td>
-                        <td class="text-muted">#@item.InitiativeCode</td>
-                        <td>@item.AssignedDate.ToString("MMM dd, yyyy")</td>
-                        <td class="@(item.IsDueSoon ? "text-danger" : "")">@(item.DueDate?.ToString("MMM dd, yyyy") ?? "-")</td>
-                        <td>
-                            @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
-                            {
-                                <span class="badge badge-completed">? Completed</span>
-                            }
-                            else
-                            {
-                                <span class="badge badge-assigned">? Assigned</span>
-                            }
-                        </td>
-                        <td>
-                            @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
-                            {
-                                <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-view">View Result</a>
-                            }
-                            else
-                            {
-                                <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-evaluate">Evaluate</a>
-                            }
-                        </td>
-                    </tr>
+                            var isDueSoon = item.DueDate.HasValue && item.DueDate.Value <= DateTime.Now.AddDays(3) && item.Status != IdeaTrack.Models.AssignmentStatus.Completed;
+                            <tr>
+                                <td>
+                                    <div class="initiative-title">@item.Title</div>
+                                    <div class="initiative-category">@item.CategoryName</div>
+                                </td>
+                                <td>
+                                    <span class="code-badge">#@item.InitiativeCode</span>
+                                </td>
+                                <td>
+                                    @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed && item.FinalScore.HasValue)
+                                    {
+                                        <div class="score-display">
+                                            <span class="score-value">@item.FinalScore.Value.ToString("0.#")</span>
+                                            <span class="score-max">/ 100</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="score-pending">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="date-text">
+                                        <i class="bi bi-calendar3 me-1"></i>@item.AssignedDate.ToString("MMM dd, yyyy")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="date-text @(isDueSoon ? "danger" : "")">
+                                        @if (isDueSoon)
+                                        {
+                                            <i class="bi bi-exclamation-triangle me-1"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-calendar-check me-1"></i>
+                                        }
+                                        @(item.DueDate?.ToString("MMM dd, yyyy") ?? "—")
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
+                                    {
+                                        <span class="status-badge success">
+                                            <i class="bi bi-check-circle-fill"></i>Completed
+                                        </span>
+                                    }
+                                    else if (item.Status == IdeaTrack.Models.AssignmentStatus.InProgress)
+                                    {
+                                        <span class="status-badge info">
+                                            <i class="bi bi-pencil-fill"></i>In Progress
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge warning">
+                                            <i class="bi bi-clock-fill"></i>Assigned
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
+                                    {
+                                        <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-action outline-success">
+                                            <i class="bi bi-eye"></i>View
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-action primary">
+                                            <i class="bi bi-pencil-square"></i>Score
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
                         }
                     }
                     else
                     {
-                    <tr>
-                        <td colspan="6" class="text-muted" style="text-align:center;padding:40px;">No initiatives found.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <i class="bi bi-check-circle"></i>
+                                    <p>No initiatives found. You're all caught up!</p>
+                                </div>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
-
-            @if (Model.TotalPages > 1)
-            {
-            <div class="pagination">
-                <a href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&sortOrder=@Model.SortOrder&page=@(Model.CurrentPage - 1)"
-                   class="page-link @(Model.CurrentPage <= 1 ? "disabled" : "")">Prev</a>
-
-                @for (var p = 1; p <= Model.TotalPages; p++)
-                {
-                    <a href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&sortOrder=@Model.SortOrder&page=@p"
-                       class="page-link @(p == Model.CurrentPage ? "active" : "")">@p</a>
-                }
-
-                <a href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&sortOrder=@Model.SortOrder&page=@(Model.CurrentPage + 1)"
-                   class="page-link @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">Next</a>
-            </div>
-            }
         </div>
+
+        <!-- Pagination -->
+        @if (Model.TotalPages > 1)
+        {
+            <div class="pagination-wrapper">
+                <small class="text-muted">Page @Model.CurrentPage of @Model.TotalPages</small>
+                <nav>
+                    <ul class="pagination mb-0">
+                        <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")">
+                            <a class="page-link" href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&page=@(Model.CurrentPage - 1)">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                        @for (var p = 1; p <= Model.TotalPages; p++)
+                        {
+                            <li class="page-item @(p == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&page=@p">@p</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.CurrentPage >= Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="/Councils/Page/AssignedInitiatives?status=@Model.Status&keyword=@Model.Keyword&page=@(Model.CurrentPage + 1)">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        }
     </div>
+</div>

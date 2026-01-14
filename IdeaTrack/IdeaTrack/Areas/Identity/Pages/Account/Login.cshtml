@@ -2,7 +2,7 @@
 @model LoginModel
 @{
     Layout = null;
-    ViewData["Title"] = "Login | UEF LMS";
+    ViewData["Title"] = "Login | UEF Teacher Portal";
 }
 
 <!DOCTYPE html>
@@ -15,230 +15,337 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome for icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="~/images/logo-uef.ico" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <style>
         body, html {
             height: 100%;
             margin: 0;
             font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
         }
 
-        .background {
+        .background-container {
             background-image: url('/images/login-background.jpg');
             background-size: cover;
             background-position: center;
             height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
         }
-
-        .login-overlay {
+        
+        .background-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: rgba(0, 0, 0, 0.25); 
         }
 
         .login-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            padding: 40px 30px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
         }
 
         .uef-logo {
-            max-height: 120px;
-            margin-bottom: 20px;
+            height: 70px; 
+            width: auto;
         }
 
-        .btn-uef-id {
-            background: #f8f9fa;
-            border: 2px solid #dee2e6;
-            border-radius: 15px;
+        .qs-logo {
+            height: 45px; 
+            width: auto;
+            /* Ensure no background interference */
+            background-color: transparent; 
+        }
+
+        .portal-title {
+            color: #0065b3; /* UEF Blue */
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .portal-alert {
+            background-color: #e3f2fd; /* Light Blue */
+            color: #0d6efd; 
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            text-align: center;
             padding: 15px;
-            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        
+        .portal-alert a {
+            font-weight: 600;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .form-control-lg {
+            border-radius: 6px;
+            font-size: 0.95rem;
+            height: 48px;
+            border: 1px solid #dee2e6;
+            padding-left: 15px;
             color: #495057;
         }
 
-        .form-control-custom {
-            border-radius: 15px;
-            padding: 15px 15px 15px 50px;
-            font-size: 1.1rem;
-            height: auto;
+        .form-control-lg:focus {
+            box-shadow: none;
+            border-color: #86b7fe;
         }
 
-        .input-group-text {
+        .password-toggle {
             position: absolute;
-            left: 10px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 10;
-            background: transparent;
             border: none;
-            color: #6c757d;
+            background: none;
+            color: #adb5bd;
+            cursor: pointer;
+            padding: 0;
         }
 
-        .btn-login {
-            background: #003087; /* UEF dark blue */
+        .btn-signin {
+            background-color: #0065b3;
             border: none;
-            border-radius: 15px;
-            padding: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            border-radius: 6px;
+            height: 48px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            width: 100%;
+            color: white;
+            text-transform: uppercase;
+            margin-top: 15px;
         }
 
-
-        .bottom-right-tools {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 999;
+        .btn-signin:hover {
+            background-color: #005091;
         }
 
-        /* Cookies */
-        .btn-cookie {
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 0.9rem;
+        .divider {
             display: flex;
             align-items: center;
-            gap: 8px;
+            text-align: center;
+            margin: 25px 0;
+            color: #6c757d;
+            font-size: 0.9rem;
         }
 
-        /* Language */
-        .lang-switch .lang-btn {
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .divider::before {
+            margin-right: 15px;
+        }
+
+        .divider::after {
+            margin-left: 15px;
+        }
+
+        .btn-google {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            height: 48px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 500;
+            color: #0065b3; /* Blue text for Google */
+            transition: all 0.2s;
+        }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .google-icon {
+            height: 24px;
+            width: auto;
+        }
+
+        .help-box {
+            background-color: #e9ecef;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 30px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .help-box a {
+            color: #0065b3;
+            text-decoration: none;
+        }
+
+        .help-box a:hover {
+            text-decoration: underline;
+        }
+
+        .link-forgot {
+            color: #28a745; /* Standard Green */
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .link-forgot:hover {
+            text-decoration: underline;
+            color: #157347;
+        }
+        
+        .language-container {
+             text-align: center;
+             margin-top: 30px;
+             position: absolute;
+             bottom: 30px;
+             left: 0; 
+             right: 0;
+             z-index: 2;
+        }
+        
+        .lang-dropdown-btn {
             background: white;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 20px;
+            border-radius: 4px;
             font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-        }
-
-        .lang-switch .dropdown-menu {
-            border-radius: 12px;
-            min-width: 140px;
+            color: #495057;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
     </style>
 </head>
 <body>
-    <div class="background">
-        <div class="login-overlay">
-            <div class="login-card text-center">
-                <!-- UEF Official Logo -->
-                <img src="https://upload.wikimedia.org/wikipedia/en/7/77/Ho_Chi_Minh_City_University_of_Economics_and_Finance_UEF_Logo.png"
-                     alt="UEF - University of Economics and Finance" class="uef-logo img-fluid" />
+    <div class="background-container">
+        <div class="background-overlay"></div>
+        
+        <div class="login-card">
+            <!-- Logos -->
+            <div class="logos">
+                <img src="https://upload.wikimedia.org/wikipedia/en/7/77/Ho_Chi_Minh_City_University_of_Economics_and_Finance_UEF_Logo.png" alt="UEF Logo" class="uef-logo">
+                <img src="/images/logo-qsstar.png" alt="QS Stars" class="qs-logo">
+            </div>
 
-                <p class="text-muted mb-4">Log in using your account on:</p>
+            <!-- Title -->
+            <h3 class="portal-title">UEF ID</h3>
 
-                <!-- Login with Google Button -->
-                <form asp-page="/Account/ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                    <button type="submit" name="provider" value="Google" class="btn btn-uef-id w-100 d-flex align-items-center justify-content-center mb-4">
-                        <img src="~/icons/logo-uef.ico" alt="" width="50" height="40" class="me-3">
-                        Login with Google
+            <!-- Alert Box -->
+            <div class="portal-alert">
+                Sign in to your UEF ID account to access <br> <strong>UEF Teacher Portal</strong>
+            </div>
+
+            <!-- Login Form -->
+            <form id="account" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger small text-center mb-3"></div>
+
+                <div class="mb-3">
+                    <input asp-for="Input.UsernameOrEmail" class="form-control form-control-lg" placeholder="Username or email" required />
+                    <span asp-validation-for="Input.UsernameOrEmail" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3 position-relative">
+                    <input asp-for="Input.Password" class="form-control form-control-lg" placeholder="Password" required />
+                    <button type="button" id="togglePassword" class="password-toggle">
+                        <i class="far fa-eye"></i>
                     </button>
-                </form>
+                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                </div>
 
-                <hr class="my-4">
-
-                <!-- Login Form -->
-                <form method="post">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                    <div class="mb-4 position-relative">
-                        <span class="input-group-text"><i class="fas fa-user fa-lg"></i></span>
-                        <input asp-for="Input.UsernameOrEmail" class="form-control form-control-custom" placeholder="Username or Email" autocomplete="username" required />
-                        <span asp-validation-for="Input.UsernameOrEmail" class="text-danger"></span>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="Input.RememberMe" id="rememberMe">
+                        <label class="form-check-label text-muted small" for="rememberMe">
+                            Remember me
+                        </label>
                     </div>
+                    <a id="forgot-password" asp-page="./ForgotPassword" class="link-forgot">Forgot Password?</a>
+                </div>
 
-                    <div class="mb-4 position-relative">
-                        <span class="input-group-text"><i class="fas fa-lock fa-lg"></i></span>
-                        <input asp-for="Input.Password" class="form-control form-control-custom" placeholder="Password" autocomplete="current-password" required />
-                        <button type="button" id="togglePassword" class="position-absolute end-0 top-50 translate-middle-y border-0 bg-transparent pe-3">
-                            <i class="fas fa-eye fa-lg text-muted"></i>
-                        </button>
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
+                <button type="submit" class="btn btn-signin">SIGN IN</button>
+            </form>
 
-                    <button type="submit" class="btn btn-login text-white w-100">Log in</button>
-                </form>
+            <!-- Divider -->
+            <div class="divider">Or sign in with</div>
+
+            <!-- Google Button -->
+            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                <button type="submit" name="provider" value="Google" class="btn btn-google" title="Log in using your Google account">
+                   <span>Google</span>
+                   <img src="/images/logo-google.png" alt="G" class="google-icon">
+                </button>
+            </form>
+
+            <!-- Footer Help -->
+            <div class="help-box">
+                If you need help, visit <a href="https://help.uef.edu.vn" target="_blank">help.uef.edu.vn</a>.
             </div>
         </div>
 
-        <div class="bottom-right-tools">
-
-            <!-- Cookies -->
-            <button type="button"
-                    class="btn btn-dark btn-cookie"
-                    data-modal="alert">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 13V15"></path>
-                    <circle cx="12" cy="9" r="1" fill="currentColor"></circle>
-                    <circle cx="12" cy="12" r="7.25" stroke="currentColor"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></circle>
-                </svg>
-                <span>Cookies</span>
-            </button>
-            <div class="lang-switch dropdown">
-                <button class="lang-btn dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="fas fa-globe"></i>
-                    <span>EN</span>
+        <!-- Language Selector -->
+        <div class="language-container">
+            <div class="dropdown d-inline-block">
+                <button class="lang-dropdown-btn dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    English
                 </button>
-
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <a class="dropdown-item" href="?lang=en">
-                            English
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="?lang=vi">
-                            Vietnamese
-                        </a>
-                    </li>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">English</a></li>
+                    <li><a class="dropdown-item" href="#">Vietnamese</a></li>
                 </ul>
             </div>
-
         </div>
     </div>
 
-    <!-- Bootstrap + Font Awesome JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        // Toggle password visibility
+        // Toggle password
         document.getElementById('togglePassword')?.addEventListener('click', function () {
-            const pwd = document.querySelector('input[placeholder="Password"]');
+            const pwd = document.querySelector('input[type="password"], input[type="text"][placeholder="Password"]');
             const icon = this.querySelector('i');
             if (pwd.type === 'password') {
                 pwd.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
             } else {
                 pwd.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         });
     </script>
-
     @await Html.PartialAsync("_ValidationScriptsPartial")
 </body>
 </html>

@@ -34,6 +34,7 @@ namespace IdeaTrack.Areas.Councils.Models
         public DateTime AssignedDate { get; set; }
         public DateTime? DueDate { get; set; }
         public AssignmentStatus Status { get; set; }
+        public decimal? FinalScore { get; set; } // Score achieved for this assignment
 
         public bool IsDueSoon => Status != AssignmentStatus.Completed
                                  && DueDate.HasValue

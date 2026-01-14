@@ -28,39 +28,16 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         }
 
         /// <summary>
-        /// Main audit log viewer
+        /// Main audit log viewer - loads all recent logs for client-side DataTables
         /// </summary>
-        public async Task<IActionResult> Index(string? table, int? targetId, int? userId, int page = 1)
+        public async Task<IActionResult> Index()
         {
-            const int pageSize = 25;
-
-            var query = _context.SystemAuditLogs
+            // Load recent audit logs (limit 500 for performance)
+            var logs = await _context.SystemAuditLogs
                 .AsNoTracking()
                 .Include(l => l.User)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(table))
-            {
-                query = query.Where(l => l.TargetTable == table);
-            }
-
-            if (targetId.HasValue)
-            {
-                query = query.Where(l => l.TargetId == targetId.Value);
-            }
-
-            if (userId.HasValue)
-            {
-                query = query.Where(l => l.UserId == userId.Value);
-            }
-
-            var totalCount = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-            var logs = await query
                 .OrderByDescending(l => l.Timestamp)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
+                .Take(500)
                 .Select(l => new AuditLogEntry
                 {
                     Id = l.Id,
@@ -74,21 +51,6 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     IpAddress = l.IpAddress
                 })
                 .ToListAsync();
-
-            // Get distinct tables for filter
-            var tables = await _context.SystemAuditLogs
-                .Select(l => l.TargetTable)
-                .Distinct()
-                .OrderBy(t => t)
-                .ToListAsync();
-
-            ViewBag.Tables = tables;
-            ViewBag.SelectedTable = table;
-            ViewBag.SelectedTargetId = targetId;
-            ViewBag.SelectedUserId = userId;
-            ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = totalPages;
-            ViewBag.TotalCount = totalCount;
 
             return View(logs);
         }
