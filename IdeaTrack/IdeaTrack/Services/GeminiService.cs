@@ -6,25 +6,13 @@ namespace IdeaTrack.Services
     public class GeminiService
     {
         private readonly HttpClient _http = new();
-        private readonly string _apiKey = "AIzaSyCcC-GOYOwXsj3jyQezRdVYyTFZFqC2kNw";
+        private readonly string _apiKey = "AIzaSyDu3fmo3r1Awk2ZAbbnL7HIVHVfZIy0J_0";
 
         // Prompt tiếng Việt – rõ nhiệm vụ + giới hạn
         private const string SUMMARY_PROMPT = @"
-Bạn là trợ lý AI chuyên tóm tắt tài liệu cho hội đồng đánh giá.
-
-NHIỆM VỤ:
-Tóm tắt nội dung tài liệu bên dưới với ĐỘ DÀI TỐI ĐA 200 TỪ.
-
-YÊU CẦU BẮT BUỘC:
-- Nếu bản tóm tắt vượt quá 200 từ, hãy tự rút gọn lại.
-- Chỉ tập trung vào mục tiêu, ý tưởng chính, giải pháp đề xuất và nội dung cốt lõi.
-- Loại bỏ ví dụ, dẫn chứng, tài liệu tham khảo và chi tiết phụ.
-- Không thêm nhận xét cá nhân hoặc suy đoán.
-- Viết bằng tiếng Việt rõ ràng, mạch lạc, trang trọng.
-- Chỉ xuất ra MỘT đoạn văn duy nhất.
-
-NỘI DUNG TÀI LIỆU:
-";
+Bạn là trợ lý AI tóm tắt tài liệu cho hội đồng đánh giá.  
+Tóm tắt tối đa 200 từ, chỉ tập trung mục tiêu, ý tưởng chính và giải pháp, bỏ chi tiết phụ.  
+NỘI DUNG:";
 
         public async Task<string> SummarizeAsync(string content)
         {
@@ -39,14 +27,19 @@ NỘI DUNG TÀI LIỆU:
             var body = new
             {
                 contents = new[]
+     {
+        new
+        {
+            parts = new[]
+            {
+                new { text = prompt }
+            }
+        }
+    },
+                generationConfig = new
                 {
-                    new
-                    {
-                        parts = new[]
-                        {
-                            new { text = prompt }
-                        }
-                    }
+                    temperature = 0.3,
+                    maxOutputTokens = 500
                 }
             };
 
