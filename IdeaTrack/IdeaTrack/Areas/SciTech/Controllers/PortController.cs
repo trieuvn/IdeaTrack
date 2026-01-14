@@ -315,7 +315,8 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 Status = initiative.Status.ToString(),
                 ConsolidatedStrengths = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Strengths)).Select(m => $"- {m.MemberName}: {m.Strengths}")),
                 ConsolidatedLimitations = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Limitations)).Select(m => $"- {m.MemberName}: {m.Limitations}")),
-                ConsolidatedRecommendations = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Recommendations)).Select(m => $"- {m.MemberName}: {m.Recommendations}"))
+                ConsolidatedRecommendations = string.Join("\n\n", memberScores.Where(m => !string.IsNullOrWhiteSpace(m.Recommendations)).Select(m => $"- {m.MemberName}: {m.Recommendations}")),
+                HidePersonalInfo = initiative.HidePersonalInfo
             };
 
             // RANK CALCULATION (Threshold-based)
@@ -371,6 +372,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 Code = initiative.Department.Code,
                 Description = initiative.Description,
                 Category = initiative.Category.Name,
+                HidePersonalInfo = initiative.HidePersonalInfo,
                 Files = initiative.Files.Select(f => new InitiativeFileVM
                 {
                     FileName = f.FileName,
@@ -542,6 +544,29 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Evaluation has been restarted. Scores are reset.";
+            return RedirectToAction("Result", new { id });
+        }
+
+        // POST: /SciTech/Port/ToggleHidePersonalInfo
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleHidePersonalInfo(int id)
+        {
+            var initiative = await _context.Initiatives.FindAsync(id);
+            if (initiative == null) return NotFound();
+
+            initiative.HidePersonalInfo = !initiative.HidePersonalInfo;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Personal Info visibility set to: {(initiative.HidePersonalInfo ? "HIDDEN" : "VISIBLE")}";
+            
+            // Redirect back to referring page if possible, otherwise determine logic
+            var referer = Request.Headers["Referer"].ToString();
+            if(!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
             return RedirectToAction("Result", new { id });
         }
 

@@ -24,6 +24,15 @@
         <a href="javascript:history.back()" class="btn btn-outline-secondary">
             <i class="fa-solid fa-arrow-left me-1"></i> Back
         </a>
+
+        <!-- TOGGLE HIDE INFO -->
+        <form asp-action="ToggleHidePersonalInfo" asp-controller="Port" asp-area="SciTech" asp-route-id="@Model.Id" method="post" style="display:inline;">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn @(Model.HidePersonalInfo ? "btn-dark" : "btn-outline-dark")" title="@(Model.HidePersonalInfo ? "Reveal Author Info" : "Hide Author Info")">
+                <i class="fa-solid @(Model.HidePersonalInfo ? "fa-eye-slash" : "fa-eye") me-1"></i>
+                @(Model.HidePersonalInfo ? "Approve: Hidden" : "Approve: Visible")
+            </button>
+        </form>
         
         <!-- ACTION BUTTONS (Pending_Final Only) -->
         @if (Model.Status == "Pending_Final")

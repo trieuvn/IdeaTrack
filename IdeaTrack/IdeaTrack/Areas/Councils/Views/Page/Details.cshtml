@@ -430,15 +430,32 @@
                 
                 <div class="info-row">
                     <label>Author</label>
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="author-avatar">@Model.ProposerName.Substring(0,1).ToUpper()</div>
-                        <span class="value">@Model.ProposerName</span>
-                    </div>
+                    @if (Model.HidePersonalInfo)
+                    {
+                         <div class="d-flex align-items-center gap-2">
+                            <div class="author-avatar" style="background:var(--text-muted); color:white;">?</div>
+                            <span class="value text-muted"><em>Hidden for Blind Review</em></span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="author-avatar">@Model.ProposerName.Substring(0,1).ToUpper()</div>
+                            <span class="value">@Model.ProposerName</span>
+                        </div>
+                    }
                 </div>
                 
                 <div class="info-row">
                     <label>Department</label>
-                    <span class="value">@Model.DepartmentName</span>
+                    @if (Model.HidePersonalInfo)
+                    {
+                        <span class="value text-muted"><em>Hidden</em></span>
+                    }
+                    else
+                    {
+                        <span class="value">@Model.DepartmentName</span>
+                    }
                 </div>
                 
                 @if (Model.DueDate.HasValue)

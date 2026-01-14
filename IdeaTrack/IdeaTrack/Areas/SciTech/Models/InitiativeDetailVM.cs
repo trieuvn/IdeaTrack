@@ -18,6 +18,7 @@ namespace IdeaTrack.Areas.SciTech.Models
         public string Note { get; set; }
         public decimal Budget { get; set; }
         public string Code { get; set; }
+        public bool HidePersonalInfo { get; set; }
 
         public List<InitiativeFileVM> Files { get; set; } = new List<InitiativeFileVM>();
     }

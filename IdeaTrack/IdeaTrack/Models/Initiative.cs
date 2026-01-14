@@ -102,6 +102,12 @@ namespace IdeaTrack.Models
         /// </summary>
         public int CurrentRound { get; set; } = 1;
         
+        /// <summary>
+        /// When true, the author's personal information (name, department) will be hidden
+        /// during the council evaluation process to enable anonymous/blind review.
+        /// Default is false (author info visible).
+        /// </summary>
+        public bool HidePersonalInfo { get; set; } = false;
         // =====================================================
         // CREATOR RELATIONSHIP (Primary Author)
         // =====================================================

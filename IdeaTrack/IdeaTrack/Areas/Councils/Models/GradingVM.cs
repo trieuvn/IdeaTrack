@@ -37,6 +37,8 @@ namespace IdeaTrack.Areas.Councils.Models
         
         // Whether there are previous rounds
         public bool HasPreviousRounds { get; set; } = false;
+
+        public bool HidePersonalInfo { get; set; } // Add this
     }
 
     public class GradingItem

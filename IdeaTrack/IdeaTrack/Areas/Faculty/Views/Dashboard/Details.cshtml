@@ -100,8 +100,22 @@
              <div class="card border-0 shadow-sm p-4 rounded-4">
                  <h5 class="fw-bold mb-3">Information</h5>
                  <div class="mb-3">
-                     <label class="small text-muted d-block">Author</label>
-                     <div class="fw-medium">@Model.ProposerName</div>
+                     <label class="small text-muted d-block">Authors (@Model.Authors.Count member@(Model.Authors.Count > 1 ? "s" : ""))</label>
+                     @if(Model.Authors != null && Model.Authors.Any())
+                     {
+                         <ul class="list-unstyled mb-0">
+                             @foreach(var author in Model.Authors)
+                             {
+                                 <li class="fw-medium">
+                                     <i class="bi bi-person-fill text-primary me-1"></i>@author
+                                 </li>
+                             }
+                         </ul>
+                     }
+                     else
+                     {
+                         <div class="fw-medium">@Model.ProposerName</div>
+                     }
                  </div>
                  <div class="mb-3">
                      <label class="small text-muted d-block">Submitted Date</label>

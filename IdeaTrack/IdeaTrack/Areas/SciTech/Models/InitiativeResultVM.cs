@@ -21,6 +21,7 @@ namespace IdeaTrack.Areas.SciTech.Models
         public string ConsolidatedStrengths { get; set; }
         public string ConsolidatedLimitations { get; set; }
         public string ConsolidatedRecommendations { get; set; }
+        public bool HidePersonalInfo { get; set; }
 
         public List<MemberScoreVM> MemberScores { get; set; } = new List<MemberScoreVM>();
     }

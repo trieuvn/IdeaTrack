@@ -182,7 +182,10 @@
                                         <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-2">
                                             @item.ProposerName.Substring(0, 1)
                                         </div>
-                                        <span>@item.ProposerName</span>
+                                        <div>
+                                            <span>@item.ProposerName</span>
+                                            <small class="text-muted d-block">(@item.MemberCount member@(item.MemberCount > 1 ? "s" : ""))</small>
+                                        </div>
                                     </div>
                                 </td>
                                 <td><span class="badge bg-light text-secondary border">@item.Category.Name</span></td>

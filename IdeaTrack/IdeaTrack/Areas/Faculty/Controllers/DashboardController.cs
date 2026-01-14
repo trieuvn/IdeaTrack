@@ -48,6 +48,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Include(i => i.Creator)
                 .Include(i => i.Category)
                 .Include(i => i.Department)
+                .Include(i => i.Authorships).ThenInclude(a => a.Author)
                 .Where(i => i.DepartmentId == deptId && i.Status != InitiativeStatus.Draft)
                 .AsQueryable();
 
@@ -104,7 +105,8 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                     Id = i.Id,
                     Title = i.Title,
                     InitiativeCode = i.InitiativeCode,
-                    ProposerName = i.Creator?.FullName ?? "Unknown",
+                    ProposerName = i.Authorships?.FirstOrDefault(a => a.IsCreator)?.Author?.FullName ?? i.Creator?.FullName ?? "Unknown",
+                    MemberCount = i.Authorships?.Count ?? 1,
                     Category = i.Category,
                     Status = i.Status,
                     SubmittedDate = i.SubmittedDate ?? i.CreatedAt
@@ -138,6 +140,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Include(i => i.Category)
                 .Include(i => i.Files)
                 .Include(i => i.RevisionRequests)
+                .Include(i => i.Authorships).ThenInclude(a => a.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (initiative == null) return NotFound();
@@ -148,13 +151,22 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 return Forbid(); // Or RedirectToAction("Index") with error
             }
 
+            // Get primary author (creator) and all authors
+            var primaryAuthor = initiative.Authorships?.FirstOrDefault(a => a.IsCreator)?.Author?.FullName 
+                                ?? initiative.Creator?.FullName ?? "Unknown";
+            var allAuthors = initiative.Authorships?
+                .OrderByDescending(a => a.IsCreator)  // Creator first
+                .Select(a => a.Author?.FullName ?? "Unknown")
+                .ToList() ?? new List<string> { primaryAuthor };
+
             var viewModel = new FacultyInitiativeDetailVM
             {
                 Id = initiative.Id,
                 Title = initiative.Title,
                 InitiativeCode = initiative.InitiativeCode,
                 Description = initiative.Description ?? "",
-                ProposerName = initiative.Creator?.FullName ?? "Unknown",
+                ProposerName = primaryAuthor,
+                Authors = allAuthors,
                 Budget = initiative.Budget,
                 SubmittedDate = initiative.SubmittedDate ?? DateTime.MinValue,
                 Status = initiative.Status,
