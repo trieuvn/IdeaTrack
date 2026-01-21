@@ -79,8 +79,11 @@ namespace IdeaTrack.Services
                     _context.InitiativeAssignments.Add(assignment);
                 }
 
-                // 4. Set Initiative.Status = Evaluating
-                initiative.Status = InitiativeStatus.Evaluating;
+                // 4. Set Initiative.Status based on current round
+                // First round: Evaluating, Subsequent rounds: Re_Evaluating
+                initiative.Status = initiative.CurrentRound > 1 
+                    ? InitiativeStatus.Re_Evaluating 
+                    : InitiativeStatus.Evaluating;
 
                 await _context.SaveChangesAsync();
 
