@@ -52,5 +52,13 @@
         /// <param name="decidedByUserId">The user making the decision</param>
         /// <returns>True if successful</returns>
         Task<bool> CreateFinalResultAsync(int initiativeId, InitiativeStatus decision, int decidedByUserId);
+
+        /// <summary>
+        /// Sync all Evaluating/Re_Evaluating/Approved initiatives in a category to the new board/template.
+        /// Creates new assignments for all board members in the new council.
+        /// </summary>
+        /// <param name="categoryId">The category to sync</param>
+        /// <returns>Number of initiatives updated, or -1 on error</returns>
+        Task<int> SyncCategoryInitiativesAsync(int categoryId);
     }
 }

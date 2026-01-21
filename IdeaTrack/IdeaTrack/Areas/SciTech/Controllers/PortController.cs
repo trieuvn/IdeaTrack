@@ -409,7 +409,9 @@ namespace IdeaTrack.Areas.SciTech.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveInitiative(int id, string? requestContent)
         {
-            var initiative = await _context.Initiatives.FirstOrDefaultAsync(i => i.Id == id);
+            var initiative = await _context.Initiatives
+                .Include(i => i.Category)
+                .FirstOrDefaultAsync(i => i.Id == id);
 
             if (initiative == null)
                 return NotFound();
@@ -429,17 +431,17 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             await _context.SaveChangesAsync();
 
             // Use service for auto-assignment (delegates to IInitiativeService)
+            // This will set status to Evaluating if successful
             var assigned = await _initiativeService.AutoAssignToBoardAsync(id);
 
             if (!assigned)
             {
-                // If no board/template configured, approve directly
-                initiative.Status = InitiativeStatus.Approved;
-                await _context.SaveChangesAsync();
-                TempData["WarningMessage"] = "Approved, but no Council or Grading Criteria configured for this category.";
+                // If no board/template configured, keep at Faculty_Approved and warn
+                TempData["ErrorMessage"] = "Cannot assign to council: Please configure a Council and Scoring Template for this category first.";
+                return RedirectToAction("Approve", new { id });
             }
 
-            TempData["SuccessMessage"] = "Successfully approved and assigned to the Council for grading!";
+            TempData["SuccessMessage"] = "Successfully approved and assigned to Council for evaluation!";
             return RedirectToAction("Result", new { id });
         }
 

@@ -23,7 +23,7 @@
         </a>
         <div>
             <h1 class="font-display fw-bold mb-0" style="font-size: 2rem;">@Model.Name</h1>
-            <p class="text-muted mb-0 small">@(Model.Description ?? "Không có mô tả")</p>
+            <p class="text-muted mb-0 small">@(Model.Description ?? "No description")</p>
         </div>
     </div>
 
@@ -31,6 +31,14 @@
     {
         <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
             <i class="fa-solid fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
+    @if(TempData["WarningMessage"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i>@TempData["WarningMessage"]
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     }
@@ -50,7 +58,7 @@
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-header bg-white py-3 border-bottom">
                     <h6 class="fw-bold mb-0 text-uppercase small">
-                        <i class="fa-solid fa-sliders me-2 text-primary"></i>Thông tin chung
+                        <i class="fa-solid fa-sliders me-2 text-primary"></i>General Information
                     </h6>
                 </div>
                 <div class="card-body">
@@ -60,11 +68,11 @@
                         
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">Tên danh mục</label>
+                                <label class="form-label small fw-bold text-muted">Category Name</label>
                                 <input type="text" class="form-control bg-light" value="@Model.Name" readonly />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">Kỳ sáng kiến</label>
+                                <label class="form-label small fw-bold text-muted">Initiative Period</label>
                                 <input type="text" class="form-control bg-light" value="@Model.Period?.Name" readonly />
                             </div>
                         </div>
@@ -74,11 +82,11 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-muted">
-                                    <i class="fa-solid fa-users me-1 text-primary"></i>Hội đồng chấm điểm (Council)
+                                    <i class="fa-solid fa-users me-1 text-primary"></i>Evaluation Council
                                 </label>
                                 <div class="input-group">
                                     <select name="boardId" id="boardSelect" class="form-select">
-                                        <option value="">-- Chưa gán --</option>
+                                        <option value="">-- Not Assigned --</option>
                                         @if(boards != null)
                                         {
                                             foreach(var b in boards)
@@ -87,18 +95,18 @@
                                             }
                                         }
                                     </select>
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#quickCreateCouncilModal" title="Tạo nhanh Hội đồng">
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#quickCreateCouncilModal" title="Quick Create Council">
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-muted">
-                                    <i class="fa-solid fa-clipboard-check me-1 text-info"></i>Mẫu chấm điểm (Template)
+                                    <i class="fa-solid fa-clipboard-check me-1 text-info"></i>Scoring Template
                                 </label>
                                 <div class="input-group">
                                     <select name="templateId" id="templateSelect" class="form-select">
-                                        <option value="">-- Chưa gán --</option>
+                                        <option value="">-- Not Assigned --</option>
                                         @if(templates != null)
                                         {
                                             foreach(var t in templates)
@@ -107,7 +115,7 @@
                                             }
                                         }
                                     </select>
-                                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#quickCreateTemplateModal" title="Tạo nhanh Mẫu chấm điểm">
+                                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#quickCreateTemplateModal" title="Quick Create Template">
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
@@ -116,7 +124,7 @@
 
                         <div class="d-flex justify-content-end mt-4 gap-2">
                             <button type="submit" class="btn btn-primary rounded-3 px-4">
-                                <i class="fa-solid fa-save me-2"></i>Lưu thay đổi
+                                <i class="fa-solid fa-save me-2"></i>Save Changes
                             </button>
                         </div>
                     </form>
@@ -127,10 +135,10 @@
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
                     <h6 class="fw-bold mb-0 text-uppercase small">
-                        <i class="fa-solid fa-file-alt me-2 text-success"></i>Biểu mẫu hướng dẫn
+                        <i class="fa-solid fa-file-alt me-2 text-success"></i>Reference Forms
                     </h6>
                     <button type="button" class="btn btn-sm btn-success rounded-3" data-bs-toggle="modal" data-bs-target="#uploadFormModal">
-                        <i class="fa-solid fa-upload me-1"></i>Tải lên
+                        <i class="fa-solid fa-upload me-1"></i>Upload
                     </button>
                 </div>
                 <div class="card-body">
@@ -157,14 +165,14 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a href="@form.FileUrl" download class="btn btn-sm btn-outline-primary" title="Tải xuống">
+                                        <a href="@form.FileUrl" download class="btn btn-sm btn-outline-primary" title="Download">
                                             <i class="fa-solid fa-download"></i>
                                         </a>
-                                        <form asp-action="DeleteReferenceForm" method="post" style="display: inline;" onsubmit="return confirm('Bạn có chắc muốn xóa file này?');">
+                                        <form asp-action="DeleteReferenceForm" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this file?');">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@form.Id" />
                                             <input type="hidden" name="categoryId" value="@Model.Id" />
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -177,7 +185,7 @@
                     {
                         <div class="text-center py-4 text-muted">
                             <i class="fa-solid fa-folder-open mb-3" style="font-size: 48px;"></i>
-                            <p class="mb-0">Chưa có biểu mẫu nào. Nhấn "Tải lên" để thêm mới.</p>
+                            <p class="mb-0">No reference forms yet. Click "Upload" to add one.</p>
                         </div>
                     }
                 </div>
@@ -187,25 +195,30 @@
             <div class="card border-0 shadow-sm rounded-4 border-warning">
                 <div class="card-header bg-warning-subtle py-3 border-bottom border-warning">
                     <h6 class="fw-bold mb-0 text-uppercase small text-warning-emphasis">
-                        <i class="fa-solid fa-sync me-2"></i>Đồng bộ Sáng kiến
+                        <i class="fa-solid fa-sync me-2"></i>Sync Initiatives
                     </h6>
                 </div>
                 <div class="card-body">
                     <p class="text-muted mb-3">
-                        Khi nhấn nút <strong>"Áp dụng"</strong>, hệ thống sẽ cập nhật tất cả sáng kiến thuộc danh mục này 
-                        với <strong>Hội đồng</strong> và <strong>Mẫu chấm điểm</strong> đã chọn ở trên.
+                        When you click <strong>"Sync"</strong>, the system will:
                     </p>
+                    <ul class="text-muted small mb-3">
+                        <li>Find all initiatives with <strong>Evaluating</strong>, <strong>Re_Evaluating</strong> or <strong>Approved</strong> status</li>
+                        <li>Close current evaluation round and create a new round</li>
+                        <li>Assign initiatives to the <strong>new Council</strong> selected above</li>
+                        <li>Set status to <strong>Re_Evaluating</strong> for the new council to evaluate</li>
+                    </ul>
                     
-                    <div class="alert alert-info mb-3">
-                        <i class="fa-solid fa-info-circle me-2"></i>
-                        Có <strong>@initiativeCount</strong> sáng kiến thuộc danh mục này sẽ được cập nhật.
+                    <div class="alert alert-warning small mb-3">
+                        <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                        <strong>Note:</strong> Approved initiatives will also be re-evaluated by the new council.
                     </div>
                     
-                    <form asp-action="SyncCategoryInitiatives" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn áp dụng thay đổi cho tất cả @initiativeCount sáng kiến?');">
+                    <form asp-action="SyncCategoryInitiatives" method="post" onsubmit="return confirm('Confirm sync? All initiatives (including Approved) will be transferred to the new Council for re-evaluation.');">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="id" value="@Model.Id" />
                         <button type="submit" class="btn btn-warning rounded-3 px-4">
-                            <i class="fa-solid fa-bolt me-2"></i>Áp dụng cho tất cả sáng kiến
+                            <i class="fa-solid fa-bolt me-2"></i>Sync to New Council
                         </button>
                     </form>
                 </div>
@@ -219,7 +232,7 @@
                 <div class="col-6">
                     <div class="card stat-card border-0 shadow-sm rounded-4 text-center p-3">
                         <div class="display-5 fw-bold text-primary">@initiativeCount</div>
-                        <div class="small text-muted">Sáng kiến</div>
+                        <div class="small text-muted">Initiatives</div>
                     </div>
                 </div>
                 <div class="col-6">
@@ -227,7 +240,7 @@
                         <div class="display-5 fw-bold @(Model.BoardId.HasValue ? "text-success" : "text-warning")">
                             <i class="fa-solid @(Model.BoardId.HasValue ? "fa-check" : "fa-exclamation")"></i>
                         </div>
-                        <div class="small text-muted">@(Model.BoardId.HasValue ? "Đã gán HĐ" : "Chưa gán HĐ")</div>
+                        <div class="small text-muted">@(Model.BoardId.HasValue ? "Council Assigned" : "No Council")</div>
                     </div>
                 </div>
             </div>
@@ -236,16 +249,16 @@
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-header bg-white py-3 border-bottom">
                     <h6 class="fw-bold mb-0 text-uppercase small">
-                        <i class="fa-solid fa-users-rectangle me-2 text-primary"></i>Danh sách Hội đồng
+                        <i class="fa-solid fa-users-rectangle me-2 text-primary"></i>Council List
                     </h6>
                 </div>
                 <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
                     <table class="table table-sm align-middle mb-0">
                         <thead class="bg-light sticky-top">
                             <tr>
-                                <th class="ps-3 py-2 small">Tên</th>
-                                <th class="py-2 small">Năm</th>
-                                <th class="py-2 small text-center">SL</th>
+                                <th class="ps-3 py-2 small">Name</th>
+                                <th class="py-2 small">Year</th>
+                                <th class="py-2 small text-center">Members</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -265,7 +278,7 @@
                             }
                             else
                             {
-                                <tr><td colspan="3" class="text-center text-muted py-3">Không có hội đồng</td></tr>
+                                <tr><td colspan="3" class="text-center text-muted py-3">No councils available</td></tr>
                             }
                         </tbody>
                     </table>
@@ -281,27 +294,27 @@
         <div class="modal-content rounded-4 border-0 shadow-lg">
             <div class="modal-header bg-primary-subtle py-3 border-0 rounded-top-4">
                 <h6 class="modal-title fw-bold text-primary">
-                    <i class="fa-solid fa-users-rectangle me-2"></i>Tạo nhanh Hội đồng
+                    <i class="fa-solid fa-users-rectangle me-2"></i>Quick Create Council
                 </h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label small fw-bold text-muted">Tên Hội đồng</label>
+                    <label class="form-label small fw-bold text-muted">Council Name</label>
                     <input type="text" id="newCouncilName" class="form-control" 
                            value="Council @Model.Name @(Model.Period?.Name ?? "") @(Model.Period?.AcademicYear?.Name ?? "")" />
-                    <small class="text-muted">Tên được gợi ý tự động theo danh mục và đợt sáng kiến</small>
+                    <small class="text-muted">Name is auto-suggested based on category and period</small>
                 </div>
                 
                 <div class="mb-3">
-                    <label class="form-label small fw-bold text-muted">Sao chép thành viên từ:</label>
+                    <label class="form-label small fw-bold text-muted">Clone Members From:</label>
                     <select id="cloneFromCouncil" class="form-select">
-                        <option value="">-- Không sao chép (tạo rỗng) --</option>
+                        <option value="">-- Don't Clone (Create Empty) --</option>
                         @if(boards != null)
                         {
                             foreach(var b in boards)
                             {
-                                <option value="@b.Id">@b.BoardName (@(b.Members?.Count ?? 0) thành viên)</option>
+                                <option value="@b.Id">@b.BoardName (@(b.Members?.Count ?? 0) members)</option>
                             }
                         }
                     </select>
@@ -309,10 +322,10 @@
                 
                 <div class="d-flex gap-2">
                     <button type="button" class="btn btn-outline-secondary flex-grow-1" onclick="createCouncil(false)">
-                        <i class="fa-solid fa-file me-1"></i>Tạo rỗng
+                        <i class="fa-solid fa-file me-1"></i>Create Empty
                     </button>
                     <button type="button" class="btn btn-primary flex-grow-1" onclick="createCouncil(true)">
-                        <i class="fa-solid fa-copy me-1"></i>Clone & Tạo
+                        <i class="fa-solid fa-copy me-1"></i>Clone & Create
                     </button>
                 </div>
             </div>
@@ -326,25 +339,25 @@
         <div class="modal-content rounded-4 border-0 shadow-lg">
             <div class="modal-header bg-info-subtle py-3 border-0 rounded-top-4">
                 <h6 class="modal-title fw-bold text-info-emphasis">
-                    <i class="fa-solid fa-clipboard-check me-2"></i>Tạo nhanh Mẫu chấm điểm
+                    <i class="fa-solid fa-clipboard-check me-2"></i>Quick Create Template
                 </h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label small fw-bold text-muted">Tên Mẫu</label>
+                    <label class="form-label small fw-bold text-muted">Template Name</label>
                     <input type="text" id="newTemplateName" class="form-control" 
-                           value="Mẫu @Model.Name @(Model.Period?.Name ?? "")" />
-                    <small class="text-muted">Tên được gợi ý theo danh mục</small>
+                           value="Template @Model.Name @(Model.Period?.Name ?? "")" />
+                    <small class="text-muted">Name is suggested based on category</small>
                 </div>
                 
                 <div class="alert alert-info small mb-3">
                     <i class="fa-solid fa-info-circle me-1"></i>
-                    Mẫu sẽ được tạo rỗng. Bạn có thể thêm các tiêu chí con sau.
+                    Template will be created empty. You can add criteria later.
                 </div>
                 
                 <button type="button" class="btn btn-info w-100" onclick="createTemplate()">
-                    <i class="fa-solid fa-plus me-1"></i>Tạo Mẫu chấm điểm
+                    <i class="fa-solid fa-plus me-1"></i>Create Template
                 </button>
             </div>
         </div>
@@ -357,7 +370,7 @@
         <div class="modal-content rounded-4 border-0 shadow-lg">
             <div class="modal-header bg-success-subtle py-3 border-0 rounded-top-4">
                 <h6 class="modal-title fw-bold text-success-emphasis">
-                    <i class="fa-solid fa-upload me-2"></i>Tải lên biểu mẫu hướng dẫn
+                    <i class="fa-solid fa-upload me-2"></i>Upload Reference Form
                 </h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -366,30 +379,30 @@
                 <input type="hidden" name="categoryId" value="@Model.Id" />
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Tên hiển thị</label>
+                        <label class="form-label small fw-bold text-muted">Display Name</label>
                         <input type="text" name="formName" class="form-control" required
-                               placeholder="Ví dụ: Mẫu đề xuất sáng kiến" />
-                        <small class="text-muted">Tên hiển thị cho người dùng (không phải tên file)</small>
+                               placeholder="E.g., Initiative Proposal Form" />
+                        <small class="text-muted">Display name for users (not the file name)</small>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Chọn file</label>
+                        <label class="form-label small fw-bold text-muted">Select File</label>
                         <input type="file" name="file" class="form-control" required
                                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
-                        <small class="text-muted">Hỗ trợ: PDF, Word, Excel, PowerPoint</small>
+                        <small class="text-muted">Supported: PDF, Word, Excel, PowerPoint</small>
                     </div>
                     
                     <div class="alert alert-info small mb-0">
                         <i class="fa-solid fa-info-circle me-1"></i>
-                        File sẽ được lưu vào hệ thống và có thể tải xuống bởi tất cả các danh mục trong cùng kỳ sáng kiến.
+                        File will be saved and can be downloaded by all categories in the same period.
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal">
-                        <i class="fa-solid fa-times me-1"></i>Hủy
+                        <i class="fa-solid fa-times me-1"></i>Cancel
                     </button>
                     <button type="submit" class="btn btn-success rounded-3">
-                        <i class="fa-solid fa-upload me-1"></i>Tải lên
+                        <i class="fa-solid fa-upload me-1"></i>Upload
                     </button>
                 </div>
             </form>
@@ -408,7 +421,7 @@
     function createCouncil(clone) {
         const name = document.getElementById('newCouncilName').value.trim();
         if (!name) {
-            alert('Vui lòng nhập tên Hội đồng!');
+            alert('Please enter a Council name!');
             return;
         }
 
@@ -426,16 +439,16 @@
                     // Reload page to show new council
                     window.location.reload();
                 } else {
-                    alert('Lỗi: ' + (data.message || 'Không thể tạo Hội đồng'));
+                    alert('Error: ' + (data.message || 'Could not create Council'));
                 }
             })
-            .catch(err => alert('Lỗi kết nối: ' + err));
+            .catch(err => alert('Connection error: ' + err));
     }
 
     function createTemplate() {
         const name = document.getElementById('newTemplateName').value.trim();
         if (!name) {
-            alert('Vui lòng nhập tên Mẫu!');
+            alert('Please enter a Template name!');
             return;
         }
 
@@ -450,10 +463,10 @@
                     // Reload page to show new template
                     window.location.reload();
                 } else {
-                    alert('Lỗi: ' + (data.message || 'Không thể tạo Mẫu'));
+                    alert('Error: ' + (data.message || 'Could not create Template'));
                 }
             })
-            .catch(err => alert('Lỗi kết nối: ' + err));
+            .catch(err => alert('Connection error: ' + err));
     }
 </script>
 }

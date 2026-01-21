@@ -1,5 +1,6 @@
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using IdeaTrack.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,12 @@ namespace IdeaTrack.Areas.SciTech.Controllers
     public class ConfigurationController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IInitiativeService _initiativeService;
 
-        public ConfigurationController(ApplicationDbContext context)
+        public ConfigurationController(ApplicationDbContext context, IInitiativeService initiativeService)
         {
             _context = context;
+            _initiativeService = initiativeService;
         }
 
         // =================================================
@@ -290,7 +293,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             category.TemplateId = templateId;
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Đã cập nhật thông tin danh mục!";
+            TempData["SuccessMessage"] = "Category information updated!";
             return RedirectToAction(nameof(CategoryDetails), new { id });
         }
 
@@ -301,15 +304,22 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             var category = await _context.InitiativeCategories.FindAsync(id);
             if (category == null) return NotFound();
 
-            // Get count of affected initiatives
-            var initiativeCount = await _context.Initiatives
-                .CountAsync(i => i.CategoryId == id);
+            // Use service to sync all Evaluating/Re_Evaluating initiatives to new board
+            var result = await _initiativeService.SyncCategoryInitiativesAsync(id);
 
-            // Note: Since Initiative references Board/Template via Category,
-            // updating the Category automatically affects all linked initiatives.
-            // The sync here is just to confirm and provide feedback.
-            
-            TempData["SuccessMessage"] = $"Đã áp dụng thay đổi cho {initiativeCount} sáng kiến thuộc danh mục này!";
+            if (result < 0)
+            {
+                TempData["ErrorMessage"] = "Sync failed: Please check that the category has a Council and Template configured, and the Council has members.";
+            }
+            else if (result == 0)
+            {
+                TempData["WarningMessage"] = "No initiatives with Evaluating/Re_Evaluating/Approved status to sync.";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = $"Successfully synced {result} initiative(s) to the new Council!";
+            }
+
             return RedirectToAction(nameof(CategoryDetails), new { id });
         }
 

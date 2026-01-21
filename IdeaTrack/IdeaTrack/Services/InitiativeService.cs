@@ -404,5 +404,113 @@ namespace IdeaTrack.Services
                 return false;
             }
         }
+
+        /// <inheritdoc/>
+        public async Task<int> SyncCategoryInitiativesAsync(int categoryId)
+        {
+            try
+            {
+                // 1. Load category with Board and Template info
+                var category = await _context.InitiativeCategories
+                    .Include(c => c.Board)
+                    .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+                if (category == null)
+                {
+                    _logger.LogWarning("SyncCategory: Category {Id} not found", categoryId);
+                    return -1;
+                }
+
+                if (category.BoardId == null || category.TemplateId == null)
+                {
+                    _logger.LogWarning("SyncCategory: Category {Id} has no Board/Template configured", categoryId);
+                    return -1;
+                }
+
+                // 2. Find all initiatives in this category with Evaluating, Re_Evaluating, or Approved status
+                var initiatives = await _context.Initiatives
+                    .Include(i => i.Assignments)
+                    .Where(i => i.CategoryId == categoryId && 
+                               (i.Status == InitiativeStatus.Evaluating || 
+                                i.Status == InitiativeStatus.Re_Evaluating ||
+                                i.Status == InitiativeStatus.Approved))
+                    .ToListAsync();
+
+                if (!initiatives.Any())
+                {
+                    _logger.LogInformation("SyncCategory: No initiatives to sync in Category {Id}", categoryId);
+                    return 0;
+                }
+
+                // 3. Get all board members of the NEW board
+                var boardMembers = await _context.BoardMembers
+                    .Where(bm => bm.BoardId == category.BoardId)
+                    .ToListAsync();
+
+                if (!boardMembers.Any())
+                {
+                    _logger.LogWarning("SyncCategory: Board {BoardId} has no members", category.BoardId);
+                    return -1;
+                }
+
+                int syncedCount = 0;
+
+                foreach (var initiative in initiatives)
+                {
+                    // 4. Lock all current round assignments as Completed
+                    var currentRoundAssignments = initiative.Assignments
+                        .Where(a => a.RoundNumber == initiative.CurrentRound)
+                        .ToList();
+
+                    foreach (var assignment in currentRoundAssignments)
+                    {
+                        if (assignment.Status != AssignmentStatus.Completed)
+                        {
+                            assignment.Status = AssignmentStatus.Completed;
+                            assignment.DecisionDate = DateTime.Now;
+                            assignment.ReviewComment = "Auto-closed due to category sync";
+                        }
+                    }
+
+                    // 5. Increment round and set status to Re_Evaluating
+                    initiative.CurrentRound++;
+                    initiative.Status = InitiativeStatus.Re_Evaluating;
+
+                    // 6. Create new assignments for NEW board members
+                    foreach (var member in boardMembers)
+                    {
+                        var newAssignment = new InitiativeAssignment
+                        {
+                            InitiativeId = initiative.Id,
+                            BoardId = category.BoardId,
+                            MemberId = member.UserId,
+                            TemplateId = category.TemplateId.Value,
+                            RoundNumber = initiative.CurrentRound,
+                            StageName = $"Round {initiative.CurrentRound}",
+                            AssignedDate = DateTime.Now,
+                            DueDate = DateTime.Now.AddDays(14),
+                            Status = AssignmentStatus.Assigned,
+                            ReviewComment = "Auto-assigned via category sync"
+                        };
+
+                        _context.InitiativeAssignments.Add(newAssignment);
+                    }
+
+                    syncedCount++;
+                }
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("SyncCategory: Synced {Count} initiatives in Category {Id} to Board {BoardId}",
+                    syncedCount, categoryId, category.BoardId);
+
+                return syncedCount;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SyncCategory: Error syncing Category {Id}", categoryId);
+                return -1;
+            }
+        }
     }
 }
