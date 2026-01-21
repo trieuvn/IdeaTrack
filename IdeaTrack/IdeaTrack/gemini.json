@@ -1,0 +1,11 @@
+{
+    "Gemini": {
+        "ApiKeys": [
+            "AIzaSyDDtLgS7OUGkT-mF9v_FdRjUqdJfItxFaY",
+            "AIzaSyDZLtu6K63T2GJzFtUy4PHnE6dVKiHp7r4"
+        ],
+        "Model": "gemini-2.5-flash",
+        "MaxOutputTokens": 1600,
+        "Temperature": 0.6
+    }
+}

@@ -14,6 +14,9 @@ QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var builder = WebApplication.CreateBuilder(args);
 
+// Add Gemini configuration from separate file
+builder.Configuration.AddJsonFile("gemini.json", optional: true, reloadOnChange: true);
+
 // DB Context
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

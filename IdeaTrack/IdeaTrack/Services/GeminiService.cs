@@ -1,26 +1,40 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 
 namespace IdeaTrack.Services
 {
     public class GeminiService
     {
         private readonly HttpClient _http;
-        private readonly List<string> _apiKeys;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<GeminiService> _logger;
 
-        public GeminiService(IConfiguration configuration, HttpClient httpClient)
+        public GeminiService(IConfiguration configuration, HttpClient httpClient, ILogger<GeminiService> logger)
         {
             _http = httpClient;
-
-            _apiKeys = configuration
-                .GetSection("Gemini:ApiKeys")
-                .Get<List<string>>()
-                ?? throw new Exception("Gemini API keys are missing");
-
-            if (_apiKeys.Count < 2)
-                throw new Exception("Cần ít nhất 2 Gemini API key để dự phòng");
+            _configuration = configuration;
+            _logger = logger;
         }
+
+        private List<string> GetApiKeys()
+        {
+            var keys = _configuration
+                .GetSection("Gemini:ApiKeys")
+                .Get<List<string>>() ?? new List<string>();
+            
+            if (keys.Count == 0)
+            {
+                _logger.LogWarning("No Gemini API keys configured in gemini.json");
+            }
+            
+            return keys;
+        }
+
+        private string GetModel() => _configuration["Gemini:Model"] ?? "gemini-2.5-flash";
+        private int GetMaxOutputTokens() => _configuration.GetValue<int>("Gemini:MaxOutputTokens", 1600);
+        private double GetTemperature() => _configuration.GetValue<double>("Gemini:Temperature", 0.6);
 
         private const int MIN_WORDS = 380;
         private const int MAX_WORDS = 420;
@@ -88,10 +102,26 @@ YÊU CẦU:
         // ================= Gemini call + fallback =================
         private async Task<string> CallGeminiAsync(string prompt)
         {
-            foreach (var apiKey in _apiKeys)
+            var apiKeys = GetApiKeys();
+            
+            if (apiKeys.Count == 0)
             {
-                var url =
-                    $"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={apiKey}";
+                return "[Error] No Gemini API keys configured. Please add keys to gemini.json";
+            }
+
+            var model = GetModel();
+            var maxTokens = GetMaxOutputTokens();
+            var temperature = GetTemperature();
+
+            for (int i = 0; i < apiKeys.Count; i++)
+            {
+                var apiKey = apiKeys[i];
+                var keyMasked = $"{apiKey[..8]}...{apiKey[^4..]}";
+                
+                _logger.LogInformation("Trying Gemini API key {KeyIndex}/{TotalKeys}: {MaskedKey}", 
+                    i + 1, apiKeys.Count, keyMasked);
+
+                var url = $"https://generativelanguage.googleapis.com/v1/models/{model}:generateContent?key={apiKey}";
 
                 var body = new
                 {
@@ -107,43 +137,60 @@ YÊU CẦU:
                     },
                     generationConfig = new
                     {
-                        temperature = 0.6,
-                        maxOutputTokens = 1600
+                        temperature = temperature,
+                        maxOutputTokens = maxTokens
                     }
                 };
 
-                var response = await _http.PostAsync(
-                    url,
-                    new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
-                );
-
-                var raw = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    using var doc = JsonDocument.Parse(raw);
-                    var text = doc.RootElement
-                        .GetProperty("candidates")[0]
-                        .GetProperty("content")
-                        .GetProperty("parts")[0]
-                        .GetProperty("text")
-                        .GetString();
+                    var response = await _http.PostAsync(
+                        url,
+                        new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json")
+                    );
 
-                    if (!string.IsNullOrWhiteSpace(text))
-                        return text;
+                    var raw = await response.Content.ReadAsStringAsync();
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using var doc = JsonDocument.Parse(raw);
+                        var text = doc.RootElement
+                            .GetProperty("candidates")[0]
+                            .GetProperty("content")
+                            .GetProperty("parts")[0]
+                            .GetProperty("text")
+                            .GetString();
+
+                        if (!string.IsNullOrWhiteSpace(text))
+                        {
+                            _logger.LogInformation("Gemini API call successful using key {KeyIndex}", i + 1);
+                            return text;
+                        }
+                    }
+
+                    // Check if we should try next key (quota limit, forbidden, server error)
+                    if (response.StatusCode is
+                        System.Net.HttpStatusCode.TooManyRequests or    // 429 - Quota exceeded
+                        System.Net.HttpStatusCode.Forbidden or          // 403 - Key invalid/blocked
+                        System.Net.HttpStatusCode.InternalServerError)  // 500 - Server error
+                    {
+                        _logger.LogWarning("Key {KeyIndex} failed with {StatusCode}, trying next key...", 
+                            i + 1, response.StatusCode);
+                        continue;
+                    }
+
+                    // For other errors, return immediately
+                    _logger.LogError("Gemini API error: {StatusCode} - {Response}", response.StatusCode, raw);
+                    return $"[Gemini API ERROR] {response.StatusCode}: {raw}";
                 }
-
-                if (response.StatusCode is
-                    System.Net.HttpStatusCode.TooManyRequests or
-                    System.Net.HttpStatusCode.Forbidden or
-                    System.Net.HttpStatusCode.InternalServerError)
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Exception calling Gemini API with key {KeyIndex}", i + 1);
                     continue;
                 }
-
-                return $"[Gemini API ERROR] {response.StatusCode}: {raw}";
             }
 
+            _logger.LogError("All {TotalKeys} Gemini API keys exhausted", apiKeys.Count);
             return "[Gemini API ERROR] All API keys exhausted (quota or invalid).";
         }
 
