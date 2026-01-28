@@ -18,15 +18,18 @@ namespace IdeaTrack.Areas.SciTech.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IInitiativeService _initiativeService;
 
         public PortController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
+            RoleManager<ApplicationRole> roleManager,
             IInitiativeService initiativeService)
         {
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
             _initiativeService = initiativeService;
         }
 
@@ -694,8 +697,21 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             if (result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(user, "User");
-                TempData["SuccessMessage"] = $"User {model.FullName} created successfully!";
+                // Use the selected role from the form, or default to "User" if not specified
+                var selectedRole = !string.IsNullOrEmpty(model.SelectedRole) ? model.SelectedRole : "User";
+                
+                // Ensure the selected role exists before adding user to it
+                if (!await _roleManager.RoleExistsAsync(selectedRole))
+                {
+                    await _roleManager.CreateAsync(new ApplicationRole 
+                    { 
+                        Name = selectedRole, 
+                        Description = $"Role: {selectedRole}" 
+                    });
+                }
+                
+                await _userManager.AddToRoleAsync(user, selectedRole);
+                TempData["SuccessMessage"] = $"User {model.FullName} created successfully with role '{selectedRole}'!";
             }
             else
             {

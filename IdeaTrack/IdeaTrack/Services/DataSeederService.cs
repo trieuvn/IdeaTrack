@@ -52,7 +52,7 @@ namespace IdeaTrack.Services
 
         private async Task SeedRolesAsync()
         {
-            var roles = new[] { "Admin", "SciTech", "FacultyLeader", "CouncilMember", "Lecturer", "Author" };
+            var roles = new[] { "Admin", "SciTech", "FacultyLeader", "CouncilMember", "Lecturer", "Author", "User" };
             foreach (var roleName in roles)
             {
                 if (!await _roleManager.RoleExistsAsync(roleName))

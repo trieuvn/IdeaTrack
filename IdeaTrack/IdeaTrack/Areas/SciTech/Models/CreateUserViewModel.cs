@@ -23,11 +23,9 @@ namespace IdeaTrack.Areas.SciTech.Models
         [Required]
         public string SelectedRole { get; set; }
 
-        [Required]
-        public string Position { get; set; }
-        [Required]
-        public string Degree { get; set; }
-        [Required]
-        public string AcademicRank { get; set; }
+        // Optional fields - no [Required] attribute
+        public string? Position { get; set; }
+        public string? Degree { get; set; }
+        public string? AcademicRank { get; set; }
     }
 }
