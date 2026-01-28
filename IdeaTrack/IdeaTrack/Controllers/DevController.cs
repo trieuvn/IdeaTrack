@@ -36,7 +36,7 @@ namespace IdeaTrack.Controllers
                     message = "Sample data seeded successfully!",
                     accounts = new[]
                     {
-                        new { username = "admin", password = "123456", role = "Admin" },
+                        new { username = "admin", password = "123456", role = "Admin" }, // Redirects to SciTech
                         new { username = "scitech1", password = "123456", role = "SciTech" },
                         new { username = "leader_cntt", password = "123456", role = "FacultyLeader" },
                         new { username = "council1", password = "123456", role = "CouncilMember" },

@@ -47,8 +47,8 @@ namespace IdeaTrack.Controllers
                     // Determine portal URL and name based on role
                     if (roles.Contains("Admin"))
                     {
-                        ViewBag.PortalName = "Admin Portal";
-                        ViewBag.PortalUrl = "/Admin";
+                        ViewBag.PortalName = "SciTech Portal";
+                        ViewBag.PortalUrl = "/SciTech/Port";
                     }
                     else if (roles.Contains("SciTech") || roles.Contains("OST_Admin"))
                     {

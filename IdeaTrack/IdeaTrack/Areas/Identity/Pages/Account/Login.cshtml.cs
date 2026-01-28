@@ -143,7 +143,7 @@ namespace IdeaTrack.Areas.Identity.Pages.Account
                     var roles = await _signInManager.UserManager.GetRolesAsync(user);
                     
                     if (roles.Contains("Admin"))
-                        return LocalRedirect("/Admin");
+                        return LocalRedirect("/SciTech/Port");
                     if (roles.Contains("SciTech") || roles.Contains("OST_Admin"))
                         return LocalRedirect("/SciTech/Port");
                     if (roles.Contains("FacultyLeader") || roles.Contains("Faculty_Admin"))
