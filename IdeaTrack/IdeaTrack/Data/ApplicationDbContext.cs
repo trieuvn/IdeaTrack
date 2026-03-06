@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using IdeaTrack.Models;
 
@@ -61,6 +61,17 @@ namespace IdeaTrack.Data
             {
                 property.SetPrecision(18);
                 property.SetScale(2);
+            }
+
+            // ========================================
+            // 1b. POSTGRESQL: Use 'timestamp without time zone' for all DateTime properties
+            // This avoids Npgsql's strict UTC requirement for 'timestamp with time zone'
+            // ========================================
+            foreach (var property in builder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetProperties())
+                .Where(p => p.ClrType == typeof(DateTime) || p.ClrType == typeof(DateTime?)))
+            {
+                property.SetColumnType("timestamp without time zone");
             }
 
             // ========================================

@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Areas.Faculty.Hubs;
+using IdeaTrack.Areas.Faculty.Hubs;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Services;
@@ -11,6 +11,11 @@ using QuestPDF.Infrastructure;
 
 QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
+// Enable legacy timestamp behavior for Npgsql (PostgreSQL)
+// This allows DateTime.Now (local time) to work with 'timestamp with time zone' columns
+// without requiring explicit UTC conversion throughout the codebase
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +27,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseNpgsql(connectionString));
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
