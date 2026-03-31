@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Areas.SciTech.Models;
+using IdeaTrack.Areas.SciTech.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Services;
@@ -39,6 +39,9 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             DateTime? toDate,
             string? status,
             string? keyword,
+            int? periodId,
+            int? categoryId,
+            int? yearId,
             int page = 1)
         {
             const int PAGE_SIZE = 5;
@@ -56,6 +59,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Include(i => i.Department)
                 .Include(i => i.Period)
                 .ThenInclude(p => p.AcademicYear)
+                .Include(i => i.Category)
                 .Where(i => allowedStatuses.Contains(i.Status))
                 .AsQueryable();
 
@@ -84,6 +88,22 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     i.InitiativeCode.Contains(keyword));
             }
 
+            // NEW FILTERS: Period, Category, Year
+            if (periodId.HasValue)
+            {
+                query = query.Where(i => i.PeriodId == periodId.Value);
+            }
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(i => i.CategoryId == categoryId.Value);
+            }
+
+            if (yearId.HasValue)
+            {
+                query = query.Where(i => i.Period != null && i.Period.AcademicYearId == yearId.Value);
+            }
+
             var totalItems = query.Count();
 
             var items = query
@@ -105,6 +125,31 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 })
                 .ToList();
 
+            // Populate dropdown data
+            var periods = _context.InitiativePeriods
+                .OrderByDescending(p => p.StartDate)
+                .Select(p => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                {
+                    Value = p.Id.ToString(),
+                    Text = p.Name
+                }).ToList();
+
+            var categories = _context.InitiativeCategories
+                .OrderBy(c => c.Name)
+                .Select(c => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList();
+
+            var years = _context.AcademicYears
+                .OrderByDescending(y => y.CreatedAt)
+                .Select(y => new Microsoft.AspNetCore.Mvc.Rendering.SelectListItem
+                {
+                    Value = y.Id.ToString(),
+                    Text = y.Name
+                }).ToList();
+
             var vm = new InitiativeReportVM
             {
                 Items = items,
@@ -112,6 +157,12 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 ToDate = toDate,
                 Status = status,
                 Keyword = keyword,
+                PeriodId = periodId,
+                CategoryId = categoryId,
+                YearId = yearId,
+                Periods = periods,
+                Categories = categories,
+                Years = years,
                 CurrentPage = page,
                 TotalItems = totalItems
             };

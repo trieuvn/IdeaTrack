@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Data;
+using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +46,7 @@ namespace IdeaTrack.Services
             // Expand data to 20+ rows per table for comprehensive testing
             await SeedExpandedDataAsync();
             await SeedLeaderboardDataAsync();
+            await SeedAuditLogsAsync();
 
             _logger.LogInformation("Data seeding completed!");
         }
@@ -848,6 +849,54 @@ namespace IdeaTrack.Services
             }
             await _context.SaveChangesAsync();
             _logger.LogInformation($"Seeded {createdCount} mock initiatives with scores for Leaderboard.");
+        }
+        private async Task SeedAuditLogsAsync()
+        {
+            _logger.LogInformation("Seeding System Audit Logs...");
+
+            if (await _context.SystemAuditLogs.AnyAsync()) return;
+
+            var users = await _context.Users.Take(10).ToListAsync();
+            var initiatives = await _context.Initiatives.Take(10).Select(i => i.Id).ToListAsync();
+
+            if (!users.Any() || !initiatives.Any()) return;
+
+            var random = new Random();
+            var actions = new[] { "Create", "Update", "Delete", "Approve", "Reject", "Login", "Logout", "Update Score", "AssignBoard" };
+            var targets = new[] { "Initiatives", "Users", "Boards", "EvaluationDetails", "InitiativeAssignments" };
+
+            var logs = new List<SystemAuditLog>();
+            var today = DateTime.Today;
+
+            // Generate roughly 100 logs over the past 7 days 
+            for (int i = 0; i < 100; i++)
+            {
+                var user = users[random.Next(users.Count)];
+                var action = actions[random.Next(actions.Length)];
+                var target = targets[random.Next(targets.Length)];
+                var targetId = initiatives.Count > 0 ? initiatives[random.Next(initiatives.Count)] : random.Next(1, 100);
+                
+                // Random time in the last 7 days
+                var daysAgo = random.Next(0, 7);
+                var hoursAgo = random.Next(0, 24);
+                var minsAgo = random.Next(0, 60);
+                var timestamp = today.AddDays(-daysAgo).AddHours(hoursAgo).AddMinutes(minsAgo);
+
+                logs.Add(new SystemAuditLog
+                {
+                    UserId = user.Id,
+                    Action = action,
+                    TargetTable = target,
+                    TargetId = targetId,
+                    Details = $"{{\"Note\": \"Seeded {action} action for testing on {timestamp:g}\"}}",
+                    IpAddress = $"192.168.1.{random.Next(2, 255)}",
+                    Timestamp = timestamp
+                });
+            }
+
+            _context.SystemAuditLogs.AddRange(logs);
+            await _context.SaveChangesAsync();
+            _logger.LogInformation($"Seeded {logs.Count} audit logs.");
         }
     }
 }

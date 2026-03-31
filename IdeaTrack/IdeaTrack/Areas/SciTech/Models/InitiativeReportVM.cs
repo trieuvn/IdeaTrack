@@ -1,4 +1,6 @@
-﻿namespace IdeaTrack.Areas.SciTech.Models
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace IdeaTrack.Areas.SciTech.Models
 {
     public class InitiativeReportVM
     {
@@ -10,6 +12,14 @@
         public DateTime? ToDate { get; set; }
         public string? Status { get; set; }
         public string? Keyword { get; set; }
+        public int? PeriodId { get; set; }
+        public int? CategoryId { get; set; }
+        public int? YearId { get; set; }
+
+        // DROPDOWN DATA
+        public List<SelectListItem> Periods { get; set; } = new();
+        public List<SelectListItem> Categories { get; set; } = new();
+        public List<SelectListItem> Years { get; set; } = new();
 
         // PAGING
         public int CurrentPage { get; set; }

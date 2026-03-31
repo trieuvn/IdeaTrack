@@ -1,4 +1,4 @@
-﻿@model IdeaTrack.Areas.SciTech.Models.InitiativeReportVM
+@model IdeaTrack.Areas.SciTech.Models.InitiativeReportVM
 
 <!-- HEADER -->
 <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
@@ -134,15 +134,36 @@
     <input type="hidden" name="page" value="1" />
 
     <div class="col-md-3">
-        <label class="form-label">From Date</label>
-        <input type="date" name="fromDate" class="form-control"
-               value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+        <label class="form-label">Năm học (Year)</label>
+        <select name="yearId" class="form-select">
+            <option value="">All</option>
+            @foreach (var y in Model.Years)
+            {
+                <option value="@y.Value" selected="@(y.Value == Model.YearId?.ToString())">@y.Text</option>
+            }
+        </select>
     </div>
 
     <div class="col-md-3">
-        <label class="form-label">To Date</label>
-        <input type="date" name="toDate" class="form-control"
-               value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+        <label class="form-label">Đợt (Period)</label>
+        <select name="periodId" class="form-select">
+            <option value="">All</option>
+            @foreach (var p in Model.Periods)
+            {
+                <option value="@p.Value" selected="@(p.Value == Model.PeriodId?.ToString())">@p.Text</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Danh mục (Category)</label>
+        <select name="categoryId" class="form-select">
+            <option value="">All</option>
+            @foreach (var c in Model.Categories)
+            {
+                <option value="@c.Value" selected="@(c.Value == Model.CategoryId?.ToString())">@c.Text</option>
+            }
+        </select>
     </div>
 
     <div class="col-md-3">
@@ -158,6 +179,18 @@
     </div>
 
     <div class="col-md-3">
+        <label class="form-label">From Date</label>
+        <input type="date" name="fromDate" class="form-control"
+               value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">To Date</label>
+        <input type="date" name="toDate" class="form-control"
+               value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="col-md-3">
         <label class="form-label">Keyword</label>
         <input name="keyword"
                class="form-control"
@@ -165,10 +198,13 @@
                placeholder="Code / Title" />
     </div>
 
-    <div class="col-12 text-end">
-        <button class="btn btn-primary">
+    <div class="col-md-3 d-flex align-items-end gap-2">
+        <button class="btn btn-primary flex-grow-1">
             <i class="fa-solid fa-filter me-1"></i>Apply
         </button>
+        <a href="/SciTech/Port" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-rotate-left"></i>
+        </a>
     </div>
 </form>
 
@@ -304,7 +340,10 @@
                                    fromDate = Model.FromDate,
                                    toDate = Model.ToDate,
                                    status = Model.Status,
-                                   keyword = Model.Keyword
+                                   keyword = Model.Keyword,
+                                   periodId = Model.PeriodId,
+                                   categoryId = Model.CategoryId,
+                                   yearId = Model.YearId
                                })">
                             @i
                         </a>
