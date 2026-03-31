@@ -356,6 +356,18 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                  averageScore = memberScores.Where(ms => ms.IsCompleted).Average(ms => ms.TotalScore);
             }
 
+            // Calculate MaxScore from the template criteria
+            decimal maxScore = 100; // default fallback
+            var firstAssignment = assignments.FirstOrDefault();
+            if (firstAssignment != null)
+            {
+                var templateMaxScore = await _context.EvaluationCriteria
+                    .Where(c => c.TemplateId == firstAssignment.TemplateId)
+                    .SumAsync(c => c.MaxScore);
+                if (templateMaxScore > 0)
+                    maxScore = templateMaxScore;
+            }
+
             var vm = new InitiativeResultVM
             {
                 Id = initiative.Id,
@@ -363,6 +375,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 InitiativeCode = initiative.InitiativeCode,
                 ProposerName = initiative.Creator.FullName,
                 AverageScore = averageScore,
+                MaxScore = maxScore,
                 ConsensusRate = consensusRate,
                 CompletedCount = completed,
                 TotalMembers = totalMembers,
@@ -383,13 +396,14 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     }).ToList() ?? new List<CoAuthorVM>()
             };
 
-            // RANK CALCULATION (Threshold-based)
+            // RANK CALCULATION (Threshold-based, relative to maxScore)
             if (string.IsNullOrEmpty(vm.Rank) || vm.Rank == "N/A")
             {
-                if (averageScore >= 90) vm.Rank = "Xuất sắc";
-                else if (averageScore >= 80) vm.Rank = "Tốt";
-                else if (averageScore >= 70) vm.Rank = "Khá";
-                else if (averageScore >= 50) vm.Rank = "Đạt";
+                var pct = maxScore > 0 ? (averageScore / maxScore * 100) : 0;
+                if (pct >= 90) vm.Rank = "Xuất sắc";
+                else if (pct >= 80) vm.Rank = "Tốt";
+                else if (pct >= 70) vm.Rank = "Khá";
+                else if (pct >= 50) vm.Rank = "Đạt";
                 else vm.Rank = "Không đạt";
             }
 

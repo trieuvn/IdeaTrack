@@ -11,6 +11,7 @@ namespace IdeaTrack.Areas.SciTech.Models
         public string Status { get; set; }
 
         public decimal AverageScore { get; set; }
+        public decimal MaxScore { get; set; } = 100;
         public double ConsensusRate { get; set; }
         public int CompletedCount { get; set; }
         public int TotalMembers { get; set; }

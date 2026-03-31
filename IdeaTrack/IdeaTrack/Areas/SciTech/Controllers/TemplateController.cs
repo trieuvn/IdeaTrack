@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Data;
+using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -89,8 +89,8 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 });
             }
 
-            model.IsActive = false;
-            model.Type = TemplateType.Screening;
+            model.IsActive = true;
+            model.Type = TemplateType.Scoring;
             _context.EvaluationTemplates.Add(model);
             _context.SaveChanges();
 

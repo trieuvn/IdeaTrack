@@ -1,4 +1,4 @@
-﻿@using IdeaTrack.Areas.SciTech.Models
+@using IdeaTrack.Areas.SciTech.Models
 @model InitiativeResultVM
 
 @{
@@ -67,10 +67,13 @@
                 <small class="text-muted text-uppercase">Average Score</small>
                 <div class="d-flex align-items-end gap-2 mt-2">
                     <h2 class="text-primary fw-bold mb-0">@Model.AverageScore.ToString("0.0")</h2>
-                    <span class="text-muted">/100</span>
+                    <span class="text-muted">/@Model.MaxScore.ToString("0.#")</span>
                 </div>
+                @{
+                    var scorePercent = Model.MaxScore > 0 ? (Model.AverageScore / Model.MaxScore * 100) : 0;
+                }
                 <div class="progress mt-3" style="height:6px;">
-                    <div class="progress-bar bg-primary" style="width: @(Model.AverageScore)%"></div>
+                    <div class="progress-bar bg-primary" style="width: @scorePercent.ToString("0.0")%"></div>
                 </div>
             </div>
         </div>
