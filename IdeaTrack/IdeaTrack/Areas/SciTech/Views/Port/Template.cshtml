@@ -1,4 +1,4 @@
-﻿@using IdeaTrack.Models
+@using IdeaTrack.Models
 @model List<IdeaTrack.Models.EvaluationTemplate>
 
 @Html.AntiForgeryToken()
@@ -137,9 +137,11 @@
                             <div class="rounded-lg bg-brand-light d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; color: #b91c1c;">
                                 <i class="fa-solid fa-flask-vial fa-lg"></i>
                             </div>
-                            <span class="status-badge bg-success-light text-success border border-success-subtle" style="background-color: #f0fdf4; color: #15803d !important;">
+                            <button class="status-badge border btn-toggle-active"
+                                    data-id="@template.Id"
+                                    style="cursor:pointer; background-color: @(template.IsActive ? "#f0fdf4" : "#fef2f2"); color: @(template.IsActive ? "#15803d" : "#991b1b") !important; border-color: @(template.IsActive ? "#bbf7d0" : "#fecaca") !important;">
                                 <small class="fa-solid fa-circle fa-2xs"></small> @(template.IsActive ? "Active" : "Inactive")
-                            </span>
+                            </button>
                         </div>
                         <code class="text-muted" style="min-width:70px">
                             #@template.Id
@@ -340,6 +342,33 @@
                     headers: { "RequestVerificationToken": token }
                 })
                 .then(res => res.ok ? window.location.reload() : alert("Delete failed"));
+            }
+
+            // --- 4. TOGGLE ACTIVE BUTTON CLICK ---
+            if (e.target.closest(".btn-toggle-active")) {
+                const btn = e.target.closest(".btn-toggle-active");
+                const id = btn.getAttribute("data-id");
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+                fetch(`/SciTech/Template/ToggleActive?id=${id}`, {
+                    method: "POST",
+                    headers: { "RequestVerificationToken": token }
+                })
+                .then(res => res.ok ? res.json() : Promise.reject())
+                .then(data => {
+                    if (data.isActive) {
+                        btn.style.backgroundColor = "#f0fdf4";
+                        btn.style.color = "#15803d";
+                        btn.style.borderColor = "#bbf7d0";
+                        btn.innerHTML = '<small class="fa-solid fa-circle fa-2xs"></small> Active';
+                    } else {
+                        btn.style.backgroundColor = "#fef2f2";
+                        btn.style.color = "#991b1b";
+                        btn.style.borderColor = "#fecaca";
+                        btn.innerHTML = '<small class="fa-solid fa-circle fa-2xs"></small> Inactive';
+                    }
+                })
+                .catch(() => alert("Toggle failed"));
             }
         });
     </script>

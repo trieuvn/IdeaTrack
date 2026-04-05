@@ -1,6 +1,7 @@
-﻿using IdeaTrack.Areas.SciTech.Models;
+using IdeaTrack.Areas.SciTech.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
+using IdeaTrack.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,13 @@ namespace IdeaTrack.Areas.SciTech.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAuditService _auditService;
 
-        public UserController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UserController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IAuditService auditService)
         {
             _context = context;
             _userManager = userManager;
+            _auditService = auditService;
         }
 
         // GET: /SciTech/User
@@ -120,8 +123,9 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 .Select(r => r.Name!)
                 .ToListAsync();
 
-            // Roles for Create User modal
-            ViewBag.AllRoles = ViewBag.Roles;
+            // Roles for Create User modal (restricted list)
+            var allowedCreateRoles = new[] { "SciTech", "FacultyLeader", "Author", "CouncilMember", "Approver" };
+            ViewBag.AllRoles = ((List<string>)ViewBag.Roles).Where(r => allowedCreateRoles.Contains(r)).ToList();
 
             // Pagination info
             ViewBag.Page = page;
@@ -248,6 +252,11 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                     }
                 }
                 TempData["SuccessMessage"] = "Successfully created new user " + model.FullName + "!";
+
+                // Audit log
+                await _auditService.LogAsync("CreateUser", "Users", user.Id,
+                    $"Created user '{model.FullName}' ({model.Email}) with role '{selectedRole}'");
+
                 return RedirectToAction(nameof(Index));
             }
 

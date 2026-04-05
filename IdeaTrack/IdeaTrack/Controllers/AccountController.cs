@@ -114,6 +114,10 @@ namespace IdeaTrack.Controllers
             {
                 return RedirectToAction("Index", "Page", new { area = "Councils" });
             }
+            if (roles.Contains("Approver"))
+            {
+                return RedirectToAction("Index", "Processing");
+            }
 
             // Default: Author portal profile
             return RedirectToAction("Index", "Dashboard", new { area = "Author" });

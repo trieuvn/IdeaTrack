@@ -89,7 +89,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 });
             }
 
-            model.IsActive = true;
+            model.IsActive = false;
             model.Type = TemplateType.Scoring;
             _context.EvaluationTemplates.Add(model);
             _context.SaveChanges();
@@ -109,6 +109,18 @@ namespace IdeaTrack.Areas.SciTech.Controllers
 
             _context.SaveChanges();
             return Json(new { success = true });
+        }
+
+        // POST: /SciTech/Template/ToggleActive
+        [HttpPost]
+        public IActionResult ToggleActive(int id)
+        {
+            var template = _context.EvaluationTemplates.Find(id);
+            if (template == null) return NotFound();
+
+            template.IsActive = !template.IsActive;
+            _context.SaveChanges();
+            return Json(new { success = true, isActive = template.IsActive });
         }
 
         // POST: /SciTech/Template/Delete

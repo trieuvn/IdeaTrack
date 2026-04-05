@@ -1,0 +1,135 @@
+@using IdeaTrack.Models
+@model List<Initiative>
+
+@{
+    ViewData["Title"] = "Recognized Initiatives";
+}
+
+<div class="container-fluid px-md-5 py-4">
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            <span class="material-icons text-warning me-2" style="vertical-align: middle; font-size: 2rem;">emoji_events</span>
+            Recognized Initiatives
+        </h2>
+        <p class="text-muted mb-0">
+            Initiatives that have passed council evaluation.
+            @if (ViewBag.PeriodName != null)
+            {
+                <span class="badge bg-primary-subtle text-primary border ms-2">@ViewBag.PeriodName</span>
+            }
+        </p>
+    </div>
+
+    <!-- FILTERS -->
+    <form method="get" class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label small text-muted">Category</label>
+                    <select name="categoryId" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach (var c in (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Categories)
+                        {
+                            <option value="@c.Value" selected="@(c.Value == ViewBag.CategoryId?.ToString())">@c.Text</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">All</option>
+                        <option value="Processing" selected="@(ViewBag.Status == "Processing")">Processing</option>
+                        <option value="Approved" selected="@(ViewBag.Status == "Approved")">Approved</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn text-white px-4" style="background-color: #b91c1c;">
+                        <i class="fa-solid fa-filter me-1"></i> Filter
+                    </button>
+                    <a href="/Processing" class="btn btn-outline-secondary px-3">
+                        <i class="fa-solid fa-rotate-left me-1"></i> Reset
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <span class="material-icons text-muted" style="font-size: 4rem;">inbox</span>
+            <p class="text-muted mt-2">No initiatives found in this period.</p>
+        </div>
+    }
+    else
+    {
+        <!-- INITIATIVE CARDS -->
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                var badgeBg = item.Status == InitiativeStatus.Approved ? "bg-success" : "bg-info";
+                var badgeLabel = item.Status == InitiativeStatus.Approved ? "Approved" : "Processing";
+
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card h-100 shadow-sm border-0" style="transition: transform 0.2s;">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <code class="text-muted">@item.InitiativeCode</code>
+                                <span class="badge @badgeBg rounded-pill px-3">@badgeLabel</span>
+                            </div>
+                            <h6 class="fw-bold mb-2" style="min-height: 48px;">@item.Title</h6>
+                            <p class="text-muted small mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                @(item.Description ?? "No description")
+                            </p>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="badge bg-light text-dark border">
+                                    <i class="fa-solid fa-building me-1"></i>@item.Department?.Name
+                                </span>
+                                <span class="badge bg-light text-dark border">
+                                    <i class="fa-solid fa-tag me-1"></i>@item.Category?.Name
+                                </span>
+                            </div>
+                            <div class="small text-muted">
+                                <i class="fa-regular fa-user me-1"></i>@item.Creator?.FullName
+                                @if (item.SubmittedDate != null)
+                                {
+                                    <span class="ms-2"><i class="fa-regular fa-clock me-1"></i>@item.SubmittedDate?.ToString("dd/MM/yyyy")</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light border-0 p-3">
+                            <a href="/Processing/Detail/@item.Id" class="btn btn-outline-primary btn-sm w-100">
+                                <i class="fa-solid fa-eye me-1"></i> View Detail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- PAGINATION -->
+        @if (ViewBag.TotalPages > 1)
+        {
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <small class="text-muted">Showing @Model.Count of @ViewBag.TotalItems initiatives</small>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", "Processing", new { page = i, categoryId = ViewBag.CategoryId, status = ViewBag.Status })">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-4px);
+    }
+</style>
