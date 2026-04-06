@@ -47,6 +47,10 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 .AddDefaultTokenProviders()
 .AddErrorDescriber<CustomIdentityErrorDescriber>();
 builder.Services.AddHttpClient<GeminiService>();
+
+// Add Localization Services
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 // Register Business Services
 builder.Services.AddScoped<IInitiativeService, InitiativeService>();
 // Register Business Services
@@ -56,6 +60,14 @@ builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 builder.Services.AddScoped<DataSeederService>();
 builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, NoOpEmailSender>();
 builder.Services.AddHttpContextAccessor();
+
+var supportedCultures = new[] { "en-US", "vi-VN" };
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.SetDefaultCulture(supportedCultures[0]);
+    options.AddSupportedCultures(supportedCultures);
+    options.AddSupportedUICultures(supportedCultures);
+});
 
 // Storage Service Registration
 var storageProvider = builder.Configuration["Storage:Provider"];
@@ -74,7 +86,9 @@ builder.Services.AddScoped<IFileService, InitiativeFileService>();
 builder.Services.AddHttpContextAccessor();
 
 // MVC + Razor
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 
@@ -102,13 +116,7 @@ builder.Services.AddAntiforgery(options =>
     options.HeaderName = "RequestVerificationToken";
 });
 var app = builder.Build();
-var supportedCultures = new[] { "en-US" };
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-
-app.UseRequestLocalization(localizationOptions);
+// Use it after Routing
 
 if (app.Environment.IsDevelopment())
 {
@@ -167,6 +175,7 @@ var rewriteOptionsdetails = new RewriteOptions()
         skipRemainingRules: true
     );
 app.UseRouting();
+app.UseRequestLocalization();
 app.UseRewriter(rewriteOptions);
 app.UseRewriter(rewriteOptionscouncils);
 app.UseRewriter(rewriteOptionsdetails);

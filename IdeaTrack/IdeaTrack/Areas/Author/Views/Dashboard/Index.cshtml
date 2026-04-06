@@ -1,17 +1,17 @@
 @model IdeaTrack.Areas.Author.ViewModels.AuthorDashboardViewModel
 @{
-    ViewData["Title"] = "Overview";
+    ViewData["Title"] = Localizer["Overview"];
 }
 
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold text-dark">Dashboard</h2>
-            <p class="text-muted mb-0">Welcome back, @Model.UserName</p>
+            <h2 class="fw-bold text-dark">@Localizer["Dashboard"]</h2>
+            <p class="text-muted mb-0">@Localizer["Welcome back"], @Model.UserName</p>
         </div>
         <a asp-controller="Initiative" asp-action="Create" class="btn btn-primary d-flex align-items-center gap-2">
             <span class="material-icons">add_circle</span>
-            Create New Initiative
+            @Localizer["Create New Initiative"]
         </a>
     </div>
 
@@ -25,10 +25,10 @@
                         <div class="icon-box bg-secondary bg-opacity-10 text-secondary rounded-circle p-3">
                             <span class="material-icons">edit_note</span>
                         </div>
-                        <span class="badge bg-secondary rounded-pill">Drafts</span>
+                        <span class="badge bg-secondary rounded-pill">@Localizer["Drafts"]</span>
                     </div>
                     <h3 class="fw-bold mb-1">@Model.DraftCount</h3>
-                    <p class="text-muted small mb-0">Total drafts</p>
+                    <p class="text-muted small mb-0">@Localizer["Total drafts"]</p>
                 </div>
             </div>
         </div>
@@ -41,10 +41,10 @@
                         <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle p-3">
                             <span class="material-icons">hourglass_empty</span>
                         </div>
-                        <span class="badge bg-warning text-dark rounded-pill">Pending</span>
+                        <span class="badge bg-warning text-dark rounded-pill">@Localizer["Pending"]</span>
                     </div>
                     <h3 class="fw-bold mb-1">@Model.SubmittedCount</h3>
-                    <p class="text-muted small mb-0">Waiting for approval</p>
+                    <p class="text-muted small mb-0">@Localizer["Waiting for approval"]</p>
                 </div>
             </div>
         </div>
@@ -57,10 +57,10 @@
                         <div class="icon-box bg-info bg-opacity-10 text-info rounded-circle p-3">
                             <span class="material-icons">fact_check</span>
                         </div>
-                        <span class="badge bg-info rounded-pill">Reviewing</span>
+                        <span class="badge bg-info rounded-pill">@Localizer["Reviewing"]</span>
                     </div>
                     <h3 class="fw-bold mb-1">@Model.UnderReviewCount</h3>
-                    <p class="text-muted small mb-0">Being evaluated</p>
+                    <p class="text-muted small mb-0">@Localizer["Being evaluated"]</p>
                 </div>
             </div>
         </div>
@@ -73,10 +73,10 @@
                         <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle p-3">
                             <span class="material-icons">check_circle</span>
                         </div>
-                        <span class="badge bg-success rounded-pill">Approved</span>
+                        <span class="badge bg-success rounded-pill">@Localizer["Approved"]</span>
                     </div>
                     <h3 class="fw-bold mb-1">@Model.ApprovedCount</h3>
-                    <p class="text-muted small mb-0">Successful initiatives</p>
+                    <p class="text-muted small mb-0">@Localizer["Successful initiatives"]</p>
                 </div>
             </div>
         </div>
@@ -84,15 +84,15 @@
 
     <!-- Quick Actions -->
     <div class="mb-4">
-        <h4 class="fw-bold text-dark mb-3">Quick Actions</h4>
+        <h4 class="fw-bold text-dark mb-3">@Localizer["Quick Actions"]</h4>
         <div class="row g-4">
             <div class="col-md-4">
                 <a asp-controller="Initiative" asp-action="History" class="text-decoration-none">
                     <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #1e3a8a, #0f172a);">
                         <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
                             <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">history</span>
-                            <h5 class="fw-bold mb-1">My Initiatives</h5>
-                            <p class="small opacity-75">View submission history</p>
+                            <h5 class="fw-bold mb-1">@Localizer["My Initiatives"]</h5>
+                            <p class="small opacity-75">@Localizer["View submission history"]</p>
                         </div>
                     </div>
                 </a>
@@ -102,8 +102,8 @@
                     <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #14532d, #064e3b);">
                         <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
                             <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">cloud_download</span>
-                            <h5 class="fw-bold mb-1">Download Guidelines</h5>
-                            <p class="small opacity-75">Get templates & forms</p>
+                            <h5 class="fw-bold mb-1">@Localizer["Download Guidelines"]</h5>
+                            <p class="small opacity-75">@Localizer["Get templates & forms"]</p>
                         </div>
                     </div>
                 </a>
@@ -113,8 +113,8 @@
                      <div class="card border-0 text-white overflow-hidden shadow h-100" style="border-radius: 15px; min-height: 180px; background: linear-gradient(135deg, #7c2d12, #451a03);">
                         <div class="card-body d-flex flex-column align-items-center justify-content-center text-center">
                             <span class="material-icons mb-2 text-warning" style="font-size: 3rem;">insights</span>
-                            <h5 class="fw-bold mb-1">Statistics</h5>
-                            <p class="small opacity-75">View performance reports</p>
+                            <h5 class="fw-bold mb-1">@Localizer["Statistics"]</h5>
+                            <p class="small opacity-75">@Localizer["View performance reports"]</p>
                         </div>
                     </div>
                 </a>

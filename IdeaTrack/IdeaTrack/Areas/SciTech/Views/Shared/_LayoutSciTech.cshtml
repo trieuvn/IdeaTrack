@@ -1,4 +1,4 @@
-﻿@using IdeaTrack.Data
+@using IdeaTrack.Data
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext _context
 @{
@@ -20,7 +20,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewData["Title"] - PKHCN Portal</title>
+    <title>@ViewData["Title"] - @Localizer["PKHCN Portal"]</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
@@ -32,31 +32,72 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          corePlugins: {
+            preflight: false,
+          },
+          theme: {
+            extend: {
+              colors: {
+                brand: '#be123c',
+              }
+            }
+          }
+        }
+    </script>
+
     <style>
         :root {
-            --brand-red: #b91c1c;
-            --brand-red-dark: #991b1b;
-            --brand-bg-subtle: #fef2f2;
+            --brand-red: #be123c;
+            --brand-red-light: #fee2e2;
+            --premium-bg: #f8fafc;
+            --premium-border: #e2e8f0;
+            --premium-text: #334155;
+            --premium-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
         }
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--premium-bg); color: var(--premium-text); }
         .font-display { font-family: 'Space Grotesk', sans-serif; }
         
-        /* Sidebar */
-        .sidebar { width: 260px; min-height: 100vh; background: white; border-right: 1px solid #e2e8f0; }
-        .sidebar-header { padding: 24px; border-bottom: 1px solid #f1f5f9; }
+        /* Sidebar Modernization */
+        .sidebar { width: 270px; min-height: 100vh; background: white; border-right: 1px solid var(--premium-border); box-shadow: 4px 0 24px rgba(0,0,0,0.02); }
+        .sidebar-header { padding: 28px 24px; border-bottom: 1px solid #f1f5f9; }
+        
         .nav-link { 
-            color: #475569; padding: 12px 16px; margin: 4px 12px; border-radius: 8px; font-weight: 500; transition: all 0.2s; 
+            color: #64748b; padding: 12px 16px; margin: 4px 16px; border-radius: 12px; font-weight: 500; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; align-items: center; text-decoration: none;
         }
-        .nav-link:hover { background-color: #f1f5f9; color: #1e293b; }
-        .nav-link.active { background-color: var(--brand-bg-subtle); color: var(--brand-red); font-weight: 600; }
-        .nav-link i { width: 24px; text-align: center; margin-right: 8px; font-size: 1.1em; }
+        .nav-link:hover { background-color: #f1f5f9; color: #0f172a; transform: translateX(4px); }
+        .nav-link.active { background-color: rgba(190, 18, 60, 0.08); color: #be123c; font-weight: 600; }
+        .nav-link i { width: 28px; text-align: center; margin-right: 12px; font-size: 1.15rem; opacity: 0.8; }
+        .nav-link.active i { opacity: 1; }
         
-        /* Header */
-        .topbar { background: white; height: 72px; padding: 0 32px; border-bottom: 1px solid #e2e8f0; }
-        .global-filter { background: #f8fafc; border: 1px solid #e2e8f0; padding: 6px 12px; border-radius: 8px; }
+        .nav-section-label { font-size: 0.7rem; font-weight: 700; color: #94a3b8; letter-spacing: 0.1em; padding: 24px 28px 8px; text-transform: uppercase; }
         
+        /* Topbar Premium */
+        .topbar { background: rgba(255, 255, 255, 0.8); height: 72px; padding: 0 32px; border-bottom: 1px solid var(--premium-border); backdrop-filter: blur(12px); }
+        
+        /* User Profile Premium */
+        .user-avatar-scitech {
+            width: 38px; height: 38px; border-radius: 12px;
+            background: linear-gradient(135deg, #be123c 0%, #e11d48 100%);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; box-shadow: 0 4px 12px rgba(190, 18, 60, 0.2);
+            transition: all 0.3s;
+        }
+        .user-avatar-scitech:hover { transform: scale(1.05); box-shadow: 0 6px 16px rgba(190, 18, 60, 0.3); }
+
+        .topbar-btn {
+            width: 40px; height: 40px; border-radius: 12px; background: #f1f5f9; border: none;
+            display: flex; align-items: center; justify-content: center; color: #64748b;
+            transition: all 0.2s;
+        }
+        .topbar-btn:hover { background: #e2e8f0; color: #0f172a; }
+
         /* Content */
-        .main-content { padding: 32px; }
+        .main-content { padding: 40px; }
     </style>
     @RenderSection("Styles", required: false)
 </head>
@@ -67,74 +108,73 @@
         <!-- SIDEBAR -->
         <aside class="sidebar d-flex flex-column flex-shrink-0 fixed-start">
             <div class="sidebar-header">
-                <div class="d-flex align-items-center gap-2 text-decoration-none">
-                    <div class="bg-danger text-white rounded p-1 d-flex">
-                        <i class="fa-solid fa-flask"></i>
+                <a href="/SciTech/Port/Index" class="d-flex align-items-center gap-3 text-decoration-none group">
+                    <div class="user-avatar-scitech transition-all duration-500 group-hover:rotate-[360deg] group-hover:scale-110">
+                        <i class="fa-solid fa-microscope text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"></i>
                     </div>
                     <div>
-                        <h6 class="mb-0 fw-bold font-display text-dark">IdeaTrack</h6>
-                        <small class="text-muted" style="font-size: 0.75rem;">SciTech Dept.</small>
+                        <h5 class="mb-0 fw-bold font-display text-dark ls-1 transition-colors group-hover:text-red-700">IdeaTrack</h5>
+                        <div class="text-danger fw-bold opacity-80" style="font-size: 0.65rem; letter-spacing: 0.05em;">@Localizer["SCITECH DEPARTMENT"]</div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <nav class="nav flex-column mt-3 flex-grow-1">
                 
                 <!-- RETURN TO HOME -->
-                <a class="nav-link" href="/" style="color: #fbbf24; font-weight: 600;">
-                    <i class="fa-solid fa-house"></i> Return to Home
+                <a class="nav-link mb-2 group transition-all duration-300" href="/" style="color: #d97706; background: rgba(217, 119, 6, 0.05);">
+                    <i class="fa-solid fa-house-user transition-transform group-hover:scale-125 group-hover:rotate-12"></i> @Localizer["Return to Home"]
                 </a>
-                <hr class="my-2 mx-3">
                 
                 <!-- OVERVIEW -->
-                <small class="text-uppercase text-muted fw-bold px-4 mb-2 mt-2" style="font-size: 0.7rem;">Overview</small>
-                <a class="nav-link @(currentController == "Port" && currentAction == "Index" ? "active" : "")"
+                <div class="nav-section-label">@Localizer["Overview"]</div>
+                <a class="nav-link group transition-all duration-300 @(currentController == "Port" && currentAction == "Index" ? "active" : "")"
                    href="@Url.Action("Index", "Port", new { area = "SciTech" })">
-                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                    <i class="fa-solid fa-gauge-high transition-transform group-hover:scale-125 group-hover:text-blue-500"></i> @Localizer["Dashboard"]
                 </a>
 
                 <!-- MANAGEMENT -->
-                <small class="text-uppercase text-muted fw-bold px-4 mb-2 mt-4" style="font-size: 0.7rem;">Management</small>
+                <div class="nav-section-label">@Localizer["Management"]</div>
                 
-                <a class="nav-link @(currentController == "Configuration" && currentAction == "AcademicYear" ? "active" : "")"
+                <a class="nav-link group transition-all duration-300 @(currentController == "Configuration" && currentAction == "AcademicYear" ? "active" : "")"
                    href="@Url.Action("AcademicYear", "Configuration", new { area = "SciTech" })">
-                    <i class="fa-regular fa-calendar"></i> Academic Years
+                    <i class="fa-solid fa-calendar-days transition-transform group-hover:scale-125 group-hover:text-emerald-500"></i> @Localizer["Academic Years"]
                 </a>
                 
-                <a class="nav-link @(currentController == "Configuration" && currentAction == "InitiativePeriod" ? "active" : "")"
+                <a class="nav-link group transition-all duration-300 @(currentController == "Configuration" && currentAction == "InitiativePeriod" ? "active" : "")"
                    href="@Url.Action("InitiativePeriod", "Configuration", new { area = "SciTech" })">
-                    <i class="fa-solid fa-timeline"></i> Periods
+                    <i class="fa-solid fa-clock-rotate-left transition-transform group-hover:scale-125 group-hover:text-indigo-500"></i> @Localizer["Periods"]
                 </a>
                 
-                <a class="nav-link @(currentController == "Configuration" && currentAction == "InitiativeCategory" ? "active" : "")"
+                <a class="nav-link group transition-all duration-300 @(currentController == "Configuration" && currentAction == "InitiativeCategory" ? "active" : "")"
                    href="@Url.Action("InitiativeCategory", "Configuration", new { area = "SciTech" })">
-                    <i class="fa-solid fa-layer-group"></i> Categories
+                    <i class="fa-solid fa-tags transition-transform group-hover:scale-125 group-hover:text-pink-500"></i> @Localizer["Categories"]
                 </a>
 
                 <!-- EVALUATION -->
-                <small class="text-uppercase text-muted fw-bold px-4 mb-2 mt-4" style="font-size: 0.7rem;">Evaluation</small>
+                <div class="nav-section-label">@Localizer["Evaluation"]</div>
                 
                 <a class="nav-link @(currentController == "Template" ? "active" : "")"
                    href="@Url.Action("Index", "Template", new { area = "SciTech" })">
-                    <i class="fa-solid fa-clipboard-check"></i> Scoring Criteria
+                    <i class="fa-solid fa-clipboard-list"></i> @Localizer["Scoring Criteria"]
                 </a>
                 
                 <a class="nav-link @(currentController == "Council" && currentAction == "ManageBoards" ? "active" : "")"
                    href="@Url.Action("ManageBoards", "Council", new { area = "SciTech" })">
-                    <i class="fa-solid fa-people-group"></i> Councils
+                    <i class="fa-solid fa-user-group"></i> @Localizer["Councils"]
                 </a>
                 
                 <!-- SYSTEM -->
-                <small class="text-uppercase text-muted fw-bold px-4 mb-2 mt-4" style="font-size: 0.7rem;">System</small>
+                <div class="nav-section-label">@Localizer["System"]</div>
                 
-                <a class="nav-link @(currentController == "User" ? "active" : "")"
+                <a class="nav-link group transition-all duration-300 @(currentController == "User" ? "active" : "")"
                    href="@Url.Action("Index", "User", new { area = "SciTech" })">
-                    <i class="fa-solid fa-users-gear"></i> Users
+                    <i class="fa-solid fa-user-shield transition-transform group-hover:scale-125 group-hover:text-cyan-600"></i> @Localizer["Users"]
                 </a>
                 
-                <a class="nav-link @(currentController == "Audit" ? "active" : "")"
+                <a class="nav-link group transition-all duration-300 @(currentController == "Audit" ? "active" : "")"
                    href="@Url.Action("Index", "Audit", new { area = "SciTech" })">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Nhật ký hệ thống
+                    <i class="fa-solid fa-shield-halved transition-transform group-hover:scale-125 group-hover:text-purple-600"></i> @Localizer["System Log"]
                 </a>
 
             </nav>
@@ -142,7 +182,7 @@
             <div class="p-3 border-top">
                 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="sidebarLogoutForm">
                     <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start text-danger">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> @Localizer["Sign Out"]
                     </button>
                 </form>
             </div>
@@ -158,34 +198,35 @@
                     <!-- Global Filters Removed as requested -->
                 </div>
 
-                <div class="d-flex align-items-center gap-4">
-                    <button class="btn btn-light rounded-circle position-relative">
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                <div class="d-flex align-items-center gap-3">
+                    <partial name="_SelectLanguagePartial" />
+                    <button class="topbar-btn position-relative">
+                        <i class="fa-regular fa-bell fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-2 border-white rounded-circle"></span>
                     </button>
                     
-                    <!-- User Dropdown -->
+                    <!-- User Dropdown Premium -->
                     <div class="dropdown">
                         <div class="d-flex align-items-center gap-3" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer">
                              <div class="text-end d-none d-md-block">
                                 <div class="fw-bold small text-dark">Administrator</div>
-                                <small class="text-muted d-block" style="font-size: 0.7rem;">SciTech Dept</small>
+                                <div class="text-danger fw-bold" style="font-size: 0.6rem; letter-spacing: 0.05em;">@Localizer["SCITECH DEPT"]</div>
                             </div>
-                            <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px;">
-                                A
+                            <div class="user-avatar-scitech">
+                                <i class="fa-solid fa-user-tie"></i>
                             </div>
                         </div>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-3 p-2 rounded-4">
                             <li>
-                                <a class="dropdown-item py-2" asp-area="" asp-controller="User" asp-action="Profile">
-                                    <i class="fas fa-user-circle me-2 text-muted"></i>User Profile
+                                <a class="dropdown-item py-2 rounded-3" asp-area="" asp-controller="User" asp-action="Profile">
+                                    <i class="fa-solid fa-circle-user me-2 opacity-50"></i>@Localizer["User Profile"]
                                 </a>
                             </li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li><hr class="dropdown-divider border-light"></li>
                             <li>
                                 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="m-0">
-                                    <button type="submit" class="dropdown-item py-2 text-danger">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                                    <button type="submit" class="dropdown-item py-2 text-danger rounded-3">
+                                        <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>@Localizer["Sign Out"]
                                     </button>
                                 </form>
                             </li>

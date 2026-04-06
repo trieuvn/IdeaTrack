@@ -1,7 +1,7 @@
-﻿@model IdeaTrack.Areas.Councils.Models.DashboardVM
+@model IdeaTrack.Areas.Councils.Models.DashboardVM
 
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = Localizer["Dashboard"];
     Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
     var today = DateTime.Now.ToString("dddd, MMMM dd, yyyy");
 }
@@ -456,7 +456,7 @@
     <!-- Page Header -->
     <div class="page-header d-flex justify-content-between align-items-center">
         <div>
-            <h3>Welcome back, @Model.UserFullName</h3>
+            <h3>@Localizer["Welcome back"], @Model.UserFullName</h3>
             <p class="date">@today</p>
         </div>
     </div>
@@ -474,7 +474,7 @@
                         </div>
                         <div class="col ps-0">
                             <div class="numbers">
-                                <p class="card-category">Total Assigned</p>
+                                <p class="card-category">@Localizer["Total Assigned"]</p>
                                 <h4 class="card-title">@Model.TotalAssigned</h4>
                             </div>
                         </div>
@@ -494,7 +494,7 @@
                         </div>
                         <div class="col ps-0">
                             <div class="numbers">
-                                <p class="card-category">Completed</p>
+                                <p class="card-category">@Localizer["Completed"]</p>
                                 <h4 class="card-title">@Model.CompletedCount</h4>
                             </div>
                         </div>
@@ -514,7 +514,7 @@
                         </div>
                         <div class="col ps-0">
                             <div class="numbers">
-                                <p class="card-category">Pending Scoring</p>
+                                <p class="card-category">@Localizer["Pending Scoring"]</p>
                                 <h4 class="card-title">@Model.PendingCount</h4>
                             </div>
                         </div>
@@ -528,7 +528,7 @@
     <div class="card progress-card mb-4">
         <div class="card-body">
             <div class="progress-header">
-                <h6><i class="bi bi-graph-up-arrow me-2"></i>Overall Progress</h6>
+                <h6><i class="bi bi-graph-up-arrow me-2"></i>@Localizer["Overall Progress"]</h6>
                 <span class="progress-percent">@Model.ProgressPercentage%</span>
             </div>
             <div class="progress">
@@ -538,22 +538,22 @@
                 @if (Model.ProgressPercentage >= 100)
                 {
                     <i class="bi bi-trophy-fill text-warning"></i>
-                    <span>Excellent! You've completed all assigned reviews.</span>
+                    <span>@Localizer["Excellent! You've completed all assigned reviews."]</span>
                 }
                 else if (Model.ProgressPercentage >= 50)
                 {
                     <i class="bi bi-lightning-fill text-primary"></i>
-                    <span>Great progress! Keep up the momentum to finish all reviews.</span>
+                    <span>@Localizer["Great progress! Keep up the momentum to finish all reviews."]</span>
                 }
                 else if (Model.PendingCount > 0)
                 {
                     <i class="bi bi-clock text-muted"></i>
-                    <span>You have @Model.PendingCount initiatives awaiting your expert review.</span>
+                    <span>@string.Format(Localizer["You have {0} initiatives awaiting your expert review."].Value, Model.PendingCount)</span>
                 }
                 else
                 {
                     <i class="bi bi-inbox text-muted"></i>
-                    <span>No initiatives assigned yet. Check back later!</span>
+                    <span>@Localizer["No initiatives assigned yet. Check back later!"]</span>
                 }
             </p>
         </div>
@@ -564,8 +564,8 @@
         <!-- Up Next -->
         <div>
             <div class="section-header">
-                <h5><i class="bi bi-list-task me-2"></i>Up Next</h5>
-                <a asp-action="AssignedInitiatives">View All <i class="bi bi-arrow-right"></i></a>
+                <h5><i class="bi bi-list-task me-2"></i>@Localizer["Up Next"]</h5>
+                <a asp-action="AssignedInitiatives">@Localizer["View All"] <i class="bi bi-arrow-right"></i></a>
             </div>
             
             @if (Model.Assignments != null && Model.Assignments.Any())
@@ -579,7 +579,7 @@
                             {
                                 <span class="due-warning">
                                     <i class="bi bi-exclamation-triangle-fill"></i>
-                                    Due Soon
+                                    @Localizer["Due Soon"]
                                 </span>
                             }
                         </div>
@@ -589,26 +589,26 @@
                             <span><i class="bi bi-clock"></i> @item.TimeAgo</span>
                             @if (item.DueDate.HasValue)
                             {
-                                <span><i class="bi bi-calendar-event"></i> Due @item.DueDate.Value.ToString("MMM dd")</span>
+                                <span><i class="bi bi-calendar-event"></i> @Localizer["Due"] @item.DueDate.Value.ToString("MMM dd")</span>
                             }
                         </div>
                         
                         <!-- Score Display -->
                         <div class="task-score">
-                            <span class="label"><i class="bi bi-star-fill"></i> Score</span>
+                            <span class="label"><i class="bi bi-star-fill"></i> @Localizer["Score"]</span>
                             @if (item.Score.HasValue)
                             {
                                 <span class="value">@item.Score.Value.ToString("0.#") / @item.MaxScore.ToString("0")</span>
                             }
                             else
                             {
-                                <span class="value pending">Not scored yet</span>
+                                <span class="value pending">@Localizer["Not scored yet"]</span>
                             }
                         </div>
                         
                         <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-start-review">
                             <i class="bi bi-play-circle-fill"></i>
-                            @(item.Score.HasValue ? "Continue Review" : "Start Review")
+                            @(item.Score.HasValue ? Localizer["Continue Review"].Value : Localizer["Start Review"].Value)
                         </a>
                     </div>
                 }
@@ -617,8 +617,8 @@
             {
                 <div class="empty-state">
                     <i class="bi bi-check2-all"></i>
-                    <h6>You're all caught up!</h6>
-                    <p>No pending initiatives at the moment.</p>
+                    <h6>@Localizer["You're all caught up!"]</h6>
+                    <p>@Localizer["No pending initiatives at the moment."]</p>
                 </div>
             }
         </div>
@@ -627,7 +627,7 @@
         <div class="right-sidebar">
             <!-- Recent Activity -->
             <div class="activity-card">
-                <h5><i class="bi bi-activity"></i> Recent Activity</h5>
+                <h5><i class="bi bi-activity"></i> @Localizer["Recent Activity"]</h5>
                 
                 @if (Model.RecentActivityList != null && Model.RecentActivityList.Any())
                 {
@@ -652,7 +652,7 @@
                     
                     <div class="mt-3 text-center">
                         <a asp-action="History" style="font-size: 0.85rem; color: var(--brand-primary);">
-                            View History <i class="bi bi-arrow-right"></i>
+                            @Localizer["View History"] <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
                 }
@@ -660,14 +660,14 @@
                 {
                     <div class="text-center py-3">
                         <i class="bi bi-inbox text-muted" style="font-size: 1.5rem;"></i>
-                        <p class="text-muted small mt-2 mb-0">No recent activity</p>
+                        <p class="text-muted small mt-2 mb-0">@Localizer["No recent activity"]</p>
                     </div>
                 }
             </div>
             
             <!-- Completion Chart -->
             <div class="completion-card">
-                <h5><i class="bi bi-pie-chart-fill"></i> Task Overview</h5>
+                <h5><i class="bi bi-pie-chart-fill"></i> @Localizer["Task Overview"]</h5>
                 <div class="donut-chart-container">
                     <div class="donut-chart">
                         @{
@@ -683,17 +683,17 @@
                         </svg>
                         <div class="chart-center">
                             <div class="percent">@Model.ProgressPercentage%</div>
-                            <div class="label">Done</div>
+                            <div class="label">@Localizer["Done"]</div>
                         </div>
                     </div>
                     <div class="chart-legend">
                         <div class="legend-item">
                             <span class="legend-dot completed"></span>
-                            <span>Completed (@Model.CompletedCount)</span>
+                            <span>@string.Format(Localizer["Completed ({0})"].Value, Model.CompletedCount)</span>
                         </div>
                         <div class="legend-item">
                             <span class="legend-dot pending"></span>
-                            <span>Pending (@Model.PendingCount)</span>
+                            <span>@string.Format(Localizer["Pending ({0})"].Value, Model.PendingCount)</span>
                         </div>
                     </div>
                 </div>
@@ -701,23 +701,23 @@
             
             <!-- Quick Links -->
             <div class="quick-links-card">
-                <h5><i class="bi bi-lightning-fill"></i> Quick Links</h5>
+                <h5><i class="bi bi-lightning-fill"></i> @Localizer["Quick Links"]</h5>
                 <div class="quick-links-grid">
                     <a href="#" class="quick-link-item">
                         <i class="bi bi-journal-bookmark-fill"></i>
-                        <span>Scoring Guidelines</span>
+                        <span>@Localizer["Scoring Guidelines"]</span>
                     </a>
                     <a href="#" class="quick-link-item">
                         <i class="bi bi-question-circle-fill"></i>
-                        <span>FAQs</span>
+                        <span>@Localizer["FAQs"]</span>
                     </a>
                     <a href="#" class="quick-link-item">
                         <i class="bi bi-file-earmark-text-fill"></i>
-                        <span>Templates</span>
+                        <span>@Localizer["Templates"]</span>
                     </a>
                     <a href="#" class="quick-link-item">
                         <i class="bi bi-headset"></i>
-                        <span>Support</span>
+                        <span>@Localizer["Support"]</span>
                     </a>
                 </div>
             </div>

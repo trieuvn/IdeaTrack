@@ -1,0 +1,114 @@
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@inject IOptions<RequestLocalizationOptions> LocOptions
+@inject IViewLocalizer Localizer
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var currentCulture = requestCulture?.RequestCulture.UICulture.Name ?? "en-US";
+}
+
+<div class="dropdown group">
+    <button class="btn language-btn dropdown-toggle-no-caret transition-all duration-300 hover:ring-2 hover:ring-white/30" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-earth-americas transition-transform duration-700 group-hover:rotate-180 text-blue-300 drop-shadow-[0_0_8px_rgba(147,197,253,0.5)]"></i>
+        <span class="ms-1 d-none d-sm-inline font-bold tracking-wider text-[10px] uppercase opacity-90 transition-colors group-hover:text-white">@(currentCulture == "vi-VN" ? "VN" : "EN")</span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-end language-dropdown-premium border-0 shadow-2xl mt-3 p-2 rounded-2xl bg-white/95 backdrop-blur-md" aria-labelledby="languageDropdown">
+        <div class="dropdown-header text-[10px] tracking-[0.2em] font-black p-3 text-slate-400">@Localizer["SELECT LANGUAGE"]</div>
+        <form asp-area="" asp-controller="Language" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString" method="post" class="m-0 space-y-1">
+            @foreach (var culture in LocOptions.Value.SupportedUICultures)
+            {
+                <button type="submit" name="culture" value="@culture.Name" 
+                        class="dropdown-item language-item group/item transition-all duration-200 hover:bg-slate-50 rounded-xl py-3 px-4 flex items-center @(currentCulture == culture.Name ? "bg-slate-100 ring-1 ring-slate-200" : "")">
+                    <span class="flag-icon transition-transform group-hover/item:scale-125 group-hover/item:-rotate-12 drop-shadow-sm">@(culture.Name == "vi-VN" ? "🇻🇳" : "🇺🇸")</span>
+                    <span class="flex-grow-1 ms-3 font-semibold text-slate-700">@culture.DisplayName</span>
+                    @if (currentCulture == culture.Name)
+                    {
+                        <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse"></div>
+                    }
+                </button>
+            }
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Premium Language Switcher */
+    .language-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: inherit !important;
+        padding: 6px 12px;
+        border-radius: 99px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        backdrop-filter: blur(4px);
+    }
+
+    .language-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .language-dropdown-premium {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        border-radius: 16px;
+        padding: 8px;
+        min-width: 200px;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .ls-1 { letter-spacing: 0.05em; font-size: 0.7rem; color: #64748b; }
+
+    .language-item {
+        border-radius: 10px;
+        margin-bottom: 2px;
+        padding: 10px 16px;
+        font-weight: 500;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s;
+        border: 1px solid transparent;
+    }
+
+    .language-item:hover {
+        background: rgba(var(--bs-primary-rgb), 0.05);
+        color: var(--bs-primary);
+        transform: translateX(4px);
+    }
+
+    .language-item.active {
+        background: rgba(var(--bs-primary-rgb), 0.1);
+        color: var(--bs-primary);
+        border-color: rgba(var(--bs-primary-rgb), 0.2);
+    }
+
+    .flag-icon { font-size: 1.25rem; }
+
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(0.9); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    @@keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dropdown-toggle-no-caret::after { display: none; }
+</style>

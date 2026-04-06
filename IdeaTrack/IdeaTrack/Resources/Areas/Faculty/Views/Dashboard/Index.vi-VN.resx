@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Faculty Dashboard" xml:space="preserve">
+    <value>Bảng điều khiển Khoa</value>
+  </data>
+  <data name="Overview of faculty initiatives and approvals" xml:space="preserve">
+    <value>Tổng quan về các sáng kiến và phê duyệt thuộc khoa</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Hôm nay</value>
+  </data>
+  <data name="Pending Approval" xml:space="preserve">
+    <value>Chờ phê duyệt</value>
+  </data>
+  <data name="Faculty Approved" xml:space="preserve">
+    <value>Khoa đã duyệt</value>
+  </data>
+  <data name="Evaluation" xml:space="preserve">
+    <value>Đang đánh giá</value>
+  </data>
+  <data name="Pending Final" xml:space="preserve">
+    <value>Chờ xét duyệt cuối</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Đã phê duyệt</value>
+  </data>
+  <data name="Rejected" xml:space="preserve">
+    <value>Đã từ chối</value>
+  </data>
+  <data name="Search by title, code..." xml:space="preserve">
+    <value>Tìm kiếm theo tiêu đề, mã...</value>
+  </data>
+  <data name="All Statuses" xml:space="preserve">
+    <value>Tất cả trạng thái</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Chờ duyệt</value>
+  </data>
+  <data name="Evaluation (Scoring)" xml:space="preserve">
+    <value>Đang chấm điểm</value>
+  </data>
+  <data name="Revision Required" xml:space="preserve">
+    <value>Yêu cầu chỉnh sửa</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Lọc</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Thiết lập lại</value>
+  </data>
+  <data name="Initiative" xml:space="preserve">
+    <value>Sáng kiến</value>
+  </data>
+  <data name="Author" xml:space="preserve">
+    <value>Tác giả</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Submitted" xml:space="preserve">
+    <value>Ngày nộp</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Thao tác</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Chi tiết</value>
+  </data>
+  <data name="No initiatives found" xml:space="preserve">
+    <value>Không tìm thấy sáng kiến nào</value>
+  </data>
+  <data name="Showing {0} to {1} of {2} results" xml:space="preserve">
+    <value>Hiển thị từ {0} đến {1} trong số {2} kết quả</value>
+  </data>
+</root>

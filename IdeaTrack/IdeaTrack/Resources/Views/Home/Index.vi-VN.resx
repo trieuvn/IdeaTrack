@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Innovation Awards 2026" xml:space="preserve">
+    <value>GIẢI THƯỞNG SÁNG TẠO 2026</value>
+  </data>
+  <data name="Important Announcement" xml:space="preserve">
+    <value>THÔNG BÁO QUAN TRỌNG</value>
+  </data>
+  <data name="Deadline: 30/06/2026" xml:space="preserve">
+    <value>Hạn chót: 30/06/2026</value>
+  </data>
+  <data name="Sparking Creativity" xml:space="preserve">
+    <value>Khơi nguồn sáng tạo - Nâng tầm giảng dạy</value>
+  </data>
+  <data name="Submit Now" xml:space="preserve">
+    <value>Nộp ngay</value>
+  </data>
+  <data name="Learn More" xml:space="preserve">
+    <value>Tìm hiểu thêm</value>
+  </data>
+  <data name="Innovation Mindset" xml:space="preserve">
+    <value>Tư duy đổi mới</value>
+  </data>
+  <data name="Improve Efficiency" xml:space="preserve">
+    <value>Nâng cao hiệu quả</value>
+  </data>
+  <data name="Recognition &amp; Rewards" xml:space="preserve">
+    <value>Công nhận &amp; Khen thưởng</value>
+  </data>
+  <data name="Support Documents" xml:space="preserve">
+    <value>Tài liệu hỗ trợ</value>
+  </data>
+  <data name="Innovation Mindset Detail" xml:space="preserve">
+    <value>Khuyến khích tư duy sáng tạo để đề xuất các giải pháp đổi mới và cải tiến phương pháp giảng dạy.</value>
+  </data>
+  <data name="Improve Efficiency Detail" xml:space="preserve">
+    <value>Tối ưu hóa quy trình làm việc, tiết kiệm nguồn lực và nâng cao chất lượng giáo dục tại UEF.</value>
+  </data>
+  <data name="Recognition Detail" xml:space="preserve">
+    <value>Các ý tưởng sáng tạo sẽ được ghi nhận, cấp chứng nhận và khen thưởng với các chế độ đãi ngộ xứng đáng.</value>
+  </data>
+  <data name="View All" xml:space="preserve">
+    <value>Xem tất cả</value>
+  </data>
+  <data name="Registration Forms" xml:space="preserve">
+    <value>Biểu mẫu đăng ký</value>
+  </data>
+  <data name="Registration Detail" xml:space="preserve">
+    <value>Tải xuống các biểu mẫu đơn đăng ký cần thiết</value>
+  </data>
+  <data name="Review Process" xml:space="preserve">
+    <value>Quy trình xem xét</value>
+  </data>
+  <data name="Review Detail" xml:space="preserve">
+    <value>Các bước từ ý tưởng đến khi triển khai thực tế</value>
+  </data>
+  <data name="Innovation Bank" xml:space="preserve">
+    <value>Ngân hàng sáng kiến</value>
+  </data>
+  <data name="Bank Detail" xml:space="preserve">
+    <value>Duyệt xem các sáng kiến tiêu biểu đã thực hiện</value>
+  </data>
+  <data name="Innovation" xml:space="preserve">
+    <value>SÁNG TẠO</value>
+  </data>
+  <data name="Awards" xml:space="preserve">
+    <value>GIẢI THƯỞNG</value>
+  </data>
+</root>
