@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
 
 @{
@@ -128,6 +128,11 @@
                 <a href="@Url.Action("About", "Home", new { area = "" })"
                    class="@(currentController == "Home" && currentAction == "About" ? "active" : "")">
                     <span class="material-icons">info</span> About
+                </a>
+
+                <a href="@Url.Action("Index", "Processing", new { area = "" })"
+                   class="@(currentController == "Processing" ? "active" : "")">
+                    <span class="material-icons">emoji_events</span> Recognized Initiatives
                 </a>
 
                 <a href="@Url.Action("Privacy", "Home", new { area = "" })"

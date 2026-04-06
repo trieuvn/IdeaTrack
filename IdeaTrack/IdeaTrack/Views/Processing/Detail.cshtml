@@ -1,0 +1,285 @@
+@using IdeaTrack.Models
+@model Initiative
+
+@{
+    ViewData["Title"] = "Initiative Detail";
+    var isApprover = (bool)(ViewBag.IsApprover ?? false);
+}
+
+<div class="container-fluid px-md-5 py-4">
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <span class="material-icons text-primary me-2" style="vertical-align:middle;">description</span>
+                @Model.Title
+            </h2>
+            <p class="text-muted mb-0">
+                Code: <span class="fw-semibold">@Model.InitiativeCode</span>
+                | Department: <span class="fw-semibold">@Model.Department?.Name</span>
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/Processing" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back
+            </a>
+
+            @if (isApprover && Model.Status == InitiativeStatus.Processing)
+            {
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#approveModal">
+                    <i class="fa-solid fa-check me-1"></i> Approve
+                </button>
+            }
+            @if (isApprover && Model.Status == InitiativeStatus.Approved)
+            {
+                <button type="button" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#revokeModal">
+                    <i class="fa-solid fa-rotate-left me-1"></i> Revoke Approval
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- SUCCESS / ERROR MESSAGES -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-check-circle me-1"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-exclamation-circle me-1"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <!-- LEFT: MAIN INFO -->
+        <div class="col-lg-8">
+            <!-- STATUS CARD -->
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <small class="text-muted text-uppercase">Status</small>
+                            @{
+                                var statusBg = Model.Status == InitiativeStatus.Approved ? "bg-success" : "bg-info";
+                                var statusLabel = Model.Status == InitiativeStatus.Approved ? "Approved" : "Processing";
+                            }
+                            <div class="mt-1">
+                                <span class="badge @statusBg fs-6 px-3 py-2">@statusLabel</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted text-uppercase">Category</small>
+                            <div class="fw-semibold mt-1">@(Model.Category?.Name ?? "N/A")</div>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted text-uppercase">Period</small>
+                            <div class="fw-semibold mt-1">@(Model.Period?.Name ?? "N/A")</div>
+                            <small class="text-muted">@(Model.Period?.AcademicYear?.Name ?? "")</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="fa-solid fa-file-lines me-2"></i> Description
+                </div>
+                <div class="card-body">
+                    <div style="white-space: pre-wrap;">@(Model.Description ?? "No description provided.")</div>
+                </div>
+            </div>
+
+            <!-- BUDGET -->
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="fa-solid fa-coins me-2"></i> Budget
+                </div>
+                <div class="card-body">
+                    <h4 class="text-primary fw-bold mb-0">@Model.Budget.ToString("N0") VNĐ</h4>
+                </div>
+            </div>
+
+            <!-- FILES -->
+            @if (Model.Files != null && Model.Files.Any())
+            {
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-light fw-bold">
+                        <i class="fa-solid fa-paperclip me-2"></i> Attached Files
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group list-group-flush">
+                            @foreach (var file in Model.Files)
+                            {
+                                <a href="@file.FilePath" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" target="_blank">
+                                    <span>
+                                        <i class="fa-solid fa-file me-2 text-muted"></i>
+                                        @file.FileName
+                                    </span>
+                                    <span class="badge bg-secondary">@file.FileType</span>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- RIGHT: SIDEBAR INFO -->
+        <div class="col-lg-4">
+            <!-- AUTHORS -->
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="fa-solid fa-users me-2"></i> Authors
+                </div>
+                <div class="card-body">
+                    @if (Model.Authorships != null)
+                    {
+                        foreach (var authorship in Model.Authorships)
+                        {
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white" style="width:36px;height:36px;font-size:0.8rem;">
+                                    @(authorship.Author?.FullName?.Substring(0, 1) ?? "?")
+                                </div>
+                                <div>
+                                    <div class="fw-semibold">@(authorship.Author?.FullName ?? "N/A")</div>
+                                    <small class="text-muted">@(authorship.IsCreator ? "Creator" : "Co-author")</small>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- FINAL RESULT -->
+            @if (Model.FinalResult != null)
+            {
+                <div class="card shadow-sm mb-4 border-0">
+                    <div class="card-header bg-light fw-bold">
+                        <i class="fa-solid fa-trophy me-2"></i> Evaluation Result
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <small class="text-muted">Average Score</small>
+                            <h5 class="text-primary fw-bold">@Model.FinalResult.AverageScore.ToString("0.0")</h5>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">Rank</small>
+                            <div class="fw-semibold">@Model.FinalResult.Rank</div>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">Decision</small>
+                            <div class="fw-semibold">@Model.FinalResult.ChairmanDecision</div>
+                        </div>
+                        <div>
+                            <small class="text-muted">Decided by</small>
+                            <div class="fw-semibold">@(Model.FinalResult.Chairman?.FullName ?? "N/A")</div>
+                            <small class="text-muted">@Model.FinalResult.DecisionDate.ToString("dd/MM/yyyy")</small>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- TIMELINE -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">
+                    <i class="fa-solid fa-clock-rotate-left me-2"></i> Timeline
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <small class="text-muted">Created</small>
+                        <div>@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    @if (Model.SubmittedDate != null)
+                    {
+                        <div class="mb-2">
+                            <small class="text-muted">Submitted</small>
+                            <div>@Model.SubmittedDate?.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- APPROVE MODAL -->
+@if (isApprover && Model.Status == InitiativeStatus.Processing)
+{
+    <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="approveModalLabel">
+                        <i class="fa-solid fa-circle-check text-success me-2"></i> Confirm Approval
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to <strong class="text-success">approve</strong> this initiative?</p>
+                    <div class="bg-light rounded p-3">
+                        <small class="text-muted">Initiative:</small>
+                        <div class="fw-semibold">@Model.Title</div>
+                        <small class="text-muted">Code: @Model.InitiativeCode</small>
+                    </div>
+                    <p class="text-muted small mt-3 mb-0">
+                        <i class="fa-solid fa-info-circle me-1"></i>
+                        This will change the status from <span class="badge bg-info">Processing</span> to <span class="badge bg-success">Approved</span>.
+                    </p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="Approve" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-check me-1"></i> Yes, Approve
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- REVOKE MODAL -->
+@if (isApprover && Model.Status == InitiativeStatus.Approved)
+{
+    <div class="modal fade" id="revokeModal" tabindex="-1" aria-labelledby="revokeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="revokeModalLabel">
+                        <i class="fa-solid fa-triangle-exclamation text-warning me-2"></i> Confirm Revoke
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to <strong class="text-warning">revoke</strong> the approval for this initiative?</p>
+                    <div class="bg-light rounded p-3">
+                        <small class="text-muted">Initiative:</small>
+                        <div class="fw-semibold">@Model.Title</div>
+                        <small class="text-muted">Code: @Model.InitiativeCode</small>
+                    </div>
+                    <p class="text-muted small mt-3 mb-0">
+                        <i class="fa-solid fa-info-circle me-1"></i>
+                        This will change the status from <span class="badge bg-success">Approved</span> back to <span class="badge bg-info">Processing</span>.
+                    </p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form asp-action="Revoke" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-warning text-white">
+                            <i class="fa-solid fa-rotate-left me-1"></i> Yes, Revoke
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}

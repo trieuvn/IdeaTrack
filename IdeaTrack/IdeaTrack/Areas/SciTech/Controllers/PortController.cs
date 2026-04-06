@@ -583,8 +583,9 @@ namespace IdeaTrack.Areas.SciTech.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             var decidedByUserId = currentUser?.Id ?? 1;
 
+            // Approve → Processing (not final Approved yet), Reject → Rejected
             var finalStatus = decision == "Approve" 
-                ? InitiativeStatus.Approved 
+                ? InitiativeStatus.Processing 
                 : InitiativeStatus.Rejected;
 
             var success = await _initiativeService.CreateFinalResultAsync(id, finalStatus, decidedByUserId);
@@ -595,7 +596,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 return RedirectToAction("Approve", new { id });
             }
 
-            TempData["SuccessMessage"] = $"Successfully {(decision == "Approve" ? "Approved" : "Rejected")} this initiative!";
+            TempData["SuccessMessage"] = $"Successfully {(decision == "Approve" ? "moved to Processing" : "Rejected")} this initiative!";
             return RedirectToAction("Index");
         }
 

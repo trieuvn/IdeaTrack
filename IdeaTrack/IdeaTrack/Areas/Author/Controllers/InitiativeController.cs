@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Areas.Author.ViewModels;
+using IdeaTrack.Areas.Author.ViewModels;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Services;
@@ -88,8 +88,8 @@ namespace IdeaTrack.Areas.Author.Controllers
                         .FirstOrDefaultAsync();
                 }
 
-                // Fetch FinalResult for approved initiatives
-                if (initiative.Status == InitiativeStatus.Approved)
+                // Fetch FinalResult for approved/processing initiatives
+                if (initiative.Status == InitiativeStatus.Approved || initiative.Status == InitiativeStatus.Processing)
                 {
                     viewModel.FinalResult = await _context.FinalResults
                         .Include(f => f.Chairman)
