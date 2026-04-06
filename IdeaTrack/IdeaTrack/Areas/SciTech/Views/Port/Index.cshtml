@@ -175,6 +175,7 @@
             <option value="Re_Evaluating" selected="@(Model.Status == "Re_Evaluating")">@Localizer["Re-evaluating"]</option>
             <option value="Pending_Final" selected="@(Model.Status == "Pending_Final")">@Localizer["Pending Final"]</option>
             <option value="Approved" selected="@(Model.Status == "Approved")">@Localizer["Approved"]</option>
+            <option value="Processing" selected="@(Model.Status == "Processing")">@Localizer["Processing"]</option>
         </select>
     </div>
 
@@ -292,13 +293,16 @@
                                         case "Draft":
                                             badgeClass = "bg-secondary";
                                             break;
+                                        case "Processing":
+                                            badgeClass = "bg-info";
+                                            break;
                                     }
                                 }
                                 <span class="badge @badgeClass rounded-pill">@label</span>
                             </td>
                             <td class="text-end">
                                 @{
-                                    var resultStatuses = new[] { "Evaluating", "Re_Evaluating", "Pending_Final", "Approved", "Rejected" };
+                                    var resultStatuses = new[] { "Evaluating", "Re_Evaluating", "Pending_Final", "Approved", "Rejected", "Processing" };
                                     var action = resultStatuses.Contains(item.Status) ? "Result" : "Approve";
                                     var btnClass = action == "Result" ? "btn-outline-primary" : "btn-primary";
                                     var icon = action == "Result" ? "fa-chart-bar" : "fa-eye";
