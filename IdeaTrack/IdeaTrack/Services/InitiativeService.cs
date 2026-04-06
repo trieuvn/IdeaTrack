@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Data;
+using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -337,8 +337,8 @@ namespace IdeaTrack.Services
                     return false;
                 }
 
-                // Only allow Approved or Rejected as final decision
-                if (decision != InitiativeStatus.Approved && decision != InitiativeStatus.Rejected)
+                // Only allow Processing, Approved, or Rejected as final decision
+                if (decision != InitiativeStatus.Processing && decision != InitiativeStatus.Approved && decision != InitiativeStatus.Rejected)
                 {
                     _logger.LogWarning("CreateFinalResult: Invalid decision {Status}", decision);
                     return false;
