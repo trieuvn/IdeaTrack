@@ -7,7 +7,8 @@ namespace IdeaTrack.Models
     /// 
     /// WORKFLOW:
     /// Draft → Pending → Faculty_Approved → Evaluating → Pending_Final → Processing → Approved
-    ///                                                                              → Rejected
+    ///                                                                              → Rejected (council)
+    ///                                                                              → Rejected_SL (school-level, Approver)
     ///                 → Revision_Required (can return to any previous state)
     ///                 → Re_Evaluating (for additional evaluation rounds)
     /// </summary>
@@ -37,10 +38,13 @@ namespace IdeaTrack.Models
         /// <summary>Processing - Council approved, pending final Approver sign-off.</summary>
         Processing = 7,
 
-        /// <summary>Rejected - Initiative was not approved. Final state.</summary>
+        /// <summary>Rejected - Initiative was not approved by council/faculty. Final state.</summary>
         Rejected = 8,
 
         /// <summary>Approved - Final approval by Approver. Eligible for recognition.</summary>
-        Approved = 9
+        Approved = 9,
+
+        /// <summary>Rejected_SL - Rejected at school level by Approver. May allow resubmission with deadline.</summary>
+        Rejected_SL = 10
     }
 }

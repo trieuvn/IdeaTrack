@@ -1,4 +1,4 @@
-﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
 
 <main class="container py-3">
 
@@ -26,6 +26,56 @@
             </h5>
         </div>
         <div class="card-body p-4">
+
+            @* Rejection Info Banner for Rejected_SL *@
+            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL && Model.LatestRevisionRequest != null)
+            {
+                var canResubmit = Model.LatestRevisionRequest.Status == "Open" 
+                    && (!Model.LatestRevisionRequest.Deadline.HasValue || Model.LatestRevisionRequest.Deadline.Value >= DateTime.Now);
+
+                <div class="alert @(canResubmit ? "alert-warning" : "alert-danger") mb-4" style="border-radius: 12px;">
+                    <div class="d-flex align-items-start">
+                        <span class="material-icons me-3 mt-1" style="font-size: 28px;">@(canResubmit ? "warning" : "block")</span>
+                        <div>
+                            <h6 class="fw-bold mb-1">
+                                @(canResubmit ? "This initiative was rejected at school level — resubmission allowed" : "This initiative was rejected at school level")
+                            </h6>
+                            <p class="mb-2" style="white-space: pre-wrap;">@Model.LatestRevisionRequest.RequestContent</p>
+                            <div class="small">
+                                <span><strong>By:</strong> @(Model.LatestRevisionRequest.Requester?.FullName ?? "Approver")</span>
+                                <span class="mx-2">•</span>
+                                <span>@Model.LatestRevisionRequest.RequestedDate.ToString("dd/MM/yyyy HH:mm")</span>
+                                @if (Model.LatestRevisionRequest.Deadline.HasValue)
+                                {
+                                    <span class="mx-2">•</span>
+                                    <span><strong>Deadline:</strong> 
+                                        <span class="text-danger fw-bold">@Model.LatestRevisionRequest.Deadline.Value.ToString("dd/MM/yyyy")</span>
+                                        @if (Model.LatestRevisionRequest.Deadline.Value < DateTime.Now)
+                                        {
+                                            <span class="badge bg-danger ms-1">Expired</span>
+                                        }
+                                    </span>
+                                }
+                            </div>
+                            @if (canResubmit)
+                            {
+                                <div class="mt-2 small text-success fw-bold">
+                                    <span class="material-icons align-middle me-1" style="font-size: 16px;">info</span>
+                                    When you click "Submit Initiative", this will go back to Processing status for re-review.
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="mt-2 small text-danger fw-bold">
+                                    <span class="material-icons align-middle me-1" style="font-size: 16px;">error</span>
+                                    Resubmission is not available. You can only save changes or create a draft copy.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
             <form asp-controller="Initiative" asp-action="Edit" method="post" enctype="multipart/form-data">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="Initiative.Id" />

@@ -1,4 +1,4 @@
-﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeDetailViewModel
+@model IdeaTrack.Areas.Author.ViewModels.InitiativeDetailViewModel
 
 <main class="container pb-5 pt-2">
 
@@ -26,6 +26,16 @@
                         case IdeaTrack.Models.InitiativeStatus.Rejected:
                             <span class="badge rounded-pill bg-danger px-3 py-1">
                                 <span class="material-icons align-middle me-1" style="font-size: 14px;">cancel</span> REJECTED
+                            </span>
+                            break;
+                        case IdeaTrack.Models.InitiativeStatus.Rejected_SL:
+                            <span class="badge rounded-pill bg-danger px-3 py-1">
+                                <span class="material-icons align-middle me-1" style="font-size: 14px;">block</span> REJECTED (SCHOOL LEVEL)
+                            </span>
+                            break;
+                        case IdeaTrack.Models.InitiativeStatus.Processing:
+                            <span class="badge rounded-pill bg-info px-3 py-1">
+                                <span class="material-icons align-middle me-1" style="font-size: 14px;">hourglass_top</span> PROCESSING
                             </span>
                             break;
                         case IdeaTrack.Models.InitiativeStatus.Draft:
@@ -260,7 +270,10 @@
                                 ("Submitted", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Pending),
                                 ("Faculty Approved", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Faculty_Approved),
                                 ("Council Evaluation", Model.Initiative.Status >= IdeaTrack.Models.InitiativeStatus.Evaluating),
-                                ("Final Decision", Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
+                                ("Final Decision", Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved 
+                                    || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected
+                                    || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Processing
+                                    || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL)
                             };
                         }
                         @for (int i = 0; i < steps.Length; i++)
@@ -289,8 +302,11 @@
                 </div>
             </div>
 
-            <!-- Final Evaluation Result (for Approved initiatives) -->
-            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved && Model.FinalResult != null)
+
+            @if ((Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Approved 
+                 || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Processing 
+                 || Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL)
+                 && Model.FinalResult != null)
             {
                 <div class="card shadow-sm mb-4 border-success" style="border-radius: 15px; border-width: 2px;">
                     <div class="card-header bg-success bg-opacity-10 border-0 pt-4 px-4">
@@ -300,7 +316,6 @@
                         </h5>
                     </div>
                     <div class="card-body p-4">
-                        <!-- Score Display -->
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="text-center p-3 bg-light rounded-3">
@@ -315,11 +330,9 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Rank & Decision -->
                         <div class="d-flex align-items-center justify-content-center mb-4">
                             @{
-                                var rankBadgeClass = Model.FinalResult.Rank switch
+                                var rankBadgeClass2 = Model.FinalResult.Rank switch
                                 {
                                     "Xuất sắc" => "bg-warning text-dark",
                                     "Tốt" => "bg-success",
@@ -328,18 +341,12 @@
                                     _ => "bg-light text-dark"
                                 };
                             }
-                            <span class="badge @rankBadgeClass rounded-pill px-4 py-2 fs-6">
+                            <span class="badge @rankBadgeClass2 rounded-pill px-4 py-2 fs-6">
                                 <span class="material-icons align-middle me-1" style="font-size: 16px;">military_tech</span>
                                 @(Model.FinalResult.Rank ?? "N/A")
                             </span>
                         </div>
-
-                        <!-- Details -->
                         <div class="small text-muted">
-                            <div class="d-flex align-items-center mb-2">
-                                <span class="material-icons me-2" style="font-size: 16px;">gavel</span>
-                                <span>Decision: <strong class="text-success">@(Model.FinalResult.ChairmanDecision ?? "Approved")</strong></span>
-                            </div>
                             <div class="d-flex align-items-center mb-2">
                                 <span class="material-icons me-2" style="font-size: 16px;">event</span>
                                 <span>Decision Date: @Model.FinalResult.DecisionDate.ToString("dd/MM/yyyy")</span>
@@ -356,10 +363,11 @@
             <!-- Revision/Rejection Reason Alert -->
             @if (Model.LatestRevisionRequest != null)
             {
-                var isRejected = Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected;
+                var isRejectedSL = Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL;
+                var isRejected = Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected || isRejectedSL;
                 var alertClass = isRejected ? "border-danger bg-danger" : "border-warning bg-warning";
                 var iconColor = isRejected ? "text-danger" : "text-warning";
-                var title = isRejected ? "Rejection Reason" : "Revision Required";
+                var title = isRejectedSL ? "Rejected (School Level)" : (isRejected ? "Rejection Reason" : "Revision Required");
                 
                 <div class="card shadow-sm mb-4 @(isRejected ? "border-danger" : "border-warning")" style="border-radius: 15px; border-width: 2px;">
                     <div class="card-header @(isRejected ? "bg-danger bg-opacity-10" : "bg-warning bg-opacity-25") border-0 pt-4 px-4">
@@ -383,7 +391,12 @@
                             {
                                 <div class="d-flex align-items-center">
                                     <span class="material-icons me-2" style="font-size: 16px;">schedule</span>
-                                    <span>Deadline: <strong class="text-danger">@Model.LatestRevisionRequest.Deadline.Value.ToString("dd/MM/yyyy")</strong></span>
+                                    <span>Deadline: <strong class="text-danger">@Model.LatestRevisionRequest.Deadline.Value.ToString("dd/MM/yyyy")</strong>
+                                        @if (Model.LatestRevisionRequest.Deadline.Value < DateTime.Now)
+                                        {
+                                            <span class="badge bg-danger ms-1">Expired</span>
+                                        }
+                                    </span>
                                 </div>
                             }
                         </div>
@@ -391,7 +404,43 @@
                 </div>
             }
 
-            <!-- Create Draft Copy Action -->
+            <!-- Resubmit / Clone Actions -->
+            @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL)
+            {
+                var canResubmit = Model.LatestRevisionRequest != null 
+                    && Model.LatestRevisionRequest.Status == "Open"
+                    && (!Model.LatestRevisionRequest.Deadline.HasValue || Model.LatestRevisionRequest.Deadline.Value >= DateTime.Now);
+
+                <div class="card card-custom shadow-sm mb-4" style="border-radius: 15px;">
+                    <div class="card-header bg-white border-0 pt-4 px-4">
+                        <h5 class="fw-bold mb-0">
+                            <span class="material-icons align-middle me-2 text-info">@(canResubmit ? "edit" : "content_copy")</span>
+                            @(canResubmit ? "Edit & Resubmit" : "Resubmit Initiative")
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        @if (canResubmit)
+                        {
+                            <p class="text-muted small mb-3">Edit your initiative and resubmit for review. It will go back to Processing status.</p>
+                            <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@Model.Initiative.Id" 
+                               class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold w-100">
+                                <span class="material-icons align-middle me-1">edit</span> Edit & Resubmit
+                            </a>
+                        }
+                        else
+                        {
+                            <p class="text-muted small mb-3">Resubmission is not available. Create a new draft copy from this initiative to make corrections and resubmit.</p>
+                            <form asp-controller="Initiative" asp-action="CopyToDraft" asp-route-id="@Model.Initiative.Id" method="post" onsubmit="return confirm('This will create a new draft copy. Continue?');">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-info btn-lg rounded-pill shadow-sm fw-bold w-100 text-white">
+                                    <span class="material-icons align-middle me-1">content_copy</span> Create Draft Copy
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+
             @if (Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Rejected || 
                  Model.Initiative.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required)
             {

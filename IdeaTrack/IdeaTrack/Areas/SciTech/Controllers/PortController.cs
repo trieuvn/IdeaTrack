@@ -52,7 +52,8 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 InitiativeStatus.Re_Evaluating, 
                 InitiativeStatus.Pending_Final, 
                 InitiativeStatus.Processing,
-                InitiativeStatus.Approved 
+                InitiativeStatus.Approved,
+                InitiativeStatus.Rejected_SL
             };
 
             var query = _context.Initiatives

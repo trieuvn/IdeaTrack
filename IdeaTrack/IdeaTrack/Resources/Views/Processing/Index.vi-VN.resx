@@ -58,109 +58,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Reports &amp; Statistics" xml:space="preserve">
-    <value>Báo cáo &amp; Thống kê</value>
+  <data name="Recognized Initiatives" xml:space="preserve">
+    <value>Sáng kiến được công nhận</value>
   </data>
-  <data name="Generate detailed reports, filter data, and export statistics." xml:space="preserve">
-    <value>Lập báo cáo chi tiết, lọc dữ liệu và xuất số liệu thống kê.</value>
-  </data>
-  <data name="Print Report (PDF)" xml:space="preserve">
-    <value>In báo cáo (PDF)</value>
-  </data>
-  <data name="Export Data" xml:space="preserve">
-    <value>Xuất dữ liệu</value>
-  </data>
-  <data name="Total Initiatives" xml:space="preserve">
-    <value>Tổng số sáng kiến</value>
-  </data>
-  <data name="Open Periods" xml:space="preserve">
-    <value>Đợt đang mở</value>
-  </data>
-  <data name="Activity Log (Last 7 Days)" xml:space="preserve">
-    <value>Nhật ký hoạt động (7 ngày qua)</value>
-  </data>
-  <data name="Faculty Approved" xml:space="preserve">
-    <value>Khoa đã duyệt</value>
-  </data>
-  <data name="Evaluating" xml:space="preserve">
-    <value>Đang đánh giá</value>
-  </data>
-  <data name="Pending Final" xml:space="preserve">
-    <value>Chờ xét duyệt cuối</value>
-  </data>
-  <data name="Year" xml:space="preserve">
-    <value>Năm học</value>
-  </data>
-  <data name="All" xml:space="preserve">
-    <value>Tất cả</value>
-  </data>
-  <data name="Period" xml:space="preserve">
-    <value>Đợt</value>
+  <data name="Initiatives that have passed council evaluation." xml:space="preserve">
+    <value>Các sáng kiến đã qua đánh giá hội đồng.</value>
   </data>
   <data name="Category" xml:space="preserve">
     <value>Danh mục</value>
   </data>
+  <data name="All Categories" xml:space="preserve">
+    <value>Tất cả danh mục</value>
+  </data>
   <data name="Status" xml:space="preserve">
     <value>Trạng thái</value>
   </data>
-  <data name="Re-evaluating" xml:space="preserve">
-    <value>Đang đánh giá lại</value>
+  <data name="All" xml:space="preserve">
+    <value>Tất cả</value>
   </data>
-  <data name="From Date" xml:space="preserve">
-    <value>Từ ngày</value>
+  <data name="Processing" xml:space="preserve">
+    <value>Đang xử lý</value>
   </data>
-  <data name="To Date" xml:space="preserve">
-    <value>Đến ngày</value>
-  </data>
-  <data name="Keyword" xml:space="preserve">
-    <value>Từ khóa</value>
-  </data>
-  <data name="Code / Title" xml:space="preserve">
-    <value>Mã / Tiêu đề</value>
-  </data>
-  <data name="Apply" xml:space="preserve">
-    <value>Áp dụng</value>
-  </data>
-  <data name="Code" xml:space="preserve">
-    <value>Mã</value>
-  </data>
-  <data name="Title" xml:space="preserve">
-    <value>Tiêu đề</value>
-  </data>
-  <data name="Year/Period" xml:space="preserve">
-    <value>Năm/Đợt</value>
-  </data>
-  <data name="Author" xml:space="preserve">
-    <value>Tác giả</value>
-  </data>
-  <data name="Department" xml:space="preserve">
-    <value>Phòng/Ban/Khoa</value>
-  </data>
-  <data name="Actions" xml:space="preserve">
-    <value>Thao tác</value>
-  </data>
-  <data name="No data available" xml:space="preserve">
-    <value>Không có dữ liệu</value>
-  </data>
-  <data name="members" xml:space="preserve">
-    <value>thành viên</value>
-  </data>
-  <data name="Revision Required" xml:space="preserve">
-    <value>Yêu cầu chỉnh sửa</value>
-  </data>
-  <data name="View Result" xml:space="preserve">
-    <value>Xem kết quả</value>
-  </data>
-  <data name="View Detail" xml:space="preserve">
-    <value>Xem chi tiết</value>
-  </data>
-  <data name="Showing {0}-{1} / {2} initiatives" xml:space="preserve">
-    <value>Hiển thị {0}-{1} / {2} sáng kiến</value>
-  </data>
-  <data name="Number of activities" xml:space="preserve">
-    <value>Số lượng hoạt động</value>
+  <data name="Approved" xml:space="preserve">
+    <value>Đã duyệt</value>
   </data>
   <data name="Rejected (SL)" xml:space="preserve">
     <value>Từ chối (Cấp trường)</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Lọc</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Đặt lại</value>
+  </data>
+  <data name="No initiatives found in this period." xml:space="preserve">
+    <value>Không tìm thấy sáng kiến nào trong đợt này.</value>
+  </data>
+  <data name="No description" xml:space="preserve">
+    <value>Không có mô tả</value>
+  </data>
+  <data name="View Detail" xml:space="preserve">
+    <value>Xem chi tiết</value>
   </data>
 </root>

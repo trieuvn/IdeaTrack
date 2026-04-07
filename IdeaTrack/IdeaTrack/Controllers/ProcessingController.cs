@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace IdeaTrack.Controllers
 {
     /// <summary>
-    /// Public page showing initiatives in Processing/Approved status.
-    /// Approver role can approve/revoke initiatives.
+    /// Public page showing initiatives in Processing/Approved/Rejected_SL status.
+    /// Approver role can approve/revoke/reject initiatives.
     /// </summary>
     public class ProcessingController : Controller
     {
@@ -53,7 +53,9 @@ namespace IdeaTrack.Controllers
                 .Include(i => i.Period)
                     .ThenInclude(p => p.AcademicYear)
                 .Where(i => i.PeriodId == latestPeriod.Id &&
-                           (i.Status == InitiativeStatus.Processing || i.Status == InitiativeStatus.Approved));
+                           (i.Status == InitiativeStatus.Processing || 
+                            i.Status == InitiativeStatus.Approved ||
+                            i.Status == InitiativeStatus.Rejected_SL));
 
             // Filter by category
             if (categoryId.HasValue)
@@ -100,12 +102,25 @@ namespace IdeaTrack.Controllers
                     .ThenInclude(a => a.Author)
                 .Include(i => i.FinalResult)
                     .ThenInclude(f => f.Chairman)
+                .Include(i => i.RevisionRequests)
+                    .ThenInclude(r => r.Requester)
                 .FirstOrDefaultAsync(i => i.Id == id
-                    && (i.Status == InitiativeStatus.Processing || i.Status == InitiativeStatus.Approved));
+                    && (i.Status == InitiativeStatus.Processing 
+                        || i.Status == InitiativeStatus.Approved
+                        || i.Status == InitiativeStatus.Rejected_SL));
 
             if (initiative == null) return NotFound();
 
             ViewBag.IsApprover = User.IsInRole("Approver");
+            
+            // Get latest revision request for Rejected_SL
+            if (initiative.Status == InitiativeStatus.Rejected_SL)
+            {
+                ViewBag.LatestRevisionRequest = initiative.RevisionRequests?
+                    .OrderByDescending(r => r.RequestedDate)
+                    .FirstOrDefault();
+            }
+
             return View(initiative);
         }
 
@@ -180,6 +195,117 @@ namespace IdeaTrack.Controllers
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Approval has been revoked. Initiative is back to Processing.";
+            return RedirectToAction("Detail", new { id });
+        }
+
+        // POST: /Processing/Reject/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Approver,Admin")]
+        public async Task<IActionResult> Reject(int id, string reason, bool allowResubmit, DateTime? deadline)
+        {
+            var initiative = await _context.Initiatives.FindAsync(id);
+            if (initiative == null) return NotFound();
+
+            if (initiative.Status != InitiativeStatus.Processing)
+            {
+                TempData["ErrorMessage"] = "Only initiatives in Processing status can be rejected.";
+                return RedirectToAction("Detail", new { id });
+            }
+
+            if (string.IsNullOrWhiteSpace(reason))
+            {
+                TempData["ErrorMessage"] = "Rejection reason is required.";
+                return RedirectToAction("Detail", new { id });
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Update status
+            initiative.Status = InitiativeStatus.Rejected_SL;
+            
+            // Create revision request record
+            var revisionRequest = new RevisionRequest
+            {
+                InitiativeId = id,
+                RequesterId = currentUser?.Id ?? 0,
+                RequestContent = reason,
+                RequestedDate = DateTime.Now,
+                Deadline = allowResubmit ? deadline : null,
+                IsResolved = false,
+                Status = allowResubmit ? "Open" : "Closed"
+            };
+            _context.RevisionRequests.Add(revisionRequest);
+
+            await _context.SaveChangesAsync();
+
+            // Audit log
+            _context.SystemAuditLogs.Add(new SystemAuditLog
+            {
+                UserId = currentUser?.Id ?? 0,
+                Action = "Reject_SL",
+                TargetTable = "Initiatives",
+                TargetId = id,
+                Details = $"Rejected initiative '{initiative.Title}' at school level (Processing → Rejected_SL). Allow resubmit: {allowResubmit}" + 
+                          (deadline.HasValue ? $", Deadline: {deadline.Value:dd/MM/yyyy}" : ""),
+                IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                Timestamp = DateTime.Now
+            });
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Initiative has been rejected at school level.";
+            return RedirectToAction("Detail", new { id });
+        }
+
+        // POST: /Processing/UndoReject/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Approver,Admin")]
+        public async Task<IActionResult> UndoReject(int id)
+        {
+            var initiative = await _context.Initiatives
+                .Include(i => i.RevisionRequests)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            if (initiative == null) return NotFound();
+
+            if (initiative.Status != InitiativeStatus.Rejected_SL)
+            {
+                TempData["ErrorMessage"] = "Only school-level rejected initiatives can be undone.";
+                return RedirectToAction("Detail", new { id });
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Revert status
+            initiative.Status = InitiativeStatus.Processing;
+
+            // Mark latest revision request as resolved
+            var latestRequest = initiative.RevisionRequests?
+                .OrderByDescending(r => r.RequestedDate)
+                .FirstOrDefault();
+            if (latestRequest != null)
+            {
+                latestRequest.IsResolved = true;
+                latestRequest.Status = "Closed";
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Audit log
+            _context.SystemAuditLogs.Add(new SystemAuditLog
+            {
+                UserId = currentUser?.Id ?? 0,
+                Action = "UndoReject_SL",
+                TargetTable = "Initiatives",
+                TargetId = id,
+                Details = $"Undid school-level rejection for initiative '{initiative.Title}' (Rejected_SL → Processing)",
+                IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                Timestamp = DateTime.Now
+            });
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Rejection has been undone. Initiative is back to Processing.";
             return RedirectToAction("Detail", new { id });
         }
     }
