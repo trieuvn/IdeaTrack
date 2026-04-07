@@ -1,4 +1,4 @@
-﻿@{
+@{
     var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PKHCN Portal</title>
+    <title>@ViewData["Title"] - @Localizer["PKHCN Portal"]</title>
 
     <link rel="icon" type="image/x-icon" href="~/lib/favicon.ico">
 
@@ -21,8 +21,24 @@
 
     <!-- Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          corePlugins: {
+            preflight: false,
+          },
+          theme: {
+            extend: {
+              colors: {
+                brand: '#be123c',
+              }
+            }
+          }
+        }
+    </script>
 
     <style>
         /* ============ BRANDING - MAROON THEME (Matching Homepage) ============ */
@@ -36,7 +52,7 @@
             
             /* Sidebar */
             --sidebar-bg: linear-gradient(180deg, #450a0a 0%, #7f1d1d 100%);
-            --sidebar-width: 260px;
+            --sidebar-width: 280px;
             --sidebar-text: rgba(255,255,255,0.7);
             --sidebar-text-active: #ffffff;
             --sidebar-hover: rgba(255,255,255,0.1);
@@ -103,23 +119,26 @@
         }
         
         .sidebar-header {
-            padding: 1.5rem;
+            padding: 2rem 1.5rem;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.1);
         }
         
         .sidebar-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             text-decoration: none;
         }
         
-        .sidebar-brand img {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-md);
-            background: rgba(255,255,255,0.1);
-            padding: 6px;
+        .logo-wrapper-premium {
+            width: 48px; height: 48px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fbbf24; font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
         .sidebar-brand-text {
@@ -128,17 +147,20 @@
         }
         
         .sidebar-brand-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--sidebar-text-active);
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #ffffff;
             letter-spacing: -0.02em;
+            line-height: 1.1;
         }
         
         .sidebar-brand-sub {
-            font-size: 0.7rem;
-            color: var(--sidebar-text);
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.5);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
+            margin-top: 2px;
         }
         
         .sidebar-nav {
@@ -159,25 +181,28 @@
         .sidebar .nav-link {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 0.75rem 1.5rem;
-            color: var(--sidebar-text);
+            gap: 14px;
+            padding: 0.875rem 1.75rem;
+            color: rgba(255,255,255,0.7);
             text-decoration: none;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            transition: all 0.2s ease;
-            border-left: 3px solid transparent;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            margin: 4px 12px;
+            border-radius: 12px;
         }
         
         .sidebar .nav-link:hover {
-            background: var(--sidebar-hover);
-            color: var(--sidebar-text-active);
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            transform: translateX(5px);
         }
         
         .sidebar .nav-link.active {
-            background: var(--sidebar-active);
-            color: var(--sidebar-text-active);
-            border-left-color: var(--brand-accent);
+            background: #ffffff;
+            color: #7f1d1d;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
         .sidebar .nav-link i {
@@ -429,53 +454,58 @@
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <a href="/Councils/Page/Index" class="sidebar-brand">
-                    <img src="~/images/logo-uef.png" alt="UEF Logo" />
+                <a href="/Councils/Page/Index" class="sidebar-brand group">
+                    <div class="logo-wrapper-premium transition-all duration-500 group-hover:rotate-[360deg] group-hover:scale-110 shadow-lg shadow-black/40">
+                        <i class="fa-solid fa-scale-balanced text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"></i>
+                    </div>
                     <div class="sidebar-brand-text">
-                        <span class="sidebar-brand-name">PKHCN Portal</span>
-                        <span class="sidebar-brand-sub">Council Reviewer</span>
+                        <span class="sidebar-brand-name transition-colors group-hover:text-amber-200">IdeaTrack</span>
+                        <span class="sidebar-brand-sub opacity-70">@Localizer["COUNCIL BOARD"]</span>
                     </div>
                 </a>
+                <div class="mt-4 px-1">
+                    <partial name="_SelectLanguagePartial" />
+                </div>
             </div>
 
             <nav class="sidebar-nav">
                 <!-- Return to Home Link -->
-                <a href="/" class="nav-link" style="color: var(--brand-accent); margin-bottom: 0.5rem;">
-                    <i class="bi bi-house-door-fill"></i>
-                    Return to Home
+                <a href="/" class="nav-link group transition-all duration-300" style="color: #fbbf24 !important; background: rgba(251, 191, 36, 0.1); margin-bottom: 1.5rem;">
+                    <i class="fa-solid fa-house-user transition-transform group-hover:scale-125 group-hover:rotate-12"></i>
+                    <span>@Localizer["Return to Home"]</span>
                 </a>
                 
-                <span class="nav-section-label">Overview</span>
+                <div class="nav-section-label">@Localizer["Overview"]</div>
 
                 <a href="/Councils/Page/Index"
-                   class="nav-link @(currentAction == "Index" ? "active" : "")">
-                    <i class="bi bi-grid-1x2-fill"></i>
-                    Dashboard
+                   class="nav-link group transition-all duration-300 @(currentAction == "Index" ? "active" : "")">
+                    <i class="fa-solid fa-gauge-high transition-transform group-hover:scale-125 group-hover:text-blue-400"></i>
+                    <span>@Localizer["Dashboard"]</span>
                 </a>
 
                 <a href="/Councils/Page/AssignedInitiatives"
-                   class="nav-link @(currentAction == "AssignedInitiatives" ? "active" : "")">
-                    <i class="bi bi-folder-fill"></i>
-                    Assigned Tasks
+                   class="nav-link group transition-all duration-300 @(currentAction == "AssignedInitiatives" ? "active" : "")">
+                    <i class="fa-solid fa-list-check transition-transform group-hover:scale-125 group-hover:text-emerald-400"></i>
+                    <span>@Localizer["Assigned Tasks"]</span>
                 </a>
 
                 <a href="/Councils/Page/History"
-                   class="nav-link @(currentAction == "History" ? "active" : "")">
-                    <i class="bi bi-clock-history"></i>
-                    History
+                   class="nav-link group transition-all duration-300 @(currentAction == "History" ? "active" : "")">
+                    <i class="fa-solid fa-clock-rotate-left transition-transform group-hover:scale-125 group-hover:text-indigo-400"></i>
+                    <span>@Localizer["History"]</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <a href="/Councils/Page/Profile" class="nav-link @(currentAction == "Profile" ? "active" : "")">
-                    <i class="bi bi-person-circle"></i>
-                    My Profile
+                <a href="/Councils/Page/Profile" class="nav-link group transition-all duration-300 @(currentAction == "Profile" ? "active" : "")">
+                    <i class="fa-solid fa-user-gear transition-transform group-hover:scale-125 group-hover:rotate-12 group-hover:text-cyan-400"></i>
+                    <span>@Localizer["My Profile"]</span>
                 </a>
 
                 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline w-100">
-                    <button type="submit" class="nav-link logout-btn w-100 text-start border-0 bg-transparent">
-                        <i class="bi bi-box-arrow-right"></i>
-                        Sign Out
+                    <button type="submit" class="nav-link logout-btn w-100 text-start border-0 bg-transparent group transition-all duration-300">
+                        <i class="fa-solid fa-power-off transition-transform group-hover:rotate-180 group-hover:text-red-400"></i>
+                        <span>@Localizer["Sign Out"]</span>
                     </button>
                 </form>
             </div>

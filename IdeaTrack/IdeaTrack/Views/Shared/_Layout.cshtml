@@ -1,12 +1,19 @@
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
 @inject UserManager<ApplicationUser> UserManager
+@inject IOptions<RequestLocalizationOptions> LocOptions
+@inject IViewLocalizer Localizer
 
 @{
     var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@(System.Globalization.CultureInfo.CurrentCulture.Name)">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,9 +25,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Google Fonts + Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Google Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <!-- Google Fonts + FontAwesome 6 -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+          corePlugins: {
+            preflight: false,
+          },
+          theme: {
+            extend: {
+              colors: {
+                brand: '#be123c',
+              }
+            }
+          }
+        }
+    </script>
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/page.css" asp-append-version="true" />
@@ -32,23 +60,26 @@
 <body>
 
     <!-- HEADER -->
-    <header class="app-header">
+    <header class="app-header" style="position: sticky; top: 0; z-index: 1030;">
         <div class="d-flex align-items-center">
-            <button id="sidebar-toggle" class="btn btn-link text-white me-3">
-                <span class="material-icons">menu</span>
+            <button id="sidebar-toggle" class="btn btn-link text-white me-3 opacity-75 hover-opacity-100 transition-transform hover:scale-110 active:scale-95 duration-200">
+                <i class="fa-solid fa-bars-staggered fs-5"></i>
             </button>
-            <div class="app-title">
-                <span class="material-icons me-2" style="color: #fbbf24;">lightbulb</span>
-                <span>INITIATIVE PORTAL</span>
+            <div class="app-title d-flex align-items-center">
+                <div class="brand-icon-wrapper me-2 shadow-md bg-white/20 backdrop-blur-sm p-1.5 rounded-lg border border-white/10">
+                    <i class="fa-solid fa-lightbulb text-amber-300 drop-shadow-[0_0_8px_rgba(252,211,77,0.8)] animate-pulse"></i>
+                </div>
+                <span class="fw-bold tracking-tight text-white/95">@Localizer["Initiative Portal"]</span>
             </div>
         </div>
         <div class="d-flex align-items-center gap-3">
+            <!-- Language Dropdown -->
+            <partial name="_SelectLanguagePartial" />
             <div class="position-relative">
-                <button class="btn btn-link text-white position-relative">
-                    <span class="material-icons">notifications</span>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                <button class="btn btn-link text-white position-relative p-2 opacity-75 hover-opacity-100 transition-all hover:translate-y-[-2px]">
+                    <i class="fa-regular fa-bell fs-5 drop-shadow-sm hover:text-amber-200"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-2 border-primary shadow-sm ring-2 ring-white/20" style="font-size: 0.6rem;">
                         3
-                        <span class="visually-hidden">unread notifications</span>
                     </span>
                 </button>
             </div>
@@ -58,45 +89,40 @@
                 var fullName = user?.FullName ?? User.Identity?.Name ?? "User";
                 var userId = user?.Id.ToString() ?? "N/A";
                 <div class="dropdown">
-                    <button class="btn btn-link text-white" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">
-                        <div class="user-avatar-small bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                            <span class="material-icons text-primary" style="font-size: 20px;">person</span>
+                    <button class="btn btn-link text-white p-0 border-0" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="user-avatar-premium">
+                            <i class="fa-solid fa-user"></i>
                         </div>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end user-dropdown-glass" aria-labelledby="userDropdown">
-                        <div class="user-info-row">
-                            <span class="material-icons">badge</span>
-                            <span>Name: <strong>@fullName</strong></span>
+                    <div class="dropdown-menu dropdown-menu-end user-dropdown-glass border-0 shadow-lg mt-2" aria-labelledby="userDropdown">
+                        <div class="px-4 py-3 border-bottom border-light opacity-75">
+                            <div class="fw-bold text-dark mb-1">@fullName</div>
+                            <div class="small text-muted">ID: @userId</div>
                         </div>
-                        <div class="user-info-row">
-                            <span class="material-icons">person</span>
-                            <span>Account: <strong>@userId</strong></span>
+                        <div class="p-2">
+                             <a class="dropdown-item rounded-3 py-2 px-3" asp-area="Author" asp-controller="HomePage" asp-action="Setting">
+                                <i class="fa-solid fa-circle-user me-2 opacity-50"></i>
+                                @Localizer["Profile"]
+                            </a>
+                            <a class="dropdown-item rounded-3 py-2 px-3" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">
+                                <i class="fa-solid fa-key me-2 opacity-50"></i>
+                                @Localizer["Change Password"]
+                            </a>
+                            <div class="dropdown-divider border-light"></div>
+                            <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                                <button type="submit" class="dropdown-item rounded-3 py-2 px-3 text-danger">
+                                    <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>
+                                    @Localizer["Logout"]
+                                </button>
+                            </form>
                         </div>
-                        <hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);">
-                        <a class="dropdown-item user-menu-item" asp-area="Author" asp-controller="HomePage" asp-action="Setting">
-                            <span class="material-icons">account_circle</span>
-                            Profile
-                        </a>
-                        <a class="dropdown-item user-menu-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">
-                            <span class="material-icons">lock</span>
-                            Change Password
-                        </a>
-                        <hr class="dropdown-divider" style="border-color: rgba(255,255,255,0.2);">
-                        <form asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
-                            <button type="submit" class="dropdown-item user-menu-item text-danger">
-                                <span class="material-icons">logout</span>
-                                Logout
-                            </button>
-                        </form>
                     </div>
                 </div>
             }
             else
             {
-                <a asp-area="Identity" asp-page="/Account/Login" class="header-avatar-link">
-                    <div class="user-avatar-small bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
-                        <span class="material-icons text-primary" style="font-size: 20px;">person</span>
-                    </div>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-warning btn-sm rounded-pill px-3 fw-bold shadow-sm">
+                    <i class="fa-solid fa-right-to-bracket me-1"></i> @Localizer["Sign In"]
                 </a>
             }
         </div>
@@ -111,70 +137,79 @@
             <partial name="_LoginPartial" />
 
             <!-- MENU -->
-            <div class="sidebar-nav">
+            <div class="sidebar-nav px-2 space-y-1">
 
                 <a href="@Url.Action("Index", "Home", new { area = "" })"
                    id="nav-home"
-                   class="@(currentController == "Home" && currentAction == "Index" ? "active" : "")">
-                    <span class="material-icons">home</span> Home
+                   class="nav-item-premium transition-all duration-300 group @(currentController == "Home" && currentAction == "Index" ? "active" : "")">
+                    <i class="fa-solid fa-house-chimney transition-transform group-hover:scale-125 group-hover:text-red-600"></i> 
+                    <span>@Localizer["Home"]</span>
                 </a>
 
                 <a href="@Url.Action("Leaderboard", "Home", new { area = "" })"
                    id="nav-leaderboard"
-                   class="@(currentController == "Home" && currentAction == "Leaderboard" ? "active" : "")">
-                    <span class="material-icons">leaderboard</span> Leaderboard
+                   class="nav-item-premium transition-all duration-300 group @(currentController == "Home" && currentAction == "Leaderboard" ? "active" : "")">
+                    <i class="fa-solid fa-trophy transition-transform group-hover:scale-125 group-hover:text-yellow-500"></i> 
+                    <span>@Localizer["Leaderboard"]</span>
                 </a>
 
                 <a href="@Url.Action("About", "Home", new { area = "" })"
-                   class="@(currentController == "Home" && currentAction == "About" ? "active" : "")">
-                    <span class="material-icons">info</span> About
+                   class="nav-item-premium transition-all duration-300 group @(currentController == "Home" && currentAction == "About" ? "active" : "")">
+                    <i class="fa-solid fa-circle-info transition-transform group-hover:scale-125 group-hover:text-blue-500"></i> 
+                    <span>@Localizer["About"]</span>
                 </a>
 
                 <a href="@Url.Action("Index", "Processing", new { area = "" })"
-                   class="@(currentController == "Processing" ? "active" : "")">
-                    <span class="material-icons">emoji_events</span> Recognized Initiatives
+                   class="nav-item-premium transition-all duration-300 group @(currentController == "Processing" ? "active" : "")">
+                    <i class="fa-solid fa-medal transition-transform group-hover:scale-125 group-hover:text-indigo-500"></i> 
+                    <span>@Localizer["Recognized Initiatives"]</span>
                 </a>
 
                 <a href="@Url.Action("Privacy", "Home", new { area = "" })"
-                   class="@(currentController == "Home" && currentAction == "Privacy" ? "active" : "")">
-                    <span class="material-icons">menu_book</span> Guidelines
+                   class="nav-item-premium transition-all duration-300 group @(currentController == "Home" && currentAction == "Privacy" ? "active" : "")">
+                    <i class="fa-solid fa-book-open-reader transition-transform group-hover:scale-125 group-hover:text-emerald-500"></i> 
+                    <span>@Localizer["Guidelines"]</span>
                 </a>
 
                 @if (User.IsInRole("Author") || User.IsInRole("Lecturer"))
                 {
-                    <hr class="my-2 mx-3 border-secondary" />
-                    <div class="px-3 mb-2 text-uppercase text-muted small fw-bold">Author</div>
+                    <div class="nav-divider mt-4 mb-2 opacity-50 tracking-widest text-[10px]">@Localizer["WORKSPACE"]</div>
 
                     <a asp-area="Author" asp-controller="Dashboard" asp-action="Index"
-                       class="@(currentAction == "Index" && currentController == "Dashboard" ? "active" : "")">
-                        <span class="material-icons">dashboard</span> Dashboard
+                       class="nav-item-premium transition-all duration-300 group @(currentAction == "Index" && currentController == "Dashboard" ? "active" : "")">
+                        <i class="fa-solid fa-chart-line transition-transform group-hover:scale-125 group-hover:text-blue-600"></i> 
+                        <span>@Localizer["Dashboard"]</span>
                     </a>
 
                     <a asp-area="Author" asp-controller="Initiative" asp-action="Create"
-                       class="@(currentAction == "Create" && currentController == "Initiative" ? "active" : "")">
-                        <span class="material-icons">add_circle</span> Register Initiative
+                       class="nav-item-premium transition-all duration-300 group @(currentAction == "Create" && currentController == "Initiative" ? "active" : "")">
+                        <i class="fa-solid fa-plus-circle transition-transform group-hover:scale-125 group-hover:text-rose-500"></i> 
+                        <span>@Localizer["Register Initiative"]</span>
                     </a>
 
                     <a asp-area="Author" asp-controller="Initiative" asp-action="History"
-                       class="@(currentAction == "History" && currentController == "Initiative" ? "active" : "")">
-                        <span class="material-icons">history</span> My Initiatives
+                       class="nav-item-premium transition-all duration-300 group @(currentAction == "History" && currentController == "Initiative" ? "active" : "")">
+                        <i class="fa-solid fa-box-archive transition-transform group-hover:scale-125 group-hover:text-amber-600"></i> 
+                        <span>@Localizer["My Initiatives"]</span>
                     </a>
 
                     <a asp-area="Author" asp-controller="HomePage" asp-action="DailyReport"
-                       class="@(currentAction == "DailyReport" ? "active" : "")">
-                        <span class="material-icons">insights</span> Statistics
+                       class="nav-item-premium transition-all duration-300 group @(currentAction == "DailyReport" ? "active" : "")">
+                        <i class="fa-solid fa-gauge-high transition-transform group-hover:scale-125 group-hover:text-purple-500"></i> 
+                        <span>@Localizer["Statistics"]</span>
                     </a>
 
                     <a asp-area="Author" asp-controller="HomePage" asp-action="Setting"
-                       class="@(currentAction == "Setting" ? "active" : "")">
-                        <span class="material-icons">settings</span> Settings
+                       class="nav-item-premium transition-all duration-300 group @(currentAction == "Setting" ? "active" : "")">
+                        <i class="fa-solid fa-sliders transition-transform group-hover:scale-125 group-hover:text-cyan-500"></i> 
+                        <span>@Localizer["Settings"]</span>
                     </a>
                 }
             </div>
 
             <!-- ONLINE SUPPORT (Fixed at Bottom) -->
             <div class="online-support-sidebar mt-auto">
-                <h6 class="fw-bold mb-2 text-dark">Online Support</h6>
+                <h6 class="fw-bold mb-2 text-dark">@Localizer["Online Support"]</h6>
                 <div class="d-flex gap-3 justify-content-center">
                     <a href="https://www.facebook.com/uef.edu.vn" target="_blank" class="support-icon-link" title="Hotline">
                         <i class="bi bi-headphones" style="font-size: 1.5rem; color: #2563eb;"></i>
@@ -215,5 +250,31 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Google Translate Script -->
+    <div id="google_translate_element" style="display:none"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'vi,en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+
+        function triggerGoogleTranslate() {
+            var googleElement = document.querySelector('.goog-te-combo');
+            if (googleElement) {
+                googleElement.value = 'vi';
+                googleElement.dispatchEvent(new Event('change'));
+            } else {
+                // If not loaded, show the widget or wait
+                var widget = document.getElementById('google_translate_element');
+                widget.style.display = 'block';
+            }
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

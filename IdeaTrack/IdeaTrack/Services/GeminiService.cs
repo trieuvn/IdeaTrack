@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
@@ -97,6 +97,25 @@ YÊU CẦU:
             }
 
             return EnforceWordLimitBySentence(summary, MAX_WORDS);
+        }
+
+        public async Task<string> TranslateAsync(string text, string targetLanguage = "Vietnamese")
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return "";
+
+            string prompt = $@"
+Bạn là một chuyên gia dịch thuật đa ngôn ngữ chuyên nghiệp.
+YÊU CẦU:
+- Dịch văn bản sau sang ngôn ngữ: {targetLanguage}.
+- Giữ nguyên định ngữ, phong thái và ý nghĩa của văn bản gốc.
+- Nếu là thuật ngữ chuyên ngành, hãy chọn từ ngữ phù hợp nhất trong bối cảnh học thuật/giảng dạy.
+- CHỈ TRẢ VỀ NỘI DUNG ĐÃ DỊCH, không thêm bất kỳ giải thích nào khác.
+
+VĂN BẢN GỐC:
+{text}
+";
+            return await CallGeminiAsync(prompt);
         }
 
         // ================= Gemini call + fallback =================

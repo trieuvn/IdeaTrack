@@ -51,6 +51,7 @@ namespace IdeaTrack.Areas.SciTech.Controllers
                 InitiativeStatus.Evaluating, 
                 InitiativeStatus.Re_Evaluating, 
                 InitiativeStatus.Pending_Final, 
+                InitiativeStatus.Processing,
                 InitiativeStatus.Approved 
             };
 

@@ -1,6 +1,8 @@
-﻿@using IdeaTrack.ViewModels
+@using IdeaTrack.ViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = Localizer["Home"];
 }
 
 
@@ -10,33 +12,32 @@
         <div class="row align-items-center">
             <div class="col-lg-8">
                 <div class="d-flex align-items-center gap-2 mb-3">
-                    <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-bold">IMPORTANT ANNOUNCEMENT</span>
-                    <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-2">Deadline: 30/06/2026</span>
+                    <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-bold">@Localizer["Important Announcement"]</span>
+                    <span class="badge rounded-pill bg-white bg-opacity-25 px-3 py-2">@Localizer["Deadline: 30/06/2026"]</span>
                 </div>
 
-                <h1 class="display-2 fw-bold mb-0" style="letter-spacing: -2px; line-height: 0.95; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">INNOVATION</h1>
-                <h1 class="display-2 fw-bold mb-3" style="letter-spacing: -2px; line-height: 0.95; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">AWARDS 2026</h1>
+                <h1 class="display-2 fw-bold mb-0" style="letter-spacing: -2px; line-height: 0.95; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">@Localizer["Innovation Awards 2026"]</h1>
 
                 <p class="fs-5 fw-light opacity-90 mb-4" style="letter-spacing: 0.5px;">
-                    Sparking Creativity - Elevating Teaching Quality
+                    @Localizer["Sparking Creativity"]
                 </p>
 
                 <div class="d-flex gap-3 flex-wrap">
                     @if (User.Identity.IsAuthenticated)
                     {
                          <a asp-controller="Initiative" asp-action="Create" asp-area="Author" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
-                            <span class="material-icons align-middle me-1">rocket_launch</span> Submit Now
+                            <span class="material-icons align-middle me-1">rocket_launch</span> @Localizer["Submit Now"]
                         </a>
                     }
                     else
                     {
                         <a asp-controller="Account" asp-action="Login" asp-area="Identity" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
-                            <span class="material-icons align-middle me-1">rocket_launch</span> Submit Now
+                            <span class="material-icons align-middle me-1">rocket_launch</span> @Localizer["Submit Now"]
                         </a>
                     }
                     
                     <a href="/Home/Privacy" class="btn btn-outline-light btn-lg px-4 rounded-3 bg-white bg-opacity-10">
-                        <span class="material-icons align-middle me-1">info</span> Learn More
+                        <span class="material-icons align-middle me-1">info</span> @Localizer["Learn More"]
                     </a>
                 </div>
             </div>
@@ -44,8 +45,8 @@
 
         <div class="award-circle d-none d-lg-flex">
             <span class="material-icons mb-2" style="font-size: 50px; color: #fbbf24;">emoji_events</span>
-            <div class="fw-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">INNOVATION</div>
-            <div class="fw-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">AWARDS</div>
+            <div class="fw-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">@Localizer["Innovation"]</div>
+            <div class="fw-bold text-uppercase" style="font-size: 0.85rem; letter-spacing: 1px;">@Localizer["Awards"]</div>
             <div class="display-6 fw-bold" style="color: #fbbf24;">2026</div>
         </div>
     </div>
@@ -58,8 +59,8 @@
                      style="width: 70px; height: 70px; background-color: #fce7f3; border-radius: 50%;">
                     <span class="material-icons" style="color: #be123c; font-size: 2rem;">lightbulb</span>
                 </div>
-                <h5 class="fw-bold">Innovation Mindset</h5>
-                <p class="text-muted small px-3">Encouraging creative thinking to propose innovative solutions and improve teaching methods.</p>
+                <h5 class="fw-bold">@Localizer["Innovation Mindset"]</h5>
+                <p class="text-muted small px-3">@Localizer["Innovation Mindset Detail"]</p>
             </div>
         </div>
         <div class="col-md-4">
@@ -68,8 +69,8 @@
                      style="width: 70px; height: 70px; background-color: #dbeafe; border-radius: 50%;">
                     <span class="material-icons" style="color: #1d4ed8; font-size: 2rem;">trending_up</span>
                 </div>
-                <h5 class="fw-bold">Improve Efficiency</h5>
-                <p class="text-muted small px-3">Optimizing workflows, saving resources, and enhancing the quality of education at UEF.</p>
+                <h5 class="fw-bold">@Localizer["Improve Efficiency"]</h5>
+                <p class="text-muted small px-3">@Localizer["Improve Efficiency Detail"]</p>
             </div>
         </div>
         <div class="col-md-4">
@@ -78,8 +79,8 @@
                      style="width: 70px; height: 70px; background-color: #fef3c7; border-radius: 50%;">
                     <span class="material-icons" style="color: #b45309; font-size: 2rem;">emoji_events</span>
                 </div>
-                <h5 class="fw-bold">Recognition & Rewards</h5>
-                <p class="text-muted small px-3">Innovative ideas will be recognized, certified, and rewarded with appropriate incentives.</p>
+                <h5 class="fw-bold">@Localizer["Recognition & Rewards"]</h5>
+                <p class="text-muted small px-3">@Localizer["Recognition Detail"]</p>
             </div>
         </div>
     </div>
@@ -90,9 +91,9 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <span class="material-icons text-danger me-2">menu_book</span>
-                <h4 class="fw-bold mb-0">Support Documents</h4>
+                <h4 class="fw-bold mb-0">@Localizer["Support Documents"]</h4>
             </div>
-            <a href="/Home/Privacy" class="text-danger text-decoration-none fw-bold small">View All <span class="material-icons fs-6 align-middle">arrow_forward</span></a>
+            <a href="/Home/Privacy" class="text-danger text-decoration-none fw-bold small">@Localizer["View All"] <span class="material-icons fs-6 align-middle">arrow_forward</span></a>
         </div>
 
         <div class="row g-4">
@@ -104,8 +105,8 @@
                                 <div class="icon-wrapper mb-3">
                                     <span class="material-icons" style="font-size: 2rem; color: #fbbf24;">description</span>
                                 </div>
-                                <h5 class="fw-bold mb-2">Registration Forms</h5>
-                                <p class="small opacity-75 mb-0">Download necessary application forms</p>
+                                <h5 class="fw-bold mb-2">@Localizer["Registration Forms"]</h5>
+                                <p class="small opacity-75 mb-0">@Localizer["Registration Detail"]</p>
                             </div>
                         </div>
                     </div>
@@ -119,8 +120,8 @@
                                 <div class="icon-wrapper mb-3">
                                     <span class="material-icons" style="font-size: 2rem; color: #fbbf24;">insights</span>
                                 </div>
-                                <h5 class="fw-bold mb-2">Review Process</h5>
-                                <p class="small opacity-75 mb-0">Steps from idea to implementation</p>
+                                <h5 class="fw-bold mb-2">@Localizer["Review Process"]</h5>
+                                <p class="small opacity-75 mb-0">@Localizer["Review Detail"]</p>
                             </div>
                         </div>
                     </div>
@@ -134,8 +135,8 @@
                                 <div class="icon-wrapper mb-3">
                                     <span class="material-icons" style="font-size: 2rem; color: #fbbf24;">inventory_2</span>
                                 </div>
-                                <h5 class="fw-bold mb-2">Innovation Bank</h5>
-                                <p class="small opacity-75 mb-0">Browse exemplary initiatives</p>
+                                <h5 class="fw-bold mb-2">@Localizer["Innovation Bank"]</h5>
+                                <p class="small opacity-75 mb-0">@Localizer["Bank Detail"]</p>
                             </div>
                         </div>
                     </div>
