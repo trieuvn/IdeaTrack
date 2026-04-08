@@ -288,7 +288,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>@Localizer["Are you sure you want to {0} this initiative?", "<strong class=\"text-success\">" + @Localizer["approve"].Value + "</strong>"]</p>
+                    <p>@Html.Raw(string.Format(Localizer["Are you sure you want to {0} this initiative?"].Value, "<strong class=\"text-success\">" + Localizer["approve"].Value + "</strong>"))</p>
                     <div class="bg-light rounded p-3">
                         <small class="text-muted">@Localizer["Initiative"]:</small>
                         <div class="fw-semibold">@Model.Title</div>
@@ -357,9 +357,9 @@
 
                         <div class="alert alert-warning mb-0">
                             <i class="fa-solid fa-triangle-exclamation me-1"></i>
-                            @Localizer["This will change the status from {0} to {1}.",
-                                "<span class=\"badge bg-info\">Processing</span>",
-                                "<span class=\"badge bg-danger\">Rejected (SL)</span>"]
+                            @Html.Raw(string.Format(Localizer["This will change the status from {0} to {1}."].Value,
+                                "<span class=\"badge bg-info\">" + Localizer["Processing"].Value + "</span>",
+                                "<span class=\"badge bg-danger\">" + Localizer["Rejected (SL)"].Value + "</span>"))
                         </div>
                     </div>
                     <div class="modal-footer border-0">
@@ -387,7 +387,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>@Localizer["Are you sure you want to {0} the approval for this initiative?", "<strong class=\"text-warning\">" + @Localizer["revoke"].Value + "</strong>"]</p>
+                    <p>@Html.Raw(string.Format(Localizer["Are you sure you want to {0} the approval for this initiative?"].Value, "<strong class=\"text-warning\">" + Localizer["revoke"].Value + "</strong>"))</p>
                     <div class="bg-light rounded p-3">
                         <small class="text-muted">@Localizer["Initiative"]:</small>
                         <div class="fw-semibold">@Model.Title</div>
