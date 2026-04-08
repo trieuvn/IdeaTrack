@@ -1,4 +1,4 @@
-﻿namespace IdeaTrack.Areas.Author.ViewModels
+namespace IdeaTrack.Areas.Author.ViewModels
 {
     using IdeaTrack.Models;
     using Microsoft.AspNetCore.Http;
@@ -38,5 +38,8 @@
         
         // Flag to check if user is owner (for edit permissions)
         public bool IsOwner { get; set; } = true;
+
+        // Latest revision request (for Rejected_SL / Revision_Required display in Edit view)
+        public RevisionRequest? LatestRevisionRequest { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IdeaTrack.Models.Initiative>
+@model IEnumerable<IdeaTrack.Models.Initiative>
 
 <main class="container pb-5 pt-2">
 
@@ -60,7 +60,7 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="rejected" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">cancel</span>
-                        Rejected <span class="badge bg-danger ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Rejected)</span>
+                        Rejected <span class="badge bg-danger ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Rejected || i.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL)</span>
                     </button>
                 </li>
             </ul>
@@ -152,9 +152,19 @@
                                                     <span class="material-icons align-middle me-1" style="font-size: 12px;">cancel</span> Rejected
                                                 </span>
                                                 break;
+                                            case IdeaTrack.Models.InitiativeStatus.Rejected_SL:
+                                                <span class="badge bg-danger rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">block</span> Rejected (SL)
+                                                </span>
+                                                break;
                                             case IdeaTrack.Models.InitiativeStatus.Draft:
                                                 <span class="badge bg-secondary rounded-pill px-3 py-2">
                                                     <span class="material-icons align-middle me-1" style="font-size: 12px;">edit_note</span> Draft
+                                                </span>
+                                                break;
+                                            case IdeaTrack.Models.InitiativeStatus.Processing:
+                                                <span class="badge bg-info rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">hourglass_top</span> Processing
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Pending:
@@ -180,7 +190,7 @@
                                                class="btn btn-sm btn-outline-primary rounded-start-pill" title="View Details">
                                                 <span class="material-icons" style="font-size: 16px;">visibility</span>
                                             </a>
-                                            @if (item.Status == IdeaTrack.Models.InitiativeStatus.Draft || item.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required)
+                                            @if (item.Status == IdeaTrack.Models.InitiativeStatus.Draft || item.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required || item.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL)
                                             {
                                                 <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@item.Id" 
                                                    class="btn btn-sm btn-outline-secondary rounded-end-pill" title="Edit Initiative">

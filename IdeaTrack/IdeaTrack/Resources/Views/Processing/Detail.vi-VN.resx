@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Initiative Detail" xml:space="preserve">
+    <value>Chi tiết sáng kiến</value>
+  </data>
+  <data name="Code" xml:space="preserve">
+    <value>Mã</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>Phòng/Ban/Khoa</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Phê duyệt</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Từ chối</value>
+  </data>
+  <data name="Revoke Approval" xml:space="preserve">
+    <value>Thu hồi phê duyệt</value>
+  </data>
+  <data name="Undo Reject" xml:space="preserve">
+    <value>Hoàn tác từ chối</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Đã duyệt</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Đang xử lý</value>
+  </data>
+  <data name="Rejected (SL)" xml:space="preserve">
+    <value>Từ chối (Cấp trường)</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+  <data name="Period" xml:space="preserve">
+    <value>Đợt</value>
+  </data>
+  <data name="Rejection Information" xml:space="preserve">
+    <value>Thông tin từ chối</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Lý do</value>
+  </data>
+  <data name="Rejected by" xml:space="preserve">
+    <value>Người từ chối</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Ngày</value>
+  </data>
+  <data name="Resubmit Deadline" xml:space="preserve">
+    <value>Hạn nộp lại</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Đã hết hạn</value>
+  </data>
+  <data name="Resubmission is not allowed for this rejection." xml:space="preserve">
+    <value>Sáng kiến này không được phép nộp lại.</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Mô tả</value>
+  </data>
+  <data name="No description provided." xml:space="preserve">
+    <value>Chưa có mô tả.</value>
+  </data>
+  <data name="Budget" xml:space="preserve">
+    <value>Ngân sách</value>
+  </data>
+  <data name="Attached Files" xml:space="preserve">
+    <value>Tệp đính kèm</value>
+  </data>
+  <data name="Authors" xml:space="preserve">
+    <value>Tác giả</value>
+  </data>
+  <data name="Creator" xml:space="preserve">
+    <value>Người tạo</value>
+  </data>
+  <data name="Co-author" xml:space="preserve">
+    <value>Đồng tác giả</value>
+  </data>
+  <data name="Evaluation Result" xml:space="preserve">
+    <value>Kết quả đánh giá</value>
+  </data>
+  <data name="Average Score" xml:space="preserve">
+    <value>Điểm trung bình</value>
+  </data>
+  <data name="Rank" xml:space="preserve">
+    <value>Xếp hạng</value>
+  </data>
+  <data name="Decided by" xml:space="preserve">
+    <value>Người quyết định</value>
+  </data>
+  <data name="Timeline" xml:space="preserve">
+    <value>Dòng thời gian</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Ngày tạo</value>
+  </data>
+  <data name="Submitted" xml:space="preserve">
+    <value>Ngày nộp</value>
+  </data>
+  <data name="Confirm Approval" xml:space="preserve">
+    <value>Xác nhận phê duyệt</value>
+  </data>
+  <data name="approve" xml:space="preserve">
+    <value>phê duyệt</value>
+  </data>
+  <data name="Initiative" xml:space="preserve">
+    <value>Sáng kiến</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="Yes, Approve" xml:space="preserve">
+    <value>Có, Phê duyệt</value>
+  </data>
+  <data name="Reject Initiative" xml:space="preserve">
+    <value>Từ chối sáng kiến</value>
+  </data>
+  <data name="Rejection Reason" xml:space="preserve">
+    <value>Lý do từ chối</value>
+  </data>
+  <data name="Enter the reason for rejection..." xml:space="preserve">
+    <value>Nhập lý do từ chối...</value>
+  </data>
+  <data name="Allow resubmission" xml:space="preserve">
+    <value>Cho phép nộp lại</value>
+  </data>
+  <data name="If checked, the author will be able to edit and resubmit before the deadline." xml:space="preserve">
+    <value>Nếu được chọn, tác giả có thể chỉnh sửa và nộp lại trước hạn.</value>
+  </data>
+  <data name="The author must resubmit before this date." xml:space="preserve">
+    <value>Tác giả phải nộp lại trước ngày này.</value>
+  </data>
+  <data name="Yes, Reject" xml:space="preserve">
+    <value>Có, Từ chối</value>
+  </data>
+  <data name="Confirm Revoke" xml:space="preserve">
+    <value>Xác nhận thu hồi</value>
+  </data>
+  <data name="revoke" xml:space="preserve">
+    <value>thu hồi</value>
+  </data>
+  <data name="Yes, Revoke" xml:space="preserve">
+    <value>Có, Thu hồi</value>
+  </data>
+  <data name="Undo Rejection" xml:space="preserve">
+    <value>Hoàn tác từ chối</value>
+  </data>
+  <data name="Are you sure you want to undo the rejection? The initiative will go back to Processing status." xml:space="preserve">
+    <value>Bạn có chắc chắn muốn hoàn tác từ chối? Sáng kiến sẽ trở lại trạng thái Đang xử lý.</value>
+  </data>
+  <data name="Yes, Undo" xml:space="preserve">
+    <value>Có, Hoàn tác</value>
+  </data>
+</root>

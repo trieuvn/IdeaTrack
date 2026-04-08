@@ -77,9 +77,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                     IsOwner = initiative.CreatorId == userId || User.IsInRole("Admin")
                 };
 
-                // Fetch latest revision request for rejected/revision_required initiatives
+                // Fetch latest revision request for rejected/revision_required/rejected_sl initiatives
                 if (initiative.Status == InitiativeStatus.Revision_Required || 
-                    initiative.Status == InitiativeStatus.Rejected)
+                    initiative.Status == InitiativeStatus.Rejected ||
+                    initiative.Status == InitiativeStatus.Rejected_SL)
                 {
                     viewModel.LatestRevisionRequest = await _context.RevisionRequests
                         .Include(r => r.Requester)
@@ -88,8 +89,10 @@ namespace IdeaTrack.Areas.Author.Controllers
                         .FirstOrDefaultAsync();
                 }
 
-                // Fetch FinalResult for approved/processing initiatives
-                if (initiative.Status == InitiativeStatus.Approved || initiative.Status == InitiativeStatus.Processing)
+                // Fetch FinalResult for approved/processing/rejected_sl initiatives
+                if (initiative.Status == InitiativeStatus.Approved || 
+                    initiative.Status == InitiativeStatus.Processing ||
+                    initiative.Status == InitiativeStatus.Rejected_SL)
                 {
                     viewModel.FinalResult = await _context.FinalResults
                         .Include(f => f.Chairman)
@@ -462,6 +465,18 @@ namespace IdeaTrack.Areas.Author.Controllers
                     ? await _context.Departments.FindAsync(currentUser.DepartmentId) 
                     : null;
 
+                // Fetch latest revision request for Rejected_SL display
+                RevisionRequest? latestRevisionRequest = null;
+                if (initiative.Status == InitiativeStatus.Rejected_SL || 
+                    initiative.Status == InitiativeStatus.Revision_Required)
+                {
+                    latestRevisionRequest = await _context.RevisionRequests
+                        .Include(r => r.Requester)
+                        .Where(r => r.InitiativeId == id)
+                        .OrderByDescending(r => r.RequestedDate)
+                        .FirstOrDefaultAsync();
+                }
+
                 var viewModel = new InitiativeCreateViewModel
                 {
                     Initiative = initiative,
@@ -473,7 +488,8 @@ namespace IdeaTrack.Areas.Author.Controllers
                     ActivePeriodId = null,
                     ExistingFiles = initiative.Files?.ToList() ?? new List<InitiativeFile>(),
                     ExistingCoAuthors = authorships.Where(a => !a.IsCreator).ToList(),
-                    IsOwner = isOwner
+                    IsOwner = isOwner,
+                    LatestRevisionRequest = latestRevisionRequest
                 };
 
                 return View(viewModel);
@@ -547,14 +563,48 @@ namespace IdeaTrack.Areas.Author.Controllers
 
                     if (action == "Submit")
                     {
-                        existingInitiative.Status = InitiativeStatus.Pending;
-                        existingInitiative.SubmittedDate = DateTime.Now;
-                        
-                        // Set period when submitting (date-based selection)
-                        var today = DateTime.Today;
-                        var activePeriod = await _context.InitiativePeriods
-                            .FirstOrDefaultAsync(p => p.StartDate <= today && today <= p.EndDate);
-                        existingInitiative.PeriodId = activePeriod?.Id;
+                        // Handle Rejected_SL resubmit — go back to Processing, not Pending
+                        if (existingInitiative.Status == InitiativeStatus.Rejected_SL)
+                        {
+                            // Check if resubmission is allowed
+                            var latestReq = await _context.RevisionRequests
+                                .Where(r => r.InitiativeId == id)
+                                .OrderByDescending(r => r.RequestedDate)
+                                .FirstOrDefaultAsync();
+
+                            if (latestReq != null && latestReq.Status == "Closed")
+                            {
+                                TempData["ErrorMessage"] = "Resubmission is not allowed for this rejection. You can only create a draft copy.";
+                                return RedirectToAction(nameof(Detail), new { id });
+                            }
+
+                            if (latestReq != null && latestReq.Deadline.HasValue && latestReq.Deadline.Value < DateTime.Now)
+                            {
+                                TempData["ErrorMessage"] = "The resubmission deadline has expired. You can only create a draft copy.";
+                                return RedirectToAction(nameof(Detail), new { id });
+                            }
+
+                            existingInitiative.Status = InitiativeStatus.Processing;
+                            existingInitiative.SubmittedDate = DateTime.Now;
+
+                            // Mark revision request as resolved
+                            if (latestReq != null)
+                            {
+                                latestReq.IsResolved = true;
+                                latestReq.Status = "Resolved";
+                            }
+                        }
+                        else
+                        {
+                            existingInitiative.Status = InitiativeStatus.Pending;
+                            existingInitiative.SubmittedDate = DateTime.Now;
+                            
+                            // Set period when submitting (date-based selection)
+                            var today = DateTime.Today;
+                            var activePeriod = await _context.InitiativePeriods
+                                .FirstOrDefaultAsync(p => p.StartDate <= today && today <= p.EndDate);
+                            existingInitiative.PeriodId = activePeriod?.Id;
+                        }
                     }
 
                     // Handle file uploads using Service
