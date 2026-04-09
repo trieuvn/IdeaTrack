@@ -100,7 +100,31 @@
                             <div class="small text-muted">ID: @userId</div>
                         </div>
                         <div class="p-2">
-                             <a class="dropdown-item rounded-3 py-2 px-3" asp-area="Author" asp-controller="HomePage" asp-action="Setting">
+                             @{
+                                 var profileArea = "Author";
+                                 var profileController = "HomePage";
+                                 var profileAction = "Setting";
+
+                                 if (User.IsInRole("SciTech"))
+                                 {
+                                     profileArea = "SciTech";
+                                     profileController = "Profile";
+                                     profileAction = "Index";
+                                 }
+                                 else if (User.IsInRole("Council"))
+                                 {
+                                     profileArea = "Councils";
+                                     profileController = "Page";
+                                     profileAction = "Profile";
+                                 }
+                                 else if (User.IsInRole("FacultyLeader"))
+                                 {
+                                     profileArea = "Faculty";
+                                     profileController = "Profile";
+                                     profileAction = "Index";
+                                 }
+                             }
+                             <a class="dropdown-item rounded-3 py-2 px-3" asp-area="@profileArea" asp-controller="@profileController" asp-action="@profileAction">
                                 <i class="fa-solid fa-circle-user me-2 opacity-50"></i>
                                 @Localizer["Profile"]
                             </a>
