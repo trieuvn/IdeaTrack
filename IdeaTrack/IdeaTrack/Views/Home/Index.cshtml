@@ -25,9 +25,12 @@
                 <div class="d-flex gap-3 flex-wrap">
                     @if (User.Identity.IsAuthenticated)
                     {
-                         <a asp-controller="Initiative" asp-action="Create" asp-area="Author" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
-                            <span class="material-icons align-middle me-1">rocket_launch</span> @Localizer["Submit Now"]
-                        </a>
+                        if (User.IsInRole("Author") || User.IsInRole("Lecturer"))
+                        {
+                             <a asp-controller="Initiative" asp-action="Create" asp-area="Author" class="btn btn-warning btn-lg px-4 fw-bold shadow-sm rounded-3">
+                                <span class="material-icons align-middle me-1">rocket_launch</span> @Localizer["Submit Now"]
+                            </a>
+                        }
                     }
                     else
                     {
