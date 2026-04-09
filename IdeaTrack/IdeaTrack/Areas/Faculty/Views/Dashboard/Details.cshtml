@@ -1,17 +1,17 @@
-﻿@model IdeaTrack.Areas.Faculty.Models.FacultyInitiativeDetailVM
+@model IdeaTrack.Areas.Faculty.Models.FacultyInitiativeDetailVM
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = Localizer["Initiative Details"].Value;
+    ViewData["Title"] = "Chi tiết Sáng kiến";
 }
 
 <div class="container py-4">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-action="Index">@Localizer["Dashboard"]</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@Localizer["Details"]</li>
+            <li class="breadcrumb-item"><a asp-action="Index">Bảng điều khiển</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
         </ol>
     </nav>
 
@@ -21,27 +21,43 @@
             <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <h2 class="fw-bold text-primary mb-0">@Model.Title</h2>
-                    <span class="badge bg-primary rounded-pill fs-6 px-3">@Model.Status</span>
+                    <span class="badge bg-primary rounded-pill fs-6 px-3">
+                        @{
+                            string statusLabel = Model.Status.ToString();
+                            switch (Model.Status)
+                            {
+                                case IdeaTrack.Models.InitiativeStatus.Pending: statusLabel = "Chờ xét duyệt"; break;
+                                case IdeaTrack.Models.InitiativeStatus.Faculty_Approved: statusLabel = "Khoa đã duyệt"; break;
+                                case IdeaTrack.Models.InitiativeStatus.Evaluating:
+                                case IdeaTrack.Models.InitiativeStatus.Re_Evaluating: statusLabel = "Đang đánh giá"; break;
+                                case IdeaTrack.Models.InitiativeStatus.Pending_Final: statusLabel = "Chờ chung khảo"; break;
+                                case IdeaTrack.Models.InitiativeStatus.Approved: statusLabel = "Đã duyệt"; break;
+                                case IdeaTrack.Models.InitiativeStatus.Rejected: statusLabel = "Bị từ chối"; break;
+                                case IdeaTrack.Models.InitiativeStatus.Revision_Required: statusLabel = "Yêu cầu chỉnh sửa"; break;
+                            }
+                        }
+                        @statusLabel
+                    </span>
                 </div>
                 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label class="text-secondary small d-block mb-1">@Localizer["Code"]</label>
+                        <label class="text-secondary small d-block mb-1">Mã số</label>
                         <div class="fw-bold">@Model.InitiativeCode</div>
                     </div>
                     <div class="col-md-6">
-                         <label class="text-secondary small d-block mb-1">@Localizer["Category"]</label>
+                         <label class="text-secondary small d-block mb-1">Danh mục</label>
                         <div class="fw-bold">@(Model.Category?.Name ?? "N/A")</div>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <h5 class="fw-bold border-bottom pb-2 mb-3">@Localizer["Description"]</h5>
+                    <h5 class="fw-bold border-bottom pb-2 mb-3">Mô tả</h5>
                     <p class="text-dark" style="text-align: justify; line-height: 1.6;">@Model.Description</p>
                 </div>
                 
                 <div>
-                     <h5 class="fw-bold border-bottom pb-2 mb-3">@Localizer["Attachments"]</h5>
+                     <h5 class="fw-bold border-bottom pb-2 mb-3">Tài liệu đính kèm</h5>
                      @if(Model.Files != null && Model.Files.Any())
                      {
                          <div class="list-group">
@@ -52,7 +68,7 @@
                                      <i class="bi bi-file-earmark-text me-3 fs-4 text-secondary"></i>
                                      <div>
                                          <div class="fw-medium">@file.FileName</div>
-                                         <small class="text-muted">@Localizer["Click to view"]</small>
+                                         <small class="text-muted">Nhấp để xem</small>
                                      </div>
                                  </a>
                              }
@@ -60,7 +76,7 @@
                      }
                      else
                      {
-                         <p class="text-muted">@Localizer["No attachments."]</p>
+                         <p class="text-muted">Không có tài liệu đính kèm.</p>
                      }
                 </div>
             </div>
@@ -73,26 +89,26 @@
                   Model.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
              {
                  <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
-                     <h5 class="fw-bold mb-3">@Localizer["Review Action"]</h5>
-                     <p class="text-muted small">@Localizer["Faculty Head Review"]</p>
+                     <h5 class="fw-bold mb-3">Đánh giá Phát duyệt</h5>
+                     <p class="text-muted small">Quyết định của Trưởng khoa</p>
                      
                      <form method="post">
                          <input type="hidden" name="InitiativeId" value="@Model.Id" />
                          
                          <div class="mb-3">
-                             <label class="form-label fw-medium">@Localizer["Comments"]</label>
-                             <textarea name="Comments" class="form-control" rows="4" placeholder="Enter comments for approval/rejection..."></textarea>
+                             <label class="form-label fw-medium">Đánh giá / Bình luận</label>
+                             <textarea name="Comments" class="form-control" rows="4" placeholder="Nhập lý do phê duyệt/từ chối..."></textarea>
                          </div>
                          
                         <div class="d-grid gap-2 review-buttons">
                              <button type="submit" asp-controller="Dashboard" asp-action="Accept" class="btn btn-success text-white" >
-                                 <i class="bi bi-check-circle me-2"></i> Accept
+                                 <i class="bi bi-check-circle me-2"></i> Chấp nhận
                              </button>
                              <button type="submit" asp-controller="Dashboard" asp-action="RequestRevision" class="btn btn-warning text-dark" >
-                                 <i class="bi bi-pencil-square me-2"></i> Request Revision
+                                 <i class="bi bi-pencil-square me-2"></i> Yêu cầu chỉnh sửa
                              </button>
                              <button type="submit" asp-controller="Dashboard" asp-action="Reject" class="btn btn-danger text-white">
-                                 <i class="bi bi-x-circle me-2"></i> Reject
+                                 <i class="bi bi-x-circle me-2"></i> Từ chối
                              </button>
                          </div>
                      </form>
@@ -100,9 +116,9 @@
              }
 
              <div class="card border-0 shadow-sm p-4 rounded-4">
-                 <h5 class="fw-bold mb-3">@Localizer["Information"]</h5>
+                 <h5 class="fw-bold mb-3">Thông tin Sáng kiến</h5>
                  <div class="mb-3">
-                     <label class="small text-muted d-block">Authors (@Model.Authors.Count member@(Model.Authors.Count > 1 ? "s" : ""))</label>
+                     <label class="small text-muted d-block">Tác giả (@Model.Authors.Count thành viên)</label>
                      @if(Model.Authors != null && Model.Authors.Any())
                      {
                          <ul class="list-unstyled mb-0">
@@ -120,12 +136,12 @@
                      }
                  </div>
                  <div class="mb-3">
-                     <label class="small text-muted d-block">@Localizer["Submitted Date"]</label>
+                     <label class="small text-muted d-block">Ngày nộp</label>
                      <div class="fw-medium">@Model.SubmittedDate.ToString("dd/MM/yyyy HH:mm")</div>
                  </div>
                  <div class="mb-3">
-                     <label class="small text-muted d-block">@Localizer["Budget"]</label>
-                     <div class="fw-bold text-success">@Model.Budget.ToString("N0") VND</div>
+                     <label class="small text-muted d-block">Ngân sách</label>
+                     <div class="fw-bold text-success">@Model.Budget.ToString("N0") VNĐ</div>
                  </div>
              </div>
         </div>
