@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Create Initiative" xml:space="preserve"><value>Tạo sáng kiến</value></data>
+  <data name="Create Initiative Description" xml:space="preserve"><value>Đăng ký sáng kiến nghiên cứu mới của bạn.</value></data>
+  <data name="Initiative Information" xml:space="preserve"><value>Thông tin sáng kiến</value></data>
+  <data name="Academic Year" xml:space="preserve"><value>Năm học</value></data>
+  <data name="-- Select academic year --" xml:space="preserve"><value>-- Chọn năm học --</value></data>
+  <data name="Select year first" xml:space="preserve"><value>Chọn năm học trước để xem danh mục khả dụng</value></data>
+  <data name="Category" xml:space="preserve"><value>Danh mục</value></data>
+  <data name="-- Select academic year first --" xml:space="preserve"><value>-- Chọn năm học trước --</value></data>
+  <data name="Department" xml:space="preserve"><value>Phòng ban</value></data>
+  <data name="Auto-assigned from your profile" xml:space="preserve"><value>Tự động gán từ hồ sơ của bạn</value></data>
+  <data name="Budget (VND)" xml:space="preserve"><value>Ngân sách (VNĐ)</value></data>
+  <data name="Initiative Title" xml:space="preserve"><value>Tiêu đề sáng kiến</value></data>
+  <data name="Co-Authors" xml:space="preserve"><value>Đồng tác giả</value></data>
+  <data name="(Optional)" xml:space="preserve"><value>(Không bắt buộc)</value></data>
+  <data name="Search by name or email..." xml:space="preserve"><value>Tìm theo tên hoặc email...</value></data>
+  <data name="Detailed Description" xml:space="preserve"><value>Mô tả chi tiết</value></data>
+  <data name="Attachments" xml:space="preserve"><value>Tệp đính kèm</value></data>
+  <data name="Drag and drop files here" xml:space="preserve"><value>Kéo và thả tệp vào đây</value></data>
+  <data name="or click to upload" xml:space="preserve"><value>hoặc nhấn để tải lên</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Bảng điều khiển</value></data>
+  <data name="Save Draft" xml:space="preserve"><value>Lưu nháp</value></data>
+  <data name="Submit Initiative" xml:space="preserve"><value>Nộp sáng kiến</value></data>
+</root>

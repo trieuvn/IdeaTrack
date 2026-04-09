@@ -1,8 +1,10 @@
-﻿@using IdeaTrack.Models
+@using IdeaTrack.Models
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @model IEnumerable<IdeaTrack.Models.Initiative>
 
 @{
-    ViewData["Title"] = "Revision Tracking";
+    ViewData["Title"] = Localizer["Revision Tracking"].Value;
     string currentFilter = ViewBag.FilterType as string ?? "All";
 }
 
@@ -52,8 +54,8 @@
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1">Revision Tracking & Requests</h2>
-            <p class="text-secondary">Manage revision requests to lecturers and track resubmission status.</p>
+            <h2 class="fw-bold mb-1">@Localizer["Revision Tracking"]</h2>
+            <p class="text-secondary">@Localizer["Revision Tracking Description"]</p>
         </div>
     </div>
 
@@ -61,15 +63,15 @@
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm p-4">
                 <h5 class="fw-bold mb-4 d-flex align-items-center">
-                    <i class="bi bi-send-plus text-primary me-2"></i>Send Revision Request
+                    <i class="bi bi-send-plus text-primary me-2"></i>@Localizer["Send Revision Request"]
                 </h5>
 
                 <form method="post" action="@Url.Action("RequestRevision", "Dashboard", new { area = "Faculty" })">
                     @Html.AntiForgeryToken()
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Select Initiative</label>
+                        <label class="form-label small fw-bold text-secondary">@Localizer["Select Initiative"]</label>
                         <select class="form-select bg-light" id="selectInitiative" onchange="autoFillLecturer()" name="InitiativeId" required>
-                            <option value="" data-lecturer="">-- Select --</option>
+                            <option value="" data-lecturer="">@Localizer["-- Select --"]</option>
                             @if (ViewBag.DropdownList != null)
                             {
                                 foreach (var item in ViewBag.DropdownList)
@@ -83,7 +85,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Recipient Lecturer</label>
+                        <label class="form-label small fw-bold text-secondary">@Localizer["Recipient Lecturer"]</label>
                         <div class="input-group">
                             <span class="input-group-text border-0 bg-light-gray text-secondary fw-bold">Lecturer</span>
                             <input type="text" id="inputLecturer" class="form-control border-0 bg-light-gray" placeholder="Auto-filled..." readonly>
@@ -91,20 +93,20 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-secondary">Request Content / Reason</label>
-                        <textarea class="form-control" rows="5" name="Comments" placeholder="Enter detailed revision requirements..." required></textarea>
+                        <label class="form-label small fw-bold text-secondary">@Localizer["Request Content / Reason"]</label>
+                        <textarea class="form-control" rows="5" name="Comments" placeholder="@Localizer["Enter detailed revision requirements..."].Value" required></textarea>
                         <div class="form-text mt-2 small text-muted italic">
-                            This request is mandatory before the record can be forwarded.
+                            @Localizer["This request is mandatory"]
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label small fw-bold text-secondary">Deadline (Optional)</label>
+                        <label class="form-label small fw-bold text-secondary">@Localizer["Deadline (Optional)"]</label>
                         <input type="date" class="form-control" name="deadline">
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
-                        <i class="bi bi-cursor-fill me-2"></i>Send Request
+                        <i class="bi bi-cursor-fill me-2"></i>@Localizer["Send Request"]
                     </button>
                 </form>
             </div>
@@ -114,19 +116,19 @@
             <div class="row g-3 mb-4 text-center">
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm p-3 border-start border-warning border-5">
-                        <small class="text-secondary d-block mb-1">Editing in Progress</small>
+                        <small class="text-secondary d-block mb-1">@Localizer["Editing in Progress"]</small>
                         <span class="fs-2 fw-bold text-warning">@ViewBag.CountEditing</span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm p-3 border-start border-primary border-5">
-                        <small class="text-secondary d-block mb-1">Resubmitted (Pending)</small>
+                        <small class="text-secondary d-block mb-1">@Localizer["Resubmitted (Pending)"]</small>
                         <span class="fs-2 fw-bold text-primary">@ViewBag.CountResubmitted</span>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm p-3 border-start border-success border-5">
-                        <small class="text-secondary d-block mb-1">Completed (This Month)</small>
+                        <small class="text-secondary d-block mb-1">@Localizer["Completed (This Month)"]</small>
                         <span class="fs-2 fw-bold text-success">@ViewBag.CountCompleted</span>
                     </div>
                 </div>
@@ -134,11 +136,11 @@
 
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-0 p-4 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Progress Status</h5>
+                    <h5 class="fw-bold mb-0">@Localizer["Progress Status"]</h5>
                     <div class="btn-group btn-group-sm border rounded">
-                        <a href="@Url.Action("Review", new { filterType = "All" })" class="btn @(currentFilter == "All" ? "btn-secondary fw-bold" : "btn-light")">All</a>
-                        <a href="@Url.Action("Review", new { filterType = "Editing" })" class="btn @(currentFilter == "Editing" ? "btn-secondary fw-bold" : "btn-light")">Editing</a>
-                        <a href="@Url.Action("Review", new { filterType = "Resubmitted" })" class="btn @(currentFilter == "Resubmitted" ? "btn-secondary fw-bold" : "btn-light")">Resubmitted</a>
+                        <a href="@Url.Action("Review", new { filterType = "All" })" class="btn @(currentFilter == "All" ? "btn-secondary fw-bold" : "btn-light")">@Localizer["All"]</a>
+                        <a href="@Url.Action("Review", new { filterType = "Editing" })" class="btn @(currentFilter == "Editing" ? "btn-secondary fw-bold" : "btn-light")">@Localizer["Editing"]</a>
+                        <a href="@Url.Action("Review", new { filterType = "Resubmitted" })" class="btn @(currentFilter == "Resubmitted" ? "btn-secondary fw-bold" : "btn-light")">@Localizer["Resubmitted"]</a>
                     </div>
                 </div>
 
@@ -187,7 +189,7 @@
                     {
                         <div class="p-5 text-center text-muted">
                             <i class="bi bi-inbox fs-1"></i>
-                            <p class="mt-2">No records found matching the filter.</p>
+                            <p class="mt-2">@Localizer["No records found."]</p>
                         </div>
                     }
                 </div>
@@ -222,16 +224,16 @@
     </div>
 
     <div class="alert alert-info mt-4 border-0 shadow-sm p-4 rounded-4" style="background-color: #f0f7ff;">
-        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-info-circle me-2"></i>Review Workflow:</h6>
+        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-info-circle me-2"></i>@Localizer["Review Workflow:"]</h6>
         <div class="row small text-primary">
             <div class="col-md-4">
-                <strong>1. Faculty Manager</strong> reviews initiatives. If issues found, clicks "Send Revision Request".
+                @Localizer["Step 1"]
             </div>
             <div class="col-md-4 border-start border-primary">
-                <strong>2. Lecturer</strong> receives notification, updates content, and resubmits. Status becomes "Resubmitted".
+                @Localizer["Step 2"]
             </div>
             <div class="col-md-4 border-start border-primary">
-                <strong>3. Faculty Manager</strong> approves revised initiative. If valid -> Fwd to R&D. If not -> Request again.
+                @Localizer["Step 3"]
             </div>
         </div>
     </div>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Revision Tracking" xml:space="preserve"><value>Theo dõi chỉnh sửa</value></data>
+  <data name="Revision Tracking Description" xml:space="preserve"><value>Quản lý yêu cầu chỉnh sửa gửi đến giảng viên và theo dõi trạng thái nộp lại.</value></data>
+  <data name="Send Revision Request" xml:space="preserve"><value>Gửi yêu cầu chỉnh sửa</value></data>
+  <data name="Select Initiative" xml:space="preserve"><value>Chọn sáng kiến</value></data>
+  <data name="-- Select --" xml:space="preserve"><value>-- Chọn --</value></data>
+  <data name="Recipient Lecturer" xml:space="preserve"><value>Giảng viên nhận</value></data>
+  <data name="Request Content / Reason" xml:space="preserve"><value>Nội dung / Lý do yêu cầu</value></data>
+  <data name="Enter detailed revision requirements..." xml:space="preserve"><value>Nhập yêu cầu chỉnh sửa chi tiết...</value></data>
+  <data name="This request is mandatory" xml:space="preserve"><value>Yêu cầu này là bắt buộc trước khi hồ sơ có thể được chuyển tiếp.</value></data>
+  <data name="Deadline (Optional)" xml:space="preserve"><value>Hạn chót (Không bắt buộc)</value></data>
+  <data name="Send Request" xml:space="preserve"><value>Gửi yêu cầu</value></data>
+  <data name="Editing in Progress" xml:space="preserve"><value>Đang chỉnh sửa</value></data>
+  <data name="Resubmitted (Pending)" xml:space="preserve"><value>Đã nộp lại (Chờ duyệt)</value></data>
+  <data name="Completed (This Month)" xml:space="preserve"><value>Hoàn thành (Tháng này)</value></data>
+  <data name="Progress Status" xml:space="preserve"><value>Trạng thái tiến trình</value></data>
+  <data name="All" xml:space="preserve"><value>Tất cả</value></data>
+  <data name="Editing" xml:space="preserve"><value>Đang sửa</value></data>
+  <data name="Resubmitted" xml:space="preserve"><value>Đã nộp lại</value></data>
+  <data name="Note from Lecturer:" xml:space="preserve"><value>Ghi chú từ giảng viên:</value></data>
+  <data name="Revision Request:" xml:space="preserve"><value>Yêu cầu chỉnh sửa:</value></data>
+  <data name="Initiative revised as requested." xml:space="preserve"><value>Sáng kiến đã được chỉnh sửa theo yêu cầu.</value></data>
+  <data name="View Details" xml:space="preserve"><value>Xem chi tiết</value></data>
+  <data name="Remind" xml:space="preserve"><value>Nhắc nhở</value></data>
+  <data name="No records found." xml:space="preserve"><value>Không tìm thấy bản ghi nào phù hợp với bộ lọc.</value></data>
+  <data name="Review Workflow:" xml:space="preserve"><value>Quy trình xét duyệt:</value></data>
+  <data name="Step 1" xml:space="preserve"><value>1. Trưởng khoa xem xét sáng kiến. Nếu phát hiện vấn đề, nhấn "Gửi yêu cầu chỉnh sửa".</value></data>
+  <data name="Step 2" xml:space="preserve"><value>2. Giảng viên nhận thông báo, cập nhật nội dung và nộp lại. Trạng thái chuyển thành "Đã nộp lại".</value></data>
+  <data name="Step 3" xml:space="preserve"><value>3. Trưởng khoa duyệt sáng kiến đã sửa. Nếu hợp lệ → Chuyển NCKH. Nếu không → Yêu cầu lại.</value></data>
+</root>

@@ -1,4 +1,6 @@
 @model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <main class="container pb-5 pt-2">
 
@@ -7,11 +9,11 @@
         <div class="row">
             <div class="col-12">
                 <span class="badge rounded-pill bg-success text-white mb-2 p-2 px-3">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">add_circle</span> NEW INITIATIVE
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">add_circle</span> @Localizer["Create Initiative"].Value.ToUpper()
                 </span>
-                <h1 class="fw-bold display-6 mb-2">Create Initiative</h1>
+                <h1 class="fw-bold display-6 mb-2">@Localizer["Create Initiative"]</h1>
                 <p class="fs-6 mb-0 opacity-75" style="line-height: 1.6;">
-                    Registered your new research initiative.
+                    @Localizer["Create Initiative Description"]
                 </p>
             </div>
         </div>
@@ -22,7 +24,7 @@
         <div class="card-header bg-white border-0 pt-4 px-4">
             <h5 class="fw-bold mb-0">
                 <span class="material-icons align-middle me-2 text-info">edit_note</span>
-                Initiative Information
+                @Localizer["Initiative Information"]
             </h5>
         </div>
         <div class="card-body p-4">
@@ -36,20 +38,20 @@
                     <div class="col-md-6">
                         <label class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">school</span>
-                            Academic Year <span class="text-danger">*</span>
+                            @Localizer["Academic Year"] <span class="text-danger">*</span>
                         </label>
                         <select id="AcademicYearId" name="SelectedAcademicYearId" asp-items="Model.AcademicYears" class="form-select">
-                            <option value="">-- Select academic year --</option>
+                            <option value="">@Localizer["-- Select academic year --"]</option>
                         </select>
-                        <small class="text-muted">Select year first to see available categories</small>
+                        <small class="text-muted">@Localizer["Select year first"]</small>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.CategoryId" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">category</span>
-                            Category <span class="text-danger">*</span>
+                            @Localizer["Category"] <span class="text-danger">*</span>
                         </label>
                         <select asp-for="Initiative.CategoryId" id="CategoryId" class="form-select">
-                            <option value="">-- Select academic year first --</option>
+                            <option value="">@Localizer["-- Select academic year first --"]</option>
                             @if (Model.Categories != null)
                             {
                                 @foreach (var item in Model.Categories)
@@ -67,16 +69,16 @@
                     <div class="col-md-6">
                         <label class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-info" style="font-size: 18px;">business</span>
-                            Department
+                            @Localizer["Department"]
                         </label>
                         <input type="text" class="form-control bg-light" value="@Model.UserDepartmentName" readonly />
                         <input type="hidden" asp-for="Initiative.DepartmentId" value="@Model.UserDepartmentId" />
-                        <small class="text-muted">Auto-assigned from your profile</small>
+                        <small class="text-muted">@Localizer["Auto-assigned from your profile"]</small>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.Budget" class="form-label fw-medium">
                             <span class="material-icons align-middle me-1 text-warning" style="font-size: 18px;">payments</span>
-                            Budget (VND)
+                            @Localizer["Budget (VND)"]
                         </label>
                         <input asp-for="Initiative.Budget" type="number" step="1000" placeholder="Enter estimated budget" class="form-control" />
                         <span asp-validation-for="Initiative.Budget" class="text-danger small"></span>
@@ -87,7 +89,7 @@
                 <div class="mb-4">
                     <label asp-for="Initiative.Title" class="form-label fw-medium">
                         <span class="material-icons align-middle me-1 text-danger" style="font-size: 18px;">title</span>
-                        Initiative Title <span class="text-danger">*</span>
+                        @Localizer["Initiative Title"] <span class="text-danger">*</span>
                     </label>
                     <input asp-for="Initiative.Title" placeholder="Enter a brief title for the initiative" class="form-control form-control-lg" />
                     <span asp-validation-for="Initiative.Title" class="text-danger small"></span>
@@ -97,11 +99,11 @@
                 <div class="mb-4">
                     <label class="form-label fw-medium">
                         <span class="material-icons align-middle me-1 text-success" style="font-size: 18px;">group_add</span>
-                        Co-Authors <small class="text-muted fw-normal">(Optional)</small>
+                        @Localizer["Co-Authors"] <small class="text-muted fw-normal">@Localizer["(Optional)"]</small>
                     </label>
                     <div class="input-group mb-2">
                         <span class="input-group-text bg-light"><span class="material-icons" style="font-size: 18px;">search</span></span>
-                        <input type="text" id="coAuthorSearch" class="form-control" placeholder="Search by name or email..." autocomplete="off" />
+                        <input type="text" id="coAuthorSearch" class="form-control" placeholder="@Localizer["Search by name or email..."].Value" autocomplete="off" />
                     </div>
                     <div id="searchResults" class="list-group mb-2" style="max-height: 200px; overflow-y: auto;"></div>
                     <div id="selectedCoAuthors" class="d-flex flex-wrap gap-2"></div>
@@ -112,7 +114,7 @@
                 <div class="mb-4">
                     <label asp-for="Initiative.Description" class="form-label fw-medium">
                         <span class="material-icons align-middle me-1 text-secondary" style="font-size: 18px;">notes</span>
-                        Detailed Description
+                        @Localizer["Detailed Description"]
                     </label>
                     <textarea asp-for="Initiative.Description" placeholder="Describe the initiative, objectives, and expected outcomes..." rows="6" class="form-control"></textarea>
                     <span asp-validation-for="Initiative.Description" class="text-danger small"></span>
@@ -122,7 +124,7 @@
                 <div class="mb-4">
                     <label class="form-label fw-medium">
                         <span class="material-icons align-middle me-1 text-primary" style="font-size: 18px;">attach_file</span>
-                        Attachments
+                        @Localizer["Attachments"]
                     </label>
                     
                     <!-- File input - use CSS to hide instead of hidden attribute for better browser compatibility -->
@@ -134,8 +136,8 @@
                          style="border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;">
                         <div class="drop-zone-content">
                             <span class="material-icons text-primary mb-3" style="font-size: 48px;">cloud_upload</span>
-                            <h6 class="fw-bold text-dark mb-2">Drag and drop files here</h6>
-                            <p class="text-muted mb-3">or click to upload</p>
+                            <h6 class="fw-bold text-dark mb-2">@Localizer["Drag and drop files here"]</h6>
+                            <p class="text-muted mb-3">@Localizer["or click to upload"]</p>
                             <span class="badge bg-light text-muted border">PDF, Word, Excel, PowerPoint • Max 10MB</span>
                         </div>
                     </div>
@@ -149,14 +151,14 @@
                 <hr class="my-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <a asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
-                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> Dashboard
+                        <span class="material-icons align-middle me-1" style="font-size: 18px;">arrow_back</span> @Localizer["Dashboard"]
                     </a>
                     <div class="d-flex gap-3">
                         <button type="submit" name="action" value="Save" class="btn btn-outline-primary rounded-pill px-4">
-                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Save Draft
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> @Localizer["Save Draft"]
                         </button>
                         <button type="submit" name="action" value="Submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow">
-                            <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> Submit Initiative
+                            <span class="material-icons align-middle me-1" style="font-size: 18px;">send</span> @Localizer["Submit Initiative"]
                         </button>
                     </div>
                 </div>
