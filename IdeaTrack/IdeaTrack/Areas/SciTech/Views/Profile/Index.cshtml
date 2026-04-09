@@ -1,0 +1,208 @@
+@model IdeaTrack.Areas.SciTech.Models.SciTechProfileVM
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="container-fluid" style="background-color: #f7f9fb; min-height: calc(100vh - 72px); padding-bottom: 2rem;">
+    <!-- Minimal Breadcrumb -->
+    <div class="mb-4 d-flex align-items-center">
+        <h4 class="fw-bold mb-0 text-dark">Hồ sơ cá nhân</h4>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column: User Info & Work Status -->
+        <div class="col-lg-5">
+            <!-- User Summary Card -->
+            <div class="card border-0 rounded-4 shadow-sm mb-4" style="background-color: #f0fdfa;">
+                <div class="card-body text-center py-5">
+                    <div class="position-relative d-inline-block mb-3">
+                        <img src="@Model.AvatarUrl" alt="Avatar" class="rounded-circle shadow-sm" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid white;" />
+                    </div>
+                    <h5 class="fw-bold mb-1 text-dark">@Model.FullName</h5>
+                    <div class="text-danger fw-bold text-uppercase mb-2" style="font-size: 0.9rem;">
+                        @(string.IsNullOrEmpty(Model.Position) ? "Chưa rõ" : Model.Position)
+                    </div>
+                    <div class="text-muted small mb-3 fst-italic">Phân loại nhân viên:</div>
+                    @if (Model.IsActive)
+                    {
+                        <span class="badge rounded-pill bg-success text-white px-3 py-2 fw-medium" style="background-color: #d1fae5 !important; color: #047857 !important;">Đang làm việc</span>
+                    }
+                    else
+                    {
+                        <span class="badge rounded-pill bg-secondary text-white px-3 py-2 fw-medium">Ngừng hoạt động</span>
+                    }
+                </div>
+            </div>
+
+            <!-- Job Info Card -->
+            <div class="card border-0 rounded-4 shadow-sm">
+                <div class="card-header bg-white border-0 pt-4 pb-0">
+                    <h6 class="fw-bold mb-0 text-uppercase" style="color: #334155;">THÔNG TIN CÔNG VIỆC</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-0 py-3 d-flex align-items-center bg-transparent border-bottom">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background-color: #fee2e2; color: #ef4444;">
+                                <i class="fa-regular fa-calendar-days fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="text-muted small mb-1">Ngày bắt đầu làm việc</div>
+                                <div class="text-dark">@(string.IsNullOrEmpty(Model.StartDate) ? "-" : Model.StartDate)</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0 py-3 d-flex align-items-center bg-transparent border-bottom">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background-color: #d1fae5; color: #10b981;">
+                                <i class="fa-solid fa-file-contract fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="text-muted small mb-1">Biên chế</div>
+                                <div class="text-dark">@(string.IsNullOrEmpty(Model.TenureStatus) ? "-" : Model.TenureStatus)</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0 py-3 d-flex align-items-center bg-transparent border-bottom">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background-color: #dbeafe; color: #3b82f6;">
+                                <i class="fa-solid fa-graduation-cap fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="text-muted small mb-1">Trình độ học vấn</div>
+                                <div class="text-dark">@(string.IsNullOrEmpty(Model.Degree) ? "-" : Model.Degree)</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0 py-3 d-flex align-items-center bg-transparent border-bottom">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background-color: #fef3c7; color: #f59e0b;">
+                                <i class="fa-solid fa-medal fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="text-muted small mb-1">Học hàm</div>
+                                <div class="text-dark">@(string.IsNullOrEmpty(Model.AcademicRank) ? "-" : Model.AcademicRank)</div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0 py-3 d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background-color: #e0e7ff; color: #6366f1;">
+                                <i class="fa-solid fa-award fs-5"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="text-muted small mb-1">Danh hiệu nhà giáo / Khen thưởng</div>
+                                <div class="text-dark">@(string.IsNullOrEmpty(Model.TeacherTitle) ? "-" : Model.TeacherTitle)</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Personal Detail -->
+        <div class="col-lg-7">
+            <div class="card border-0 rounded-4 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4 pb-0">
+                    <h6 class="fw-bold mb-0 text-uppercase" style="color: #334155;">SƠ YẾU LÝ LỊCH</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #fee2e2; color: #ef4444;">
+                                <i class="fa-regular fa-envelope fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Email</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.Email) ? "-" : Model.Email)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #d1fae5; color: #10b981;">
+                                <i class="fa-solid fa-phone fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Số điện thoại</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.PhoneNumber) ? "-" : Model.PhoneNumber)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #e0e7ff; color: #6366f1;">
+                                <i class="fa-regular fa-calendar fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Ngày sinh</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.DateOfBirth) ? "-" : Model.DateOfBirth)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #fef3c7; color: #f59e0b;">
+                                <i class="fa-solid fa-house fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Quê quán</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.BirthPlace) ? "-" : Model.BirthPlace)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #ffedd5; color: #f97316;">
+                                <i class="fa-solid fa-venus-mars fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Giới tính</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.Gender) ? "-" : Model.Gender)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #cffafe; color: #06b6d4;">
+                                <i class="fa-regular fa-id-badge fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Mã nhân viên</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.EmployeeCode) ? "-" : Model.EmployeeCode)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #fce7f3; color: #ec4899;">
+                                <i class="fa-solid fa-building-columns fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Quốc tịch</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.Nationality) ? "-" : Model.Nationality)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #f3e8ff; color: #a855f7;">
+                                <i class="fa-solid fa-hands-praying fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Tôn giáo</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.Religion) ? "-" : Model.Religion)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 border-bottom d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #ffedd5; color: #ea580c;">
+                                <i class="fa-solid fa-users fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-muted">Dân tộc</div>
+                                <div class="text-end fw-medium">@(string.IsNullOrEmpty(Model.Ethnicity) ? "-" : Model.Ethnicity)</div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item px-0 py-3 d-flex align-items-center bg-transparent">
+                            <div class="rounded p-2 me-3 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background-color: #cffafe; color: #0891b2;">
+                                <i class="fa-solid fa-location-dot fs-6"></i>
+                            </div>
+                            <div class="d-flex w-100 justify-content-between">
+                                <div class="text-muted">Địa chỉ liên lạc</div>
+                                <div class="text-end fw-medium" style="max-width: 65%;">
+                                    @(string.IsNullOrEmpty(Model.ContactAddress) ? "-" : Model.ContactAddress)
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
