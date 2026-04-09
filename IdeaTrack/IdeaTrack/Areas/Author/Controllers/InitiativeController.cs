@@ -855,20 +855,60 @@ namespace IdeaTrack.Areas.Author.Controllers
 
         // GET: /Author/Initiative/History
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public async Task<IActionResult> History()
+        public async Task<IActionResult> History(int? yearId, int? periodId, int? categoryId, InitiativeStatus? statusFilter)
         {
             try
             {
                 var currentUser = await _userManager.GetUserAsync(User);
                 var userId = currentUser?.Id ?? 0;
 
+                // Load filter data
+                var years = await _context.AcademicYears.OrderByDescending(y => y.Name).ToListAsync();
+                var periods = yearId.HasValue 
+                    ? await _context.InitiativePeriods.Where(p => p.AcademicYearId == yearId.Value).OrderByDescending(p => p.StartDate).ToListAsync()
+                    : await _context.InitiativePeriods.OrderByDescending(p => p.StartDate).ToListAsync();
+                var categories = periodId.HasValue
+                    ? await _context.InitiativeCategories.Where(c => c.PeriodId == periodId.Value).OrderBy(c => c.Name).ToListAsync()
+                    : await _context.InitiativeCategories.OrderBy(c => c.Name).ToListAsync();
+
+                ViewBag.Years = new SelectList(years, "Id", "Name", yearId);
+                ViewBag.Periods = new SelectList(periods, "Id", "Name", periodId);
+                ViewBag.Categories = new SelectList(categories, "Id", "Name", categoryId);
+                ViewBag.CurrentYear = yearId;
+                ViewBag.CurrentPeriod = periodId;
+                ViewBag.CurrentCategory = categoryId;
+                ViewBag.CurrentStatus = statusFilter;
+
                 // Get initiatives where user is creator or co-author
-                var initiatives = await _context.Initiatives
+                var query = _context.Initiatives
                     .Include(i => i.Category)
+                        .ThenInclude(c => c != null ? c.Period : null)
                     .Include(i => i.Authorships)
                     .Where(i => i.CreatorId == userId || i.Authorships.Any(a => a.AuthorId == userId))
-                    .OrderByDescending(i => i.CreatedAt)
-                    .ToListAsync();
+                    .AsQueryable();
+
+                // Apply filters
+                if (yearId.HasValue)
+                {
+                    query = query.Where(i => i.Category != null && i.Category.Period != null && i.Category.Period.AcademicYearId == yearId.Value);
+                }
+                
+                if (periodId.HasValue)
+                {
+                    query = query.Where(i => i.Category != null && i.Category.PeriodId == periodId.Value);
+                }
+
+                if (categoryId.HasValue)
+                {
+                    query = query.Where(i => i.CategoryId == categoryId.Value);
+                }
+
+                if (statusFilter.HasValue)
+                {
+                    query = query.Where(i => i.Status == statusFilter.Value);
+                }
+
+                var initiatives = await query.OrderByDescending(i => i.CreatedAt).ToListAsync();
 
                 return View(initiatives);
             }

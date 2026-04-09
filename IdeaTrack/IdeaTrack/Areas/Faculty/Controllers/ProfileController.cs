@@ -7,13 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Hosting;
+
 namespace IdeaTrack.Areas.Faculty.Controllers
 {
-    /// <summary>
-    /// Dedicated ProfileController for Faculty area.
-    /// Handles user profile viewing, editing, and account actions.
-    /// Separated from DashboardController for clear responsibility.
-    /// </summary>
     [Area("Faculty")]
     [Authorize(Roles = "FacultyLeader,Faculty_Admin,Admin")]
     public class ProfileController : Controller
@@ -21,15 +18,18 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public ProfileController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // ==========================================
@@ -65,7 +65,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 AcademicRank = user.AcademicRank,
                 Degree = user.Degree,
                 DepartmentName = user.Department?.Name ?? "Chưa cập nhật",
-                AvatarUrl = user.AvatarUrl ?? "https://i.pravatar.cc/150?img=32",
+                AvatarUrl = user.AvatarUrl ?? "",
                 InitiativeCount = initiativeCount,
                 AchievementCount = 5 // Placeholder
             };
@@ -103,7 +103,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 Position = user.Position ?? "",
                 AcademicRank = user.AcademicRank ?? "",
                 Degree = user.Degree ?? "",
-                AvatarUrl = user.AvatarUrl ?? "https://i.pravatar.cc/150?img=32"
+                AvatarUrl = user.AvatarUrl ?? ""
             };
 
             return View(viewModel);
@@ -140,8 +140,24 @@ namespace IdeaTrack.Areas.Faculty.Controllers
             user.AcademicRank = model.AcademicRank;
             user.Degree = model.Degree;
 
-            // Handle avatar URL if provided
-            if (!string.IsNullOrWhiteSpace(model.AvatarUrl))
+            // Handle avatar file upload to wwwroot
+            if (model.AvatarFile != null)
+            {
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads", "avatars");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + model.AvatarFile.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.AvatarFile.CopyToAsync(fileStream);
+                }
+                user.AvatarUrl = "/uploads/avatars/" + uniqueFileName;
+            }
+            // Retain fallback URL mechanism if no file, but a URL was provided
+            else if (!string.IsNullOrWhiteSpace(model.AvatarUrl))
             {
                 user.AvatarUrl = model.AvatarUrl;
             }

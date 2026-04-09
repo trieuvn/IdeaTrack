@@ -225,10 +225,59 @@
                 </div>
                 
                 <div class="action-buttons">
+                    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="bi bi-pencil-square"></i> @Localizer["Update Profile"]
+                    </button>
                     <a href="/Identity/Account/Manage/ChangePassword" class="btn-change-password">
                         <i class="bi bi-key"></i>
                         @Localizer["Change Password"]
                     </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Edit Profile Modal -->
+        <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="editProfileModalLabel"><i class="bi bi-person-lines-fill me-2"></i>@Localizer["Update Profile"]</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form asp-action="UpdateProfile" asp-controller="Page" asp-area="Councils" method="post">
+                        <div class="modal-body p-4">
+                            <input type="hidden" name="Id" value="@Model.Id" />
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-secondary">@Localizer["Full Name"]</label>
+                                <input type="text" class="form-control" name="FullName" value="@Model.FullName" required />
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-secondary">@Localizer["Phone Number"]</label>
+                                <input type="text" class="form-control" name="PhoneNumber" value="@Model.PhoneNumber" />
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-secondary">@Localizer["Position"]</label>
+                                <input type="text" class="form-control" name="Position" value="@Model.Position" />
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-secondary">@Localizer["Academic Rank"]</label>
+                                <input type="text" class="form-control" name="AcademicRank" value="@Model.AcademicRank" />
+                            </div>
+                            
+                            <div class="mb-0">
+                                <label class="form-label fw-semibold text-secondary">@Localizer["Degree"]</label>
+                                <input type="text" class="form-control" name="Degree" value="@Model.Degree" />
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">@Localizer["Save Changes"]</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
