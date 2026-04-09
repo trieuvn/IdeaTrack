@@ -25,47 +25,92 @@
         </div>
     </section>
 
-    <!-- Filter Tabs -->
-    <div class="card card-custom shadow-sm mb-4" style="border-radius: 15px;">
-        <div class="card-body py-3">
-            <ul class="nav nav-pills" id="historyTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active rounded-pill" data-filter="all" type="button">
-                        <span class="material-icons align-middle me-1" style="font-size: 16px;">apps</span>
-                        @Localizer["All"] <span class="badge bg-secondary ms-1">@Model.Count()</span>
+    <!-- Search and Filter Form -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            <form method="get" action="@Url.Action("History")" class="row g-3">
+                <!-- Year -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-secondary small text-uppercase">@Localizer["Year"]</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-calendar"></i></span>
+                        <select id="yearSelect" name="yearId" class="form-select border-start-0 ps-0" asp-items="ViewBag.Years">
+                            <option value="">-- @Localizer["All Years"] --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Period -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-secondary small text-uppercase">@Localizer["Period"]</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-clock"></i></span>
+                        <select id="periodSelect" name="periodId" class="form-select border-start-0 ps-0" asp-items="ViewBag.Periods">
+                            <option value="">-- @Localizer["All Periods"] --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-secondary small text-uppercase">@Localizer["Category"]</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-tags"></i></span>
+                        <select id="categorySelect" name="categoryId" class="form-select border-start-0 ps-0" asp-items="ViewBag.Categories">
+                            <option value="">-- @Localizer["All Categories"] --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-secondary small text-uppercase">@Localizer["Status"]</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-flag"></i></span>
+                        <select name="statusFilter" class="form-select border-start-0 ps-0 text-capitalize">
+                            <option value="">-- @Localizer["All Statuses"] --</option>
+                            @foreach (var status in Enum.GetValues(typeof(IdeaTrack.Models.InitiativeStatus)).Cast<IdeaTrack.Models.InitiativeStatus>())
+                            {
+                                var statusName = status.ToString().Replace("_", " ");
+                                string translatedName = status switch
+                                {
+                                    IdeaTrack.Models.InitiativeStatus.Draft => "Bản nháp",
+                                    IdeaTrack.Models.InitiativeStatus.Pending => "Chờ xét duyệt",
+                                    IdeaTrack.Models.InitiativeStatus.Faculty_Approved => "Khoa đã duyệt",
+                                    IdeaTrack.Models.InitiativeStatus.Evaluating => "Đang đánh giá",
+                                    IdeaTrack.Models.InitiativeStatus.Re_Evaluating => "Đang chấm lại",
+                                    IdeaTrack.Models.InitiativeStatus.Revision_Required => "Yêu cầu chỉnh sửa",
+                                    IdeaTrack.Models.InitiativeStatus.Processing => "Đang xử lý",
+                                    IdeaTrack.Models.InitiativeStatus.Pending_Final => "Chờ chung khảo",
+                                    IdeaTrack.Models.InitiativeStatus.Approved => "Đã duyệt",
+                                    IdeaTrack.Models.InitiativeStatus.Rejected => "Đã từ chối",
+                                    IdeaTrack.Models.InitiativeStatus.Rejected_SL => "Từ chối (Hội đồng)",
+                                    _ => statusName
+                                };
+
+                                if (ViewBag.CurrentStatus != null && ViewBag.CurrentStatus == status)
+                                {
+                                    <option value="@status" selected>@translatedName</option>
+                                }
+                                else
+                                {
+                                    <option value="@status">@translatedName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="col-12 mt-3 text-end">
+                    <a href="@Url.Action("History")" class="btn btn-light rounded-pill px-4 me-2">
+                        <i class="fa-solid fa-rotate-left me-1"></i> @Localizer["Reset"]
+                    </a>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">
+                        <i class="fa-solid fa-filter me-1"></i> @Localizer["Filter"]
                     </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link rounded-pill" data-filter="approved" type="button">
-                        <span class="material-icons align-middle me-1" style="font-size: 16px;">check_circle</span>
-                        @Localizer["Approved"] <span class="badge bg-success ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Approved)</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link rounded-pill" data-filter="pending" type="button">
-                        <span class="material-icons align-middle me-1" style="font-size: 16px;">pending</span>
-                        @Localizer["Pending"] <span class="badge bg-warning text-dark ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Pending || i.Status == IdeaTrack.Models.InitiativeStatus.Evaluating)</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link rounded-pill" data-filter="draft" type="button">
-                        <span class="material-icons align-middle me-1" style="font-size: 16px;">edit_note</span>
-                        @Localizer["Draft"] <span class="badge bg-secondary ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Draft)</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link rounded-pill" data-filter="revision" type="button">
-                        <span class="material-icons align-middle me-1" style="font-size: 16px;">rate_review</span>
-                        @Localizer["Revision"] <span class="badge bg-info ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required)</span>
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link rounded-pill" data-filter="rejected" type="button">
-                        <span class="material-icons align-middle me-1" style="font-size: 16px;">cancel</span>
-                        @Localizer["Rejected"] <span class="badge bg-danger ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Rejected || i.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL)</span>
-                    </button>
-                </li>
-            </ul>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -146,39 +191,57 @@
                                         {
                                             case IdeaTrack.Models.InitiativeStatus.Approved:
                                                 <span class="badge bg-success rounded-pill px-3 py-2">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">check_circle</span> Approved
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">check_circle</span> Đã duyệt
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Rejected:
                                                 <span class="badge bg-danger rounded-pill px-3 py-2">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">cancel</span> Rejected
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">cancel</span> Đã từ chối
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Rejected_SL:
                                                 <span class="badge bg-danger rounded-pill px-3 py-2">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">block</span> Rejected (SL)
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">block</span> Từ chối (Hội đồng)
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Draft:
                                                 <span class="badge bg-secondary rounded-pill px-3 py-2">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">edit_note</span> Draft
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">edit_note</span> Bản nháp
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Processing:
                                                 <span class="badge bg-info rounded-pill px-3 py-2">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">hourglass_top</span> Processing
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">hourglass_top</span> Đang xử lý
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Pending:
-                                            case IdeaTrack.Models.InitiativeStatus.Evaluating:
-                                            case IdeaTrack.Models.InitiativeStatus.Faculty_Approved:
                                                 <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">schedule</span> Pending
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">schedule</span> Chờ xét duyệt
+                                                </span>
+                                                break;
+                                            case IdeaTrack.Models.InitiativeStatus.Evaluating:
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">assignment</span> Đang đánh giá
+                                                </span>
+                                                break;
+                                            case IdeaTrack.Models.InitiativeStatus.Faculty_Approved:
+                                                <span class="badge bg-success bg-opacity-75 text-white rounded-pill px-3 py-2" style="background-color: #198754 !important;">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">thumb_up</span> Khoa đã duyệt
                                                 </span>
                                                 break;
                                             case IdeaTrack.Models.InitiativeStatus.Revision_Required:
                                                 <span class="badge bg-info text-white rounded-pill px-3 py-2">
-                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">rate_review</span> Revision
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">rate_review</span> Yêu cầu chỉnh sửa
+                                                </span>
+                                                break;
+                                            case IdeaTrack.Models.InitiativeStatus.Pending_Final:
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">gavel</span> Chờ chung khảo
+                                                </span>
+                                                break;
+                                            case IdeaTrack.Models.InitiativeStatus.Re_Evaluating:
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                                    <span class="material-icons align-middle me-1" style="font-size: 12px;">assignment_returned</span> Đang chấm lại
                                                 </span>
                                                 break;
                                             default:
@@ -225,5 +288,20 @@
 
 </main>
 
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Dynamic dropdowns submission
+            $('#yearSelect').change(function() {
+                $('#periodSelect').val('');
+                $('#categorySelect').val('');
+                $(this).closest('form').submit();
+            });
 
-
+            $('#periodSelect').change(function() {
+                $('#categorySelect').val('');
+                $(this).closest('form').submit();
+            });
+        });
+    </script>
+}

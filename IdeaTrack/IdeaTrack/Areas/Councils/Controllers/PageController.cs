@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Areas.Councils.Models;
+using IdeaTrack.Areas.Councils.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using IdeaTrack.Services;
@@ -166,6 +166,43 @@ namespace IdeaTrack.Areas.Councils.Controllers
 
             ViewBag.UserRoles = string.Join(", ", roles);
             return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfile(CouncilProfileEditVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Vui lòng kiểm tra lại thông tin.";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            var user = await _userManager.FindByIdAsync(vm.Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Update user properties
+            user.FullName = vm.FullName;
+            user.PhoneNumber = vm.PhoneNumber;
+            user.Position = vm.Position;
+            user.AcademicRank = vm.AcademicRank;
+            user.Degree = vm.Degree;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Cập nhật hồ sơ thành công!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Đã có lỗi xảy ra khi cập nhật hồ sơ.";
+            }
+
+            return RedirectToAction(nameof(Profile));
         }
 
         public async Task<IActionResult> AssignedInitiatives(string? keyword, string status = "Assigned", string sortOrder = "Deadline", int page = 1)
