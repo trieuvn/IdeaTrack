@@ -50,5 +50,7 @@ namespace IdeaTrack.Areas.Faculty.Models
 
         [System.ComponentModel.DataAnnotations.Display(Name = "Avatar URL")]
         public string AvatarUrl { get; set; } = "";
+
+        public Microsoft.AspNetCore.Http.IFormFile? AvatarFile { get; set; }
     }
 }

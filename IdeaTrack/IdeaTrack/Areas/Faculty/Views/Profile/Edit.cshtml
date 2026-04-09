@@ -1,4 +1,4 @@
-﻿@model IdeaTrack.Areas.Faculty.Models.ProfileEditVM
+@model IdeaTrack.Areas.Faculty.Models.ProfileEditVM
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 
@@ -14,21 +14,21 @@
                 <div>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-1">
-                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile", new { area = "Faculty" })" class="text-decoration-none">@Localizer["Profile"]</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">@Localizer["Edit"]</li>
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile", new { area = "Faculty" })" class="text-decoration-none">Hồ sơ</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
                         </ol>
                     </nav>
-                    <h2 class="fw-bold mb-0">@Localizer["Edit Personal Profile"]</h2>
+                    <h2 class="fw-bold mb-0">Chỉnh sửa Hồ sơ cá nhân</h2>
                 </div>
                 <a href="@Url.Action("Index", "Profile", new { area = "Faculty" })" class="btn btn-outline-secondary rounded-pill px-4">
-                    <i class="bi bi-arrow-left me-2"></i>Back
+                    <i class="bi bi-arrow-left me-2"></i>Quay lại
                 </a>
             </div>
 
             <!-- Edit Form Card -->
             <div class="card border-0 shadow-sm" style="border-radius: 16px;">
                 <div class="card-body p-4">
-                    <form asp-action="Edit" asp-controller="Profile" asp-area="Faculty" method="post">
+                    <form asp-action="Edit" asp-controller="Profile" asp-area="Faculty" method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
                         <input type="hidden" asp-for="UserId" />
                         <input type="hidden" asp-for="Email" />
@@ -36,73 +36,85 @@
                         <!-- Avatar Section -->
                         <div class="text-center mb-4">
                             <div class="position-relative d-inline-block">
-                                <img src="@(string.IsNullOrEmpty(Model.AvatarUrl) ? "https://i.pravatar.cc/150?img=32" : Model.AvatarUrl)" 
-                                     alt="Avatar" 
-                                     class="rounded-circle border border-3 shadow-sm" 
-                                     style="width: 120px; height: 120px; object-fit: cover;"
-                                     id="avatarPreview">
+                                @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                                {
+                                    <img src="@Model.AvatarUrl" 
+                                         alt="Avatar" 
+                                         class="rounded-circle border border-3 shadow-sm bg-white" 
+                                         style="width: 120px; height: 120px; object-fit: cover;"
+                                         id="avatarPreview">
+                                }
+                                else
+                                {
+                                    <div class="rounded-circle border border-3 shadow-sm d-flex align-items-center justify-content-center bg-secondary text-white" 
+                                         style="width: 120px; height: 120px;" id="avatarPreviewHolder">
+                                        <i class="fa-solid fa-user" style="font-size: 3rem;"></i>
+                                    </div>
+                                    <img src="" id="avatarPreview" style="display:none; width: 120px; height: 120px; object-fit: cover;" class="rounded-circle border border-3 shadow-sm bg-white" />
+                                }
                                 <button type="button" class="position-absolute bottom-0 end-0 btn btn-sm btn-primary rounded-circle" 
                                         style="width: 36px; height: 36px;" 
-                                        data-bs-toggle="modal" data-bs-target="#avatarModal">
+                                        onclick="document.getElementById('avatarFileInput').click()">
                                     <i class="bi bi-camera"></i>
                                 </button>
                             </div>
-                            <input type="hidden" asp-for="AvatarUrl" id="avatarUrlInput" />
+                            <input type="file" asp-for="AvatarFile" id="avatarFileInput" class="d-none" accept="image/*" onchange="previewImage(event)" />
+                            <input type="hidden" asp-for="AvatarUrl" />
                         </div>
 
                         <!-- Personal Info -->
                         <h5 class="fw-bold mb-3 border-bottom pb-2">
-                            <i class="bi bi-person me-2 text-primary"></i>Personal Information
+                            <i class="bi bi-person me-2 text-primary"></i>Thông tin cá nhân
                         </h5>
                         
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label asp-for="FullName" class="form-label fw-medium">@Localizer["Full Name"]</label>
-                                <input asp-for="FullName" class="form-control form-control-lg rounded-3" placeholder="Enter your full name" />
+                                <label asp-for="FullName" class="form-label fw-medium">Họ và tên</label>
+                                <input asp-for="FullName" class="form-control form-control-lg rounded-3" placeholder="Nhập họ và tên" />
                                 <span asp-validation-for="FullName" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-medium">@Localizer["Email (cannot be changed)"]</label>
+                                <label class="form-label fw-medium">Email (không thể thay đổi)</label>
                                 <input type="email" class="form-control form-control-lg rounded-3 bg-light" 
                                        value="@Model.Email" disabled />
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="PhoneNumber" class="form-label fw-medium">@Localizer["Phone Number"]</label>
-                                <input asp-for="PhoneNumber" class="form-control form-control-lg rounded-3" placeholder="Enter phone number" />
+                                <label asp-for="PhoneNumber" class="form-label fw-medium">Số điện thoại</label>
+                                <input asp-for="PhoneNumber" class="form-control form-control-lg rounded-3" placeholder="Nhập số điện thoại" />
                                 <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="Position" class="form-label fw-medium">@Localizer["Position"]</label>
-                                <input asp-for="Position" class="form-control form-control-lg rounded-3" placeholder="Enter your position" />
+                                <label asp-for="Position" class="form-label fw-medium">Vị trí / Chức vụ</label>
+                                <input asp-for="Position" class="form-control form-control-lg rounded-3" placeholder="Nhập vị trí công tác" />
                             </div>
                         </div>
 
                         <!-- Academic Info -->
                         <h5 class="fw-bold mb-3 border-bottom pb-2">
-                            <i class="bi bi-mortarboard me-2 text-primary"></i>Academic Information
+                            <i class="bi bi-mortarboard me-2 text-primary"></i>Thông tin học thuật
                         </h5>
                         
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label asp-for="AcademicRank" class="form-label fw-medium">@Localizer["Academic Rank"]</label>
+                                <label asp-for="AcademicRank" class="form-label fw-medium">Học hàm</label>
                                 <select asp-for="AcademicRank" class="form-select form-select-lg rounded-3">
-                                    <option value="">-- Select Academic Rank --</option>
-                                    <option value="Professor">Professor</option>
-                                    <option value="Associate Professor">Associate Professor</option>
-                                    <option value="Senior Lecturer">Senior Lecturer</option>
-                                    <option value="Principal Lecturer">Principal Lecturer</option>
-                                    <option value="Lecturer">Lecturer</option>
+                                    <option value="">-- Chọn Học hàm --</option>
+                                    <option value="Professor">Giáo sư</option>
+                                    <option value="Associate Professor">Phó Giáo sư</option>
+                                    <option value="Senior Lecturer">Giảng viên cao cấp</option>
+                                    <option value="Principal Lecturer">Giảng viên chính</option>
+                                    <option value="Lecturer">Giảng viên</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="Degree" class="form-label fw-medium">@Localizer["Degree"]</label>
+                                <label asp-for="Degree" class="form-label fw-medium">Học vị</label>
                                 <select asp-for="Degree" class="form-select form-select-lg rounded-3">
-                                    <option value="">-- Select Degree --</option>
-                                    <option value="Doctor of Science">Doctor of Science</option>
-                                    <option value="Ph.D.">Ph.D.</option>
-                                    <option value="Doctoral Candidate">Doctoral Candidate</option>
-                                    <option value="Master's Degree">Master's Degree</option>
-                                    <option value="Bachelor's Degree">Bachelor's Degree</option>
+                                    <option value="">-- Chọn Học vị --</option>
+                                    <option value="Doctor of Science">Tiến sĩ khoa học</option>
+                                    <option value="Ph.D.">Tiến sĩ</option>
+                                    <option value="Doctoral Candidate">Nghiên cứu sinh</option>
+                                    <option value="Master's Degree">Thạc sĩ</option>
+                                    <option value="Bachelor's Degree">Cử nhân / Kỹ sư</option>
                                 </select>
                             </div>
                         </div>
@@ -110,10 +122,10 @@
                         <!-- Action Buttons -->
                         <div class="d-flex justify-content-end gap-3 pt-3 border-top">
                             <a href="@Url.Action("Index", "Profile", new { area = "Faculty" })" class="btn btn-light px-4 py-2 rounded-3">
-                                <i class="bi bi-x-lg me-2"></i>Cancel
+                                <i class="bi bi-x-lg me-2"></i>Hủy
                             </a>
-                            <button type="submit" class="btn btn-primary px-5 py-2 rounded-3 fw-medium">
-                                <i class="bi bi-check-lg me-2"></i>Save Changes
+                            <button type="submit" class="btn btn-danger px-5 py-2 rounded-3 fw-medium">
+                                <i class="bi bi-check-lg me-2"></i>Lưu thay đổi
                             </button>
                         </div>
                     </form>
@@ -123,40 +135,23 @@
     </div>
 </div>
 
-<!-- Avatar Modal -->
-<div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4">
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold" id="avatarModalLabel">@Localizer["Update Avatar"]</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">@Localizer["Enter Avatar URL:"]</label>
-                    <input type="url" class="form-control rounded-3" id="avatarUrlTemp" placeholder="https://example.com/avatar.jpg">
-                    <small class="text-muted">@Localizer["You can use image links from Gravatar, Google Photos, or any image URL."]</small>
-                </div>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
-                <button type="button" class="btn btn-primary rounded-3" onclick="updateAvatar()">@Localizer["Update"]</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @section Scripts {
     <script>
-        function updateAvatar() {
-            const url = document.getElementById('avatarUrlTemp').value;
-            if (url) {
-                document.getElementById('avatarPreview').src = url;
-                document.getElementById('avatarUrlInput').value = url;
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('avatarPreview');
+                output.src = reader.result;
+                output.style.display = 'block';
+
+                var placeholder = document.getElementById('avatarPreviewHolder');
+                if(placeholder) {
+                    placeholder.style.display = 'none';
+                }
+            };
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
             }
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('avatarModal'));
-            modal.hide();
         }
     </script>
 }
