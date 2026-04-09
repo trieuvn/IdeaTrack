@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="User Management" xml:space="preserve"><value>Quản lý người dùng</value></data>
+  <data name="User Management Description" xml:space="preserve"><value>Quản lý tài khoản giảng viên, phân quyền vai trò và phòng ban.</value></data>
+  <data name="Search by name, email..." xml:space="preserve"><value>Tìm kiếm theo tên, email...</value></data>
+  <data name="Department:" xml:space="preserve"><value>Phòng ban:</value></data>
+  <data name="All Departments" xml:space="preserve"><value>Tất cả phòng ban</value></data>
+  <data name="Role:" xml:space="preserve"><value>Vai trò:</value></data>
+  <data name="All Roles" xml:space="preserve"><value>Tất cả vai trò</value></data>
+  <data name="New User" xml:space="preserve"><value>Thêm người dùng</value></data>
+  <data name="Total Users" xml:space="preserve"><value>Tổng người dùng</value></data>
+  <data name="No." xml:space="preserve"><value>STT</value></data>
+  <data name="Full Name" xml:space="preserve"><value>Họ tên</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Department" xml:space="preserve"><value>Phòng ban</value></data>
+  <data name="Role" xml:space="preserve"><value>Vai trò</value></data>
+  <data name="Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Actions" xml:space="preserve"><value>Thao tác</value></data>
+  <data name="Active" xml:space="preserve"><value>Hoạt động</value></data>
+  <data name="Locked" xml:space="preserve"><value>Đã khóa</value></data>
+  <data name="Unassigned" xml:space="preserve"><value>Chưa gán</value></data>
+  <data name="Lock" xml:space="preserve"><value>Khóa</value></data>
+  <data name="Unlock" xml:space="preserve"><value>Mở khóa</value></data>
+  <data name="Delete" xml:space="preserve"><value>Xóa</value></data>
+  <data name="No users found." xml:space="preserve"><value>Không tìm thấy người dùng nào.</value></data>
+  <data name="Add New User" xml:space="preserve"><value>Thêm người dùng mới</value></data>
+  <data name="Password" xml:space="preserve"><value>Mật khẩu</value></data>
+  <data name="Save" xml:space="preserve"><value>Lưu</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Edit User" xml:space="preserve"><value>Chỉnh sửa người dùng</value></data>
+  <data name="Confirm Lock User" xml:space="preserve"><value>Khóa tài khoản người dùng này?</value></data>
+  <data name="Confirm Unlock User" xml:space="preserve"><value>Mở khóa tài khoản người dùng này?</value></data>
+  <data name="Confirm Delete User" xml:space="preserve"><value>Xóa người dùng này? Hành động không thể hoàn tác.</value></data>
+</root>

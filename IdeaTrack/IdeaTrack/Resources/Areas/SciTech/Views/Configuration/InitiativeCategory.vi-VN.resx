@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Categories" xml:space="preserve"><value>Danh mục</value></data>
+  <data name="Categories Description" xml:space="preserve"><value>Xác định danh mục nào khả dụng cho sáng kiến trong đợt này.</value></data>
+  <data name="Period:" xml:space="preserve"><value>Đợt:</value></data>
+  <data name="Clone from Previous Period" xml:space="preserve"><value>Sao chép từ đợt trước</value></data>
+  <data name="New Category" xml:space="preserve"><value>Thêm danh mục mới</value></data>
+  <data name="Category Name" xml:space="preserve"><value>Tên danh mục</value></data>
+  <data name="Assigned Board" xml:space="preserve"><value>Hội đồng phụ trách</value></data>
+  <data name="Scoring Template" xml:space="preserve"><value>Mẫu chấm điểm</value></data>
+  <data name="Actions" xml:space="preserve"><value>Thao tác</value></data>
+  <data name="Unassigned" xml:space="preserve"><value>Chưa gán</value></data>
+  <data name="Missing Template" xml:space="preserve"><value>Thiếu mẫu</value></data>
+  <data name="No categories empty" xml:space="preserve"><value>Không có danh mục nào trong đợt này. Sử dụng "Sao chép" để sao chép từ đợt trước.</value></data>
+  <data name="Add Category" xml:space="preserve"><value>Thêm danh mục</value></data>
+  <data name="Name" xml:space="preserve"><value>Tên</value></data>
+  <data name="Assign Board (Council)" xml:space="preserve"><value>Gán Hội đồng</value></data>
+  <data name="-- Select Board --" xml:space="preserve"><value>-- Chọn Hội đồng --</value></data>
+  <data name="Assign Scoring Template" xml:space="preserve"><value>Gán Mẫu chấm điểm</value></data>
+  <data name="-- Select Template --" xml:space="preserve"><value>-- Chọn Mẫu --</value></data>
+  <data name="Create" xml:space="preserve"><value>Tạo</value></data>
+  <data name="Clone Configuration" xml:space="preserve"><value>Sao chép cấu hình</value></data>
+  <data name="Clone Description" xml:space="preserve"><value>Thao tác này sẽ sao chép tất cả danh mục (cùng với cấu hình Hội đồng &amp; Mẫu) từ đợt nguồn được chọn vào đợt hiện tại:</value></data>
+  <data name="Source Period" xml:space="preserve"><value>Đợt nguồn</value></data>
+  <data name="Clone Now" xml:space="preserve"><value>Sao chép ngay</value></data>
+  <data name="Confirm Delete Category" xml:space="preserve"><value>Xóa danh mục này?</value></data>
+</root>

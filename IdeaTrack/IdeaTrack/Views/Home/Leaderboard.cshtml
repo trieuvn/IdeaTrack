@@ -1,6 +1,8 @@
 @using IdeaTrack.ViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Leaderboard";
+    ViewData["Title"] = Localizer["Leaderboard"];
     var leaderboard = ViewBag.Leaderboard as LeaderboardVM;
 }
 
@@ -10,24 +12,24 @@
     <div class="mb-4">
         <div class="d-flex align-items-center mb-2">
             <span class="material-icons text-danger me-2" style="font-size: 2rem;">leaderboard</span>
-            <h2 class="fw-bold mb-0">Leaderboard</h2>
+            <h2 class="fw-bold mb-0">@Localizer["Leaderboard"]</h2>
         </div>
-        <p class="text-muted">Top performing initiatives and lecturers across all periods</p>
+        <p class="text-muted">@Localizer["Leaderboard Description"]</p>
     </div>
 
     <!-- FILTERS -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div class="d-flex flex-wrap gap-2">
             <button type="button" class="btn btn-outline-danger btn-sm active" id="btn-all-time" onclick="resetFilters()">
-                All-time
+                @Localizer["All-time"]
             </button>
             
             <div class="dropdown">
                 <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="yearFilterBtn" data-bs-toggle="dropdown" aria-expanded="false">
-                    Year: All
+                    @Localizer["Year:"] @Localizer["All"]
                 </button>
                 <ul class="dropdown-menu" id="yearFilterList">
-                    <li><a class="dropdown-item" href="#" onclick="selectYear(null, 'All')">All</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="selectYear(null, '@Localizer["All"].Value')">@Localizer["All"]</a></li>
                     @{
                         var years = ViewBag.AvailableYears as List<IdeaTrack.Services.FilterOption>;
                          if (years != null)
@@ -43,10 +45,10 @@
 
             <div class="dropdown">
                 <button class="btn btn-outline-danger btn-sm dropdown-toggle disabled" type="button" id="periodFilterBtn" data-bs-toggle="dropdown" aria-expanded="false">
-                    Period: All
+                    @Localizer["Period:"] @Localizer["All"]
                 </button>
                 <ul class="dropdown-menu" id="periodFilterList">
-                    <li><a class="dropdown-item" href="#" onclick="selectPeriod(null, 'All')">All</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="selectPeriod(null, '@Localizer["All"].Value')">@Localizer["All"]</a></li>
                     <!-- Periods will be populated via AJAX -->
                 </ul>
             </div>
@@ -61,9 +63,9 @@
                 <div class="card-header py-3 border-0 text-white" style="background: linear-gradient(135deg, #991b1b, #7f1d1d);">
                     <div class="d-flex align-items-center">
                         <span class="material-icons me-2">emoji_events</span>
-                        <h5 class="mb-0 fw-bold">Top Initiatives</h5>
+                        <h5 class="mb-0 fw-bold">@Localizer["Top Initiatives"]</h5>
                     </div>
-                    <small class="opacity-75">Ranked by evaluation score percentage</small>
+                    <small class="opacity-75">@Localizer["Ranked by evaluation score percentage"]</small>
                 </div>
                 <div class="card-body p-0">
                     <div id="initiatives-table-container">
@@ -73,8 +75,8 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="ps-3" style="width: 50px;">#</th>
-                                    <th>Initiative</th>
-                                    <th class="text-end pe-3" style="width: 100px;">Score</th>
+                                    <th>@Localizer["Initiative"]</th>
+                                    <th class="text-end pe-3" style="width: 100px;">@Localizer["Score"]</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,7 +121,7 @@
                     {
                         <div class="text-center text-muted py-5">
                             <span class="material-icons mb-2" style="font-size: 48px; opacity: 0.3;">inbox</span>
-                            <p class="mb-0">No approved initiatives yet</p>
+                            <p class="mb-0">@Localizer["No approved initiatives yet"]</p>
                         </div>
                     }
                     </div>
@@ -133,9 +135,9 @@
                 <div class="card-header py-3 border-0 text-white" style="background: linear-gradient(135deg, #991b1b, #7f1d1d);">
                     <div class="d-flex align-items-center">
                         <span class="material-icons me-2">stars</span>
-                        <h5 class="mb-0 fw-bold">Top Lecturers</h5>
+                        <h5 class="mb-0 fw-bold">@Localizer["Top Lecturers"]</h5>
                     </div>
-                    <small class="opacity-75">Ranked by approved initiatives count</small>
+                    <small class="opacity-75">@Localizer["Ranked by approved initiatives count"]</small>
                 </div>
                 <div class="card-body p-0">
                     <div id="lecturers-table-container">
@@ -145,8 +147,8 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="ps-3" style="width: 50px;">#</th>
-                                    <th>Lecturer</th>
-                                    <th class="text-end pe-3" style="width: 100px;">Count</th>
+                                    <th>@Localizer["Lecturer"]</th>
+                                    <th class="text-end pe-3" style="width: 100px;">@Localizer["Count"]</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -191,7 +193,7 @@
                                         </td>
                                         <td class="text-end pe-3">
                                             <span class="badge bg-danger px-2 py-1">
-                                                @item.ApprovedCount initiatives
+                                                @item.ApprovedCount @Localizer["initiatives"]
                                             </span>
                                         </td>
                                     </tr>
@@ -203,7 +205,7 @@
                     {
                         <div class="text-center text-muted py-5">
                             <span class="material-icons mb-2" style="font-size: 48px; opacity: 0.3;">person_off</span>
-                            <p class="mb-0">No lecturers with approved initiatives yet</p>
+                            <p class="mb-0">@Localizer["No lecturers with approved initiatives yet"]</p>
                         </div>
                     }
                     </div>
@@ -218,34 +220,45 @@
         let currentYearId = null;
         let currentPeriodId = null;
 
-        // Reset all filters to All-time
+        const localized = {
+            yearLabel: '@Localizer["Year:"].Value',
+            periodLabel: '@Localizer["Period:"].Value',
+            all: '@Localizer["All"].Value',
+            initiative: '@Localizer["Initiative"].Value',
+            score: '@Localizer["Score"].Value',
+            lecturer: '@Localizer["Lecturer"].Value',
+            count: '@Localizer["Count"].Value',
+            initiatives: '@Localizer["initiatives"].Value',
+            noInitiatives: '@Localizer["No approved initiatives found"].Value',
+            noLecturers: '@Localizer["No lecturers found"].Value',
+            errorLoading: '@Localizer["Error loading leaderboard data"].Value'
+        };
+
         function resetFilters() {
             currentYearId = null;
             currentPeriodId = null;
             
             $('#btn-all-time').addClass('active');
-            $('#yearFilterBtn').text('Year: All').removeClass('active');
-            $('#periodFilterBtn').text('Period: All').addClass('disabled').removeClass('active');
-            $('#periodFilterList').html('<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'All\')">All</a></li>');
+            $('#yearFilterBtn').text(localized.yearLabel + ' ' + localized.all).removeClass('active');
+            $('#periodFilterBtn').text(localized.periodLabel + ' ' + localized.all).addClass('disabled').removeClass('active');
+            $('#periodFilterList').html('<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'' + localized.all + '\')">' + localized.all + '</a></li>');
             
             loadData();
         }
 
-        // Select Year handler
         function selectYear(id, name) {
             currentYearId = id;
-            currentPeriodId = null; // Reset period when year changes
+            currentPeriodId = null;
             
             $('#btn-all-time').removeClass('active');
-            $('#yearFilterBtn').text('Year: ' + name).addClass('active');
-            $('#periodFilterBtn').text('Period: All').removeClass('active');
+            $('#yearFilterBtn').text(localized.yearLabel + ' ' + name).addClass('active');
+            $('#periodFilterBtn').text(localized.periodLabel + ' ' + localized.all).removeClass('active');
             
             if (id) {
-                // Fetch periods for selected year
                 $('#periodFilterBtn').removeClass('disabled');
                 
                 $.get('/Home/GetPeriods?yearId=' + id, function(data) {
-                    let html = '<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'All\')">All</a></li>';
+                    let html = '<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'' + localized.all + '\')">' + localized.all + '</a></li>';
                     data.forEach(function(p) {
                         html += `<li><a class="dropdown-item" href="#" onclick="selectPeriod(${p.id}, '${p.name}')">${p.name}</a></li>`;
                     });
@@ -253,17 +266,16 @@
                 });
             } else {
                 $('#periodFilterBtn').addClass('disabled');
-                $('#periodFilterList').html('<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'All\')">All</a></li>');
+                $('#periodFilterList').html('<li><a class="dropdown-item" href="#" onclick="selectPeriod(null, \'' + localized.all + '\')">' + localized.all + '</a></li>');
             }
             
             loadData();
         }
 
-        // Select Period handler
         function selectPeriod(id, name) {
             currentPeriodId = id;
             
-            $('#periodFilterBtn').text('Period: ' + name);
+            $('#periodFilterBtn').text(localized.periodLabel + ' ' + name);
             if (id) {
                 $('#periodFilterBtn').addClass('active');
             } else {
@@ -273,13 +285,12 @@
             loadData();
         }
 
-        // Main data loader
         function loadData() {
             $.get('/Home/GetLeaderboardData', { yearId: currentYearId, periodId: currentPeriodId }, function(data) {
                 renderInitiatives(data.topInitiatives);
                 renderLecturers(data.topLecturers);
             }).fail(function() {
-                alert("Error loading leaderboard data");
+                alert(localized.errorLoading);
             });
         }
 
@@ -288,7 +299,7 @@
                 $('#initiatives-table-container').html(`
                     <div class="text-center text-muted py-5">
                         <span class="material-icons mb-2" style="font-size: 48px; opacity: 0.3;">inbox</span>
-                        <p class="mb-0">No approved initiatives found</p>
+                        <p class="mb-0">${localized.noInitiatives}</p>
                     </div>`);
                 return;
             }
@@ -298,8 +309,8 @@
                     <thead class="table-light">
                         <tr>
                             <th class="ps-3" style="width: 50px;">#</th>
-                            <th>Initiative</th>
-                            <th class="text-end pe-3" style="width: 100px;">Score</th>
+                            <th>${localized.initiative}</th>
+                            <th class="text-end pe-3" style="width: 100px;">${localized.score}</th>
                         </tr>
                     </thead>
                     <tbody>`;
@@ -341,7 +352,7 @@
                 $('#lecturers-table-container').html(`
                     <div class="text-center text-muted py-5">
                         <span class="material-icons mb-2" style="font-size: 48px; opacity: 0.3;">person_off</span>
-                        <p class="mb-0">No lecturers found</p>
+                        <p class="mb-0">${localized.noLecturers}</p>
                     </div>`);
                 return;
             }
@@ -351,8 +362,8 @@
                     <thead class="table-light">
                         <tr>
                             <th class="ps-3" style="width: 50px;">#</th>
-                            <th>Lecturer</th>
-                            <th class="text-end pe-3" style="width: 100px;">Count</th>
+                            <th>${localized.lecturer}</th>
+                            <th class="text-end pe-3" style="width: 100px;">${localized.count}</th>
                         </tr>
                     </thead>
                     <tbody>`;
@@ -385,7 +396,7 @@
                             </div>
                         </td>
                         <td class="text-end pe-3">
-                            <span class="badge bg-danger px-2 py-1">${item.approvedCount} initiatives</span>
+                            <span class="badge bg-danger px-2 py-1">${item.approvedCount} ${localized.initiatives}</span>
                         </td>
                     </tr>`;
             });

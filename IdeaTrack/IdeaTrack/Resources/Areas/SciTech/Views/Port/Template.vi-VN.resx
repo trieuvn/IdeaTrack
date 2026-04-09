@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Scoring Templates" xml:space="preserve"><value>Mẫu chấm điểm</value></data>
+  <data name="Template Description" xml:space="preserve"><value>Tạo và quản lý mẫu chấm điểm cho các sáng kiến khác nhau.</value></data>
+  <data name="Create Template" xml:space="preserve"><value>Tạo mẫu mới</value></data>
+  <data name="Total Templates" xml:space="preserve"><value>Tổng số mẫu</value></data>
+  <data name="Total Criteria" xml:space="preserve"><value>Tổng tiêu chí</value></data>
+  <data name="Template Name" xml:space="preserve"><value>Tên mẫu</value></data>
+  <data name="Criteria" xml:space="preserve"><value>Tiêu chí</value></data>
+  <data name="Max Points" xml:space="preserve"><value>Điểm tối đa</value></data>
+  <data name="Actions" xml:space="preserve"><value>Thao tác</value></data>
+  <data name="criteria" xml:space="preserve"><value>tiêu chí</value></data>
+  <data name="pts" xml:space="preserve"><value>điểm</value></data>
+  <data name="view" xml:space="preserve"><value>xem</value></data>
+  <data name="Delete" xml:space="preserve"><value>Xóa</value></data>
+  <data name="No scoring templates yet." xml:space="preserve"><value>Chưa có mẫu chấm điểm nào.</value></data>
+  <data name="No templates hint" xml:space="preserve"><value>Nhấn "Tạo mẫu mới" để bắt đầu.</value></data>
+  <data name="New Template" xml:space="preserve"><value>Mẫu mới</value></data>
+  <data name="Name" xml:space="preserve"><value>Tên</value></data>
+  <data name="Scoring Criteria" xml:space="preserve"><value>Tiêu chí chấm điểm</value></data>
+  <data name="Criterion Name" xml:space="preserve"><value>Tên tiêu chí</value></data>
+  <data name="Max Score" xml:space="preserve"><value>Điểm tối đa</value></data>
+  <data name="Remove" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Add Criterion" xml:space="preserve"><value>Thêm tiêu chí</value></data>
+  <data name="Save Template" xml:space="preserve"><value>Lưu mẫu</value></data>
+  <data name="Template Details" xml:space="preserve"><value>Chi tiết mẫu</value></data>
+  <data name="Score" xml:space="preserve"><value>Điểm</value></data>
+  <data name="Close" xml:space="preserve"><value>Đóng</value></data>
+  <data name="Confirm Delete Template" xml:space="preserve"><value>Xóa mẫu chấm điểm này?</value></data>
+  <data name="Error saving template" xml:space="preserve"><value>Lỗi khi lưu mẫu</value></data>
+</root>

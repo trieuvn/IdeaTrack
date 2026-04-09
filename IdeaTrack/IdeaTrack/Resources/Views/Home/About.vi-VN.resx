@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="OFFICIAL INFORMATION PORTAL" xml:space="preserve">
+    <value>CỔNG THÔNG TIN CHÍNH THỨC</value>
+  </data>
+  <data name="Elevate Initiatives" xml:space="preserve">
+    <value>Nâng tầm Sáng kiến</value>
+  </data>
+  <data name="Teaching &amp; Research" xml:space="preserve">
+    <value>Giảng dạy &amp; Nghiên cứu</value>
+  </data>
+  <data name="About Description" xml:space="preserve">
+    <value>Hệ thống quản lý nhằm thúc đẩy các sáng kiến khoa học, giúp giảng viên dễ dàng đề xuất, theo dõi và triển khai các phương pháp giáo dục tiên tiến.</value>
+  </data>
+  <data name="Goals &amp; Vision" xml:space="preserve">
+    <value>Mục tiêu &amp; Tầm nhìn</value>
+  </data>
+  <data name="Goals Description" xml:space="preserve">
+    <value>Xây dựng hệ sinh thái tri thức số, nơi mọi ý tưởng cải tiến được ghi nhận, đánh giá công bằng và có cơ hội áp dụng vào thực tiễn giảng dạy. Chúng tôi hướng đến trở thành đơn vị tiên phong trong đổi mới giáo dục số.</value>
+  </data>
+  <data name="Importance" xml:space="preserve">
+    <value>Tầm quan trọng</value>
+  </data>
+  <data name="Importance Description" xml:space="preserve">
+    <value>Sáng kiến không chỉ nâng cao chất lượng đào tạo mà còn thúc đẩy sự phát triển cá nhân của mỗi giảng viên. Hệ thống giúp kết nối các ý tưởng, tạo nên môi trường học thuật năng động và sáng tạo.</value>
+  </data>
+  <data name="System Components" xml:space="preserve">
+    <value>Các thành phần hệ thống</value>
+  </data>
+  <data name="View Documentation" xml:space="preserve">
+    <value>Xem tài liệu</value>
+  </data>
+  <data name="Submit Initiative" xml:space="preserve">
+    <value>Nộp sáng kiến</value>
+  </data>
+  <data name="Submit Initiative Detail" xml:space="preserve">
+    <value>Nộp hồ sơ và minh chứng dễ dàng qua hệ thống trực tuyến.</value>
+  </data>
+  <data name="Manage &amp; Track" xml:space="preserve">
+    <value>Quản lý &amp; Theo dõi</value>
+  </data>
+  <data name="Manage Track Detail" xml:space="preserve">
+    <value>Theo dõi tiến độ phê duyệt và nhận phản hồi từ hội đồng chuyên gia.</value>
+  </data>
+  <data name="Evaluate &amp; Approve" xml:space="preserve">
+    <value>Đánh giá &amp; Phê duyệt</value>
+  </data>
+  <data name="Evaluate Approve Detail" xml:space="preserve">
+    <value>Quy trình đánh giá minh bạch, công bằng và nhanh chóng.</value>
+  </data>
+</root>

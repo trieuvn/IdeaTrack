@@ -1,17 +1,19 @@
-﻿
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 
 <main class="container py-3">
     <section class="hero-section text-white p-5 mb-5 shadow-lg" style="background: linear-gradient(to right, rgba(16, 24, 64, 0.95) 0%, rgba(16, 24, 64, 0.8) 50%, rgba(16, 24, 64, 0.4) 100%), url('/images/Technology.jpg') no-repeat center center; background-size: cover;">
         <div class="row">
             <div class="col-lg-8">
                 <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-4 p-2 px-3" style="border: 1px solid rgba(0,255,255,0.2)">
-                    <i class="bi bi-patch-check-fill me-1"></i> OFFICIAL INFORMATION PORTAL
+                    <i class="bi bi-patch-check-fill me-1"></i> @Localizer["OFFICIAL INFORMATION PORTAL"]
                 </span>
 
-                <h1 class="fw-bold display-5 mb-3">Elevate Initiatives<br>Teaching & Research</h1>
+                <h1 class="fw-bold display-5 mb-3">@Localizer["Elevate Initiatives"]<br>@Localizer["Teaching & Research"]</h1>
 
                 <p class="fs-5 mb-4 opacity-75" style="max-width: 600px; line-height: 1.6;">
-                    A management system for promoting scientific initiatives, helping faculty members easily propose, track, and implement advanced educational methods.
+                    @Localizer["About Description"]
                 </p>
             </div>
         </div>
@@ -23,9 +25,9 @@
                 <div class="icon-circle bg-light-blue mb-3">
                     <i class="bi bi-bullseye text-primary fs-4"></i>
                 </div>
-                <h4 class="fw-bold">Goals & Vision</h4>
+                <h4 class="fw-bold">@Localizer["Goals & Vision"]</h4>
                 <p class="text-secondary">
-                    Build a digital knowledge ecosystem where every improvement idea is recognized, fairly evaluated, and has the opportunity to be applied in teaching practice. We aim to become a pioneer in digital education innovation.
+                    @Localizer["Goals Description"]
                 </p>
             </div>
         </div>
@@ -34,9 +36,9 @@
                 <div class="icon-circle bg-light-green mb-3">
                     <i class="bi bi-lightbulb text-success fs-4"></i>
                 </div>
-                <h4 class="fw-bold">Importance</h4>
+                <h4 class="fw-bold">@Localizer["Importance"]</h4>
                 <p class="text-secondary">
-                    Initiatives not only improve training quality but also drive personal development for each faculty member. The system helps connect ideas, creating a dynamic and creative academic environment.
+                    @Localizer["Importance Description"]
                 </p>
             </div>
         </div>
@@ -44,8 +46,8 @@
 
     <section>
         <div class="d-flex justify-content-between align-items-end mb-4">
-            <h3 class="fw-bold m-0">System Components</h3>
-            <a href="#" class="text-decoration-none fw-bold small">View Documentation</a>
+            <h3 class="fw-bold m-0">@Localizer["System Components"]</h3>
+            <a href="#" class="text-decoration-none fw-bold small">@Localizer["View Documentation"]</a>
         </div>
 
         <div class="row g-4">
@@ -54,8 +56,8 @@
                     <div class="mx-auto mb-3 bg-white shadow-sm rounded-3 p-3" style="width: fit-content;">
                         <i class="bi bi-file-earmark-arrow-up text-primary fs-2"></i>
                     </div>
-                    <h5 class="fw-bold">Submit Initiative</h5>
-                    <p class="small text-muted">Submit documents and evidence easily through the online system.</p>
+                    <h5 class="fw-bold">@Localizer["Submit Initiative"]</h5>
+                    <p class="small text-muted">@Localizer["Submit Initiative Detail"]</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -63,8 +65,8 @@
                     <div class="mx-auto mb-3 bg-white shadow-sm rounded-3 p-3" style="width: fit-content;">
                         <i class="bi bi-grid-1x2 text-warning fs-2"></i>
                     </div>
-                    <h5 class="fw-bold">Manage & Track</h5>
-                    <p class="small text-muted">Track approval progress and receive feedback from the expert council.</p>
+                    <h5 class="fw-bold">@Localizer["Manage & Track"]</h5>
+                    <p class="small text-muted">@Localizer["Manage Track Detail"]</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -72,8 +74,8 @@
                     <div class="mx-auto mb-3 bg-white shadow-sm rounded-3 p-3" style="width: fit-content;">
                         <i class="bi bi-check-square text-success fs-2"></i>
                     </div>
-                    <h5 class="fw-bold">Evaluate & Approve</h5>
-                    <p class="small text-muted">Transparent, fair, and fast evaluation process.</p>
+                    <h5 class="fw-bold">@Localizer["Evaluate & Approve"]</h5>
+                    <p class="small text-muted">@Localizer["Evaluate Approve Detail"]</p>
                 </div>
             </div>
         </div>

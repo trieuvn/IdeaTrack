@@ -1,15 +1,18 @@
-@model IEnumerable<IdeaTrack.Models.Initiative>
+@model List<IdeaTrack.Models.Initiative>
+@using IdeaTrack.Models
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Council Dashboard";
+    ViewData["Title"] = Localizer["Council Dashboard"];
 }
 
 <div class="container py-4">
     <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold mb-1">Council Dashboard</h2>
-            <p class="text-muted mb-0">Manage and approve initiatives passed by Faculty.</p>
+            <h2 class="fw-bold mb-1">@Localizer["Council Dashboard"]</h2>
+            <p class="text-muted mb-0">@Localizer["Council Description"]</p>
         </div>
         <div class="d-flex gap-2">
             <a href="@Url.Action("ManageBoards", "Council", new { Area = "SciTech" })" class="btn btn-outline-secondary">
@@ -80,11 +83,11 @@
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
                         <input type="text" name="searchString" class="form-control border-start-0 ps-0" 
-                               placeholder="Search by initiative status code, title..." value="@ViewBag.SearchString">
+                               placeholder="@Localizer["Search by title or code..."].Value" value="@ViewBag.SearchString">
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    <button type="submit" class="btn btn-primary w-100">@Localizer["Search"]</button>
                 </div>
             </form>
         </div>
@@ -99,13 +102,13 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4">Code</th>
-                        <th>Title</th>
+                        <th class="ps-4">@Localizer["Initiative Code"]</th>
+                        <th>@Localizer["Title"]</th>
                         <th>Proposer</th>
-                        <th>Department</th>
-                        <th>Submitted Date</th>
-                        <th>Status</th>
-                        <th class="text-end pe-4">Actions</th>
+                        <th>@Localizer["Department"]</th>
+                        <th>@Localizer["Submitted"]</th>
+                        <th>@Localizer["Status"]</th>
+                        <th class="text-end pe-4">@Localizer["Actions"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -114,7 +117,7 @@
                         <tr>
                             <td colspan="7" class="text-center py-5 text-muted">
                                 <i class="fas fa-folder-open fs-1 d-block mb-3 opacity-25"></i>
-                                No initiatives found matching the criteria.
+                                @Localizer["No initiatives found."]
                             </td>
                         </tr>
                     }

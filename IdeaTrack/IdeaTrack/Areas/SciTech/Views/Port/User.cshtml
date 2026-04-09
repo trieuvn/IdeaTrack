@@ -1,4 +1,7 @@
-﻿@model IEnumerable<IdeaTrack.Areas.SciTech.Models.UserViewModel>
+@model IEnumerable<IdeaTrack.Areas.SciTech.Models.UserViewModel>
+@using IdeaTrack.Models
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -18,9 +21,9 @@
 
 <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
     <div>
-        <h1 class="fw-bold mb-1">User & Access Management</h1>
+        <h1 class="fw-bold mb-1">@Localizer["User Management"]</h1>
         <p class="text-muted mb-0">
-            Manage accounts, permissions, and track system access logs.
+            @Localizer["User Management Description"]
         </p>
     </div>
     <a class="btn btn-outline-primary custom-btn" style="height:70px;padding-top:20px;"
@@ -39,7 +42,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <i class="fa-solid fa-users text-primary fs-4"></i>
-                <p class="text-muted small mb-1">Total Users</p>
+                <p class="text-muted small mb-1">@Localizer["Total Users"]</p>
                 <h3 class="fw-bold mb-0">@ViewBag.TotalUsers</h3>
                 <small class="text-success">
                     <i class="fa-solid fa-arrow-up"></i>
@@ -96,13 +99,13 @@
                 <input class="form-control"
                        name="keyword"
                        value="@ViewBag.Keyword"
-                       placeholder="Search by name or email">
+                       placeholder="@Localizer["Search by name, email..."].Value">
             </div>
         </div>
 
         <div style="min-width: 150px;">
             <select class="form-select" name="role">
-                <option value="">All Roles</option>
+                <option value="">@Localizer["All Roles"]</option>
                 @foreach (var r in ViewBag.Roles as List<string> ?? new List<string>())
                 {
                     <option value="@r" selected="@(ViewBag.Role == r)">
@@ -126,7 +129,7 @@
         </button>
 
         <a href="#" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#createUserModal">
-            <i class="fa-solid fa-user-plus me-1"></i> Add User
+            <i class="fa-solid fa-user-plus me-1"></i> @Localizer["New User"]
         </a>
     </div>
 </form>
@@ -137,12 +140,12 @@
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                    <th>Status</th>
+                    <th>@Localizer["Full Name"]</th>
+                    <th>@Localizer["Role"]</th>
+                    <th>@Localizer["Status"]</th>
                     <th>Last Login</th>
                     <th class="text-center">Login Count</th>
-                    <th class="text-end">Actions</th>
+                    <th class="text-end">@Localizer["Actions"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -161,11 +164,11 @@
                         <td>
                             @if (user.IsActive)
                             {
-                                <span class="badge bg-success">Active</span>
+                                <span class="badge bg-success">@Localizer["Active"]</span>
                             }
                             else
                             {
-                                <span class="badge bg-danger">Locked</span>
+                                <span class="badge bg-danger">@Localizer["Locked"]</span>
                             }
                         </td>
                         <td>
@@ -182,7 +185,7 @@
                             {
                                 <a href="@Url.Action("LockUser", "Port", new { area = "SciTech", id = user.Id })"
                                    class="btn btn-sm btn-outline-danger"
-                                   onclick="return confirm('Are you sure you want to lock this account?');">
+                                   onclick="return confirm('@Localizer["Confirm Lock User"].Value');">
                                     <i class="fa-solid fa-user-slash"></i>
                                 </a>
                             }

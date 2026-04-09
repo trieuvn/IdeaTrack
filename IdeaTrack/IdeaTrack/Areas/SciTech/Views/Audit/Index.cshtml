@@ -1,13 +1,15 @@
-﻿@model List<IdeaTrack.Services.AuditLogEntry>
+@model List<IdeaTrack.Services.AuditLogEntry>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "System Audit Log";
+    ViewData["Title"] = Localizer["Audit Log"];
     Layout = "~/Areas/SciTech/Views/Shared/_LayoutSciTech.cshtml";
 }
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold">
-            <i class="fas fa-history text-primary me-2"></i>System Audit Log
+            <i class="fas fa-history text-primary me-2"></i>@Localizer["Audit Log"]
         </h2>
         <a asp-action="Statistics" class="btn btn-outline-primary">
             <i class="fas fa-chart-bar me-1"></i>Statistics
@@ -17,7 +19,7 @@
     <!-- Multi-Filter DataTable -->
     <div class="card shadow-sm border-0">
         <div class="card-header bg-white">
-            <h5 class="card-title mb-0"><i class="fas fa-filter me-2 text-primary"></i>Nhật Ký Hệ Thống (Multi-Filter)</h5>
+            <h5 class="card-title mb-0"><i class="fas fa-filter me-2 text-primary"></i>@Localizer["Audit Log"]</h5>
         </div>
         <div class="card-body">
             <div class="table-responsive">
