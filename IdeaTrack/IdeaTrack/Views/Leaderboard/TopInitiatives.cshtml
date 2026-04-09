@@ -1,6 +1,8 @@
 ﻿@model List<IdeaTrack.Models.ViewModels.TopInitiativeItem>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Top Initiatives";
+    ViewData["Title"] = Localizer["Top Initiatives"].Value;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var periods = ViewBag.Periods as List<IdeaTrack.Models.ViewModels.PeriodSelectItem>;
     var selectedPeriodId = ViewBag.SelectedPeriodId as int?;
@@ -37,14 +39,14 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th style="width: 60px">Rank</th>
-                                <th>Code</th>
-                                <th>Title</th>
-                                <th>Category</th>
-                                <th>Author</th>
-                                <th>Department</th>
-                                <th class="text-end">Avg Score</th>
-                                <th class="text-center">Result</th>
+                                <th style="width: 60px">@Localizer["Rank"]</th>
+                                <th>@Localizer["Code"]</th>
+                                <th>@Localizer["Title"]</th>
+                                <th>@Localizer["Category"]</th>
+                                <th>@Localizer["Author"]</th>
+                                <th>@Localizer["Department"]</th>
+                                <th class="text-end">@Localizer["Avg Score"]</th>
+                                <th class="text-center">@Localizer["Result"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,11 +75,11 @@
                                     <td class="text-center">
                                         @if (item.Status == IdeaTrack.Models.InitiativeStatus.Approved)
                                         {
-                                            <span class="badge bg-success">Approved</span>
+                                            <span class="badge bg-success">@Localizer["Approved"]</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-danger">Rejected</span>
+                                            <span class="badge bg-danger">@Localizer["Rejected"]</span>
                                         }
                                     </td>
                                 </tr>
@@ -116,7 +118,7 @@
             {
                 <div class="text-center py-5 text-muted">
                     <i class="fas fa-clipboard-list fa-4x mb-3"></i>
-                    <p>No ranking data available</p>
+                    <p>@Localizer["No ranking data available"]</p>
                 </div>
             }
         </div>

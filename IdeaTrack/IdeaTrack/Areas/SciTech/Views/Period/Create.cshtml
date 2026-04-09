@@ -1,4 +1,6 @@
 ﻿@model IdeaTrack.Areas.SciTech.Models.PeriodCreateEditVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <main class="container py-4">
     <div class="row justify-content-center">
@@ -60,9 +62,7 @@
                         <div class="mb-3">
                             <div class="form-check form-switch">
                                 <input asp-for="IsActive" class="form-check-input" type="checkbox" />
-                                <label asp-for="IsActive" class="form-check-label fw-medium">
-                                    Open period immediately (closes other periods)
-                                </label>
+                                <label asp-for="IsActive" class="form-check-label fw-medium">@Localizer["Open period immediately (closes other periods)"]</label>
                             </div>
                         </div>
 
@@ -73,14 +73,14 @@
                                 <span class="material-icons align-middle me-1" style="font-size: 18px;">content_copy</span>
                                 Clone categories from previous period (optional)
                             </h6>
-                            <p class="text-muted small">Select a period to clone categories and Board/Criteria configuration</p>
+                            <p class="text-muted small">@Localizer["Select a period to clone categories and Board/Criteria configuration"]</p>
                             <select asp-for="CloneFromPeriodId" asp-items="Model.ExistingPeriods" class="form-select">
                                 <option value="">-- Don't clone --</option>
                             </select>
                         </div>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                            <a asp-action="Index" class="btn btn-outline-secondary">@Localizer["Cancel"]</a>
                             <button type="submit" class="btn btn-primary px-4" id="btnSubmit">
                                 <span class="material-icons align-middle me-1" style="font-size: 18px;">save</span> Create Period
                             </button>

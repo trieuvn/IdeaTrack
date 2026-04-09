@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Account Settings" xml:space="preserve"><value>Cài đặt tài khoản</value></data>
+  <data name="Settings Description" xml:space="preserve"><value>Quản lý thông tin cá nhân và tùy chỉnh cài đặt hệ thống.</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Department" xml:space="preserve"><value>Phòng ban</value></data>
+  <data name="Not updated" xml:space="preserve"><value>Chưa cập nhật</value></data>
+  <data name="Personal Information" xml:space="preserve"><value>Thông tin cá nhân</value></data>
+  <data name="Update full name, title, degree" xml:space="preserve"><value>Cập nhật họ tên, chức danh, học vị</value></data>
+  <data name="Edit" xml:space="preserve"><value>Sửa</value></data>
+  <data name="Change Password" xml:space="preserve"><value>Đổi mật khẩu</value></data>
+  <data name="Update your login password" xml:space="preserve"><value>Cập nhật mật khẩu đăng nhập</value></data>
+  <data name="Change" xml:space="preserve"><value>Đổi</value></data>
+  <data name="File Management" xml:space="preserve"><value>Quản lý tệp</value></data>
+  <data name="View and manage uploaded files" xml:space="preserve"><value>Xem và quản lý tệp đã tải lên</value></data>
+  <data name="Notification" xml:space="preserve"><value>Thông báo</value></data>
+  <data name="System Notifications" xml:space="preserve"><value>Thông báo hệ thống</value></data>
+  <data name="Receive notifications for initiative updates" xml:space="preserve"><value>Nhận thông báo khi sáng kiến được cập nhật</value></data>
+  <data name="Email Notifications" xml:space="preserve"><value>Thông báo qua email</value></data>
+  <data name="Receive email when initiative is approved/rejected" xml:space="preserve"><value>Nhận email khi sáng kiến được duyệt/từ chối</value></data>
+  <data name="Logout" xml:space="preserve"><value>Đăng xuất</value></data>
+  <data name="Sign out of current account" xml:space="preserve"><value>Đăng xuất khỏi tài khoản hiện tại</value></data>
+  <data name="Edit Profile" xml:space="preserve"><value>Chỉnh sửa hồ sơ</value></data>
+  <data name="Full Name" xml:space="preserve"><value>Họ tên</value></data>
+  <data name="Position" xml:space="preserve"><value>Chức vụ</value></data>
+  <data name="Academic Rank" xml:space="preserve"><value>Học hàm</value></data>
+  <data name="Degree" xml:space="preserve"><value>Học vị</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Save Changes" xml:space="preserve"><value>Lưu thay đổi</value></data>
+  <data name="Current Password" xml:space="preserve"><value>Mật khẩu hiện tại</value></data>
+  <data name="New Password" xml:space="preserve"><value>Mật khẩu mới</value></data>
+  <data name="Minimum 6 characters" xml:space="preserve"><value>Tối thiểu 6 ký tự</value></data>
+  <data name="Confirm New Password" xml:space="preserve"><value>Xác nhận mật khẩu mới</value></data>
+  <data name="Passwords do not match" xml:space="preserve"><value>Mật khẩu không khớp</value></data>
+</root>

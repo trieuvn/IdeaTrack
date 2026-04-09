@@ -1,4 +1,6 @@
 @model IEnumerable<IdeaTrack.Models.Initiative>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <main class="container pb-5 pt-2">
 
@@ -9,15 +11,15 @@
                 <span class="badge rounded-pill bg-info bg-opacity-25 text-info mb-2 p-2 px-3" style="border: 1px solid rgba(0,255,255,0.2)">
                     <span class="material-icons align-middle me-1" style="font-size: 16px;">history</span> INITIATIVE HISTORY
                 </span>
-                <h1 class="fw-bold display-6 mb-2">Activity History</h1>
+                <h1 class="fw-bold display-6 mb-2">@Localizer["Activity History"]</h1>
                 <p class="fs-6 mb-0 opacity-75" style="line-height: 1.6;">
-                    Track and manage all your proposed initiatives, from drafts to approved ones.
+                    @Localizer["Activity History Description"]
                 </p>
             </div>
             <div class="col-lg-4 d-flex align-items-center justify-content-end">
                 <div class="text-center">
                     <div class="display-4 fw-bold">@Model.Count()</div>
-                    <div class="opacity-75">Total Initiatives</div>
+                    <div class="opacity-75">@Localizer["Total Initiatives"]</div>
                 </div>
             </div>
         </div>
@@ -30,37 +32,37 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active rounded-pill" data-filter="all" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">apps</span>
-                        All <span class="badge bg-secondary ms-1">@Model.Count()</span>
+                        @Localizer["All"] <span class="badge bg-secondary ms-1">@Model.Count()</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="approved" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">check_circle</span>
-                        Approved <span class="badge bg-success ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Approved)</span>
+                        @Localizer["Approved"] <span class="badge bg-success ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Approved)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="pending" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">pending</span>
-                        Pending <span class="badge bg-warning text-dark ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Pending || i.Status == IdeaTrack.Models.InitiativeStatus.Evaluating)</span>
+                        @Localizer["Pending"] <span class="badge bg-warning text-dark ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Pending || i.Status == IdeaTrack.Models.InitiativeStatus.Evaluating)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="draft" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">edit_note</span>
-                        Draft <span class="badge bg-secondary ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Draft)</span>
+                        @Localizer["Draft"] <span class="badge bg-secondary ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Draft)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="revision" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">rate_review</span>
-                        Revision <span class="badge bg-info ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required)</span>
+                        @Localizer["Revision"] <span class="badge bg-info ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Revision_Required)</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link rounded-pill" data-filter="rejected" type="button">
                         <span class="material-icons align-middle me-1" style="font-size: 16px;">cancel</span>
-                        Rejected <span class="badge bg-danger ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Rejected || i.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL)</span>
+                        @Localizer["Rejected"] <span class="badge bg-danger ms-1">@Model.Count(i => i.Status == IdeaTrack.Models.InitiativeStatus.Rejected || i.Status == IdeaTrack.Models.InitiativeStatus.Rejected_SL)</span>
                     </button>
                 </li>
             </ul>
@@ -73,10 +75,10 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-primary">
                     <span class="material-icons align-middle me-2" style="font-size: 20px;">list_alt</span>
-                    Initiative List
+                    @Localizer["Initiative List"]
                 </h5>
                 <a asp-controller="Initiative" asp-action="Create" class="btn btn-primary btn-sm rounded-pill px-3">
-                    <span class="material-icons align-middle me-1" style="font-size: 16px;">add</span> New Initiative
+                    <span class="material-icons align-middle me-1" style="font-size: 16px;">add</span> @Localizer["New Initiative"]
                 </a>
             </div>
         </div>
@@ -89,23 +91,23 @@
                             <tr>
                                 <th class="ps-3">
                                     <span class="material-icons align-middle me-1" style="font-size: 16px;">title</span>
-                                    Title
+                                    @Localizer["Title"]
                                 </th>
                                 <th>
                                     <span class="material-icons align-middle me-1" style="font-size: 16px;">category</span>
-                                    Category
+                                    @Localizer["Category"]
                                 </th>
                                 <th>
                                     <span class="material-icons align-middle me-1" style="font-size: 16px;">event</span>
-                                    Created Date
+                                    @Localizer["Created Date"]
                                 </th>
                                 <th>
                                     <span class="material-icons align-middle me-1" style="font-size: 16px;">flag</span>
-                                    Status
+                                    @Localizer["Status"]
                                 </th>
                                 <th class="text-end pe-3">
                                     <span class="material-icons align-middle me-1" style="font-size: 16px;">settings</span>
-                                    Actions
+                                    @Localizer["Actions"]
                                 </th>
                             </tr>
                         </thead>
@@ -211,10 +213,10 @@
                     <div class="mb-3">
                         <span class="material-icons text-muted" style="font-size: 80px;">inbox</span>
                     </div>
-                    <h5 class="text-muted mb-2">No initiatives found</h5>
-                    <p class="text-muted mb-4">Start by creating your first initiative</p>
+                    <h5 class="text-muted mb-2">@Localizer["No initiatives found"]</h5>
+                    <p class="text-muted mb-4">@Localizer["Start by creating your first initiative"]</p>
                     <a asp-controller="Initiative" asp-action="Create" class="btn btn-primary rounded-pill px-4 py-2">
-                        <span class="material-icons align-middle me-1">add_circle</span> Create New Initiative
+                        <span class="material-icons align-middle me-1">add_circle</span> @Localizer["Create New Initiative"]
                     </a>
                 </div>
             }

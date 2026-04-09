@@ -1,7 +1,9 @@
 @model IdeaTrack.Models.ApplicationUser
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "My Profile";
+    ViewData["Title"] = Localizer["My Profile"].Value;
     Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
 }
 
@@ -186,46 +188,46 @@
         <div class="col-lg-8">
             <!-- Personal Information -->
             <div class="profile-card mb-4">
-                <h5><i class="bi bi-person-vcard"></i> Personal Information</h5>
+                <h5><i class="bi bi-person-vcard"></i> @Localizer["Personal Information"]</h5>
                 <div class="info-grid">
                     <div class="info-item">
-                        <label>Full Name</label>
-                        <span>@(Model.FullName ?? "Not set")</span>
+                        <label>@Localizer["Full Name"]</label>
+                        <span>@(Model.FullName ?? Localizer["Not set"].Value)</span>
                     </div>
                     <div class="info-item">
-                        <label>Username</label>
+                        <label>@Localizer["Username"]</label>
                         <span>@Model.UserName</span>
                     </div>
                     <div class="info-item">
-                        <label>Email Address</label>
+                        <label>@Localizer["Email Address"]</label>
                         <span>@Model.Email</span>
                     </div>
                     <div class="info-item">
-                        <label>Phone Number</label>
-                        <span>@(Model.PhoneNumber ?? "Not set")</span>
+                        <label>@Localizer["Phone Number"]</label>
+                        <span>@(Model.PhoneNumber ?? Localizer["Not set"].Value)</span>
                     </div>
                     <div class="info-item">
-                        <label>Department</label>
-                        <span>@(Model.Department?.Name ?? "Not assigned")</span>
+                        <label>@Localizer["Department"]</label>
+                        <span>@(Model.Department?.Name ?? Localizer["Not assigned"].Value)</span>
                     </div>
                     <div class="info-item">
-                        <label>Position</label>
-                        <span>@(Model.Position ?? "Not set")</span>
+                        <label>@Localizer["Position"]</label>
+                        <span>@(Model.Position ?? Localizer["Not set"].Value)</span>
                     </div>
                     <div class="info-item">
-                        <label>Academic Rank</label>
-                        <span>@(Model.AcademicRank ?? "Not set")</span>
+                        <label>@Localizer["Academic Rank"]</label>
+                        <span>@(Model.AcademicRank ?? Localizer["Not set"].Value)</span>
                     </div>
                     <div class="info-item">
-                        <label>Degree</label>
-                        <span>@(Model.Degree ?? "Not set")</span>
+                        <label>@Localizer["Degree"]</label>
+                        <span>@(Model.Degree ?? Localizer["Not set"].Value)</span>
                     </div>
                 </div>
                 
                 <div class="action-buttons">
                     <a href="/Identity/Account/Manage/ChangePassword" class="btn-change-password">
                         <i class="bi bi-key"></i>
-                        Change Password
+                        @Localizer["Change Password"]
                     </a>
                 </div>
             </div>
@@ -234,35 +236,35 @@
         <div class="col-lg-4">
             <!-- Account Status -->
             <div class="profile-card">
-                <h5><i class="bi bi-shield-lock"></i> Account Status</h5>
+                <h5><i class="bi bi-shield-lock"></i> @Localizer["Account Status"]</h5>
                 <div class="info-item mb-3">
-                    <label>Account Status</label>
+                    <label>@Localizer["Account Status"]</label>
                     <span>
                         @if (Model.IsActive)
                         {
-                            <span class="badge bg-success">Active</span>
+                            <span class="badge bg-success">@Localizer["Active"]</span>
                         }
                         else
                         {
-                            <span class="badge bg-danger">Inactive</span>
+                            <span class="badge bg-danger">@Localizer["Inactive"]</span>
                         }
                     </span>
                 </div>
                 <div class="info-item mb-3">
-                    <label>Email Verified</label>
+                    <label>@Localizer["Email Verified"]</label>
                     <span>
                         @if (Model.EmailConfirmed)
                         {
-                            <span class="badge bg-success"><i class="bi bi-check me-1"></i>Verified</span>
+                            <span class="badge bg-success"><i class="bi bi-check me-1"></i>@Localizer["Verified"]</span>
                         }
                         else
                         {
-                            <span class="badge bg-warning">Not Verified</span>
+                            <span class="badge bg-warning">@Localizer["Not Verified"]</span>
                         }
                     </span>
                 </div>
                 <div class="info-item">
-                    <label>Last Active</label>
+                    <label>@Localizer["Last Active"]</label>
                     <span>@(Model.LastActive?.ToString("dd MMM yyyy, HH:mm") ?? "N/A")</span>
                 </div>
             </div>

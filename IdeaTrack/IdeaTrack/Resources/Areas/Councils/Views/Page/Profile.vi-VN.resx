@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="My Profile" xml:space="preserve"><value>Hồ sơ của tôi</value></data>
+  <data name="Personal Information" xml:space="preserve"><value>Thông tin cá nhân</value></data>
+  <data name="Full Name" xml:space="preserve"><value>Họ tên</value></data>
+  <data name="Not set" xml:space="preserve"><value>Chưa cập nhật</value></data>
+  <data name="Username" xml:space="preserve"><value>Tên đăng nhập</value></data>
+  <data name="Email Address" xml:space="preserve"><value>Địa chỉ email</value></data>
+  <data name="Phone Number" xml:space="preserve"><value>Số điện thoại</value></data>
+  <data name="Department" xml:space="preserve"><value>Phòng ban</value></data>
+  <data name="Not assigned" xml:space="preserve"><value>Chưa phân công</value></data>
+  <data name="Position" xml:space="preserve"><value>Chức vụ</value></data>
+  <data name="Academic Rank" xml:space="preserve"><value>Học hàm</value></data>
+  <data name="Degree" xml:space="preserve"><value>Học vị</value></data>
+  <data name="Change Password" xml:space="preserve"><value>Đổi mật khẩu</value></data>
+  <data name="Account Status" xml:space="preserve"><value>Trạng thái tài khoản</value></data>
+  <data name="Active" xml:space="preserve"><value>Hoạt động</value></data>
+  <data name="Inactive" xml:space="preserve"><value>Không hoạt động</value></data>
+  <data name="Email Verified" xml:space="preserve"><value>Email xác thực</value></data>
+  <data name="Verified" xml:space="preserve"><value>Đã xác thực</value></data>
+  <data name="Not Verified" xml:space="preserve"><value>Chưa xác thực</value></data>
+  <data name="Last Active" xml:space="preserve"><value>Hoạt động lần cuối</value></data>
+</root>

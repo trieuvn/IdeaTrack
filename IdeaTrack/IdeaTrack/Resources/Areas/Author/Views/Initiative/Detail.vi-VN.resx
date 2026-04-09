@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Academic Year" xml:space="preserve"><value>Năm học</value></data>
+  <data name="Average Score" xml:space="preserve"><value>Average Score</value></data>
+  <data name="Budget" xml:space="preserve"><value>Ngân sách</value></data>
+  <data name="Create a new draft copy from this initiative to make corrections and resubmit." xml:space="preserve"><value>Create a new draft copy from this initiative to make corrections and resubmit.</value></data>
+  <data name="Created Date" xml:space="preserve"><value>Ngày tạo</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Bảng điều khiển</value></data>
+  <data name="Department" xml:space="preserve"><value>Phòng ban</value></data>
+  <data name="Detail" xml:space="preserve"><value>Detail</value></data>
+  <data name="Download" xml:space="preserve"><value>Tải xuống</value></data>
+  <data name="Edit your initiative and resubmit for review. It will go back to Processing status." xml:space="preserve"><value>Edit your initiative and resubmit for review. It will go back to Processing status.</value></data>
+  <data name="Expired" xml:space="preserve"><value>Expired</value></data>
+  <data name="Final Score" xml:space="preserve"><value>Final Score</value></data>
+  <data name="History" xml:space="preserve"><value>Lịch sử</value></data>
+  <data name="No attachments found" xml:space="preserve"><value>No attachments found</value></data>
+  <data name="No co-authors." xml:space="preserve"><value>No co-authors.</value></data>
+  <data name="Once submitted, you won&#x27;t be able to edit it until it&#x27;s reviewed." xml:space="preserve"><value>Once submitted, you won&#x27;t be able to edit it until it&#x27;s reviewed.</value></data>
+  <data name="Resubmission is not available. Create a new draft copy from this initiative to make corrections and resubmit." xml:space="preserve"><value>Resubmission is not available. Create a new draft copy from this initiative to make corrections and resubmit.</value></data>
+  <data name="This action cannot be undone. All files and data will be lost." xml:space="preserve"><value>This action cannot be undone. All files and data will be lost.</value></data>
+  <data name="View" xml:space="preserve"><value>Xem</value></data>
+</root>

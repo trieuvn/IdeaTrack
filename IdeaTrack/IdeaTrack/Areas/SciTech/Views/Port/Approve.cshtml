@@ -1,6 +1,8 @@
 ﻿@using IdeaTrack.Models
 @using IdeaTrack.Areas.SciTech.Models
 @model InitiativeDetailVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
 
@@ -101,19 +103,19 @@
 
             <div class="card-body row g-4">
                 <div class="col-md-6">
-                    <small class="text-muted">Proposer</small>
+                    <small class="text-muted">@Localizer["Proposer"]</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-user-tie me-1 text-primary"></i>@Model.ProposerName</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted">Department</small>
+                    <small class="text-muted">@Localizer["Department"]</small>
                     <p class="fw-semibold mb-0"><i class="fas @deptIcon @deptColor me-1"></i>@Model.DepartmentName</p>
                 </div>
 
                 @if (Model.CoAuthors != null && Model.CoAuthors.Any())
                 {
                     <div class="col-12">
-                        <small class="text-muted">Co-authors</small>
+                        <small class="text-muted">@Localizer["Co-authors"]</small>
                         <div class="d-flex flex-wrap gap-2 mt-1">
                             @foreach (var coauthor in Model.CoAuthors)
                             {
@@ -126,19 +128,19 @@
                 }
 
                 <div class="col-md-6">
-                    <small class="text-muted">Category</small>
+                    <small class="text-muted">@Localizer["Category"]</small>
                     <p class="fw-semibold mb-0"><i class="fas fa-brain me-1 text-info"></i>@Model.Category</p>
                 </div>
 
                 <div class="col-md-6">
-                    <small class="text-muted d-block mb-1">Submitted Date</small>
+                    <small class="text-muted d-block mb-1">@Localizer["Submitted Date"]</small>
                     <p class="fw-semibold mb-0 gradient-text">
                         <i class="fas fa-clock me-1"></i>
                         @Model.SubmittedDate.ToString("dd/MM/yyyy")
                     </p>
                 </div>
                 <div class="col-md-6">
-                    <small class="text-muted">Proposed Budget</small>
+                    <small class="text-muted">@Localizer["Proposed Budget"]</small>
                     <p class="fw-bold text-primary fs-5 mb-0"><i class="fas fa-dollar-sign me-1 text-success"></i>@Model.Budget.ToString("N0") VND</p>
                 </div>
 
@@ -414,7 +416,7 @@
                 <div class="text-center mb-3">
                     <i class="fas fa-trophy fa-3x text-success"></i>
                 </div>
-                <p class="mb-0 text-center">This will <strong>FINALLY APPROVE</strong> the initiative. This is the last step in the approval process.</p>
+                <p class="mb-0 text-center">This will <strong>@Localizer["FINALLY APPROVE"]</strong> the initiative. This is the last step in the approval process.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -446,7 +448,7 @@
                 <div class="text-center mb-3">
                     <i class="fas fa-ban fa-3x text-danger"></i>
                 </div>
-                <p class="mb-0 text-center">This will <strong>FINALLY REJECT</strong> the initiative. This action cannot be undone.</p>
+                <p class="mb-0 text-center">This will <strong>@Localizer["FINALLY REJECT"]</strong> the initiative. This action cannot be undone.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

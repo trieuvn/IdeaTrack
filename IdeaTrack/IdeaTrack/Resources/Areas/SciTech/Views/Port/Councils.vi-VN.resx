@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Council Management" xml:space="preserve"><value>Quản lý Hội đồng</value></data>
+  <data name="Council Management Description" xml:space="preserve"><value>Thiết lập và quản lý các hội đồng đánh giá sáng kiến.</value></data>
+  <data name="Council List" xml:space="preserve"><value>Danh sách Hội đồng</value></data>
+  <data name="Create new" xml:space="preserve"><value>Tạo mới</value></data>
+  <data name="Search councils..." xml:space="preserve"><value>Tìm kiếm hội đồng...</value></data>
+  <data name="Active" xml:space="preserve"><value>Hoạt động</value></data>
+  <data name="Closed" xml:space="preserve"><value>Đã đóng</value></data>
+  <data name="Members" xml:space="preserve"><value>Thành viên</value></data>
+  <data name="Fiscal Year:" xml:space="preserve"><value>Năm tài chính:</value></data>
+  <data name="Delete" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Add Member" xml:space="preserve"><value>Thêm thành viên</value></data>
+  <data name="Member" xml:space="preserve"><value>Thành viên</value></data>
+  <data name="Field/Dept" xml:space="preserve"><value>Lĩnh vực/Khoa</value></data>
+  <data name="Role" xml:space="preserve"><value>Vai trò</value></data>
+  <data name="Actions" xml:space="preserve"><value>Thao tác</value></data>
+  <data name="Chairman" xml:space="preserve"><value>Chủ tịch</value></data>
+  <data name="Secretary" xml:space="preserve"><value>Thư ký</value></data>
+  <data name="No Council Selected" xml:space="preserve"><value>Chưa chọn Hội đồng</value></data>
+  <data name="Select a council from the list on the left to view details." xml:space="preserve"><value>Chọn một hội đồng từ danh sách bên trái để xem chi tiết.</value></data>
+  <data name="Council Information" xml:space="preserve"><value>Thông tin Hội đồng</value></data>
+  <data name="Council Name" xml:space="preserve"><value>Tên Hội đồng</value></data>
+  <data name="Fiscal Year" xml:space="preserve"><value>Năm tài chính</value></data>
+  <data name="Description" xml:space="preserve"><value>Mô tả</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Save" xml:space="preserve"><value>Lưu</value></data>
+  <data name="Search by name, email or ID..." xml:space="preserve"><value>Tìm kiếm theo tên, email hoặc mã...</value></data>
+  <data name="Enter keywords to search for personnel" xml:space="preserve"><value>Nhập từ khóa để tìm kiếm nhân sự</value></data>
+  <data name="Select" xml:space="preserve"><value>Chọn</value></data>
+  <data name="No personnel found" xml:space="preserve"><value>Không tìm thấy nhân sự</value></data>
+  <data name="Create New Council" xml:space="preserve"><value>Tạo Hội đồng mới</value></data>
+  <data name="Update Council" xml:space="preserve"><value>Cập nhật Hội đồng</value></data>
+  <data name="Confirm Delete Council" xml:space="preserve"><value>CẢNH BÁO: Xóa hội đồng sẽ xóa tất cả dữ liệu liên quan. Bạn có chắc chắn?</value></data>
+  <data name="Cannot delete council" xml:space="preserve"><value>Không thể xóa hội đồng</value></data>
+  <data name="Cannot add member" xml:space="preserve"><value>Không thể thêm thành viên</value></data>
+  <data name="Remove member from council?" xml:space="preserve"><value>Xóa thành viên khỏi hội đồng?</value></data>
+</root>

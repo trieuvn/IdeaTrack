@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Initiative Submission Guide" xml:space="preserve">
+    <value>Hướng dẫn nộp sáng kiến</value>
+  </data>
+  <data name="Privacy Description" xml:space="preserve">
+    <value>Quy trình chi tiết, biểu mẫu cần thiết và tiêu chí đánh giá giúp giảng viên hoàn thành hồ sơ sáng kiến thành công.</value>
+  </data>
+  <data name="Overview" xml:space="preserve">
+    <value>Tổng quan</value>
+  </data>
+  <data name="Overview Detail" xml:space="preserve">
+    <value>Chào mừng bạn đến với hướng dẫn nộp sáng kiến. Sáng kiến thực tiễn là những kiến thức, kỹ năng, kỹ thuật mà tác giả đã đúc kết từ kinh nghiệm làm việc, mang lại hiệu quả cao trong quản lý, giảng dạy và nghiên cứu khoa học. Việc nộp sáng kiến không chỉ là quyền lợi mà còn là trách nhiệm để nâng cao chất lượng đào tạo chung của Trường.</value>
+  </data>
+  <data name="Submission Process" xml:space="preserve">
+    <value>Quy trình nộp hồ sơ</value>
+  </data>
+  <data name="Prepare Documents" xml:space="preserve">
+    <value>Chuẩn bị hồ sơ</value>
+  </data>
+  <data name="Prepare Documents Detail" xml:space="preserve">
+    <value>Tải biểu mẫu, điền thông tin và chuẩn bị các minh chứng cần thiết.</value>
+  </data>
+  <data name="Submit Online" xml:space="preserve">
+    <value>Nộp trực tuyến</value>
+  </data>
+  <data name="Submit Online Detail" xml:space="preserve">
+    <value>Đăng nhập vào cổng thông tin và tải lên hồ sơ ở định dạng PDF/DOCX.</value>
+  </data>
+  <data name="Council Review" xml:space="preserve">
+    <value>Hội đồng xét duyệt</value>
+  </data>
+  <data name="Council Review Detail" xml:space="preserve">
+    <value>Hội đồng khoa học sẽ đánh giá và xem xét sáng kiến của bạn.</value>
+  </data>
+  <data name="Recognition &amp; Awards" xml:space="preserve">
+    <value>Công nhận &amp; Khen thưởng</value>
+  </data>
+  <data name="Recognition Awards Detail" xml:space="preserve">
+    <value>Nhận quyết định công nhận và khen thưởng theo quy định.</value>
+  </data>
+  <data name="Document Requirements" xml:space="preserve">
+    <value>Yêu cầu hồ sơ</value>
+  </data>
+  <data name="Document Type" xml:space="preserve">
+    <value>Loại tài liệu</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>Định dạng</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Ghi chú</value>
+  </data>
+  <data name="Initiative Registration Form" xml:space="preserve">
+    <value>Đơn đăng ký sáng kiến</value>
+  </data>
+  <data name="Must include author's signature" xml:space="preserve">
+    <value>Phải có chữ ký của tác giả</value>
+  </data>
+  <data name="Initiative Description" xml:space="preserve">
+    <value>Bản mô tả sáng kiến</value>
+  </data>
+  <data name="Content should not exceed 20 pages" xml:space="preserve">
+    <value>Nội dung không quá 20 trang</value>
+  </data>
+  <data name="Supporting Evidence" xml:space="preserve">
+    <value>Minh chứng hỗ trợ</value>
+  </data>
+  <data name="Photos, videos, data..." xml:space="preserve">
+    <value>Hình ảnh, video, dữ liệu...</value>
+  </data>
+  <data name="Compress all documents if file size is large" xml:space="preserve">
+    <value>Nén tất cả tài liệu nếu dung lượng lớn</value>
+  </data>
+  <data name="Frequently Asked Questions" xml:space="preserve">
+    <value>Câu hỏi thường gặp</value>
+  </data>
+  <data name="FAQ1 Question" xml:space="preserve">
+    <value>Hạn chót nộp sáng kiến là khi nào?</value>
+  </data>
+  <data name="FAQ1 Answer" xml:space="preserve">
+    <value>Thông thường, Trường nhận hồ sơ sáng kiến theo hai đợt trong năm học. Đợt 1 vào tháng 11 và Đợt 2 vào tháng 4 hàng năm.</value>
+  </data>
+  <data name="FAQ2 Question" xml:space="preserve">
+    <value>Một sáng kiến có thể có bao nhiêu tác giả?</value>
+  </data>
+  <data name="FAQ2 Answer" xml:space="preserve">
+    <value>Một sáng kiến có thể do cá nhân hoặc nhóm tác giả thực hiện (tối đa 3 thành viên).</value>
+  </data>
+  <data name="FAQ3 Question" xml:space="preserve">
+    <value>Tôi có thể chỉnh sửa hồ sơ sau khi nộp không?</value>
+  </data>
+  <data name="FAQ3 Answer" xml:space="preserve">
+    <value>Giảng viên chỉ có thể chỉnh sửa hồ sơ khi trạng thái hiển thị "Chờ sửa đổi" hoặc trước khi Hội đồng bắt đầu đánh giá.</value>
+  </data>
+  <data name="Select Period" xml:space="preserve">
+    <value>Chọn đợt</value>
+  </data>
+  <data name="Select Period Description" xml:space="preserve">
+    <value>Chọn năm học và đợt để xem tài liệu liên quan.</value>
+  </data>
+  <data name="Academic Year" xml:space="preserve">
+    <value>Năm học</value>
+  </data>
+  <data name="Initiative Period" xml:space="preserve">
+    <value>Đợt sáng kiến</value>
+  </data>
+  <data name="(Current)" xml:space="preserve">
+    <value>(Hiện tại)</value>
+  </data>
+  <data name="(Active)" xml:space="preserve">
+    <value>(Đang mở)</value>
+  </data>
+  <data name="No active years available" xml:space="preserve">
+    <value>Không có năm học khả dụng</value>
+  </data>
+  <data name="No active periods" xml:space="preserve">
+    <value>Không có đợt đang mở</value>
+  </data>
+  <data name="Support Documents" xml:space="preserve">
+    <value>Tài liệu hỗ trợ</value>
+  </data>
+  <data name="Documents for:" xml:space="preserve">
+    <value>Tài liệu cho:</value>
+  </data>
+  <data name="Download forms and guides" xml:space="preserve">
+    <value>Tải xuống các biểu mẫu và hướng dẫn để chuẩn bị hồ sơ.</value>
+  </data>
+  <data name="No documents available for this period." xml:space="preserve">
+    <value>Không có tài liệu cho đợt này.</value>
+  </data>
+  <data name="Download All (.zip)" xml:space="preserve">
+    <value>Tải tất cả (.zip)</value>
+  </data>
+  <data name="Current Status" xml:space="preserve">
+    <value>Trạng thái hiện tại</value>
+  </data>
+  <data name="Deadline:" xml:space="preserve">
+    <value>Hạn chót:</value>
+  </data>
+  <data name="days remaining" xml:space="preserve">
+    <value>ngày còn lại</value>
+  </data>
+  <data name="No Active Period" xml:space="preserve">
+    <value>Không có đợt đang mở</value>
+  </data>
+  <data name="No active period description" xml:space="preserve">
+    <value>Hiện tại không có đợt nộp sáng kiến nào đang mở.</value>
+  </data>
+  <data name="Need Help?" xml:space="preserve">
+    <value>Cần hỗ trợ?</value>
+  </data>
+  <data name="Science &amp; Technology Office" xml:space="preserve">
+    <value>Phòng Khoa học &amp; Công nghệ</value>
+  </data>
+  <data name="Support Email" xml:space="preserve">
+    <value>Email hỗ trợ</value>
+  </data>
+  <data name="Important Notice" xml:space="preserve">
+    <value>Lưu ý quan trọng</value>
+  </data>
+  <data name="Late submission notice" xml:space="preserve">
+    <value>Tất cả hồ sơ nộp muộn sẽ được tự động chuyển sang xét duyệt ở đợt tiếp theo của năm học sau.</value>
+  </data>
+</root>

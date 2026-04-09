@@ -1,15 +1,17 @@
-﻿@model IdeaTrack.ViewModels.PrivacyViewModel
+@model IdeaTrack.ViewModels.PrivacyViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Initiative Submission Guide";
+    ViewData["Title"] = Localizer["Initiative Submission Guide"];
 }
 
 <main class="container pb-5 pt-2">
     <div class="row g-4">
         <div class="col-lg-8">
             <header class="mb-5">
-                <h1 class="fw-bold text-dark">Initiative Submission Guide</h1>
+                <h1 class="fw-bold text-dark">@Localizer["Initiative Submission Guide"]</h1>
                 <p class="text-secondary fs-5">
-                    Detailed procedures, required forms, and evaluation criteria to help faculty members successfully complete their initiative submissions.
+                    @Localizer["Privacy Description"]
                 </p>
             </header>
 
@@ -17,24 +19,24 @@
                 <div class="card-body p-4">
                     <h5 class="fw-bold d-flex align-items-center mb-3">
                         <span class="badge bg-danger rounded-circle me-2 p-1" style="width: 24px; height: 24px; display: inline-block; font-size: 12px;">i</span>
-                        Overview
+                        @Localizer["Overview"]
                     </h5>
                     <p class="text-muted mb-0">
-                        Welcome to the initiative submission guide. Practical initiatives are knowledge, skills, and techniques that authors have distilled from their work experience, bringing high efficiency in management, teaching, and scientific research. Submitting initiatives is not only a right but also a responsibility to improve the overall training quality of the Institution.
+                        @Localizer["Overview Detail"]
                     </p>
                 </div>
             </section>
 
             <section>
-                <h3 class="fw-bold mb-4">Submission Process</h3>
+                <h3 class="fw-bold mb-4">@Localizer["Submission Process"]</h3>
                 <div class="row g-3">
                     <div class="col-md-3">
                         <div class="card h-100 border-0 shadow-sm rounded-4 p-3">
                             <div class="mb-3">
                                 <span class="badge bg-danger-subtle text-danger rounded-3 px-3 py-2 fw-bold">1</span>
                             </div>
-                            <h6 class="fw-bold">Prepare Documents</h6>
-                            <p class="small text-muted mb-0">Download forms, fill in information, and prepare necessary supporting evidence.</p>
+                            <h6 class="fw-bold">@Localizer["Prepare Documents"]</h6>
+                            <p class="small text-muted mb-0">@Localizer["Prepare Documents Detail"]</p>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -42,8 +44,8 @@
                             <div class="mb-3">
                                 <span class="badge bg-danger-subtle text-danger rounded-3 px-3 py-2 fw-bold">2</span>
                             </div>
-                            <h6 class="fw-bold">Submit Online</h6>
-                            <p class="small text-muted mb-0">Log in to the portal and upload your documents in PDF/DOCX format.</p>
+                            <h6 class="fw-bold">@Localizer["Submit Online"]</h6>
+                            <p class="small text-muted mb-0">@Localizer["Submit Online Detail"]</p>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -51,8 +53,8 @@
                             <div class="mb-3">
                                 <span class="badge bg-danger-subtle text-danger rounded-3 px-3 py-2 fw-bold">3</span>
                             </div>
-                            <h6 class="fw-bold">Council Review</h6>
-                            <p class="small text-muted mb-0">The scientific council will evaluate and review your initiative.</p>
+                            <h6 class="fw-bold">@Localizer["Council Review"]</h6>
+                            <p class="small text-muted mb-0">@Localizer["Council Review Detail"]</p>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -60,47 +62,47 @@
                             <div class="mb-3">
                                 <span class="badge bg-danger-subtle text-danger rounded-3 px-3 py-2 fw-bold">4</span>
                             </div>
-                            <h6 class="fw-bold">Recognition & Awards</h6>
-                            <p class="small text-muted mb-0">Receive recognition decisions and awards according to regulations.</p>
+                            <h6 class="fw-bold">@Localizer["Recognition & Awards"]</h6>
+                            <p class="small text-muted mb-0">@Localizer["Recognition Awards Detail"]</p>
                         </div>
                     </div>
                 </div>
             </section>
             <section class="mt-5">
-                <h3 class="fw-bold mb-4">Document Requirements</h3>
+                <h3 class="fw-bold mb-4">@Localizer["Document Requirements"]</h3>
                 <div class="table-responsive bg-white rounded-4 shadow-sm p-3">
                     <table class="table table-borderless align-middle">
                         <thead class="border-bottom">
                             <tr>
-                                <th class="text-muted small text-uppercase">Document Type</th>
-                                <th class="text-muted small text-uppercase">Format</th>
-                                <th class="text-muted small text-uppercase">Notes</th>
+                                <th class="text-muted small text-uppercase">@Localizer["Document Type"]</th>
+                                <th class="text-muted small text-uppercase">@Localizer["Format"]</th>
+                                <th class="text-muted small text-uppercase">@Localizer["Notes"]</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>
-                                    <div class="fw-bold">Initiative Registration Form</div>
+                                    <div class="fw-bold">@Localizer["Initiative Registration Form"]</div>
                                     <div class="small text-muted">Form M01</div>
                                 </td>
                                 <td><span class="badge bg-light text-dark border">PDF/DOCX</span></td>
-                                <td class="small text-muted">Must include author's signature</td>
+                                <td class="small text-muted">@Localizer["Must include author's signature"]</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <div class="fw-bold">Initiative Description</div>
+                                    <div class="fw-bold">@Localizer["Initiative Description"]</div>
                                     <div class="small text-muted">Form M02</div>
                                 </td>
                                 <td><span class="badge bg-light text-dark border">PDF</span></td>
-                                <td class="small text-muted">Content should not exceed 20 pages</td>
+                                <td class="small text-muted">@Localizer["Content should not exceed 20 pages"]</td>
                             </tr>
                             <tr>
                                 <td>
-                                    <div class="fw-bold">Supporting Evidence</div>
-                                    <div class="small text-muted">Photos, videos, data...</div>
+                                    <div class="fw-bold">@Localizer["Supporting Evidence"]</div>
+                                    <div class="small text-muted">@Localizer["Photos, videos, data..."]</div>
                                 </td>
                                 <td><span class="badge bg-light text-dark border">ZIP/RAR</span></td>
-                                <td class="small text-muted">Compress all documents if file size is large</td>
+                                <td class="small text-muted">@Localizer["Compress all documents if file size is large"]</td>
                             </tr>
                         </tbody>
                     </table>
@@ -108,17 +110,17 @@
             </section>
 
             <section class="mt-5 mb-5">
-                <h3 class="fw-bold mb-4">Frequently Asked Questions</h3>
+                <h3 class="fw-bold mb-4">@Localizer["Frequently Asked Questions"]</h3>
                 <div class="accordion accordion-flush" id="faqAccordion">
                     <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
                         <h2 class="accordion-header">
                             <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                When is the deadline for initiative submission?
+                                @Localizer["FAQ1 Question"]
                             </button>
                         </h2>
                         <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                             <div class="accordion-body text-muted">
-                                Typically, the institution accepts initiative submissions in two periods during the academic year. Period 1 is in November and Period 2 is in April each year.
+                                @Localizer["FAQ1 Answer"]
                             </div>
                         </div>
                     </div>
@@ -126,12 +128,12 @@
                     <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                How many authors can an initiative have?
+                                @Localizer["FAQ2 Question"]
                             </button>
                         </h2>
                         <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                             <div class="accordion-body text-muted">
-                                An initiative can be carried out by an individual or a group of authors (maximum 3 members).
+                                @Localizer["FAQ2 Answer"]
                             </div>
                         </div>
                     </div>
@@ -139,12 +141,12 @@
                     <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                Can I edit my submission after submitting?
+                                @Localizer["FAQ3 Question"]
                             </button>
                         </h2>
                         <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                             <div class="accordion-body text-muted">
-                                Faculty members can only edit their submission when the status shows "Pending Revision" or before the Council begins evaluation.
+                                @Localizer["FAQ3 Answer"]
                             </div>
                         </div>
                     </div>
@@ -160,12 +162,12 @@
                         <div class="bg-danger bg-opacity-10 p-2 rounded-3 me-3">
                             <i class="bi bi-calendar-check text-danger fs-4"></i>
                         </div>
-                        <h5 class="fw-bold mb-0">Select Period</h5>
+                        <h5 class="fw-bold mb-0">@Localizer["Select Period"]</h5>
                     </div>
-                    <p class="small text-muted mb-3">Choose an academic year and period to view related documents.</p>
+                    <p class="small text-muted mb-3">@Localizer["Select Period Description"]</p>
                     
                     <div class="mb-3">
-                        <label class="form-label small text-muted text-uppercase fw-bold">Academic Year</label>
+                        <label class="form-label small text-muted text-uppercase fw-bold">@Localizer["Academic Year"]</label>
                         <select class="form-select" id="yearSelect">
                             @if (Model.AvailableYears.Any())
                             {
@@ -173,23 +175,23 @@
                                 {
                                     if (year.Id == Model.SelectedYearId)
                                     {
-                                        <option value="@year.Id" selected>@year.Name @(year.IsCurrent ? "(Current)" : "")</option>
+                                        <option value="@year.Id" selected>@year.Name @(year.IsCurrent ? Localizer["(Current)"].Value : "")</option>
                                     }
                                     else
                                     {
-                                        <option value="@year.Id">@year.Name @(year.IsCurrent ? "(Current)" : "")</option>
+                                        <option value="@year.Id">@year.Name @(year.IsCurrent ? Localizer["(Current)"].Value : "")</option>
                                     }
                                 }
                             }
                             else
                             {
-                                <option value="">No active years available</option>
+                                <option value="">@Localizer["No active years available"]</option>
                             }
                         </select>
                     </div>
                     
                     <div class="mb-0">
-                        <label class="form-label small text-muted text-uppercase fw-bold">Initiative Period</label>
+                        <label class="form-label small text-muted text-uppercase fw-bold">@Localizer["Initiative Period"]</label>
                         <select class="form-select" id="periodSelect">
                             @if (Model.AvailablePeriods.Any())
                             {
@@ -197,17 +199,17 @@
                                 {
                                     if (period.Id == Model.SelectedPeriodId)
                                     {
-                                        <option value="@period.Id" selected>@period.Name @(period.IsActive ? "(Active)" : "")</option>
+                                        <option value="@period.Id" selected>@period.Name @(period.IsActive ? Localizer["(Active)"].Value : "")</option>
                                     }
                                     else
                                     {
-                                        <option value="@period.Id">@period.Name @(period.IsActive ? "(Active)" : "")</option>
+                                        <option value="@period.Id">@period.Name @(period.IsActive ? Localizer["(Active)"].Value : "")</option>
                                     }
                                 }
                             }
                             else
                             {
-                                <option value="">No active periods</option>
+                                <option value="">@Localizer["No active periods"]</option>
                             }
                         </select>
                     </div>
@@ -221,16 +223,16 @@
                         <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3">
                             <i class="bi bi-folder2-open text-primary fs-4"></i>
                         </div>
-                        <h5 class="fw-bold mb-0">Support Documents</h5>
+                        <h5 class="fw-bold mb-0">@Localizer["Support Documents"]</h5>
                     </div>
                     <p class="small text-muted mb-3">
                         @if (!string.IsNullOrEmpty(Model.SelectedPeriodName))
                         {
-                            <span>Documents for: <strong class="text-danger">@Model.SelectedPeriodName</strong></span>
+                            <span>@Localizer["Documents for:"] <strong class="text-danger">@Model.SelectedPeriodName</strong></span>
                         }
                         else
                         {
-                            <span>Download forms and guides to prepare your submission.</span>
+                            <span>@Localizer["Download forms and guides"]</span>
                         }
                     </p>
 
@@ -287,7 +289,7 @@
                         {
                             <div class="text-center py-4">
                                 <i class="bi bi-folder-x text-muted" style="font-size: 48px;"></i>
-                                <p class="text-muted mt-2 mb-0">No documents available for this period.</p>
+                                <p class="text-muted mt-2 mb-0">@Localizer["No documents available for this period."]</p>
                             </div>
                         }
                     </div>
@@ -296,7 +298,7 @@
                     {
                         <a href="@Url.Action("DownloadAllDocuments", new { periodId = Model.SelectedPeriodId })"
                            class="btn btn-outline-danger w-100 rounded-pill fw-bold py-2">
-                            <i class="bi bi-file-earmark-zip me-2"></i>Download All (.zip)
+                            <i class="bi bi-file-earmark-zip me-2"></i>@Localizer["Download All (.zip)"]
                         </a>
                     }
                 </div>
@@ -305,7 +307,7 @@
             <!-- Current Status Card -->
             <div class="card border-0 shadow-sm rounded-4 mb-4 bg-danger bg-opacity-10">
                 <div class="card-body p-4">
-                    <h6 class="fw-bold text-danger text-uppercase small mb-3">Current Status</h6>
+                    <h6 class="fw-bold text-danger text-uppercase small mb-3">@Localizer["Current Status"]</h6>
                     @if (Model.ActivePeriodInfo != null)
                     {
                         <div class="d-flex align-items-center mb-3">
@@ -313,35 +315,35 @@
                             <span class="fw-bold text-dark">@Model.ActivePeriodInfo.PeriodName</span>
                         </div>
                         <p class="small text-muted mb-0">
-                            Deadline: <strong>@Model.ActivePeriodInfo.EndDate.ToString("dd/MM/yyyy")</strong> 
-                            (@Model.ActivePeriodInfo.DaysRemaining days remaining)
+                            @Localizer["Deadline:"] <strong>@Model.ActivePeriodInfo.EndDate.ToString("dd/MM/yyyy")</strong> 
+                            (@Model.ActivePeriodInfo.DaysRemaining @Localizer["days remaining"])
                         </p>
                     }
                     else
                     {
                         <div class="d-flex align-items-center mb-3">
                             <span class="badge bg-secondary p-2 me-2">●</span>
-                            <span class="fw-bold text-dark">No Active Period</span>
+                            <span class="fw-bold text-dark">@Localizer["No Active Period"]</span>
                         </div>
-                        <p class="small text-muted mb-0">There is no submission period currently open.</p>
+                        <p class="small text-muted mb-0">@Localizer["No active period description"]</p>
                     }
                 </div>
             </div>
 
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-body p-4">
-                    <h6 class="fw-bold text-dark text-uppercase small mb-3">Need Help?</h6>
+                    <h6 class="fw-bold text-dark text-uppercase small mb-3">@Localizer["Need Help?"]</h6>
                     <div class="d-flex align-items-start mb-3">
                         <i class="bi bi-telephone text-primary me-3"></i>
                         <div>
-                            <div class="small fw-bold">Science & Technology Office</div>
+                            <div class="small fw-bold">@Localizer["Science & Technology Office"]</div>
                             <div class="small text-muted">(028) 38.XXX.XXX (Ext: 102)</div>
                         </div>
                     </div>
                     <div class="d-flex align-items-start mb-0">
                         <i class="bi bi-envelope text-primary me-3"></i>
                         <div>
-                            <div class="small fw-bold">Support Email</div>
+                            <div class="small fw-bold">@Localizer["Support Email"]</div>
                             <div class="small text-muted">scitech@university.edu.vn</div>
                         </div>
                     </div>
@@ -350,9 +352,9 @@
 
             <div class="alert alert-warning border-0 rounded-4 p-4 shadow-sm" role="alert">
                 <h6 class="alert-heading fw-bold d-flex align-items-center">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Important Notice
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @Localizer["Important Notice"]
                 </h6>
-                <p class="small mb-0 text-dark">All late submissions will be automatically transferred for review in the next period of the following academic year.</p>
+                <p class="small mb-0 text-dark">@Localizer["Late submission notice"]</p>
             </div>
         </div>
     </div>
@@ -362,14 +364,12 @@
 <script>
     document.getElementById('yearSelect').addEventListener('change', function() {
         var yearId = this.value;
-        // Redirect to reload page with new year
         window.location.href = '@Url.Action("Privacy")' + '?yearId=' + yearId;
     });
 
     document.getElementById('periodSelect').addEventListener('change', function() {
         var periodId = this.value;
         var yearId = document.getElementById('yearSelect').value;
-        // Redirect to reload page with selected period
         window.location.href = '@Url.Action("Privacy")' + '?yearId=' + yearId + '&periodId=' + periodId;
     });
 </script>

@@ -1,6 +1,8 @@
 @model IdeaTrack.Areas.Councils.Models.GradingVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Evaluation";
+    ViewData["Title"] = Localizer["Evaluation"].Value;
     Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
     var isViewOnly = ViewData["ViewOnlyMode"] as bool? ?? Model.IsLocked;
 }
@@ -426,15 +428,15 @@
         <!-- Info Panel -->
         <div class="eval-info-panel">
             <div class="info-card">
-                <h6><i class="bi bi-info-circle me-1"></i>Initiative Details</h6>
+                <h6><i class="bi bi-info-circle me-1"></i>@Localizer["Initiative Details"]</h6>
                 
                 <div class="info-row">
-                    <label>Author</label>
+                    <label>@Localizer["Author"]</label>
                     @if (Model.HidePersonalInfo)
                     {
                          <div class="d-flex align-items-center gap-2">
                             <div class="author-avatar" style="background:var(--text-muted); color:white;">?</div>
-                            <span class="value text-muted"><em>Hidden for Blind Review</em></span>
+                            <span class="value text-muted"><em>@Localizer["Hidden for Blind Review"]</em></span>
                         </div>
                     }
                     else
@@ -447,10 +449,10 @@
                 </div>
                 
                 <div class="info-row">
-                    <label>Department</label>
+                    <label>@Localizer["Department"]</label>
                     @if (Model.HidePersonalInfo)
                     {
-                        <span class="value text-muted"><em>Hidden</em></span>
+                        <span class="value text-muted"><em>@Localizer["Hidden"]</em></span>
                     }
                     else
                     {
@@ -461,7 +463,7 @@
                 @if (Model.DueDate.HasValue)
                 {
                     <div class="info-row">
-                        <label>Due Date</label>
+                        <label>@Localizer["Due Date"]</label>
                         <span class="value @(Model.DueDate.Value < DateTime.Now ? "text-danger" : "")">
                             @Model.DueDate.Value.ToString("MMMM dd, yyyy")
                         </span>
@@ -470,14 +472,14 @@
             </div>
             
             <div class="info-card">
-                <h6><i class="bi bi-file-text me-1"></i>Description</h6>
+                <h6><i class="bi bi-file-text me-1"></i>@Localizer["Description"]</h6>
                 <div style="font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary); white-space: pre-wrap;">
-                    @(Model.Description ?? "No description provided.")
+                    @(Model.Description ?? Localizer["No description provided."].Value)
                 </div>
             </div>
             
             <div class="info-card">
-                <h6><i class="bi bi-paperclip me-1"></i>Attachments</h6>
+                <h6><i class="bi bi-paperclip me-1"></i>@Localizer["Attachments"]</h6>
                 @if (Model.Files != null && Model.Files.Any())
                 {
                     @foreach (var f in Model.Files)
@@ -498,7 +500,7 @@
                             <button type="button"
                                     class="btn btn-sm btn-outline-info btn-ai-summary"
                                     data-file="@relativePath"
-                                    title="AI Summary">
+                                    title="@Localizer["AI Summary"].Value">
                                 <i class="bi bi-stars"></i>
                             </button>
                         </div>
@@ -506,14 +508,14 @@
                 }
                 else
                 {
-                    <p class="text-muted small mb-0">No attachments</p>
+                    <p class="text-muted small mb-0">@Localizer["No attachments"]</p>
                 }
                 
             </div>
             <div id="aiSummaryPanel" class="ai-summary-box d-none">
                 <h6>
                     <i class="bi bi-stars me-1 text-info"></i>
-                    AI Summary
+                    @Localizer["AI Summary"]
                 </h6>
                 <div id="aiSummaryContent" class="ai-summary-content">
                     <!-- dynamic -->
@@ -527,9 +529,9 @@
                 <input type="hidden" asp-for="AssignmentId" />
                 
                 <div class="scoring-header">
-                    <h4>Scoring & Feedback</h4>
+                    <h4>@Localizer["Scoring & Feedback"]</h4>
                     <div class="total-score-box">
-                        <span class="label">Total Score</span>
+                        <span class="label">@Localizer["Total Score"]</span>
                         <span class="value" id="totalScore">0</span>
                         <span class="max">/ @Model.MaxTotalScore</span>
                     </div>
@@ -542,9 +544,9 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width: 45%;">Criteria</th>
-                                    <th style="width: 20%;">Score</th>
-                                    <th style="width: 35%;">Note</th>
+                                    <th style="width: 45%;">@Localizer["Criteria"]</th>
+                                    <th style="width: 20%;">@Localizer["Score"]</th>
+                                    <th style="width: 35%;">@Localizer["Note"]</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -573,7 +575,7 @@
                                                    class="note-input" 
                                                    value="@criterion.Note"
                                                    @(isViewOnly ? "readonly" : "") 
-                                                   placeholder="Add note..." />
+                                                   placeholder="@Localizer["Add note..."].Value" />
                                         </td>
                                     </tr>
                                 }
@@ -584,32 +586,32 @@
                 
                 <!-- Feedback Section -->
                 <div class="feedback-section">
-                    <h5>Detailed Assessment</h5>
+                    <h5>@Localizer["Detailed Assessment"]</h5>
                     
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <div class="feedback-box feedback-strengths h-100">
-                                <h6><i class="bi bi-check-circle-fill"></i> Strengths</h6>
+                                <h6><i class="bi bi-check-circle-fill"></i> @Localizer["Strengths"]</h6>
                                 <textarea name="Strengths" rows="3" 
                                           @(isViewOnly ? "readonly" : "") 
-                                          placeholder="What are the key strengths?">@Model.Strengths</textarea>
+                                          placeholder="@Localizer["What are the key strengths?"].Value">@Model.Strengths</textarea>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="feedback-box feedback-limitations h-100">
-                                <h6><i class="bi bi-exclamation-triangle-fill"></i> Limitations</h6>
+                                <h6><i class="bi bi-exclamation-triangle-fill"></i> @Localizer["Limitations"]</h6>
                                 <textarea name="Limitations" rows="3" 
                                           @(isViewOnly ? "readonly" : "") 
-                                          placeholder="What are the limitations?">@Model.Limitations</textarea>
+                                          placeholder="@Localizer["What are the limitations?"].Value">@Model.Limitations</textarea>
                             </div>
                         </div>
                     </div>
                     
                     <div class="feedback-box feedback-recommendations">
-                        <h6><i class="bi bi-lightbulb-fill"></i> Recommendations</h6>
+                        <h6><i class="bi bi-lightbulb-fill"></i> @Localizer["Recommendations"]</h6>
                         <textarea name="Recommendations" rows="2" 
                                   @(isViewOnly ? "readonly" : "") 
-                                  placeholder="Suggest improvements...">@Model.Recommendations</textarea>
+                                  placeholder="@Localizer["Suggest improvements..."].Value">@Model.Recommendations</textarea>
                     </div>
                 </div>
                 
@@ -618,10 +620,10 @@
                 {
                     <div class="action-footer">
                         <button type="submit" class="btn-save-draft">
-                            <i class="bi bi-save me-2"></i>Save Draft
+                            <i class="bi bi-save me-2"></i>@Localizer["Save Draft"]
                         </button>
                         <button type="button" id="btnSubmitFinal" class="btn-submit">
-                            <i class="bi bi-send-fill me-2"></i>Submit Final
+                            <i class="bi bi-send-fill me-2"></i>@Localizer["Submit Final"]
                         </button>
                     </div>
 
@@ -660,7 +662,7 @@
 
                 if (hasZeroScore) {
                     showConfirmPopup(
-                        "Each evaluation criteria must have a score greater than 0.",
+                        Localizer["Each evaluation criteria must have a score greater than 0."].Value,
                         null,
                         true
                     );
@@ -669,7 +671,7 @@
 
                 // OK → xác nhận submit
                 showConfirmPopup(
-                    "Submit your evaluation? You cannot modify after submitting.",
+                    Localizer["Submit your evaluation? You cannot modify after submitting."].Value,
                     function () {
                         hiddenActionInput.value = 'Submit';
                         gradingForm.submit();
@@ -733,8 +735,8 @@
                            border-radius:50%; padding:0.5rem;"></i>
                         <p style="margin-top:1rem;">${message}</p>
                         <div style="display:flex; justify-content:center; gap:0.75rem; margin-top:1.5rem;">
-                            <button class="btn-cancel">Cancel</button>
-                            ${!isWarning ? '<button class="btn-confirm">Submit</button>' : ''}
+                            <button class="btn-cancel">@Localizer["Cancel"]</button>
+                            ${!isWarning ? '<button class="btn-confirm">@Localizer["Submit"]</button>' : ''}
                         </div>
                     </div>
                 </div>
@@ -797,7 +799,7 @@
                 content.innerHTML = `
                     <div class="d-flex align-items-center gap-2">
                         <div class="spinner-border spinner-border-sm text-info"></div>
-                        <span>AI is summarizing this document...</span>
+                        <span>@Localizer["AI is summarizing this document..."]</span>
                     </div>
                 `;
 

@@ -1,4 +1,6 @@
 ﻿@model IdeaTrack.Areas.SciTech.Models.CategoryListVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <main class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -7,7 +9,7 @@
                 <span class="material-icons align-middle me-2 text-success">category</span>
                 Initiative Category Management
             </h2>
-            <p class="text-muted mb-0">Configure Category - Board - Criteria Template (1-1-1 mechanism)</p>
+            <p class="text-muted mb-0">@Localizer["Configure Category - Board - Criteria Template (1-1-1 mechanism)"]</p>
         </div>
         <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-success rounded-pill px-4">
             <span class="material-icons align-middle me-1" style="font-size: 18px;">add</span> Add Category
@@ -34,7 +36,7 @@
         <div class="card-body py-3">
             <form method="get" class="row align-items-center">
                 <div class="col-auto">
-                    <label class="form-label fw-medium mb-0">Filter by period:</label>
+                    <label class="form-label fw-medium mb-0">@Localizer["Filter by period:"]</label>
                 </div>
                 <div class="col-md-4">
                     <select name="periodId" class="form-select" onchange="this.form.submit()">
@@ -61,12 +63,12 @@
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Category Name</th>
-                            <th>Period</th>
-                            <th>Evaluation Board</th>
-                            <th>Criteria Template</th>
-                            <th class="text-center">Initiatives</th>
-                            <th class="text-end pe-4">Actions</th>
+                            <th class="ps-4">@Localizer["Category Name"]</th>
+                            <th>@Localizer["Period"]</th>
+                            <th>@Localizer["Evaluation Board"]</th>
+                            <th>@Localizer["Criteria Template"]</th>
+                            <th class="text-center">@Localizer["Initiatives"]</th>
+                            <th class="text-end pe-4">@Localizer["Actions"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,7 +92,7 @@
                                         }
                                         else
                                         {
-                                            <span class="text-muted">Not configured</span>
+                                            <span class="text-muted">@Localizer["Not configured"]</span>
                                         }
                                     </td>
                                     <td>
@@ -100,7 +102,7 @@
                                         }
                                         else
                                         {
-                                            <span class="text-muted">Not configured</span>
+                                            <span class="text-muted">@Localizer["Not configured"]</span>
                                         }
                                     </td>
                                     <td class="text-center">
@@ -131,7 +133,7 @@
                             <tr>
                                 <td colspan="6" class="text-center py-5 text-muted">
                                     <span class="material-icons mb-2" style="font-size: 48px;">folder_off</span>
-                                    <p class="mb-0">No categories found in this period.</p>
+                                    <p class="mb-0">@Localizer["No categories found in this period."]</p>
                                     <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-sm btn-outline-success mt-2">
                                         <span class="material-icons align-middle" style="font-size: 16px;">add</span> Add Category
                                     </a>

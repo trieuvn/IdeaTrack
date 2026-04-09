@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="AI Summary" xml:space="preserve"><value>AI Summary</value></data>
+  <data name="AI is summarizing this document..." xml:space="preserve"><value>AI is summarizing this document...</value></data>
+  <data name="Author" xml:space="preserve"><value>Tác giả</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Criteria" xml:space="preserve"><value>Criteria</value></data>
+  <data name="Department" xml:space="preserve"><value>Phòng ban</value></data>
+  <data name="Detailed Assessment" xml:space="preserve"><value>Detailed Assessment</value></data>
+  <data name="Due Date" xml:space="preserve"><value>Hạn chót</value></data>
+  <data name="Evaluation" xml:space="preserve"><value>Đánh giá</value></data>
+  <data name="No attachments" xml:space="preserve"><value>No attachments</value></data>
+  <data name="Note" xml:space="preserve"><value>Ghi chú</value></data>
+  <data name="Score" xml:space="preserve"><value>Điểm</value></data>
+  <data name="Scoring &amp; Feedback" xml:space="preserve"><value>Scoring &amp; Feedback</value></data>
+  <data name="Submit" xml:space="preserve"><value>Gửi</value></data>
+  <data name="Total Score" xml:space="preserve"><value>Tổng điểm</value></data>
+  <data name="Initiative Details" xml:space="preserve"><value>Chi tiết sáng kiến</value></data>
+  <data name="Hidden for Blind Review" xml:space="preserve"><value>Đã ẩn để đánh giá mù</value></data>
+  <data name="Hidden" xml:space="preserve"><value>Đã ẩn</value></data>
+  <data name="Description" xml:space="preserve"><value>Mô tả</value></data>
+  <data name="No description provided." xml:space="preserve"><value>Không có mô tả nào được cung cấp.</value></data>
+  <data name="Attachments" xml:space="preserve"><value>Tệp đính kèm</value></data>
+  <data name="AI Summary" xml:space="preserve"><value>Tóm tắt (AI)</value></data>
+  <data name="What are the key strengths?" xml:space="preserve"><value>Khoá cạnh mạnh của sáng kiến là gì?</value></data>
+  <data name="What are the limitations?" xml:space="preserve"><value>Những hạn chế của sáng kiến là gì?</value></data>
+  <data name="Suggest improvements..." xml:space="preserve"><value>Gợi ý cải thiện...</value></data>
+  <data name="Add note..." xml:space="preserve"><value>Thêm ghi chú...</value></data>
+  <data name="Save Draft" xml:space="preserve"><value>Lưu nháp</value></data>
+  <data name="Submit Final" xml:space="preserve"><value>Nộp kết quả</value></data>
+  <data name="Each evaluation criteria must have a score greater than 0." xml:space="preserve"><value>Mỗi tiêu chí đánh giá phải có điểm lớn hơn 0.</value></data>
+  <data name="Submit your evaluation? You cannot modify after submitting." xml:space="preserve"><value>Nộp kết quả? Bạn sẽ không thể sửa đổi sau khi nộp.</value></data>
+  <data name="Strengths" xml:space="preserve"><value>Điểm mạnh</value></data>
+  <data name="Limitations" xml:space="preserve"><value>Hạn chế</value></data>
+  <data name="Recommendations" xml:space="preserve"><value>Khuyến nghị</value></data>
+</root>

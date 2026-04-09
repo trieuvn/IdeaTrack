@@ -1,4 +1,6 @@
-@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeCreateViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <main class="container py-3">
 
@@ -9,7 +11,7 @@
                 <span class="badge rounded-pill bg-info text-white mb-2 px-3 py-1">
                     <span class="material-icons align-middle me-1" style="font-size: 14px;">edit</span> EDIT INITIATIVE
                 </span>
-                <h1 class="fw-bold display-6 mb-2">Update Initiative</h1>
+                <h1 class="fw-bold display-6 mb-2">@Localizer["Update Initiative"]</h1>
                 <p class="mb-0 opacity-75">
                     Initiative Code: <strong>@Model.Initiative.InitiativeCode</strong>
                 </p>
@@ -42,17 +44,17 @@
                             </h6>
                             <p class="mb-2" style="white-space: pre-wrap;">@Model.LatestRevisionRequest.RequestContent</p>
                             <div class="small">
-                                <span><strong>By:</strong> @(Model.LatestRevisionRequest.Requester?.FullName ?? "Approver")</span>
+                                <span><strong>@Localizer["By:"]</strong> @(Model.LatestRevisionRequest.Requester?.FullName ?? "Approver")</span>
                                 <span class="mx-2">•</span>
                                 <span>@Model.LatestRevisionRequest.RequestedDate.ToString("dd/MM/yyyy HH:mm")</span>
                                 @if (Model.LatestRevisionRequest.Deadline.HasValue)
                                 {
                                     <span class="mx-2">•</span>
-                                    <span><strong>Deadline:</strong> 
+                                    <span><strong>@Localizer["Deadline:"]</strong> 
                                         <span class="text-danger fw-bold">@Model.LatestRevisionRequest.Deadline.Value.ToString("dd/MM/yyyy")</span>
                                         @if (Model.LatestRevisionRequest.Deadline.Value < DateTime.Now)
                                         {
-                                            <span class="badge bg-danger ms-1">Expired</span>
+                                            <span class="badge bg-danger ms-1">@Localizer["Expired"]</span>
                                         }
                                     </span>
                                 }
@@ -96,7 +98,7 @@
                         <select id="AcademicYearId" name="SelectedAcademicYearId" asp-items="Model.AcademicYears" class="form-select">
                             <option value="">-- Select academic year --</option>
                         </select>
-                        <small class="text-muted">Select year first to see available categories</small>
+                        <small class="text-muted">@Localizer["Select year first to see available categories"]</small>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.CategoryId" class="form-label fw-medium">
@@ -126,7 +128,7 @@
                         </label>
                         <input type="text" class="form-control bg-light" value="@Model.UserDepartmentName" readonly />
                         <input type="hidden" asp-for="Initiative.DepartmentId" value="@Model.UserDepartmentId" />
-                        <small class="text-muted">Auto-assigned from your profile</small>
+                        <small class="text-muted">@Localizer["Auto-assigned from your profile"]</small>
                     </div>
                     <div class="col-md-6">
                         <label asp-for="Initiative.Budget" class="form-label fw-medium">
@@ -175,7 +177,7 @@
                     }
                     else
                     {
-                        <p class="text-muted small mb-2">No co-authors yet.</p>
+                        <p class="text-muted small mb-2">@Localizer["No co-authors yet."]</p>
                     }
                     
                     <!-- Add New Co-Authors (Owner only) -->
@@ -237,10 +239,10 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-1">
-                                        <a href="@file.FilePath" target="_blank" class="btn btn-sm btn-outline-primary" title="View">
+                                        <a href="@file.FilePath" target="_blank" class="btn btn-sm btn-outline-primary" title="@Localizer["View"].Value">
                                             <span class="material-icons" style="font-size: 16px;">visibility</span>
                                         </a>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Delete"
+                                        <button type="button" class="btn btn-sm btn-outline-danger" title="@Localizer["Delete"].Value"
                                                 onclick="if(confirm('Delete this file?')) { document.getElementById('delete-file-@file.Id').submit(); }">
                                             <span class="material-icons" style="font-size: 16px;">delete</span>
                                         </button>
@@ -274,7 +276,7 @@
                          style="border-color: #dee2e6 !important; cursor: pointer; transition: all 0.3s ease;">
                         <div class="drop-zone-content">
                             <span class="material-icons text-primary mb-2" style="font-size: 36px;">cloud_upload</span>
-                            <h6 class="fw-bold text-dark mb-1">Drag and drop files here</h6>
+                            <h6 class="fw-bold text-dark mb-1">@Localizer["Drag and drop files here"]</h6>
                             <p class="text-muted mb-2 small">or click to upload</p>
                             <span class="badge bg-light text-muted border" style="font-size: 11px;">PDF, Word, Excel, PowerPoint • Max 10MB</span>
                         </div>
@@ -498,10 +500,10 @@
                                 </div>
                                 <div>
                                     <div class="fw-medium text-truncate" style="max-width: 280px;">${file.name}</div>
-                                    <small class="text-muted">${size} • <span class="text-primary">New</span></small>
+                                    <small class="text-muted">${size} • <span class="text-primary">@Localizer["New"]</span></small>
                                 </div>
                             </div>
-                            <button type="button" class="remove-btn" onclick="window.removeFileAtIndex(${index})" title="Remove">
+                            <button type="button" class="remove-btn" onclick="window.removeFileAtIndex(${index})" title="@Localizer["Remove"].Value">
                                 <span class="material-icons" style="font-size: 20px;">close</span>
                             </button>
                         </div>
@@ -631,7 +633,7 @@
                                     }
                                 });
                                 if (users.length === 0) {
-                                    searchResults.innerHTML = '<div class="list-group-item text-muted">No users found</div>';
+                                    searchResults.innerHTML = '<div class="list-group-item text-muted">@Localizer["No users found"]</div>';
                                 }
                             });
                     }, 300);

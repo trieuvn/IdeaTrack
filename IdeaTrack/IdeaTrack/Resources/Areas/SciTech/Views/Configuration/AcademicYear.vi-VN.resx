@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Academic Year Management" xml:space="preserve"><value>Quản lý Năm học</value></data>
+  <data name="Academic Years" xml:space="preserve"><value>Năm học</value></data>
+  <data name="Manage the academic calendar year structure." xml:space="preserve"><value>Quản lý cấu trúc năm học theo lịch học thuật.</value></data>
+  <data name="New Academic Year" xml:space="preserve"><value>Thêm năm học mới</value></data>
+  <data name="Current Year" xml:space="preserve"><value>Năm hiện tại</value></data>
+  <data name="None Set" xml:space="preserve"><value>Chưa thiết lập</value></data>
+  <data name="Total Years" xml:space="preserve"><value>Tổng số năm</value></data>
+  <data name="Academic Year Name" xml:space="preserve"><value>Tên năm học</value></data>
+  <data name="Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Created Date" xml:space="preserve"><value>Ngày tạo</value></data>
+  <data name="Actions" xml:space="preserve"><value>Thao tác</value></data>
+  <data name="Current Active" xml:space="preserve"><value>Đang hoạt động</value></data>
+  <data name="History" xml:space="preserve"><value>Lịch sử</value></data>
+  <data name="Set as Current" xml:space="preserve"><value>Đặt làm hiện tại</value></data>
+  <data name="Delete" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Display Name" xml:space="preserve"><value>Tên hiển thị</value></data>
+  <data name="Set as Current Active Year" xml:space="preserve"><value>Đặt làm Năm học hiện tại</value></data>
+  <data name="Create Year" xml:space="preserve"><value>Tạo năm học</value></data>
+  <data name="Confirm Set Current" xml:space="preserve"><value>Đặt năm này làm Năm học hiện tại?</value></data>
+  <data name="Confirm Delete Year" xml:space="preserve"><value>Xóa năm học này? Hành động không thể hoàn tác.</value></data>
+</root>

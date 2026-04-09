@@ -1,7 +1,9 @@
-@model IdeaTrack.Areas.Faculty.Models.ProfileEditVM
+﻿@model IdeaTrack.Areas.Faculty.Models.ProfileEditVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Edit Profile";
+    ViewData["Title"] = Localizer["Edit Profile"].Value;
 }
 
 <div class="container-fluid py-4">
@@ -12,11 +14,11 @@
                 <div>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-1">
-                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile", new { area = "Faculty" })" class="text-decoration-none">Profile</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Profile", new { area = "Faculty" })" class="text-decoration-none">@Localizer["Profile"]</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">@Localizer["Edit"]</li>
                         </ol>
                     </nav>
-                    <h2 class="fw-bold mb-0">Edit Personal Profile</h2>
+                    <h2 class="fw-bold mb-0">@Localizer["Edit Personal Profile"]</h2>
                 </div>
                 <a href="@Url.Action("Index", "Profile", new { area = "Faculty" })" class="btn btn-outline-secondary rounded-pill px-4">
                     <i class="bi bi-arrow-left me-2"></i>Back
@@ -55,22 +57,22 @@
                         
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label asp-for="FullName" class="form-label fw-medium">Full Name</label>
+                                <label asp-for="FullName" class="form-label fw-medium">@Localizer["Full Name"]</label>
                                 <input asp-for="FullName" class="form-control form-control-lg rounded-3" placeholder="Enter your full name" />
                                 <span asp-validation-for="FullName" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-medium">Email (cannot be changed)</label>
+                                <label class="form-label fw-medium">@Localizer["Email (cannot be changed)"]</label>
                                 <input type="email" class="form-control form-control-lg rounded-3 bg-light" 
                                        value="@Model.Email" disabled />
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="PhoneNumber" class="form-label fw-medium">Phone Number</label>
+                                <label asp-for="PhoneNumber" class="form-label fw-medium">@Localizer["Phone Number"]</label>
                                 <input asp-for="PhoneNumber" class="form-control form-control-lg rounded-3" placeholder="Enter phone number" />
                                 <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="Position" class="form-label fw-medium">Position</label>
+                                <label asp-for="Position" class="form-label fw-medium">@Localizer["Position"]</label>
                                 <input asp-for="Position" class="form-control form-control-lg rounded-3" placeholder="Enter your position" />
                             </div>
                         </div>
@@ -82,7 +84,7 @@
                         
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label asp-for="AcademicRank" class="form-label fw-medium">Academic Rank</label>
+                                <label asp-for="AcademicRank" class="form-label fw-medium">@Localizer["Academic Rank"]</label>
                                 <select asp-for="AcademicRank" class="form-select form-select-lg rounded-3">
                                     <option value="">-- Select Academic Rank --</option>
                                     <option value="Professor">Professor</option>
@@ -93,7 +95,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label asp-for="Degree" class="form-label fw-medium">Degree</label>
+                                <label asp-for="Degree" class="form-label fw-medium">@Localizer["Degree"]</label>
                                 <select asp-for="Degree" class="form-select form-select-lg rounded-3">
                                     <option value="">-- Select Degree --</option>
                                     <option value="Doctor of Science">Doctor of Science</option>
@@ -126,19 +128,19 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4">
             <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold" id="avatarModalLabel">Update Avatar</h5>
+                <h5 class="modal-title fw-bold" id="avatarModalLabel">@Localizer["Update Avatar"]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label">Enter Avatar URL:</label>
+                    <label class="form-label">@Localizer["Enter Avatar URL:"]</label>
                     <input type="url" class="form-control rounded-3" id="avatarUrlTemp" placeholder="https://example.com/avatar.jpg">
-                    <small class="text-muted">You can use image links from Gravatar, Google Photos, or any image URL.</small>
+                    <small class="text-muted">@Localizer["You can use image links from Gravatar, Google Photos, or any image URL."]</small>
                 </div>
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary rounded-3" onclick="updateAvatar()">Update</button>
+                <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                <button type="button" class="btn btn-primary rounded-3" onclick="updateAvatar()">@Localizer["Update"]</button>
             </div>
         </div>
     </div>

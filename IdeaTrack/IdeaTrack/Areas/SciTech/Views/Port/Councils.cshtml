@@ -1,19 +1,21 @@
-﻿@model BoardManagementVM
+@model BoardManagementVM
 @using IdeaTrack.Areas.SciTech.Controllers
 @using IdeaTrack.Models
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <div class="mb-4">
-    <h1 class="fw-bold mb-1">Council Management</h1>
-    <p class="text-muted mb-0">Set up and manage initiative evaluation councils.</p>
+    <h1 class="fw-bold mb-1">@Localizer["Council Management"]</h1>
+    <p class="text-muted mb-0">@Localizer["Council Management Description"]</p>
 </div>
 
 <div class="row g-4">
     <div class="col-lg-4">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
-                <h6 class="fw-bold mb-0 text-uppercase small">Council List</h6>
+                <h6 class="fw-bold mb-0 text-uppercase small">@Localizer["Council List"]</h6>
                 <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="openBoardModal()" style="width: 150px;">
-                    <i class="fa-solid fa-plus me-1"></i> Create new
+                    <i class="fa-solid fa-plus me-1"></i> @Localizer["Create new"]
                 </button>
             </div>
 
@@ -21,7 +23,7 @@
                 <div class="px-2 mb-2">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
-                        <input class="form-control border-start-0 bg-light shadow-none" id="searchBoard" placeholder="Search councils...">
+                        <input class="form-control border-start-0 bg-light shadow-none" id="searchBoard" placeholder="@Localizer["Search councils..."].Value">
                     </div>
                 </div>
 
@@ -37,12 +39,12 @@
                                         <i class="fa-solid fa-users-rectangle me-2"></i>@board.BoardName
                                     </div>
                                     <span class="badge @(board.IsActive ? "bg-success-subtle text-success" : "bg-light text-muted") border">
-                                        @(board.IsActive ? "Active" : "Closed")
+                                        @(board.IsActive ? Localizer["Active"].Value : Localizer["Closed"].Value)
                                     </span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center small text-muted">
                                     <span><i class="fa-regular fa-calendar me-1"></i> @board.FiscalYear</span>
-                                    <span><i class="fa-solid fa-user-group me-1"></i> @(board.Members?.Count ?? 0) Members</span>
+                                    <span><i class="fa-solid fa-user-group me-1"></i> @(board.Members?.Count ?? 0) @Localizer["Members"]</span>
                                 </div>
                             </div>
                         </a>
@@ -63,16 +65,16 @@
                             <p class="text-muted mb-0 small">@Model.SelectedBoard.Description</p>
                             <div class="mt-2">
                                 <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2">
-                                    Fiscal Year: @Model.SelectedBoard.FiscalYear
+                                    @Localizer["Fiscal Year:"] @Model.SelectedBoard.FiscalYear
                                 </span>
                             </div>
                         </div>
                         <div class="d-flex gap-2">
                             <button class="btn btn-outline-danger btn-sm rounded-pill" style="width: 110px;" onclick="deleteBoard(@Model.SelectedBoard.Id)">
-                                <i class="fa-solid fa-trash me-1"></i> Delete
+                                <i class="fa-solid fa-trash me-1"></i> @Localizer["Delete"]
                             </button>
                             <button class="btn btn-primary btn-sm rounded-pill px-3" onclick="openAddMemberModal(@Model.SelectedBoard.Id)" style="width: 150px;">
-                                <i class="fa-solid fa-user-plus me-1"></i> Add Member
+                                <i class="fa-solid fa-user-plus me-1"></i> @Localizer["Add Member"]
                             </button>
                         </div>
                     </div>
@@ -82,10 +84,10 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="bg-light">
                             <tr>
-                                <th class="ps-4 py-3 border-0 small text-uppercase fw-bold text-muted">Member</th>
-                                <th class="py-3 border-0 small text-uppercase fw-bold text-muted">Field/Dept</th>
-                                <th class="py-3 border-0 small text-uppercase fw-bold text-muted" style="width: 180px;">Role</th>
-                                <th class="text-end pe-4 py-3 border-0 small text-uppercase fw-bold text-muted">Actions</th>
+                                <th class="ps-4 py-3 border-0 small text-uppercase fw-bold text-muted">@Localizer["Member"]</th>
+                                <th class="py-3 border-0 small text-uppercase fw-bold text-muted">@Localizer["Field/Dept"]</th>
+                                <th class="py-3 border-0 small text-uppercase fw-bold text-muted" style="width: 180px;">@Localizer["Role"]</th>
+                                <th class="text-end pe-4 py-3 border-0 small text-uppercase fw-bold text-muted">@Localizer["Actions"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,7 +114,7 @@
                                             @foreach (BoardRole r in Enum.GetValues(typeof(BoardRole)))
                                             {
                                                 <option value="@((int)r)" selected="@(member.Role == r)">
-                                                    @(r == BoardRole.Chairman ? "Chairman" : r == BoardRole.Secretary ? "Secretary" : "Member")
+                                                    @(r == BoardRole.Chairman ? Localizer["Chairman"].Value : r == BoardRole.Secretary ? Localizer["Secretary"].Value : Localizer["Member"].Value)
                                                 </option>
                                             }
                                         </select>
@@ -132,8 +134,8 @@
             {
                 <div class="card-body d-flex flex-column align-items-center justify-content-center text-muted py-5">
                     <i class="fa-solid fa-users-viewfinder fa-3x opacity-25 mb-3"></i>
-                    <h5 class="fw-bold">No Council Selected</h5>
-                    <p class="small">Select a council from the list on the left to view details.</p>
+                    <h5 class="fw-bold">@Localizer["No Council Selected"]</h5>
+                    <p class="small">@Localizer["Select a council from the list on the left to view details."]</p>
                 </div>
             }
         </div>
@@ -144,28 +146,28 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header border-bottom-0">
-                <h5 class="fw-bold mb-0" id="modalTitle">Council Information</h5>
+                <h5 class="fw-bold mb-0" id="modalTitle">@Localizer["Council Information"]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="boardForm">
                 <div class="modal-body">
                     <input type="hidden" id="boardId" name="Id" value="0" />
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Council Name</label>
+                        <label class="form-label small fw-bold">@Localizer["Council Name"]</label>
                         <input type="text" class="form-control shadow-none" id="boardName" name="BoardName" required placeholder="e.g.: Faculty Council 2024">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Fiscal Year</label>
+                        <label class="form-label small fw-bold">@Localizer["Fiscal Year"]</label>
                         <input type="number" class="form-control shadow-none" id="fiscalYear" name="FiscalYear" value="@DateTime.Now.Year" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Description</label>
+                        <label class="form-label small fw-bold">@Localizer["Description"]</label>
                         <textarea class="form-control shadow-none" id="description" name="Description" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer border-top-0">
-                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4">Save</button>
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">@Localizer["Save"]</button>
                 </div>
             </form>
         </div>
@@ -176,26 +178,26 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header border-bottom-0">
-                <h5 class="fw-bold mb-0">Add Member</h5>
+                <h5 class="fw-bold mb-0">@Localizer["Add Member"]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="input-group mb-4 shadow-sm">
                     <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
                     <input type="text" class="form-control border-start-0 shadow-none" id="searchUserInput"
-                           placeholder="Search by name, email or ID...">
+                           placeholder="@Localizer["Search by name, email or ID..."].Value">
                 </div>
 
                 <div id="userSearchResult" class="list-group list-group-flush border rounded-3"
                      style="max-height: 400px; overflow-y: auto;">
                     <div class="text-center py-5 text-muted">
                         <i class="fa-solid fa-search fa-2x mb-2 opacity-25"></i>
-                        <p>Enter keywords to search for personnel</p>
+                        <p>@Localizer["Enter keywords to search for personnel"]</p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
             </div>
         </div>
     </div>
@@ -231,20 +233,20 @@
         $('#fiscalYear').val(year);
         $('#description').val(desc);
 
-        $('#modalTitle').text(id === 0 ? 'Create New Council' : 'Update Council');
+        $('#modalTitle').text(id === 0 ? '@Localizer["Create New Council"].Value' : '@Localizer["Update Council"].Value');
 
         new bootstrap.Modal(document.getElementById('saveBoardModal')).show();
     }
 
     function deleteBoard(id) {
-        if (!confirm('WARNING: Deleting a council will remove all associated data. Are you sure?')) return;
+        if (!confirm('@Localizer["Confirm Delete Council"].Value')) return;
 
         $.post(API.deleteBoard, { id })
             .done(res => {
                 if (res.success) {
                     location.href = '@Url.Action("ManageBoards", "Council", new { area = "SciTech" })';
                 } else {
-                    alert(res.message || 'Cannot delete council');
+                    alert(res.message || '@Localizer["Cannot delete council"].Value');
                 }
             });
     }
@@ -262,7 +264,7 @@
             userId: userId
         }).done(res => {
             if (res.success) location.reload();
-            else alert(res.message || 'Cannot add member');
+            else alert(res.message || '@Localizer["Cannot add member"].Value');
         });
     }
 
@@ -290,7 +292,7 @@
         // Remove member
         $('.btn-remove-member').on('click', function () {
             const memberId = $(this).data('id');
-            if (!confirm('Remove member from council?')) return;
+            if (!confirm('@Localizer["Remove member from council?"].Value')) return;
 
             $.post(API.removeMember, { memberId })
                 .done(res => {
@@ -329,7 +331,7 @@
             .done(data => {
                 let html = '';
                 if (!data || data.length === 0) {
-                    html = '<div class="text-center py-5 text-muted">No personnel found</div>';
+                    html = '<div class="text-center py-5 text-muted">@Localizer["No personnel found"]</div>';
                 } else {
                     data.forEach(user => {
                         html += `
@@ -339,7 +341,7 @@
                                     <div class="small text-muted">${user.email} - ${user.departmentName || ''}</div>
                                 </div>
                                 <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="addMember(${user.id})">
-                                    Select
+                                    @Localizer["Select"]
                                 </button>
                             </div>`;
                     });

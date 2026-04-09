@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Approved" xml:space="preserve"><value>Đã duyệt</value></data>
+  <data name="Category Details" xml:space="preserve"><value>Category Details</value></data>
+  <data name="Category Name" xml:space="preserve"><value>Category Name</value></data>
+  <data name="Clone Members From:" xml:space="preserve"><value>Clone Members From:</value></data>
+  <data name="Close current evaluation round and create a new round" xml:space="preserve"><value>Close current evaluation round and create a new round</value></data>
+  <data name="Council Name" xml:space="preserve"><value>Council Name</value></data>
+  <data name="Delete" xml:space="preserve"><value>Xóa</value></data>
+  <data name="Display Name" xml:space="preserve"><value>Display Name</value></data>
+  <data name="Display name for users (not the file name)" xml:space="preserve"><value>Display name for users (not the file name)</value></data>
+  <data name="Download" xml:space="preserve"><value>Tải xuống</value></data>
+  <data name="Evaluating" xml:space="preserve"><value>Đang đánh giá</value></data>
+  <data name="Initiative Period" xml:space="preserve"><value>Initiative Period</value></data>
+  <data name="Initiatives" xml:space="preserve"><value>Sáng kiến</value></data>
+  <data name="Members" xml:space="preserve"><value>Thành viên</value></data>
+  <data name="Name" xml:space="preserve"><value>Tên</value></data>
+  <data name="Name is auto-suggested based on category and period" xml:space="preserve"><value>Name is auto-suggested based on category and period</value></data>
+  <data name="Name is suggested based on category" xml:space="preserve"><value>Name is suggested based on category</value></data>
+  <data name="No councils available" xml:space="preserve"><value>No councils available</value></data>
+  <data name="No reference forms yet. Click &quot;Upload&quot; to add one." xml:space="preserve"><value>No reference forms yet. Click &quot;Upload&quot; to add one.</value></data>
+  <data name="Note:" xml:space="preserve"><value>Note:</value></data>
+  <data name="Quick Create Council" xml:space="preserve"><value>Quick Create Council</value></data>
+  <data name="Quick Create Template" xml:space="preserve"><value>Quick Create Template</value></data>
+  <data name="Select File" xml:space="preserve"><value>Select File</value></data>
+  <data name="Supported: PDF, Word, Excel, PowerPoint" xml:space="preserve"><value>Supported: PDF, Word, Excel, PowerPoint</value></data>
+  <data name="Template Name" xml:space="preserve"><value>Template Name</value></data>
+  <data name="Year" xml:space="preserve"><value>Year</value></data>
+</root>

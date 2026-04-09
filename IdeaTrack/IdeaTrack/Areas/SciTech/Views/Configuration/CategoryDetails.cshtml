@@ -1,6 +1,8 @@
 @model IdeaTrack.Models.InitiativeCategory
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Category Details";
+    ViewData["Title"] = Localizer["Category Details"].Value;
     var boards = ViewBag.Boards as List<IdeaTrack.Models.Board>;
     var templates = ViewBag.Templates as List<IdeaTrack.Models.EvaluationTemplate>;
     var initiativeCount = (int?)ViewBag.InitiativeCount ?? 0;
@@ -68,11 +70,11 @@
                         
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">Category Name</label>
+                                <label class="form-label small fw-bold text-muted">@Localizer["Category Name"]</label>
                                 <input type="text" class="form-control bg-light" value="@Model.Name" readonly />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold text-muted">Initiative Period</label>
+                                <label class="form-label small fw-bold text-muted">@Localizer["Initiative Period"]</label>
                                 <input type="text" class="form-control bg-light" value="@Model.Period?.Name" readonly />
                             </div>
                         </div>
@@ -95,7 +97,7 @@
                                             }
                                         }
                                     </select>
-                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#quickCreateCouncilModal" title="Quick Create Council">
+                                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#quickCreateCouncilModal" title="@Localizer["Quick Create Council"].Value">
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
@@ -115,7 +117,7 @@
                                             }
                                         }
                                     </select>
-                                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#quickCreateTemplateModal" title="Quick Create Template">
+                                    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#quickCreateTemplateModal" title="@Localizer["Quick Create Template"].Value">
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
                                 </div>
@@ -165,14 +167,14 @@
                                         </div>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a href="@form.FileUrl" download class="btn btn-sm btn-outline-primary" title="Download">
+                                        <a href="@form.FileUrl" download class="btn btn-sm btn-outline-primary" title="@Localizer["Download"].Value">
                                             <i class="fa-solid fa-download"></i>
                                         </a>
                                         <form asp-action="DeleteReferenceForm" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this file?');">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@form.Id" />
                                             <input type="hidden" name="categoryId" value="@Model.Id" />
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="@Localizer["Delete"].Value">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -185,7 +187,7 @@
                     {
                         <div class="text-center py-4 text-muted">
                             <i class="fa-solid fa-folder-open mb-3" style="font-size: 48px;"></i>
-                            <p class="mb-0">No reference forms yet. Click "Upload" to add one.</p>
+                            <p class="mb-0">@Localizer["No reference forms yet"]</p>
                         </div>
                     }
                 </div>
@@ -203,15 +205,15 @@
                         When you click <strong>"Sync"</strong>, the system will:
                     </p>
                     <ul class="text-muted small mb-3">
-                        <li>Find all initiatives with <strong>Evaluating</strong>, <strong>Re_Evaluating</strong> or <strong>Approved</strong> status</li>
-                        <li>Close current evaluation round and create a new round</li>
+                        <li>Find all initiatives with <strong>@Localizer["Evaluating"]</strong>, <strong>Re_Evaluating</strong> or <strong>@Localizer["Approved"]</strong> status</li>
+                        <li>@Localizer["Close current evaluation round and create a new round"]</li>
                         <li>Assign initiatives to the <strong>new Council</strong> selected above</li>
                         <li>Set status to <strong>Re_Evaluating</strong> for the new council to evaluate</li>
                     </ul>
                     
                     <div class="alert alert-warning small mb-3">
                         <i class="fa-solid fa-exclamation-triangle me-2"></i>
-                        <strong>Note:</strong> Approved initiatives will also be re-evaluated by the new council.
+                        <strong>@Localizer["Note:"]</strong> Approved initiatives will also be re-evaluated by the new council.
                     </div>
                     
                     <form asp-action="SyncCategoryInitiatives" method="post" onsubmit="return confirm('Confirm sync? All initiatives (including Approved) will be transferred to the new Council for re-evaluation.');">
@@ -232,7 +234,7 @@
                 <div class="col-6">
                     <div class="card stat-card border-0 shadow-sm rounded-4 text-center p-3">
                         <div class="display-5 fw-bold text-primary">@initiativeCount</div>
-                        <div class="small text-muted">Initiatives</div>
+                        <div class="small text-muted">@Localizer["Initiatives"]</div>
                     </div>
                 </div>
                 <div class="col-6">
@@ -256,9 +258,9 @@
                     <table class="table table-sm align-middle mb-0">
                         <thead class="bg-light sticky-top">
                             <tr>
-                                <th class="ps-3 py-2 small">Name</th>
-                                <th class="py-2 small">Year</th>
-                                <th class="py-2 small text-center">Members</th>
+                                <th class="ps-3 py-2 small">@Localizer["Name"]</th>
+                                <th class="py-2 small">@Localizer["Year"]</th>
+                                <th class="py-2 small text-center">@Localizer["Members"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -278,7 +280,7 @@
                             }
                             else
                             {
-                                <tr><td colspan="3" class="text-center text-muted py-3">No councils available</td></tr>
+                                <tr><td colspan="3" class="text-center text-muted py-3">@Localizer["No councils available"]</td></tr>
                             }
                         </tbody>
                     </table>
@@ -300,14 +302,14 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label small fw-bold text-muted">Council Name</label>
+                    <label class="form-label small fw-bold text-muted">@Localizer["Council Name"]</label>
                     <input type="text" id="newCouncilName" class="form-control" 
                            value="Council @Model.Name @(Model.Period?.Name ?? "") @(Model.Period?.AcademicYear?.Name ?? "")" />
-                    <small class="text-muted">Name is auto-suggested based on category and period</small>
+                    <small class="text-muted">@Localizer["Name is auto-suggested based on category and period"]</small>
                 </div>
                 
                 <div class="mb-3">
-                    <label class="form-label small fw-bold text-muted">Clone Members From:</label>
+                    <label class="form-label small fw-bold text-muted">@Localizer["Clone Members From:"]</label>
                     <select id="cloneFromCouncil" class="form-select">
                         <option value="">-- Don't Clone (Create Empty) --</option>
                         @if(boards != null)
@@ -345,10 +347,10 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label small fw-bold text-muted">Template Name</label>
+                    <label class="form-label small fw-bold text-muted">@Localizer["Template Name"]</label>
                     <input type="text" id="newTemplateName" class="form-control" 
                            value="Template @Model.Name @(Model.Period?.Name ?? "")" />
-                    <small class="text-muted">Name is suggested based on category</small>
+                    <small class="text-muted">@Localizer["Name is suggested based on category"]</small>
                 </div>
                 
                 <div class="alert alert-info small mb-3">
@@ -379,17 +381,17 @@
                 <input type="hidden" name="categoryId" value="@Model.Id" />
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Display Name</label>
+                        <label class="form-label small fw-bold text-muted">@Localizer["Display Name"]</label>
                         <input type="text" name="formName" class="form-control" required
                                placeholder="E.g., Initiative Proposal Form" />
-                        <small class="text-muted">Display name for users (not the file name)</small>
+                        <small class="text-muted">@Localizer["Display name for users (not the file name)"]</small>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">Select File</label>
+                        <label class="form-label small fw-bold text-muted">@Localizer["Select File"]</label>
                         <input type="file" name="file" class="form-control" required
                                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
-                        <small class="text-muted">Supported: PDF, Word, Excel, PowerPoint</small>
+                        <small class="text-muted">@Localizer["Supported: PDF, Word, Excel, PowerPoint"]</small>
                     </div>
                     
                     <div class="alert alert-info small mb-0">

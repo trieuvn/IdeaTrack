@@ -1,15 +1,17 @@
 ﻿@model IdeaTrack.Areas.Faculty.Models.FacultyInitiativeDetailVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Initiative Details";
+    ViewData["Title"] = Localizer["Initiative Details"].Value;
 }
 
 <div class="container py-4">
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Details</li>
+            <li class="breadcrumb-item"><a asp-action="Index">@Localizer["Dashboard"]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Localizer["Details"]</li>
         </ol>
     </nav>
 
@@ -24,22 +26,22 @@
                 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label class="text-secondary small d-block mb-1">Code</label>
+                        <label class="text-secondary small d-block mb-1">@Localizer["Code"]</label>
                         <div class="fw-bold">@Model.InitiativeCode</div>
                     </div>
                     <div class="col-md-6">
-                         <label class="text-secondary small d-block mb-1">Category</label>
+                         <label class="text-secondary small d-block mb-1">@Localizer["Category"]</label>
                         <div class="fw-bold">@(Model.Category?.Name ?? "N/A")</div>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <h5 class="fw-bold border-bottom pb-2 mb-3">Description</h5>
+                    <h5 class="fw-bold border-bottom pb-2 mb-3">@Localizer["Description"]</h5>
                     <p class="text-dark" style="text-align: justify; line-height: 1.6;">@Model.Description</p>
                 </div>
                 
                 <div>
-                     <h5 class="fw-bold border-bottom pb-2 mb-3">Attachments</h5>
+                     <h5 class="fw-bold border-bottom pb-2 mb-3">@Localizer["Attachments"]</h5>
                      @if(Model.Files != null && Model.Files.Any())
                      {
                          <div class="list-group">
@@ -50,7 +52,7 @@
                                      <i class="bi bi-file-earmark-text me-3 fs-4 text-secondary"></i>
                                      <div>
                                          <div class="fw-medium">@file.FileName</div>
-                                         <small class="text-muted">Click to view</small>
+                                         <small class="text-muted">@Localizer["Click to view"]</small>
                                      </div>
                                  </a>
                              }
@@ -58,7 +60,7 @@
                      }
                      else
                      {
-                         <p class="text-muted">No attachments.</p>
+                         <p class="text-muted">@Localizer["No attachments."]</p>
                      }
                 </div>
             </div>
@@ -71,14 +73,14 @@
                   Model.Status == IdeaTrack.Models.InitiativeStatus.Rejected)
              {
                  <div class="card border-0 shadow-sm p-4 rounded-4 mb-4">
-                     <h5 class="fw-bold mb-3">Review Action</h5>
-                     <p class="text-muted small">Faculty Head Review</p>
+                     <h5 class="fw-bold mb-3">@Localizer["Review Action"]</h5>
+                     <p class="text-muted small">@Localizer["Faculty Head Review"]</p>
                      
                      <form method="post">
                          <input type="hidden" name="InitiativeId" value="@Model.Id" />
                          
                          <div class="mb-3">
-                             <label class="form-label fw-medium">Comments</label>
+                             <label class="form-label fw-medium">@Localizer["Comments"]</label>
                              <textarea name="Comments" class="form-control" rows="4" placeholder="Enter comments for approval/rejection..."></textarea>
                          </div>
                          
@@ -98,7 +100,7 @@
              }
 
              <div class="card border-0 shadow-sm p-4 rounded-4">
-                 <h5 class="fw-bold mb-3">Information</h5>
+                 <h5 class="fw-bold mb-3">@Localizer["Information"]</h5>
                  <div class="mb-3">
                      <label class="small text-muted d-block">Authors (@Model.Authors.Count member@(Model.Authors.Count > 1 ? "s" : ""))</label>
                      @if(Model.Authors != null && Model.Authors.Any())
@@ -118,11 +120,11 @@
                      }
                  </div>
                  <div class="mb-3">
-                     <label class="small text-muted d-block">Submitted Date</label>
+                     <label class="small text-muted d-block">@Localizer["Submitted Date"]</label>
                      <div class="fw-medium">@Model.SubmittedDate.ToString("dd/MM/yyyy HH:mm")</div>
                  </div>
                  <div class="mb-3">
-                     <label class="small text-muted d-block">Budget</label>
+                     <label class="small text-muted d-block">@Localizer["Budget"]</label>
                      <div class="fw-bold text-success">@Model.Budget.ToString("N0") VND</div>
                  </div>
              </div>

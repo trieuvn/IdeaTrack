@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="AUTHOR DASHBOARD" xml:space="preserve"><value>AUTHOR DASHBOARD</value></data>
+  <data name="Achievements" xml:space="preserve"><value>Achievements</value></data>
+  <data name="Actions" xml:space="preserve"><value>Thao tác</value></data>
+  <data name="Approved" xml:space="preserve"><value>Đã duyệt</value></data>
+  <data name="Category" xml:space="preserve"><value>Danh mục</value></data>
+  <data name="Create New Initiative" xml:space="preserve"><value>Create New Initiative</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Bảng điều khiển</value></data>
+  <data name="Date Created" xml:space="preserve"><value>Date Created</value></data>
+  <data name="Draft" xml:space="preserve"><value>Bản nháp</value></data>
+  <data name="Drafts" xml:space="preserve"><value>Drafts</value></data>
+  <data name="Guidelines" xml:space="preserve"><value>Guidelines</value></data>
+  <data name="No initiatives found" xml:space="preserve"><value>No initiatives found</value></data>
+  <data name="Pending" xml:space="preserve"><value>Chờ duyệt</value></data>
+  <data name="Quick Actions" xml:space="preserve"><value>Quick Actions</value></data>
+  <data name="Recent Initiatives" xml:space="preserve"><value>Recent Initiatives</value></data>
+  <data name="Rejected" xml:space="preserve"><value>Từ chối</value></data>
+  <data name="Start with your idea" xml:space="preserve"><value>Start with your idea</value></data>
+  <data name="Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Submission process" xml:space="preserve"><value>Submission process</value></data>
+  <data name="Submitted" xml:space="preserve"><value>Submitted</value></data>
+  <data name="Success Rate" xml:space="preserve"><value>Success Rate</value></data>
+  <data name="Title" xml:space="preserve"><value>Tiêu đề</value></data>
+  <data name="Track initiative progress" xml:space="preserve"><value>Track initiative progress</value></data>
+  <data name="Under Review" xml:space="preserve"><value>Under Review</value></data>
+  <data name="View Statistics" xml:space="preserve"><value>View Statistics</value></data>
+</root>

@@ -1,9 +1,11 @@
-@using IdeaTrack.Models
+﻿@using IdeaTrack.Models
 @using IdeaTrack.Areas.SciTech.Models
 @model InitiativeDetailVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Review Initiative";
+    ViewData["Title"] = Localizer["Review Initiative"].Value;
     string statusBadgeClass = Model.Status switch
     {
         InitiativeStatus.Faculty_Approved => "bg-warning text-dark",
@@ -20,8 +22,8 @@
     <!-- BREADCRUMB -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Council">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Review Initiative</li>
+            <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Council">@Localizer["Dashboard"]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Localizer["Review Initiative"]</li>
         </ol>
     </nav>
 
@@ -49,24 +51,24 @@
                 <div class="card-body">
                     <div class="row g-4 mb-3">
                         <div class="col-md-6">
-                            <label class="small text-muted">Proposer</label>
+                            <label class="small text-muted">@Localizer["Proposer"]</label>
                             <div class="fw-medium">@(Model.HidePersonalInfo ? "Anonymous Author" : Model.ProposerName)</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="small text-muted">Department</label>
+                            <label class="small text-muted">@Localizer["Department"]</label>
                             <div class="fw-medium">@(Model.HidePersonalInfo ? "Anonymous Department" : Model.DepartmentName)</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="small text-muted">Category</label>
+                            <label class="small text-muted">@Localizer["Category"]</label>
                             <div class="fw-medium">@Model.Category</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="small text-muted">Budget</label>
+                            <label class="small text-muted">@Localizer["Budget"]</label>
                             <div class="fw-bold text-success">@Model.Budget.ToString("N0") VND</div>
                         </div>
                     </div>
 
-                    <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Description</h6>
+                    <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">@Localizer["Description"]</h6>
                     <div class="text-secondary" style="white-space: pre-wrap;">@Model.Description</div>
                 </div>
             </div>
@@ -85,7 +87,7 @@
                                     <i class="fas fa-file me-3 text-primary"></i>
                                     <div>
                                         <div class="fw-medium">@file.FileName</div>
-                                        <small class="text-muted">Click to download</small>
+                                        <small class="text-muted">@Localizer["Click to download"]</small>
                                     </div>
                                 </a>
                             }
@@ -93,7 +95,7 @@
                     }
                     else
                     {
-                        <p class="text-muted mb-0">No files attached.</p>
+                        <p class="text-muted mb-0">@Localizer["No files attached."]</p>
                     }
                 </div>
             </div>
@@ -110,9 +112,9 @@
                         <input type="hidden" name="id" value="@Model.Id" />
                         
                         <div class="mb-3">
-                            <label class="form-label fw-medium">Review Comments</label>
+                            <label class="form-label fw-medium">@Localizer["Review Comments"]</label>
                             <textarea name="comments" rows="5" class="form-control" placeholder="Enter reason for rejection or revision requirements..."></textarea>
-                            <div class="form-text text-muted">Required for Rejection/Revision. Optional for Approval.</div>
+                            <div class="form-text text-muted">@Localizer["Required for Rejection/Revision. Optional for Approval."]</div>
                         </div>
 
                         <div class="d-grid gap-2">

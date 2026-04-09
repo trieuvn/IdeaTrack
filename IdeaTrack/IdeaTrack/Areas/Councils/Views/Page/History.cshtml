@@ -1,8 +1,10 @@
-﻿@using IdeaTrack.Models
+@using IdeaTrack.Models
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @model IdeaTrack.Areas.Councils.Models.AssignedListVM
 
 @{
-    ViewData["Title"] = "Evaluation History";
+    ViewData["Title"] = Localizer["Evaluation History"].Value;
     Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
     int fromItem = (Model.CurrentPage - 1) * Model.PageSize + 1;
     int toItem = Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount);
@@ -282,12 +284,12 @@
     <div class="page-header-section">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h4><i class="bi bi-clock-history me-2"></i>Evaluation History</h4>
-                <p>Review your past evaluations and scores for completed initiatives.</p>
+                <h4><i class="bi bi-clock-history me-2"></i>@Localizer["Evaluation History"]</h4>
+                <p>@Localizer["Evaluation History Description"]</p>
             </div>
             <div class="stats-badge">
                 <i class="bi bi-check-circle-fill"></i>
-                <span>@Model.TotalCount Completed</span>
+                <span>@Model.TotalCount @Localizer["Completed"]</span>
             </div>
         </div>
     </div>
@@ -298,15 +300,15 @@
             <div class="flex-grow-1">
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Search by initiative name or code...">
+                    <input type="text" name="keyword" value="@Model.Keyword" class="form-control" placeholder="@Localizer["Search by initiative name or code..."].Value">
                 </div>
             </div>
             <select name="sortOrder" class="form-select" style="width: auto; min-width: 160px;" onchange="this.form.submit()">
-                <option value="Newest" selected="@(Model.SortOrder == "Newest")">Newest First</option>
-                <option value="Oldest" selected="@(Model.SortOrder == "Oldest")">Oldest First</option>
+                <option value="Newest" selected="@(Model.SortOrder == "Newest")">@Localizer["Newest First"]</option>
+                <option value="Oldest" selected="@(Model.SortOrder == "Oldest")">@Localizer["Oldest First"]</option>
             </select>
             <button type="submit" class="btn btn-brand">
-                <i class="bi bi-funnel me-1"></i>Apply Filter
+                <i class="bi bi-funnel me-1"></i>@Localizer["Apply Filter"]
             </button>
         </div>
     </form>
@@ -317,12 +319,12 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Initiative</th>
-                        <th>Category</th>
-                        <th>Score</th>
-                        <th>Date Completed</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>@Localizer["Initiative"]</th>
+                        <th>@Localizer["Category"]</th>
+                        <th>@Localizer["Score"]</th>
+                        <th>@Localizer["Date Completed"]</th>
+                        <th>@Localizer["Status"]</th>
+                        <th>@Localizer["Action"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -358,12 +360,12 @@
                                 </td>
                                 <td>
                                     <span class="status-badge success">
-                                        <i class="bi bi-check-circle-fill"></i>Completed
+                                        <i class="bi bi-check-circle-fill"></i>@Localizer["Completed"]
                                     </span>
                                 </td>
                                 <td>
                                     <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-view">
-                                        <i class="bi bi-eye"></i>View Details
+                                        <i class="bi bi-eye"></i>@Localizer["View Details"]
                                     </a>
                                 </td>
                             </tr>
@@ -375,7 +377,7 @@
                             <td colspan="6">
                                 <div class="empty-state">
                                     <i class="bi bi-inbox"></i>
-                                    <p>No evaluation history found. Complete your first initiative to see it here!</p>
+                                    <p>@Localizer["No evaluation history found."]</p>
                                 </div>
                             </td>
                         </tr>

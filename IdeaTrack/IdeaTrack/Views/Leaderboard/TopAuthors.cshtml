@@ -1,6 +1,8 @@
 ﻿@model List<IdeaTrack.Models.ViewModels.TopAuthorItem>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Top Authors";
+    ViewData["Title"] = Localizer["Top Authors"].Value;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var periods = ViewBag.Periods as List<IdeaTrack.Models.ViewModels.PeriodSelectItem>;
     var selectedPeriodId = ViewBag.SelectedPeriodId as int?;
@@ -34,13 +36,13 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th style="width: 60px">Rank</th>
-                                <th>Author</th>
-                                <th>Department</th>
-                                <th class="text-center">Total</th>
-                                <th class="text-center">Approved</th>
-                                <th class="text-end">Total Score</th>
-                                <th class="text-end">Avg Score</th>
+                                <th style="width: 60px">@Localizer["Rank"]</th>
+                                <th>@Localizer["Author"]</th>
+                                <th>@Localizer["Department"]</th>
+                                <th class="text-center">@Localizer["Total"]</th>
+                                <th class="text-center">@Localizer["Approved"]</th>
+                                <th class="text-end">@Localizer["Total Score"]</th>
+                                <th class="text-end">@Localizer["Avg Score"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,7 +91,7 @@
             {
                 <div class="text-center py-5 text-muted">
                     <i class="fas fa-users fa-4x mb-3"></i>
-                    <p>No ranking data available</p>
+                    <p>@Localizer["No ranking data available"]</p>
                 </div>
             }
         </div>

@@ -1,6 +1,8 @@
 ﻿@model IdeaTrack.Areas.SciTech.Controllers.AuditStatistics
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Audit Log Statistics";
+    ViewData["Title"] = Localizer["Audit Log Statistics"].Value;
     Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
 }
 
@@ -20,7 +22,7 @@
             <div class="card border-0 shadow-sm bg-primary text-white">
                 <div class="card-body text-center">
                     <h3 class="display-4 fw-bold">@Model.TotalLogs.ToString("N0")</h3>
-                    <p class="mb-0">Total Records</p>
+                    <p class="mb-0">@Localizer["Total Records"]</p>
                 </div>
             </div>
         </div>
@@ -28,7 +30,7 @@
             <div class="card border-0 shadow-sm bg-success text-white">
                 <div class="card-body text-center">
                     <h3 class="display-4 fw-bold">@Model.LogsToday.ToString("N0")</h3>
-                    <p class="mb-0">Today</p>
+                    <p class="mb-0">@Localizer["Today"]</p>
                 </div>
             </div>
         </div>
@@ -36,7 +38,7 @@
             <div class="card border-0 shadow-sm bg-info text-white">
                 <div class="card-body text-center">
                     <h3 class="display-4 fw-bold">@Model.LogsThisWeek.ToString("N0")</h3>
-                    <p class="mb-0">This Week</p>
+                    <p class="mb-0">@Localizer["This Week"]</p>
                 </div>
             </div>
         </div>

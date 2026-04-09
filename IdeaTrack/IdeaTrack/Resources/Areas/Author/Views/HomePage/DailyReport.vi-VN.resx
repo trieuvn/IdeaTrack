@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Innovation Metrics" xml:space="preserve"><value>Số liệu sáng kiến</value></data>
+  <data name="Innovation Metrics Description" xml:space="preserve"><value>Theo dõi và phân tích sáng kiến. Xem phân bổ theo danh mục và tiến trình duyệt.</value></data>
+  <data name="Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="-- All Statuses --" xml:space="preserve"><value>-- Tất cả trạng thái --</value></data>
+  <data name="Category" xml:space="preserve"><value>Danh mục</value></data>
+  <data name="-- All Categories --" xml:space="preserve"><value>-- Tất cả danh mục --</value></data>
+  <data name="Year" xml:space="preserve"><value>Năm</value></data>
+  <data name="-- All Years --" xml:space="preserve"><value>-- Tất cả năm --</value></data>
+  <data name="Period" xml:space="preserve"><value>Đợt</value></data>
+  <data name="-- All Periods --" xml:space="preserve"><value>-- Tất cả đợt --</value></data>
+  <data name="From Date" xml:space="preserve"><value>Từ ngày</value></data>
+  <data name="To Date" xml:space="preserve"><value>Đến ngày</value></data>
+  <data name="Apply Filter" xml:space="preserve"><value>Áp dụng bộ lọc</value></data>
+  <data name="Export Report" xml:space="preserve"><value>Xuất báo cáo</value></data>
+  <data name="Total Initiatives" xml:space="preserve"><value>Tổng sáng kiến</value></data>
+  <data name="Approved (this month)" xml:space="preserve"><value>Đã duyệt (tháng này)</value></data>
+  <data name="Pending Approval" xml:space="preserve"><value>Chờ duyệt</value></data>
+  <data name="This Month" xml:space="preserve"><value>Tháng này</value></data>
+  <data name="Distribution by Category" xml:space="preserve"><value>Phân bổ theo danh mục</value></data>
+  <data name="No distribution data" xml:space="preserve"><value>Không có dữ liệu phân bổ</value></data>
+  <data name="Total" xml:space="preserve"><value>Tổng</value></data>
+  <data name="Recent Initiatives (7 days)" xml:space="preserve"><value>Sáng kiến gần đây (7 ngày)</value></data>
+  <data name="View All" xml:space="preserve"><value>Xem tất cả</value></data>
+  <data name="Title" xml:space="preserve"><value>Tiêu đề</value></data>
+  <data name="Time" xml:space="preserve"><value>Thời gian</value></data>
+  <data name="Actions" xml:space="preserve"><value>Thao tác</value></data>
+  <data name="Draft" xml:space="preserve"><value>Bản nháp</value></data>
+  <data name="Pending" xml:space="preserve"><value>Chờ duyệt</value></data>
+  <data name="Approved" xml:space="preserve"><value>Đã duyệt</value></data>
+  <data name="No initiatives in the past 7 days" xml:space="preserve"><value>Không có sáng kiến nào trong 7 ngày qua</value></data>
+  <data name="Create New Initiative" xml:space="preserve"><value>Tạo sáng kiến mới</value></data>
+</root>

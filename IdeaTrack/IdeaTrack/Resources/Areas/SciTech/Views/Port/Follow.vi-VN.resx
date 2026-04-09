@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="All" xml:space="preserve"><value>Tất cả</value></data>
+  <data name="Completed" xml:space="preserve"><value>Hoàn thành</value></data>
+  <data name="Editing" xml:space="preserve"><value>Editing</value></data>
+  <data name="GV" xml:space="preserve"><value>GV</value></data>
+  <data name="Manage revision requests and track resubmission progress from Lecturers." xml:space="preserve"><value>Manage revision requests and track resubmission progress from Lecturers.</value></data>
+  <data name="Note from Lecturer:" xml:space="preserve"><value>Note from Lecturer:</value></data>
+  <data name="Pending" xml:space="preserve"><value>Chờ duyệt</value></data>
+  <data name="Recipient" xml:space="preserve"><value>Recipient</value></data>
+  <data name="Request &amp; Track Revisions" xml:space="preserve"><value>Request &amp; Track Revisions</value></data>
+  <data name="Request Content" xml:space="preserve"><value>Request Content</value></data>
+  <data name="Request History" xml:space="preserve"><value>Request History</value></data>
+  <data name="Required before approval." xml:space="preserve"><value>Required before approval.</value></data>
+  <data name="Resubmission Deadline" xml:space="preserve"><value>Resubmission Deadline</value></data>
+  <data name="Resubmitted" xml:space="preserve"><value>Resubmitted</value></data>
+  <data name="Select Initiative" xml:space="preserve"><value>Select Initiative</value></data>
+  <data name="Select an initiative to view lecturer" xml:space="preserve"><value>Select an initiative to view lecturer</value></data>
+  <data name="Topic: Faculty Innovation Registration" xml:space="preserve"><value>Topic: Faculty Innovation Registration</value></data>
+  <data name="Topic: Optimization of Renewable Energy" xml:space="preserve"><value>Topic: Optimization of Renewable Energy</value></data>
+  <data name="Track Revisions" xml:space="preserve"><value>Track Revisions</value></data>
+  <data name="View Details" xml:space="preserve"><value>View Details</value></data>
+  <data name="Your Request:" xml:space="preserve"><value>Your Request:</value></data>
+</root>

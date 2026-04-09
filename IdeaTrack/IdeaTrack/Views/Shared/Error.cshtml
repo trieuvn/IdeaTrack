@@ -1,6 +1,8 @@
 ﻿@model ErrorViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "UEF LMS";
+    ViewData["Title"] = Localizer["UEF LMS"].Value;
     Layout = "_Layout";
 }
 
@@ -8,40 +10,34 @@
 
     <!-- Home -->
     <div class="mt-3">
-        <a href="/" class="nav-home">Home</a>
+        <a href="/" class="nav-home">@Localizer["Home"]</a>
     </div>
 
     <!-- Title -->
-    <h1 class="page-title">UEF LMS</h1>
+    <h1 class="page-title">@Localizer["UEF LMS"]</h1>
 
     <!-- Error message -->
     <div class="alert alert-danger mt-4">
-        <div class="fw-bold">
-            An error occurred while processing your request.
-        </div>
+        <div class="fw-bold">@Localizer["An error occurred while processing your request."]</div>
 
         @if (Model.ShowRequestId)
         {
             <div class="mt-2">
                 <small>
-                    <strong>Request ID:</strong>
+                    <strong>@Localizer["Request ID:"]</strong>
                     <code>@Model.RequestId</code>
                 </small>
             </div>
         }
 
         <div class="mt-2">
-            <a href="#" class="text-decoration-none fw-semibold text-danger">
-                More information about this error
-            </a>
+            <a href="#" class="text-decoration-none fw-semibold text-danger">@Localizer["More information about this error"]</a>
         </div>
     </div>
 
     <!-- Continue button -->
     <div class="text-end mt-5">
-        <a href="/Identity/Account/Login" class="btn btn-primary btn-continue">
-            Continue
-        </a>
+        <a href="/Identity/Account/Login" class="btn btn-primary btn-continue">@Localizer["Continue"]</a>
     </div>
 
 </div>

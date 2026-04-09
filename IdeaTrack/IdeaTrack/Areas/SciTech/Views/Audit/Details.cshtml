@@ -1,7 +1,9 @@
-@model IdeaTrack.Models.SystemAuditLog
+﻿@model IdeaTrack.Models.SystemAuditLog
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Audit Log Details";
+    ViewData["Title"] = Localizer["Audit Log Details"].Value;
     Layout = "~/Areas/SciTech/Views/Shared/_LayoutSciTech.cshtml";
 }
 
@@ -18,36 +20,36 @@
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label text-muted small">User</label>
+                    <label class="form-label text-muted small">@Localizer["User"]</label>
                     <p class="fw-medium">@(Model.User != null ? Model.User.FullName : "Unknown") (@Model.UserId)</p>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label text-muted small">Action</label>
+                    <label class="form-label text-muted small">@Localizer["Action"]</label>
                     <p>
                         <span class="badge bg-secondary">@Model.Action</span>
                     </p>
                 </div>
                 
                 <div class="col-md-4">
-                    <label class="form-label text-muted small">Target Table</label>
+                    <label class="form-label text-muted small">@Localizer["Target Table"]</label>
                     <p class="font-monospace">@Model.TargetTable</p>
                 </div>
                  <div class="col-md-4">
-                    <label class="form-label text-muted small">Target ID</label>
+                    <label class="form-label text-muted small">@Localizer["Target ID"]</label>
                     <p class="font-monospace">@Model.TargetId</p>
                 </div>
                  <div class="col-md-4">
-                    <label class="form-label text-muted small">IP Address</label>
+                    <label class="form-label text-muted small">@Localizer["IP Address"]</label>
                     <p class="font-monospace">@Model.IpAddress</p>
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label text-muted small">Timestamp</label>
+                    <label class="form-label text-muted small">@Localizer["Timestamp"]</label>
                     <p>@Model.Timestamp.ToString("dd/MM/yyyy HH:mm:ss")</p>
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label text-muted small">Details</label>
+                    <label class="form-label text-muted small">@Localizer["Details"]</label>
                     <div class="bg-light p-3 rounded border font-monospace" style="white-space: pre-wrap; word-break: break-all;">
                         @Model.Details
                     </div>

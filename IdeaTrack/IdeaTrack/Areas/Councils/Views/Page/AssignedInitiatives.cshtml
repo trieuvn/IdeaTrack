@@ -1,6 +1,8 @@
-﻿@model IdeaTrack.Areas.Councils.Models.AssignedListVM
+@model IdeaTrack.Areas.Councils.Models.AssignedListVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Assigned Initiatives";
+    ViewData["Title"] = Localizer["Assigned Initiatives"].Value;
     Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
     var pendingCount = Model.Items.Count(i => i.Status != IdeaTrack.Models.AssignmentStatus.Completed);
     var completedCount = Model.Items.Count(i => i.Status == IdeaTrack.Models.AssignmentStatus.Completed);
@@ -361,17 +363,17 @@
     <div class="page-header-section">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h4><i class="bi bi-list-task me-2"></i>Assigned Initiatives</h4>
-                <p>Track and evaluate initiatives assigned to you for review.</p>
+                <h4><i class="bi bi-list-task me-2"></i>@Localizer["Assigned Initiatives"]</h4>
+                <p>@Localizer["Assigned Initiatives Description"]</p>
             </div>
             <div class="header-stats">
                 <div class="stat-pill warning">
                     <i class="bi bi-hourglass-split"></i>
-                    <span>@pendingCount Pending</span>
+                    <span>@pendingCount @Localizer["Pending"]</span>
                 </div>
                 <div class="stat-pill success">
                     <i class="bi bi-check-circle-fill"></i>
-                    <span>@completedCount Completed</span>
+                    <span>@completedCount @Localizer["Completed"]</span>
                 </div>
             </div>
         </div>
@@ -384,22 +386,22 @@
                 <form method="get" class="input-group">
                     <input type="hidden" name="status" value="@Model.Status" />
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input type="text" name="keyword" value="@Model.Keyword" class="form-control" placeholder="Search initiatives by name or code...">
+                    <input type="text" name="keyword" value="@Model.Keyword" class="form-control" placeholder="@Localizer["Search initiatives by name or code..."].Value">
                 </form>
             </div>
             <div class="col-md-7 d-flex gap-2 justify-content-end">
                 <div class="filter-tabs">
                     <a href="/Councils/Page/AssignedInitiatives?status=All&keyword=@Model.Keyword" 
                        class="filter-tab @(Model.Status == "All" ? "active" : "")">
-                        <i class="bi bi-grid-3x3-gap me-1"></i>All
+                        <i class="bi bi-grid-3x3-gap me-1"></i>@Localizer["All"]
                     </a>
                     <a href="/Councils/Page/AssignedInitiatives?status=Assigned&keyword=@Model.Keyword" 
                        class="filter-tab @(Model.Status == "Assigned" ? "active" : "")">
-                        <i class="bi bi-clock me-1"></i>Pending
+                        <i class="bi bi-clock me-1"></i>@Localizer["Pending"]
                     </a>
                     <a href="/Councils/Page/AssignedInitiatives?status=Completed&keyword=@Model.Keyword" 
                        class="filter-tab @(Model.Status == "Completed" ? "active" : "")">
-                        <i class="bi bi-check2-circle me-1"></i>Completed
+                        <i class="bi bi-check2-circle me-1"></i>@Localizer["Completed"]
                     </a>
                 </div>
             </div>
@@ -412,13 +414,13 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Initiative</th>
-                        <th>ID</th>
-                        <th>Score</th>
-                        <th>Date Assigned</th>
-                        <th>Due Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th>@Localizer["Initiative"]</th>
+                        <th>@Localizer["ID"]</th>
+                        <th>@Localizer["Score"]</th>
+                        <th>@Localizer["Date Assigned"]</th>
+                        <th>@Localizer["Due Date"]</th>
+                        <th>@Localizer["Status"]</th>
+                        <th>@Localizer["Action"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -470,19 +472,19 @@
                                     @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
                                     {
                                         <span class="status-badge success">
-                                            <i class="bi bi-check-circle-fill"></i>Completed
+                                            <i class="bi bi-check-circle-fill"></i>@Localizer["Completed"]
                                         </span>
                                     }
                                     else if (item.Status == IdeaTrack.Models.AssignmentStatus.InProgress)
                                     {
                                         <span class="status-badge info">
-                                            <i class="bi bi-pencil-fill"></i>In Progress
+                                            <i class="bi bi-pencil-fill"></i>@Localizer["In Progress"]
                                         </span>
                                     }
                                     else
                                     {
                                         <span class="status-badge warning">
-                                            <i class="bi bi-clock-fill"></i>Assigned
+                                            <i class="bi bi-clock-fill"></i>@Localizer["Assigned"]
                                         </span>
                                     }
                                 </td>
@@ -490,7 +492,7 @@
                                     @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
                                     {
                                         <a href="/Councils/Page/Details/@item.AssignmentId" class="btn-action outline-success">
-                                            <i class="bi bi-eye"></i>View
+                                            <i class="bi bi-eye"></i>@Localizer["View"]
                                         </a>
                                     }
                                     else
@@ -509,7 +511,7 @@
                             <td colspan="7">
                                 <div class="empty-state">
                                     <i class="bi bi-check-circle"></i>
-                                    <p>No initiatives found. You're all caught up!</p>
+                                    <p>@Localizer["No initiatives found."]</p>
                                 </div>
                             </td>
                         </tr>

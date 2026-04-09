@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unreachable">
+          <xsd:element name="metadata"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /><xsd:attribute name="type" type="xsd:string" /><xsd:attribute name="mimetype" type="xsd:string" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="assembly"><xsd:complexType><xsd:attribute name="alias" type="xsd:string" /><xsd:attribute name="name" type="xsd:string" /></xsd:complexType></xsd:element>
+          <xsd:element name="data"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /><xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" /></xsd:sequence><xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" /><xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" /><xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" /><xsd:attribute ref="xml:space" /></xsd:complexType></xsd:element>
+          <xsd:element name="resheader"><xsd:complexType><xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence><xsd:attribute name="name" use="required" type="xsd:string" /></xsd:complexType></xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="APPROVE" xml:space="preserve"><value>Duyệt</value></data>
+  <data name="Action" xml:space="preserve"><value>Thao tác</value></data>
+  <data name="Average Score" xml:space="preserve"><value>Average Score</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Hủy</value></data>
+  <data name="Confirm Approve" xml:space="preserve"><value>Confirm Approve</value></data>
+  <data name="Confirm Reject" xml:space="preserve"><value>Confirm Reject</value></data>
+  <data name="Confirm Restart" xml:space="preserve"><value>Confirm Restart</value></data>
+  <data name="Consensus Rate" xml:space="preserve"><value>Consensus Rate</value></data>
+  <data name="Consolidated Feedback" xml:space="preserve"><value>Consolidated Feedback</value></data>
+  <data name="Current Rank" xml:space="preserve"><value>Current Rank</value></data>
+  <data name="Evaluation Result" xml:space="preserve"><value>Evaluation Result</value></data>
+  <data name="Member" xml:space="preserve"><value>Thành viên</value></data>
+  <data name="Pending" xml:space="preserve"><value>Chờ duyệt</value></data>
+  <data name="REJECT" xml:space="preserve"><value>Từ chối</value></data>
+  <data name="RESTART" xml:space="preserve"><value>RESTART</value></data>
+  <data name="Re-Evaluating" xml:space="preserve"><value>Re-Evaluating</value></data>
+  <data name="Role" xml:space="preserve"><value>Vai trò</value></data>
+  <data name="Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Submitted" xml:space="preserve"><value>Submitted</value></data>
+  <data name="This action cannot be undone efficiently." xml:space="preserve"><value>This action cannot be undone efficiently.</value></data>
+  <data name="This will finalize the result and create a permanent record." xml:space="preserve"><value>This will finalize the result and create a permanent record.</value></data>
+  <data name="Total Score" xml:space="preserve"><value>Tổng điểm</value></data>
+  <data name="View Details" xml:space="preserve"><value>View Details</value></data>
+  <data name="Warning:" xml:space="preserve"><value>Warning:</value></data>
+  <data name="Council Evaluation Results" xml:space="preserve"><value>Kết quả đánh giá của Hội đồng</value></data>
+  <data name="Code" xml:space="preserve"><value>Mã</value></data>
+  <data name="Title" xml:space="preserve"><value>Tiêu đề</value></data>
+  <data name="Proposer" xml:space="preserve"><value>Người đề xuất</value></data>
+  <data name="Co-authors" xml:space="preserve"><value>Đồng tác giả</value></data>
+  <data name="Back" xml:space="preserve"><value>Quay lại</value></data>
+  <data name="Reveal Author Info" xml:space="preserve"><value>Hiển thị thông tin tác giả</value></data>
+  <data name="Hide Author Info" xml:space="preserve"><value>Ẩn thông tin tác giả</value></data>
+  <data name="Approve: Hidden" xml:space="preserve"><value>Duyệt: Ẩn thông tin</value></data>
+  <data name="Approve: Visible" xml:space="preserve"><value>Duyệt: Hiện thông tin</value></data>
+  <data name="Restart Evaluation" xml:space="preserve"><value>Bắt đầu lại đánh giá</value></data>
+  <data name="Reject" xml:space="preserve"><value>Từ chối</value></data>
+  <data name="Approve" xml:space="preserve"><value>Duyệt</value></data>
+  <data name="Status" xml:space="preserve"><value>Trạng thái</value></data>
+  <data name="Detailed Member Scores" xml:space="preserve"><value>Điểm chi tiết của thành viên</value></data>
+  <data name="View All Feedback" xml:space="preserve"><value>Xem tất cả nhận xét</value></data>
+  <data name="Strengths" xml:space="preserve"><value>Điểm mạnh</value></data>
+  <data name="Limitations" xml:space="preserve"><value>Điểm hạn chế</value></data>
+  <data name="Recommendation" xml:space="preserve"><value>Đề xuất</value></data>
+  <data name="No comments." xml:space="preserve"><value>Không có nhận xét.</value></data>
+  <data name="Consolidated Feedback" xml:space="preserve"><value>Nhận xét tổng hợp</value></data>
+  <data name="Confirm Approval" xml:space="preserve"><value>Xác nhận duyệt</value></data>
+  <data name="Confirm Rejection" xml:space="preserve"><value>Xác nhận từ chối</value></data>
+</root>

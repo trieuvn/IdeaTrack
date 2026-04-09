@@ -1,6 +1,8 @@
 ﻿@model IdeaTrack.Areas.SciTech.Models.ReferenceFormEditVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Edit Form";
+    ViewData["Title"] = Localizer["Edit Form"].Value;
     Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
 }
 
@@ -46,13 +48,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Description" class="form-label">Description</label>
+                            <label asp-for="Description" class="form-label">@Localizer["Description"]</label>
                             <textarea asp-for="Description" class="form-control" rows="3"></textarea>
                         </div>
 
                         <!-- Current File Info -->
                         <div class="mb-3">
-                            <label class="form-label">Current File</label>
+                            <label class="form-label">@Localizer["Current File"]</label>
                             <div class="d-flex align-items-center p-3 bg-light rounded">
                                 <i class="fas fa-file-alt fa-2x text-primary me-3"></i>
                                 <div>
@@ -65,7 +67,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="NewFile" class="form-label">Replace File (optional)</label>
+                            <label asp-for="NewFile" class="form-label">@Localizer["Replace File (optional)"]</label>
                             <input asp-for="NewFile" type="file" class="form-control" 
                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
                             <span asp-validation-for="NewFile" class="text-danger"></span>

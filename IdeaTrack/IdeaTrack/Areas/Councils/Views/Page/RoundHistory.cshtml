@@ -1,6 +1,8 @@
 ﻿@model IdeaTrack.Areas.Councils.Models.RoundHistoryVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Round Grading History";
+    ViewData["Title"] = Localizer["Round Grading History"].Value;
     Layout = "~/Areas/Councils/Views/Shared/_LayoutCouncils.cshtml";
 }
 
@@ -266,7 +268,7 @@
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
                 <h4><i class="bi bi-clock-history me-2"></i>Round Grading History</h4>
-                <p>View all grading rounds and scores for this initiative.</p>
+                <p>@Localizer["View all grading rounds and scores for this initiative."]</p>
             </div>
             <a asp-action="AssignedInitiatives" class="btn-back">
                 <i class="bi bi-arrow-left"></i>Back to Initiatives
@@ -297,12 +299,12 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Member</th>
-                                <th>Assigned Date</th>
-                                <th>Completed Date</th>
-                                <th>Total Score</th>
-                                <th>Status</th>
-                                <th style="width: 100px">Actions</th>
+                                <th>@Localizer["Member"]</th>
+                                <th>@Localizer["Assigned Date"]</th>
+                                <th>@Localizer["Completed Date"]</th>
+                                <th>@Localizer["Total Score"]</th>
+                                <th>@Localizer["Status"]</th>
+                                <th style="width: 100px">@Localizer["Actions"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -358,7 +360,7 @@
                                     <td>
                                         @if (item.Status == IdeaTrack.Models.AssignmentStatus.Completed)
                                         {
-                                            <a asp-action="ViewPastAssignment" asp-route-id="@item.AssignmentId" class="btn-view-sm" title="View Details">
+                                            <a asp-action="ViewPastAssignment" asp-route-id="@item.AssignmentId" class="btn-view-sm" title="@Localizer["View Details"].Value">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         }
@@ -380,13 +382,13 @@
                                 <div class="col">
                                     <div class="summary-stat">
                                         <div class="value primary">@completedItems.Count/@roundGroup.Count()</div>
-                                        <div class="label">Completed</div>
+                                        <div class="label">@Localizer["Completed"]</div>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="summary-stat">
                                         <div class="value success">@avgScore.ToString("F2")</div>
-                                        <div class="label">Average Score</div>
+                                        <div class="label">@Localizer["Average Score"]</div>
                                     </div>
                                 </div>
                             </div>
@@ -401,7 +403,7 @@
         <div class="round-card">
             <div class="empty-state">
                 <i class="bi bi-clipboard-data"></i>
-                <p>No grading data available for this initiative.</p>
+                <p>@Localizer["No grading data available for this initiative."]</p>
             </div>
         </div>
     }
