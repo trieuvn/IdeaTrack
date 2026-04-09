@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Areas.Faculty.Models;
+using IdeaTrack.Areas.Faculty.Models;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -36,29 +36,50 @@ namespace IdeaTrack.Areas.Faculty.Controllers
         // ==========================================
         // 1. DASHBOARD LIST (INDEX)
         // ==========================================
-        public async Task<IActionResult> Index(string searchString, string statusFilter, int pageNumber = 1)
+        public async Task<IActionResult> Index(string searchString, string statusFilter, int? yearId, int? periodId, int? categoryId, int pageNumber = 1)
         {
             var deptId = await GetCurrentUserDepartmentId();
             if (deptId == null) return View("Error", new { message = "User not assigned to a department" });
 
-            int pageSize = 5;
+            int pageSize = 10;
 
             // 1. Base Query - Everything EXCEPT Draft for Faculty View
             var query = _context.Initiatives
                 .Include(i => i.Creator)
-                .Include(i => i.Category)
+                .Include(i => i.Category).ThenInclude(c => c.Period)
                 .Include(i => i.Department)
                 .Include(i => i.Authorships).ThenInclude(a => a.Author)
                 .Where(i => i.DepartmentId == deptId && i.Status != InitiativeStatus.Draft)
                 .AsQueryable();
 
-            // 2. Apply Search
+            var baseStatsQuery = _context.Initiatives
+                .Where(i => i.DepartmentId == deptId && i.Status != InitiativeStatus.Draft)
+                .AsQueryable();
+
+            // 2. Apply Filters to Output List AND Stats Query
+            if (yearId.HasValue)
+            {
+                query = query.Where(i => i.Category.Period.AcademicYearId == yearId.Value);
+                baseStatsQuery = baseStatsQuery.Where(i => i.Category.Period.AcademicYearId == yearId.Value);
+            }
+            if (periodId.HasValue)
+            {
+                query = query.Where(i => i.Category.PeriodId == periodId.Value);
+                baseStatsQuery = baseStatsQuery.Where(i => i.Category.PeriodId == periodId.Value);
+            }
+            if (categoryId.HasValue)
+            {
+                query = query.Where(i => i.CategoryId == categoryId.Value);
+                baseStatsQuery = baseStatsQuery.Where(i => i.CategoryId == categoryId.Value);
+            }
+
+            // 3. Apply Search
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(s => s.Title.Contains(searchString) || s.InitiativeCode.Contains(searchString) || s.Creator.FullName.Contains(searchString));
             }
 
-            // 3. Apply Status Filter
+            // 4. Apply Status Filter
             if (!string.IsNullOrEmpty(statusFilter))
             {
                 if (statusFilter == "Evaluation")
@@ -71,10 +92,10 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 }
             }
 
-            // 4. Sorting
+            // 5. Sorting
             query = query.OrderByDescending(i => i.SubmittedDate ?? i.CreatedAt);
 
-            // 5. Pagination
+            // 6. Pagination
             var totalItems = await query.CountAsync();
             var totalPages = totalItems > 0 ? (int)Math.Ceiling(totalItems / (double)pageSize) : 1;
             pageNumber = Math.Max(1, Math.Min(pageNumber, totalPages));
@@ -84,11 +105,7 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
-            // 6. Dynamic Statistics (Count directly from DB, restricted to Dept, Excluding Draft)
-            // Note: We use the base condition (Dept + No Draft) for all counts
-            var baseStatsQuery = _context.Initiatives
-                .Where(i => i.DepartmentId == deptId && i.Status != InitiativeStatus.Draft);
-            
+            // 7. Dynamic Statistics
             var viewModel = new FacultyDashboardVM
             {
                 PendingCount = await baseStatsQuery.CountAsync(i => i.Status == InitiativeStatus.Pending),
@@ -113,14 +130,32 @@ namespace IdeaTrack.Areas.Faculty.Controllers
                 }).ToList()
             };
 
+            // Populate Dropdowns
+            var years = await _context.AcademicYears.OrderByDescending(y => y.Name).ToListAsync();
+            
+            var periodQ = _context.InitiativePeriods.AsQueryable();
+            if (yearId.HasValue) periodQ = periodQ.Where(p => p.AcademicYearId == yearId.Value);
+            var periods = await periodQ.OrderByDescending(p => p.StartDate).ToListAsync();
+
+            var catQ = _context.InitiativeCategories.AsQueryable();
+            if (periodId.HasValue) catQ = catQ.Where(c => c.PeriodId == periodId.Value);
+            else if (yearId.HasValue) catQ = catQ.Where(c => c.Period.AcademicYearId == yearId.Value);
+            var categories = await catQ.OrderBy(c => c.Name).ToListAsync();
+
+            ViewBag.Years = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(years, "Id", "Name", yearId);
+            ViewBag.Periods = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(periods, "Id", "Name", periodId);
+            ViewBag.Categories = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categories, "Id", "Name", categoryId);
+
+            ViewBag.SelectedYearId = yearId;
+            ViewBag.SelectedPeriodId = periodId;
+            ViewBag.SelectedCategoryId = categoryId;
+
             ViewBag.CurrentPage = pageNumber;
             ViewBag.TotalPages = totalPages;
             ViewBag.TotalItems = totalItems;
             ViewBag.PageSize = pageSize;
             ViewBag.CurrentSearch = searchString;
             ViewBag.CurrentStatus = statusFilter;
-
-            // Pass statuses list for dropdown (handled in View, but good to know)
 
             return View(viewModel);
         }

@@ -133,4 +133,9 @@
   <data name="Showing {0} to {1} of {2} results" xml:space="preserve">
     <value>Hiển thị từ {0} đến {1} trong số {2} kết quả</value>
   </data>
+  <data name="Year" xml:space="preserve"><value>Năm học</value></data>
+  <data name="All Years" xml:space="preserve"><value>Tất cả năm học</value></data>
+  <data name="Period" xml:space="preserve"><value>Đợt</value></data>
+  <data name="All Periods" xml:space="preserve"><value>Tất cả các đợt</value></data>
+  <data name="All Categories" xml:space="preserve"><value>Tất cả lĩnh vực</value></data>
 </root>

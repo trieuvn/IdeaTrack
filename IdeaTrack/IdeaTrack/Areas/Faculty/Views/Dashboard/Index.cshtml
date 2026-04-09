@@ -121,34 +121,55 @@
 
     <!-- Filter & Search -->
     <div class="card border-0 shadow-sm mb-4">
-        <form method="get" action="@Url.Action("Index")">
+        <form method="get" action="@Url.Action("Index")" id="filterForm">
             <div class="card-body p-3">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
-                            <input type="text" name="searchString" class="form-control border-start-0 ps-0" placeholder="Tìm kiếm theo mã, tiêu đề..." value="@ViewBag.CurrentSearch">
-                        </div>
-                    </div>
+                <div class="row g-3 mb-3">
                     <div class="col-md-3">
-                        <select class="form-select" name="statusFilter">
-                            <option value="">Mọi trạng thái</option>
-                            <option value="Pending" selected="@(ViewBag.CurrentStatus == "Pending")">Chờ xét duyệt</option>
-                            <option value="Faculty_Approved" selected="@(ViewBag.CurrentStatus == "Faculty_Approved")">Khoa đã duyệt</option>
-                            <option value="Evaluation" selected="@(ViewBag.CurrentStatus == "Evaluation")">Đang đánh giá</option>
-                            <option value="Pending_Final" selected="@(ViewBag.CurrentStatus == "Pending_Final")">Chờ chung khảo</option>
-                            <option value="Approved" selected="@(ViewBag.CurrentStatus == "Approved")">Đã duyệt (Cấp vốn)</option>
-                            <option value="Rejected" selected="@(ViewBag.CurrentStatus == "Rejected")">Bị từ chối</option>
-                            <option value="Revision_Required" selected="@(ViewBag.CurrentStatus == "Revision_Required")">Yêu cầu chỉnh sửa</option>
+                        <label class="form-label text-muted small fw-bold">@Localizer["Year"]</label>
+                        <select id="yearSelect" name="yearId" class="form-select" asp-items="ViewBag.Years">
+                            <option value="">-- @Localizer["All Years"] --</option>
                         </select>
                     </div>
                     <div class="col-md-3">
+                        <label class="form-label text-muted small fw-bold">@Localizer["Period"]</label>
+                        <select id="periodSelect" name="periodId" class="form-select" asp-items="ViewBag.Periods">
+                            <option value="">-- @Localizer["All Periods"] --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted small fw-bold">@Localizer["Category"]</label>
+                        <select id="categorySelect" name="categoryId" class="form-select" asp-items="ViewBag.Categories">
+                            <option value="">-- @Localizer["All Categories"] --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-muted small fw-bold">@Localizer["Status"]</label>
+                        <select class="form-select" name="statusFilter">
+                            <option value="">@Localizer["All Statuses"]</option>
+                            <option value="Pending" selected="@(ViewBag.CurrentStatus == "Pending")">@Localizer["Pending Approval"]</option>
+                            <option value="Faculty_Approved" selected="@(ViewBag.CurrentStatus == "Faculty_Approved")">@Localizer["Faculty Approved"]</option>
+                            <option value="Evaluation" selected="@(ViewBag.CurrentStatus == "Evaluation")">@Localizer["Evaluation"]</option>
+                            <option value="Pending_Final" selected="@(ViewBag.CurrentStatus == "Pending_Final")">@Localizer["Pending Final"]</option>
+                            <option value="Approved" selected="@(ViewBag.CurrentStatus == "Approved")">@Localizer["Approved"]</option>
+                            <option value="Rejected" selected="@(ViewBag.CurrentStatus == "Rejected")">@Localizer["Rejected"]</option>
+                            <option value="Revision_Required" selected="@(ViewBag.CurrentStatus == "Revision_Required")">@Localizer["Revision Required"]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-secondary"></i></span>
+                            <input type="text" name="searchString" class="form-control border-start-0 ps-0" placeholder="@Localizer["Search by title, code..."]" value="@ViewBag.CurrentSearch">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
                         <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-filter me-2"></i>Lọc
+                            <i class="bi bi-filter me-2"></i>@Localizer["Filter"]
                         </button>
                     </div>
                      <div class="col-md-2">
-                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100">Đặt lại</a>
+                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100">@Localizer["Reset"]</a>
                     </div>
                 </div>
             </div>
@@ -264,24 +285,49 @@
                 int endItem = Math.Min(currentPage * pageSize, totalItems);
                 string currentSearch = ViewBag.CurrentSearch;
                 string currentStatus = ViewBag.CurrentStatus;
+                int? yId = ViewBag.SelectedYearId;
+                int? pId = ViewBag.SelectedPeriodId;
+                int? cId = ViewBag.SelectedCategoryId;
             }
             <span class="text-secondary small">Hiển thị từ @startItem đến @endItem trong tổng @totalItems kết quả</span>
             <nav>
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
-                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = currentPage - 1, searchString = currentSearch, statusFilter = currentStatus })"><i class="bi bi-chevron-left"></i></a>
+                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = currentPage - 1, searchString = currentSearch, statusFilter = currentStatus, yearId = yId, periodId = pId, categoryId = cId })"><i class="bi bi-chevron-left"></i></a>
                     </li>
                     @for (int i = 1; i <= totalPages; i++)
                     {
                         <li class="page-item @(i == currentPage ? "active" : "")">
-                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, searchString = currentSearch, statusFilter = currentStatus })">@i</a>
+                            <a class="page-link" href="@Url.Action("Index", new { pageNumber = i, searchString = currentSearch, statusFilter = currentStatus, yearId = yId, periodId = pId, categoryId = cId })">@i</a>
                         </li>
                     }
                     <li class="page-item @(currentPage >= totalPages || totalPages == 0 ? "disabled" : "")">
-                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = currentPage + 1, searchString = currentSearch, statusFilter = currentStatus })"><i class="bi bi-chevron-right"></i></a>
+                        <a class="page-link" href="@Url.Action("Index", new { pageNumber = currentPage + 1, searchString = currentSearch, statusFilter = currentStatus, yearId = yId, periodId = pId, categoryId = cId })"><i class="bi bi-chevron-right"></i></a>
                     </li>
                 </ul>
             </nav>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var yearSelect = document.getElementById('yearSelect');
+            var periodSelect = document.getElementById('periodSelect');
+            var categorySelect = document.getElementById('categorySelect');
+            var filterForm = document.getElementById('filterForm');
+
+            yearSelect.addEventListener('change', function () {
+                periodSelect.value = '';
+                categorySelect.value = '';
+                filterForm.submit();
+            });
+
+            periodSelect.addEventListener('change', function () {
+                categorySelect.value = '';
+                filterForm.submit();
+            });
+        });
+    </script>
+}

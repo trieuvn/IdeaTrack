@@ -37,4 +37,7 @@
   <data name="Verified" xml:space="preserve"><value>Đã xác thực</value></data>
   <data name="Not Verified" xml:space="preserve"><value>Chưa xác thực</value></data>
   <data name="Last Active" xml:space="preserve"><value>Hoạt động lần cuối</value></data>
+  <data name="Update Profile" xml:space="preserve"><value>Cập nhật hồ sơ</value></data>
+  <data name="Save Changes" xml:space="preserve"><value>Lưu thay đổi</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Hủy</value></data>
 </root>
