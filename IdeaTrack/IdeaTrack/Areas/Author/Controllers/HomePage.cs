@@ -1,4 +1,4 @@
-﻿using IdeaTrack.Areas.Author.ViewModels;
+using IdeaTrack.Areas.Author.ViewModels;
 using IdeaTrack.Data;
 using IdeaTrack.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace IdeaTrack.Areas.Author.Controllers
 {
     [Area("Author")]
-    [Authorize(Roles = "Author,Lecturer,Admin")]
+    [Authorize(Roles = "Author,Lecturer,Admin,Approver")]
     public class HomePage : Controller
     {
         private readonly ApplicationDbContext _context;
