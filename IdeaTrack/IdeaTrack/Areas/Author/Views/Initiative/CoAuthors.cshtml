@@ -1,6 +1,8 @@
 ﻿@model IdeaTrack.Areas.Author.ViewModels.CoAuthorManageViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Manage Co-Authors";
+    ViewData["Title"] = Localizer["Manage Co-Authors"].Value;
     Layout = "~/Areas/Author/Views/Shared/_Layout.cshtml";
 }
 
@@ -90,14 +92,14 @@
                             <table class="table table-hover align-middle">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Full Name</th>
-                                        <th>Email</th>
-                                        <th>Department</th>
-                                        <th>Role</th>
-                                        <th>Joined Date</th>
+                                        <th>@Localizer["Full Name"]</th>
+                                        <th>@Localizer["Email"]</th>
+                                        <th>@Localizer["Department"]</th>
+                                        <th>@Localizer["Role"]</th>
+                                        <th>@Localizer["Joined Date"]</th>
                                         @if (Model.CanEdit)
                                         {
-                                            <th style="width: 80px">Actions</th>
+                                            <th style="width: 80px">@Localizer["Actions"]</th>
                                         }
                                     </tr>
                                 </thead>
@@ -124,7 +126,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-info">Co-Author</span>
+                                                    <span class="badge bg-info">@Localizer["Co-Author"]</span>
                                                 }
                                             </td>
                                             <td>@author.JoinedAt.ToString("dd/MM/yyyy")</td>
@@ -137,7 +139,7 @@
                                                               onsubmit="return confirm('Are you sure you want to remove this co-author?');">
                                                             @Html.AntiForgeryToken()
                                                             <input type="hidden" name="authorshipId" value="@author.AuthorshipId" />
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="@Localizer["Remove"].Value">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -154,7 +156,7 @@
                     {
                         <div class="text-center py-4 text-muted">
                             <i class="fas fa-users fa-3x mb-3"></i>
-                            <p>No co-authors yet</p>
+                            <p>@Localizer["No co-authors yet"]</p>
                         </div>
                     }
                 </div>

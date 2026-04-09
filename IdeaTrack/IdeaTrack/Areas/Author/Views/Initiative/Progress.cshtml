@@ -1,6 +1,8 @@
 ﻿@model IdeaTrack.Areas.Author.ViewModels.ProgressTimelineViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Initiative Progress";
+    ViewData["Title"] = Localizer["Initiative Progress"].Value;
     Layout = "~/Areas/Author/Views/Shared/_Layout.cshtml";
 }
 
@@ -138,7 +140,7 @@
                                         }
                                         else if (step.IsCurrent)
                                         {
-                                            <span class="badge bg-primary">In Progress</span>
+                                            <span class="badge bg-primary">@Localizer["In Progress"]</span>
                                         }
                                     </div>
                                     <p class="mb-0 text-muted small">@step.Description</p>
@@ -152,25 +154,25 @@
             <!-- Legend -->
             <div class="card shadow-sm border-0 mt-3">
                 <div class="card-body">
-                    <h6 class="mb-3">Legend</h6>
+                    <h6 class="mb-3">@Localizer["Legend"]</h6>
                     <div class="row text-center">
                         <div class="col">
                             <span class="badge bg-success px-3 py-2 mb-1">
                                 <i class="fas fa-check"></i>
                             </span>
-                            <div class="small text-muted">Completed</div>
+                            <div class="small text-muted">@Localizer["Completed"]</div>
                         </div>
                         <div class="col">
                             <span class="badge bg-primary px-3 py-2 mb-1">
                                 <i class="fas fa-spinner"></i>
                             </span>
-                            <div class="small text-muted">In Progress</div>
+                            <div class="small text-muted">@Localizer["In Progress"]</div>
                         </div>
                         <div class="col">
                             <span class="badge bg-secondary px-3 py-2 mb-1">
                                 <i class="fas fa-hourglass-half"></i>
                             </span>
-                            <div class="small text-muted">Pending</div>
+                            <div class="small text-muted">@Localizer["Pending"]</div>
                         </div>
                     </div>
                 </div>

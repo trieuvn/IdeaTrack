@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Post-Faculty Files";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Post-Faculty Files"].Value;
 }
 
 @section Styles {

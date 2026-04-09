@@ -1,6 +1,8 @@
 ﻿@model IdeaTrack.Areas.SciTech.Models.ReferenceFormCreateVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Add New Form";
+    ViewData["Title"] = Localizer["Add New Form"].Value;
     Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
 }
 
@@ -43,7 +45,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Description" class="form-label">Description</label>
+                            <label asp-for="Description" class="form-label">@Localizer["Description"]</label>
                             <textarea asp-for="Description" class="form-control" rows="3" 
                                       placeholder="Brief description of the form content"></textarea>
                         </div>

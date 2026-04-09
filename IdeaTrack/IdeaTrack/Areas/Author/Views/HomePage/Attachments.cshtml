@@ -1,13 +1,15 @@
-﻿<div class="breadcrumb">
-    <a class="breadcrumb-link" asp-action="HomePage" asp-controller="Index">HomePage</a>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<div class="breadcrumb">
+    <a class="breadcrumb-link" asp-action="HomePage" asp-controller="Index">@Localizer["HomePage"]</a>
     <span class="breadcrumb-separator">/</span>
-    <span class="breadcrumb-current">Attachments</span>
+    <span class="breadcrumb-current">@Localizer["Attachments"]</span>
 </div>
 
 <!-- Header -->
 <div class="initiative-header">
     <div>
-        <h1>Manage Attachments</h1>
+        <h1>@Localizer["Manage Attachments"]</h1>
         
     </div>
 
@@ -20,11 +22,11 @@
 <div class="card upload" id="uploadBox">
     <i class="bi bi-cloud-arrow-up fs-3"></i>
     <p>
-        <strong>Drag & drop files here</strong><br>
+        <strong>@Localizer["Drag & drop files here"]</strong><br>
         or click to browse from your computer
     </p>
     <small>Max size 10MB  PDF, DOCX, XLSX</small><br><br>
-    <button class="btn-primary" onclick="fileInput.click()">Browse Files</button>
+    <button class="btn-primary" onclick="fileInput.click()">@Localizer["Browse Files"]</button>
     <input type="file" id="fileInput" hidden multiple>
 </div>
 

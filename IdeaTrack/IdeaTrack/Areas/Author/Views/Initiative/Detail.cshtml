@@ -1,13 +1,15 @@
-@model IdeaTrack.Areas.Author.ViewModels.InitiativeDetailViewModel
+﻿@model IdeaTrack.Areas.Author.ViewModels.InitiativeDetailViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <main class="container pb-5 pt-2">
 
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index" class="text-decoration-none">Dashboard</a></li>
-            <li class="breadcrumb-item"><a asp-controller="Initiative" asp-action="History" class="text-decoration-none">History</a></li>
-            <li class="breadcrumb-item active">Detail</li>
+            <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index" class="text-decoration-none">@Localizer["Dashboard"]</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Initiative" asp-action="History" class="text-decoration-none">@Localizer["History"]</a></li>
+            <li class="breadcrumb-item active">@Localizer["Detail"]</li>
         </ol>
     </nav>
 
@@ -101,7 +103,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="material-icons text-muted me-3">calendar_month</span>
                                 <div>
-                                    <div class="small text-muted">Academic Year</div>
+                                    <div class="small text-muted">@Localizer["Academic Year"]</div>
                                     <div class="fw-medium">@(Model.Initiative.Period?.Name ?? "N/A")</div>
                                 </div>
                             </div>
@@ -110,7 +112,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="material-icons text-muted me-3">business</span>
                                 <div>
-                                    <div class="small text-muted">Department</div>
+                                    <div class="small text-muted">@Localizer["Department"]</div>
                                     <div class="fw-medium">@(Model.Initiative.Department?.Name ?? "N/A")</div>
                                 </div>
                             </div>
@@ -119,7 +121,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="material-icons text-muted me-3">payments</span>
                                 <div>
-                                    <div class="small text-muted">Budget</div>
+                                    <div class="small text-muted">@Localizer["Budget"]</div>
                                     <div class="fw-medium">@Model.Initiative.Budget.ToString("N0") VND</div>
                                 </div>
                             </div>
@@ -128,7 +130,7 @@
                             <div class="d-flex align-items-center">
                                 <span class="material-icons text-muted me-3">event</span>
                                 <div>
-                                    <div class="small text-muted">Created Date</div>
+                                    <div class="small text-muted">@Localizer["Created Date"]</div>
                                     <div class="fw-medium">@Model.Initiative.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
                                 </div>
                             </div>
@@ -171,7 +173,7 @@
                     }
                     else
                     {
-                        <p class="text-muted small mb-0">No co-authors.</p>
+                        <p class="text-muted small mb-0">@Localizer["No co-authors."]</p>
                     }
                 </div>
             </div>
@@ -221,7 +223,7 @@
                                                 <a href="@file.FilePath"
                                                    download
                                                    class="btn btn-sm btn-outline-primary rounded-pill d-flex align-items-center justify-content-center"
-                                                   title="Download">
+                                                   title="@Localizer["Download"].Value">
                                                     <span class="material-icons" style="font-size: 18px;">download</span>
                                                 </a>
 
@@ -232,7 +234,7 @@
                                                    target="_blank"
                                                    rel="noopener noreferrer"
                                                    class="btn btn-sm btn-outline-success rounded-pill d-flex align-items-center justify-content-center"
-                                                   title="View">
+                                                   title="@Localizer["View"].Value">
                                                     <span class="material-icons" style="font-size: 18px;">remove_red_eye</span>
                                                 </a>
                                             </div>
@@ -246,7 +248,7 @@
                     {
                         <div class="text-center py-4">
                             <span class="material-icons text-muted" style="font-size: 48px;">folder_off</span>
-                            <p class="text-muted mt-2 mb-0">No attachments found</p>
+                            <p class="text-muted mt-2 mb-0">@Localizer["No attachments found"]</p>
                         </div>
                     }
                 </div>
@@ -319,13 +321,13 @@
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="text-center p-3 bg-light rounded-3">
-                                    <div class="small text-muted mb-1">Average Score</div>
+                                    <div class="small text-muted mb-1">@Localizer["Average Score"]</div>
                                     <div class="display-6 fw-bold text-primary">@Model.FinalResult.AverageScore.ToString("F1")</div>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="text-center p-3 bg-light rounded-3">
-                                    <div class="small text-muted mb-1">Final Score</div>
+                                    <div class="small text-muted mb-1">@Localizer["Final Score"]</div>
                                     <div class="display-6 fw-bold text-success">@((Model.FinalResult.FinalScore ?? Model.FinalResult.AverageScore).ToString("F1"))</div>
                                 </div>
                             </div>
@@ -394,7 +396,7 @@
                                     <span>Deadline: <strong class="text-danger">@Model.LatestRevisionRequest.Deadline.Value.ToString("dd/MM/yyyy")</strong>
                                         @if (Model.LatestRevisionRequest.Deadline.Value < DateTime.Now)
                                         {
-                                            <span class="badge bg-danger ms-1">Expired</span>
+                                            <span class="badge bg-danger ms-1">@Localizer["Expired"]</span>
                                         }
                                     </span>
                                 </div>
@@ -421,7 +423,7 @@
                     <div class="card-body p-4">
                         @if (canResubmit)
                         {
-                            <p class="text-muted small mb-3">Edit your initiative and resubmit for review. It will go back to Processing status.</p>
+                            <p class="text-muted small mb-3">@Localizer["Edit your initiative and resubmit for review. It will go back to Processing status."]</p>
                             <a asp-controller="Initiative" asp-action="Edit" asp-route-id="@Model.Initiative.Id" 
                                class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold w-100">
                                 <span class="material-icons align-middle me-1">edit</span> Edit & Resubmit
@@ -429,7 +431,7 @@
                         }
                         else
                         {
-                            <p class="text-muted small mb-3">Resubmission is not available. Create a new draft copy from this initiative to make corrections and resubmit.</p>
+                            <p class="text-muted small mb-3">@Localizer["Resubmission is not available. Create a new draft copy from this initiative to make corrections and resubmit."]</p>
                             <form asp-controller="Initiative" asp-action="CopyToDraft" asp-route-id="@Model.Initiative.Id" method="post" onsubmit="return confirm('This will create a new draft copy. Continue?');">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-info btn-lg rounded-pill shadow-sm fw-bold w-100 text-white">
@@ -452,7 +454,7 @@
                         </h5>
                     </div>
                     <div class="card-body p-4">
-                        <p class="text-muted small mb-3">Create a new draft copy from this initiative to make corrections and resubmit.</p>
+                        <p class="text-muted small mb-3">@Localizer["Create a new draft copy from this initiative to make corrections and resubmit."]</p>
                         <form asp-controller="Initiative" asp-action="CopyToDraft" asp-route-id="@Model.Initiative.Id" method="post" onsubmit="return confirm('This will create a new draft copy. Continue?');">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-info btn-lg rounded-pill shadow-sm fw-bold w-100 text-white">
@@ -531,7 +533,7 @@
                         <span class="material-icons text-primary" style="font-size: 64px;">task_alt</span>
                     </div>
                     <p class="text-center mb-0">Are you sure you want to <strong>submit</strong> this initiative for review?</p>
-                    <p class="text-center text-muted small mt-2">Once submitted, you won't be able to edit it until it's reviewed.</p>
+                    <p class="text-center text-muted small mt-2">@Localizer["Once submitted, you won't be able to edit it until it's reviewed."]</p>
                 </div>
                 <div class="modal-footer border-0 pt-0 justify-content-center">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
@@ -567,7 +569,7 @@
                         <span class="material-icons text-danger" style="font-size: 64px;">delete_forever</span>
                     </div>
                     <p class="text-center mb-0">Are you sure you want to <strong class="text-danger">permanently delete</strong> this initiative?</p>
-                    <p class="text-center text-muted small mt-2">This action cannot be undone. All files and data will be lost.</p>
+                    <p class="text-center text-muted small mt-2">@Localizer["This action cannot be undone. All files and data will be lost."]</p>
                 </div>
                 <div class="modal-footer border-0 pt-0 justify-content-center">
                     <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">

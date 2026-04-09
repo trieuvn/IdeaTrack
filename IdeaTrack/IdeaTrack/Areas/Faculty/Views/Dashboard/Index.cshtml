@@ -1,5 +1,7 @@
-@using IdeaTrack.Models
+﻿@using IdeaTrack.Models
 @model IdeaTrack.Areas.Faculty.Models.FacultyDashboardVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 @{
     ViewData["Title"] = Localizer["Faculty Dashboard"];

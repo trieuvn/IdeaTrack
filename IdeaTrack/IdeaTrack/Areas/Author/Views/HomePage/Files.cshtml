@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<IdeaTrack.Models.InitiativeFile>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <main class="container py-5">
 
@@ -9,15 +11,13 @@
                 <span class="badge rounded-pill bg-white bg-opacity-25 mb-3 p-2 px-3">
                     <span class="material-icons align-middle me-1" style="font-size: 16px;">folder</span> FILE MANAGEMENT
                 </span>
-                <h1 class="fw-bold display-5 mb-3">File Repository</h1>
-                <p class="fs-5 mb-0 opacity-75">
-                    All files you have uploaded for initiatives.
-                </p>
+                <h1 class="fw-bold display-5 mb-3">@Localizer["File Repository"]</h1>
+                <p class="fs-5 mb-0 opacity-75">@Localizer["All files you have uploaded for initiatives."]</p>
             </div>
             <div class="col-lg-4 d-flex align-items-center justify-content-end">
                 <div class="text-center">
                     <div class="display-3 fw-bold">@Model.Count()</div>
-                    <div class="opacity-75">Total Files</div>
+                    <div class="opacity-75">@Localizer["Total Files"]</div>
                 </div>
             </div>
         </div>
@@ -99,8 +99,8 @@
             {
                 <div class="text-center py-5">
                     <span class="material-icons text-muted" style="font-size: 80px;">folder_off</span>
-                    <h5 class="text-muted mt-3">No files found</h5>
-                    <p class="text-muted mb-4">Upload files when creating a new initiative</p>
+                    <h5 class="text-muted mt-3">@Localizer["No files found"]</h5>
+                    <p class="text-muted mb-4">@Localizer["Upload files when creating a new initiative"]</p>
                     <a asp-controller="Initiative" asp-action="Create" class="btn btn-danger rounded-pill px-4">
                         <span class="material-icons align-middle me-1">add_circle</span> Create New Initiative
                     </a>
