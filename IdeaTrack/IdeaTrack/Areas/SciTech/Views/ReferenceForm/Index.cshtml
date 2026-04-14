@@ -1,132 +1,227 @@
-﻿@model IdeaTrack.Areas.SciTech.Models.ReferenceFormListVM
+@model IdeaTrack.Areas.SciTech.Models.ReferenceFormListVM
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = Localizer["Reference Forms"].Value;
-    Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/SciTech/Views/Shared/_LayoutSciTech.cshtml";
 }
 
-<div class="container-fluid py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">
-                <i class="fas fa-file-alt me-2"></i>Reference Forms
-            </h4>
-            <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-light btn-sm">
-                <i class="fas fa-plus me-1"></i>Add Form
-            </a>
-        </div>
-        
-        <div class="card-body">
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            }
+<style>
+    .premium-card {
+        background: white;
+        border: 1px solid var(--premium-border) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03) !important;
+        overflow: hidden;
+    }
+    .table-hover tbody tr:hover {
+        background-color: #f8fafc !important;
+    }
+    .badge-soft-primary {
+        background-color: #eff6ff;
+        color: #1e40af;
+        border: 1px solid #dbeafe;
+    }
+    .btn-brand {
+        background-color: var(--brand-red);
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+    }
+    .btn-brand:hover {
+        background-color: #9f1239;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(190, 18, 60, 0.2);
+    }
+    .period-filter-container {
+        border-radius: 12px;
+        border: 1px solid var(--premium-border);
+        transition: all 0.3s;
+    }
+    .period-filter-container:focus-within {
+        border-color: var(--brand-red);
+        box-shadow: 0 0 0 3px rgba(190, 18, 60, 0.1);
+    }
+    .file-icon-box {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        transition: all 0.3s;
+    }
+    tr:hover .file-icon-box {
+        transform: scale(1.1) rotate(-5deg);
+    }
+</style>
 
-            <!-- Period Filter -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <label class="form-label">@Localizer["Filter by initiative period:"]</label>
-                    <select id="periodFilter" class="form-select">
-                        <option value="">-- All periods --</option>
-                        @foreach (var period in Model.Periods)
-                        {
-                            <option value="@period.Value" selected="@(Model.SelectedPeriodId?.ToString() == period.Value)">
-                                @period.Text
-                            </option>
-                        }
-                    </select>
+<!-- HEADER -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5">
+    <div>
+        <h2 class="fw-bold font-display mb-1 text-dark">
+            <i class="fa-solid fa-file-invoice-dollar me-2 text-brand"></i>@Localizer["Reference Forms"]
+        </h2>
+        <p class="text-muted mb-0">@Localizer["Manage template forms and reference documents for initiatives."]</p>
+    </div>
+    <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-brand px-3 py-2 shadow-sm" style="font-size: 0.9rem;">
+        <i class="fas fa-plus-circle me-1"></i>@Localizer["Add New Form"]
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success border-0 shadow-sm rounded-4 d-flex align-items-center mb-4 p-3 animate__animated animate__fadeIn">
+        <i class="fas fa-check-circle me-3 fs-4"></i>
+        <div>@TempData["SuccessMessage"]</div>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger border-0 shadow-sm rounded-4 d-flex align-items-center mb-4 p-3 animate__animated animate__fadeIn">
+        <i class="fas fa-exclamation-circle me-3 fs-4"></i>
+        <div>@TempData["ErrorMessage"]</div>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<!-- FILTER & CONTENT -->
+<div class="premium-card">
+    <div class="p-4 bg-white border-bottom border-light">
+        <div class="row align-items-center g-3">
+            <div class="col-md-5">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-2 bg-light rounded-3 text-muted">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <label class="form-label small fw-bold text-muted text-uppercase mb-1" style="font-size: 0.65rem; letter-spacing: 0.05em;">@Localizer["Initiative Period"]</label>
+                        <select id="periodFilter" class="form-select border-0 bg-light-subtle shadow-none period-filter-container font-medium" style="cursor: pointer;">
+                            <option value="">-- @Localizer["All Periods"] --</option>
+                            @foreach (var period in Model.Periods)
+                            {
+                                <option value="@period.Value" selected="@(Model.SelectedPeriodId?.ToString() == period.Value)">
+                                    @period.Text
+                                </option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
-
+            
             @if (Model.SelectedPeriodName != null)
             {
-                <div class="alert alert-info mb-3">
-                    <i class="fas fa-info-circle me-1"></i>
-                    Showing forms for period: <strong>@Model.SelectedPeriodName</strong>
-                </div>
-            }
-
-            @if (Model.Items.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 5%">#</th>
-                                <th style="width: 25%">@Localizer["Form Name"]</th>
-                                <th style="width: 20%">@Localizer["Initiative Period"]</th>
-                                <th style="width: 10%">@Localizer["File Type"]</th>
-                                <th style="width: 15%">@Localizer["Upload Date"]</th>
-                                <th style="width: 15%">@Localizer["Actions"]</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @{ var index = 1; }
-                            @foreach (var item in Model.Items)
-                            {
-                                <tr>
-                                    <td>@(index++)</td>
-                                    <td>
-                                        <div class="fw-semibold">@item.FormName</div>
-                                        @if (!string.IsNullOrEmpty(item.Description))
-                                        {
-                                            <small class="text-muted">@item.Description</small>
-                                        }
-                                    </td>
-                                    <td>@item.PeriodName</td>
-                                    <td>
-                                        <span class="badge bg-secondary text-uppercase">
-                                            @(item.FileType ?? "N/A")
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <small>@item.UploadedAt.ToString("dd/MM/yyyy HH:mm")</small>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="@item.FileUrl" target="_blank" class="btn btn-outline-success" title="@Localizer["Download"].Value">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary" title="@Localizer["Edit"].Value">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
-                                                  onsubmit="return confirm('Are you sure you want to delete this form?');">
-                                                @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-outline-danger" title="@Localizer["Delete"].Value">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else
-            {
-                <div class="text-center py-5">
-                    <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
-                    <p class="text-muted">@Localizer["No forms available"]</p>
-                    <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-primary">
-                        <i class="fas fa-plus me-1"></i>Add First Form
-                    </a>
+                <div class="col-md-7 text-md-end">
+                    <span class="badge badge-soft-primary px-4 py-2.5 rounded-pill font-semibold">
+                        <i class="fas fa-calendar-day me-2"></i>@Model.SelectedPeriodName
+                    </span>
                 </div>
             }
         </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 border-0">
+            <thead>
+                <tr>
+                    <th class="ps-4 py-4 bg-light text-muted small fw-bold text-uppercase border-0" style="font-size: 0.7rem; letter-spacing: 0.05em;">@Localizer["Form Template Name"]</th>
+                    <th class="py-4 bg-light text-muted small fw-bold text-uppercase border-0" style="font-size: 0.7rem; letter-spacing: 0.05em;">@Localizer["Associated Period"]</th>
+                    <th class="py-4 bg-light text-muted small fw-bold text-uppercase border-0" style="font-size: 0.7rem; letter-spacing: 0.05em;">@Localizer["Format"]</th>
+                    <th class="py-4 bg-light text-muted small fw-bold text-uppercase border-0" style="font-size: 0.7rem; letter-spacing: 0.05em;">@Localizer["Upload Date"]</th>
+                    <th class="pe-4 py-4 bg-light text-muted small fw-bold text-uppercase border-0 text-end" style="font-size: 0.7rem; letter-spacing: 0.05em;">@Localizer["Actions"]</th>
+                </tr>
+            </thead>
+            <tbody class="border-0">
+                @if (!Model.Items.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <div class="py-5">
+                                <div class="bg-light d-inline-flex p-4 rounded-circle mb-4 text-muted opacity-50">
+                                    <i class="fa-solid fa-folder-open fa-3x"></i>
+                                </div>
+                                <h5 class="fw-bold text-dark mb-2">@Localizer["No templates available"]</h5>
+                                <p class="text-muted mb-4 mx-auto" style="max-width: 350px;">@Localizer["It seems like there are no template forms uploaded for this period yet."]</p>
+                                <a asp-action="Create" asp-route-periodId="@Model.SelectedPeriodId" class="btn btn-brand px-4 shadow-sm">
+                                    <i class="fas fa-plus-circle me-2"></i> @Localizer["Add First Template"]
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr class="transition-all duration-200">
+                            <td class="ps-4 py-4 border-light">
+                                <div class="d-flex align-items-center">
+                                    @{
+                                        var (icon, color, bgColor) = (item.FileType ?? "").ToLower() switch {
+                                            "pdf" => ("fa-file-pdf", "#ef4444", "#fef2f2"),
+                                            "docx" or "doc" => ("fa-file-word", "#3b82f6", "#eff6ff"),
+                                            "xlsx" or "xls" => ("fa-file-excel", "#10b981", "#ecfdf5"),
+                                            "pptx" or "ppt" => ("fa-file-powerpoint", "#f59e0b", "#fffbeb"),
+                                            _ => ("fa-file-lines", "#6b7280", "#f3f4f6")
+                                        };
+                                    }
+                                    <div class="file-icon-box me-3 shadow-none border" style="background-color: @bgColor; color: @color;">
+                                        <i class="fa-solid @icon fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark mb-0.5">@item.FormName</div>
+                                        @if (!string.IsNullOrEmpty(item.Description))
+                                        {
+                                            <div class="small text-muted text-truncate font-medium opacity-75" style="max-width: 320px;">@item.Description</div>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 border-light">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-1 px-2 rounded-lg bg-light text-muted small fw-semibold border">
+                                        <i class="fa-regular fa-clock me-1 opacity-50"></i>@item.PeriodName
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 border-light">
+                                <span class="badge bg-light text-muted border px-2.5 py-1.5 font-bold text-uppercase" style="font-size: 0.65rem;">
+                                    .@(item.FileType ?? "file")
+                                </span>
+                            </td>
+                            <td class="py-4 border-light">
+                                <div class="font-medium text-dark" style="font-size: 0.9rem;">@item.UploadedAt.ToString("dd MMM yyyy")</div>
+                                <div class="small text-muted opacity-60">@item.UploadedAt.ToString("h:mm tt")</div>
+                            </td>
+                            <td class="pe-4 py-4 text-end border-light">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="@(item.FileUrl.StartsWith("http") ? item.FileUrl : Url.Content("~/" + item.FileUrl.TrimStart('/')))" 
+                                       download="@(item.FileName ?? item.FormName)" 
+                                       class="btn btn-outline-light btn-sm rounded-lg border shadow-sm text-dark hover:bg-slate-50" 
+                                       title="@Localizer["Download"]">
+                                        <i class="fa-solid fa-cloud-arrow-down text-emerald-600"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-light btn-sm rounded-lg border shadow-sm text-dark hover:bg-slate-50" title="@Localizer["Edit"]">
+                                        <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('@Localizer["Are you sure you want to delete this template form?"]');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-light btn-sm rounded-lg border shadow-sm text-dark hover:bg-slate-50" title="@Localizer["Delete"]">
+                                            <i class="fa-solid fa-trash-can text-rose-600"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -134,11 +229,7 @@
     <script>
         document.getElementById('periodFilter').addEventListener('change', function() {
             var periodId = this.value;
-            if (periodId) {
-                window.location.href = '@Url.Action("Index")' + '?periodId=' + periodId;
-            } else {
-                window.location.href = '@Url.Action("Index")';
-            }
+            window.location.href = '@Url.Action("Index")' + (periodId ? '?periodId=' + periodId : '');
         });
     </script>
 }

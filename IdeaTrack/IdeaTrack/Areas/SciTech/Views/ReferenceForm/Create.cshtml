@@ -1,81 +1,240 @@
-﻿@model IdeaTrack.Areas.SciTech.Models.ReferenceFormCreateVM
+@model IdeaTrack.Areas.SciTech.Models.ReferenceFormCreateVM
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = Localizer["Add New Form"].Value;
-    Layout = "~/Areas/SciTech/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/SciTech/Views/Shared/_LayoutSciTech.cshtml";
 }
 
-<div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="fas fa-plus-circle me-2"></i>Add New Form
-                    </h4>
-                </div>
-                
-                <div class="card-body">
-                    @if (TempData["ErrorMessage"] != null)
-                    {
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    }
+<style>
+    .premium-form-card {
+        background: white;
+        border: 1px solid var(--premium-border) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04) !important;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .form-control, .form-select {
+        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        padding: 0.75rem 1rem !important;
+        transition: all 0.3s ease;
+        background-color: #f8fafc;
+    }
+    .form-control:focus, .form-select:focus {
+        background-color: white;
+        border-color: var(--brand-red) !important;
+        box-shadow: 0 0 0 4px rgba(190, 18, 60, 0.1) !important;
+    }
+    .btn-brand {
+        background-color: var(--brand-red);
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 0.8rem 2rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+    }
+    .btn-brand:hover {
+        background-color: #9f1239;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(190, 18, 60, 0.25);
+    }
+    .btn-outline-custom {
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 0.8rem 2rem;
+        transition: all 0.3s;
+        border: 1px solid #e2e8f0;
+        background: white;
+        color: #475569;
+    }
+    .btn-outline-custom:hover {
+        background-color: #f1f5f9;
+        color: #0f172a;
+        transform: translateY(-1px);
+    }
+    .upload-zone {
+        border: 2px dashed #e2e8f0;
+        border-radius: 16px;
+        padding: 2.5rem;
+        text-align: center;
+        transition: all 0.3s;
+        background: #f8fafc;
+        cursor: pointer;
+    }
+    .upload-zone:hover {
+        border-color: var(--brand-red);
+        background: #fffafa;
+    }
+    .upload-icon {
+        width: 64px;
+        height: 64px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        color: var(--brand-red);
+        font-size: 1.5rem;
+    }
+    .stepper-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .step-number {
+        width: 32px;
+        height: 32px;
+        background: var(--brand-red);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+</style>
 
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
-                        @Html.AntiForgeryToken()
-                        
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+<div class="container py-2" style="max-width: 900px;">
+    <!-- BREADCRUMB / BACK -->
+    <div class="mb-4">
+        <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="text-decoration-none text-muted fw-bold small d-inline-flex align-items-center">
+            <i class="fa-solid fa-arrow-left-long me-2"></i> @Localizer["Back to Reference Forms"]
+        </a>
+    </div>
 
-                        <div class="mb-3">
-                            <label asp-for="PeriodId" class="form-label">Initiative Period <span class="text-danger">*</span></label>
-                            <select asp-for="PeriodId" asp-items="Model.Periods" class="form-select">
-                                <option value="">-- Select period --</option>
+    <!-- HEADER -->
+    <div class="mb-5">
+        <h2 class="fw-bold font-display text-dark mb-1">@Localizer["Upload New Form Template"]</h2>
+        <p class="text-muted">@Localizer["Create a new reference document or template form that will be available for initiative proposers."]</p>
+    </div>
+
+    <div class="premium-form-card p-4 p-md-5">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger border-0 rounded-4 shadow-sm mb-4"></div>
+
+            <div class="row g-4">
+                <!-- FORM INFO SECTION -->
+                <div class="col-12">
+                    <div class="stepper-header">
+                        <div class="step-number">1</div>
+                        <h5 class="fw-bold text-dark mb-0">@Localizer["General Information"]</h5>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label asp-for="PeriodId" class="form-label">@Localizer["Initiative Period"] <span class="text-rose-500">*</span></label>
+                            <select asp-for="PeriodId" asp-items="Model.Periods" class="form-select shadow-none">
+                                <option value="">-- @Localizer["Select a mapping period"] --</option>
                             </select>
-                            <span asp-validation-for="PeriodId" class="text-danger"></span>
+                            <span asp-validation-for="PeriodId" class="text-danger small mt-1 d-block font-semibold"></span>
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="FormName" class="form-label">Form Name <span class="text-danger">*</span></label>
-                            <input asp-for="FormName" class="form-control" placeholder="e.g., Initiative Recognition Application Form" />
-                            <span asp-validation-for="FormName" class="text-danger"></span>
+                        <div class="col-md-6">
+                            <label asp-for="FormName" class="form-label">@Localizer["Template Name"] <span class="text-rose-500">*</span></label>
+                            <input asp-for="FormName" class="form-control shadow-none" placeholder="@Localizer["e.g. Initiative Application Form V1"]" />
+                            <span asp-validation-for="FormName" class="text-danger small mt-1 d-block font-semibold"></span>
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Description" class="form-label">@Localizer["Description"]</label>
-                            <textarea asp-for="Description" class="form-control" rows="3" 
-                                      placeholder="Brief description of the form content"></textarea>
+                        <div class="col-12">
+                            <label asp-for="Description" class="form-label">@Localizer["Short Description"]</label>
+                            <textarea asp-for="Description" class="form-control shadow-none" rows="3" placeholder="@Localizer["Explain what this form is used for..."]"></textarea>
+                            <div class="form-text mt-2 opacity-75">@Localizer["Keep it brief (max 200 characters)"]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FILE UPLOAD SECTION -->
+                <div class="col-12 mt-5">
+                    <div class="stepper-header">
+                        <div class="step-number">2</div>
+                        <h5 class="fw-bold text-dark mb-0">@Localizer["Document Upload"]</h5>
+                    </div>
+
+                    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                        <div class="upload-icon">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-2">@Localizer["Click to choose or drag & drop"]</h5>
+                        <p class="text-muted small mb-4">@Localizer["Choose the file template from your local device"]</p>
+                        
+                        <div class="d-inline-flex flex-wrap justify-content-center gap-2 mb-3">
+                            <span class="badge bg-white text-muted border px-3 py-2 font-bold">.PDF</span>
+                            <span class="badge bg-white text-muted border px-3 py-2 font-bold">.DOCX</span>
+                            <span class="badge bg-white text-muted border px-3 py-2 font-bold">.XLSX</span>
+                            <span class="badge bg-white text-muted border px-3 py-2 font-bold">.PPTX</span>
                         </div>
 
-                        <div class="mb-4">
-                            <label asp-for="File" class="form-label">Form File <span class="text-danger">*</span></label>
-                            <input asp-for="File" type="file" class="form-control" 
-                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
-                            <span asp-validation-for="File" class="text-danger"></span>
-                            <div class="form-text">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Supported formats: PDF, Word, Excel, PowerPoint. Max size: 10MB
+                        <input id="fileInput" asp-for="File" type="file" class="d-none" onchange="updateFileName(this)"
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+                        
+                        <div id="fileSelectionInfo" class="mt-3 p-3 bg-white rounded-3 border d-none animate__animated animate__fadeInUp">
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <i class="fa-solid fa-file-circle-check text-emerald-500 fs-5"></i>
+                                <span id="fileNameDisplay" class="fw-bold text-dark"></span>
+                                <button type="button" class="btn btn-sm text-danger p-0 ms-2" onclick="clearFile(event)">
+                                    <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
                             </div>
                         </div>
 
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>Upload
-                            </button>
-                            <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-secondary">
-                                <i class="fas fa-times me-1"></i>Cancel
-                            </a>
+                        <span asp-validation-for="File" class="text-danger small mt-2 d-block font-semibold"></span>
+                        
+                        <div class="alert alert-info border-0 bg-blue-50 text-blue-800 rounded-3 mt-4 small mb-0 d-inline-block text-start">
+                            <i class="fa-solid fa-circle-info me-2"></i>
+                            <strong>@Localizer["Note:"]</strong> @Localizer["Maximum file size allowed is 10MB."]
                         </div>
-                    </form>
+                    </div>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="col-12 mt-4 border-top pt-4">
+                    <div class="d-flex flex-column flex-md-row gap-2">
+                        <button type="submit" class="btn btn-brand shadow-sm order-1 order-md-2 px-4">
+                            <i class="fa-solid fa-paper-plane me-2"></i>@Localizer["Publish Template Form"]
+                        </button>
+                        <a asp-action="Index" asp-route-periodId="@Model.PeriodId" class="btn btn-outline-custom order-2 order-md-1 px-4">
+                            @Localizer["Discard Changes"]
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        function updateFileName(input) {
+            const display = document.getElementById('fileNameDisplay');
+            const info = document.getElementById('fileSelectionInfo');
+            if (input.files && input.files.length > 0) {
+                display.textContent = input.files[0].name;
+                info.classList.remove('d-none');
+            } else {
+                info.classList.add('d-none');
+            }
+        }
+
+        function clearFile(e) {
+            e.stopPropagation();
+            const input = document.getElementById('fileInput');
+            const info = document.getElementById('fileSelectionInfo');
+            input.value = '';
+            info.classList.add('d-none');
+        }
+    </script>
 }

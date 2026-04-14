@@ -163,6 +163,11 @@
                    href="@Url.Action("ManageBoards", "Council", new { area = "SciTech" })">
                     <i class="fa-solid fa-user-group"></i> @Localizer["Councils"]
                 </a>
+
+                <a class="nav-link group transition-all duration-300 @(currentController == "ReferenceForm" ? "active" : "")"
+                   href="@Url.Action("Index", "ReferenceForm", new { area = "SciTech" })">
+                    <i class="fa-solid fa-file-invoice transition-transform group-hover:scale-125 group-hover:text-amber-500"></i> @Localizer["Reference Forms"]
+                </a>
                 
                 <!-- SYSTEM -->
                 <div class="nav-section-label">@Localizer["System"]</div>

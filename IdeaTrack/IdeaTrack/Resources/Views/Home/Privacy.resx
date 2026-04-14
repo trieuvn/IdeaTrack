@@ -59,183 +59,183 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Initiative Submission Guide" xml:space="preserve">
-    <value>Hướng dẫn nộp sáng kiến</value>
+    <value>Initiative Submission Guide</value>
   </data>
   <data name="Privacy Description" xml:space="preserve">
-    <value>Quy trình chi tiết, biểu mẫu cần thiết và tiêu chí đánh giá giúp giảng viên hoàn thành hồ sơ sáng kiến thành công.</value>
+    <value>Detailed process, required forms, and evaluation criteria to help faculty successfully complete their initiative portfolios.</value>
   </data>
   <data name="Overview" xml:space="preserve">
-    <value>Tổng quan</value>
+    <value>Overview</value>
   </data>
   <data name="Overview Detail" xml:space="preserve">
-    <value>Chào mừng bạn đến với hướng dẫn nộp sáng kiến. Sáng kiến thực tiễn là những kiến thức, kỹ năng, kỹ thuật mà tác giả đã đúc kết từ kinh nghiệm làm việc, mang lại hiệu quả cao trong quản lý, giảng dạy và nghiên cứu khoa học. Việc nộp sáng kiến không chỉ là quyền lợi mà còn là trách nhiệm để nâng cao chất lượng đào tạo chung của Trường.</value>
+    <value>Welcome to the initiative submission guide. Practical initiatives are knowledge, skills, and techniques that authors have drawn from work experience, bringing high efficiency in management, teaching, and scientific research. Submitting initiatives is not only a right but also a responsibility to improve the overall training quality of the University.</value>
   </data>
   <data name="Submission Process" xml:space="preserve">
-    <value>Quy trình nộp hồ sơ</value>
+    <value>Submission Process</value>
   </data>
   <data name="Prepare Documents" xml:space="preserve">
-    <value>Chuẩn bị hồ sơ</value>
+    <value>Prepare Documents</value>
   </data>
   <data name="Prepare Documents Detail" xml:space="preserve">
-    <value>Tải biểu mẫu, điền thông tin và chuẩn bị các minh chứng cần thiết.</value>
+    <value>Download forms, fill in information and prepare necessary evidence.</value>
   </data>
   <data name="Submit Online" xml:space="preserve">
-    <value>Nộp trực tuyến</value>
+    <value>Submit Online</value>
   </data>
   <data name="Submit Online Detail" xml:space="preserve">
-    <value>Đăng nhập vào cổng thông tin và tải lên hồ sơ ở định dạng PDF/DOCX.</value>
+    <value>Log in to the portal and upload the application in PDF/DOCX format.</value>
   </data>
   <data name="Council Review" xml:space="preserve">
-    <value>Hội đồng xét duyệt</value>
+    <value>Council Review</value>
   </data>
   <data name="Council Review Detail" xml:space="preserve">
-    <value>Hội đồng khoa học sẽ đánh giá và xem xét sáng kiến của bạn.</value>
+    <value>The Scientific Council will evaluate and review your initiative.</value>
   </data>
   <data name="Recognition &amp; Awards" xml:space="preserve">
-    <value>Công nhận &amp; Khen thưởng</value>
+    <value>Recognition &amp; Awards</value>
   </data>
   <data name="Recognition Awards Detail" xml:space="preserve">
-    <value>Nhận quyết định công nhận và khen thưởng theo quy định.</value>
+    <value>Receive the recognition decision and awards according to regulations.</value>
   </data>
   <data name="Document Requirements" xml:space="preserve">
-    <value>Yêu cầu hồ sơ</value>
+    <value>Document Requirements</value>
   </data>
   <data name="Document Type" xml:space="preserve">
-    <value>Loại tài liệu</value>
+    <value>Document Type</value>
   </data>
   <data name="Format" xml:space="preserve">
-    <value>Định dạng</value>
+    <value>Format</value>
   </data>
   <data name="Notes" xml:space="preserve">
-    <value>Ghi chú</value>
+    <value>Notes</value>
   </data>
   <data name="Initiative Registration Form" xml:space="preserve">
-    <value>Đơn đăng ký sáng kiến</value>
+    <value>Initiative Registration Form</value>
   </data>
   <data name="Must include author's signature" xml:space="preserve">
-    <value>Phải có chữ ký của tác giả</value>
+    <value>Must include author's signature</value>
   </data>
   <data name="Initiative Description" xml:space="preserve">
-    <value>Bản mô tả sáng kiến</value>
+    <value>Initiative Description</value>
   </data>
   <data name="Content should not exceed 20 pages" xml:space="preserve">
-    <value>Nội dung không quá 20 trang</value>
+    <value>Content should not exceed 20 pages</value>
   </data>
   <data name="Supporting Evidence" xml:space="preserve">
-    <value>Minh chứng hỗ trợ</value>
+    <value>Supporting Evidence</value>
   </data>
   <data name="Photos, videos, data..." xml:space="preserve">
-    <value>Hình ảnh, video, dữ liệu...</value>
+    <value>Photos, videos, data...</value>
   </data>
   <data name="Compress all documents if file size is large" xml:space="preserve">
-    <value>Nén tất cả tài liệu nếu dung lượng lớn</value>
+    <value>Compress all documents if file size is large</value>
   </data>
   <data name="Frequently Asked Questions" xml:space="preserve">
-    <value>Câu hỏi thường gặp</value>
+    <value>Frequently Asked Questions</value>
   </data>
   <data name="FAQ1 Question" xml:space="preserve">
-    <value>Hạn chót nộp sáng kiến là khi nào?</value>
+    <value>When is the deadline for initiative submission?</value>
   </data>
   <data name="FAQ1 Answer" xml:space="preserve">
-    <value>Thông thường, Trường nhận hồ sơ sáng kiến theo hai đợt trong năm học. Đợt 1 vào tháng 11 và Đợt 2 vào tháng 4 hàng năm.</value>
+    <value>Usually, the University receives initiative applications in two periods per academic year. Period 1 in November and Period 2 in April.</value>
   </data>
   <data name="FAQ2 Question" xml:space="preserve">
-    <value>Một sáng kiến có thể có bao nhiêu tác giả?</value>
+    <value>How many authors can an initiative have?</value>
   </data>
   <data name="FAQ2 Answer" xml:space="preserve">
-    <value>Một sáng kiến có thể do cá nhân hoặc nhóm tác giả thực hiện (tối đa 3 thành viên).</value>
+    <value>An initiative can be carried out by an individual or a group of authors (maximum 3 members).</value>
   </data>
   <data name="FAQ3 Question" xml:space="preserve">
-    <value>Tôi có thể chỉnh sửa hồ sơ sau khi nộp không?</value>
+    <value>Can I edit my application after submission?</value>
   </data>
   <data name="FAQ3 Answer" xml:space="preserve">
-    <value>Giảng viên chỉ có thể chỉnh sửa hồ sơ khi trạng thái hiển thị "Chờ sửa đổi" hoặc trước khi Hội đồng bắt đầu đánh giá.</value>
+    <value>Lecturers can only edit applications when the status shows "Waiting for Modification" or before the Council begins evaluation.</value>
   </data>
   <data name="Q1_Question" xml:space="preserve">
-    <value>Hạn chót nộp sáng kiến là khi nào?</value>
+    <value>When is the deadline for initiative submission?</value>
   </data>
   <data name="Q1_Answer" xml:space="preserve">
-    <value>Thông thường, Trường nhận hồ sơ sáng kiến theo hai đợt trong năm học. Đợt 1 vào tháng 11 và Đợt 2 vào tháng 4 hàng năm.</value>
+    <value>Usually, the University receives initiative applications in two periods per academic year. Period 1 in November and Period 2 in April.</value>
   </data>
   <data name="Q2_Question" xml:space="preserve">
-    <value>Một sáng kiến có thể có bao nhiêu tác giả?</value>
+    <value>How many authors can an initiative have?</value>
   </data>
   <data name="Q2_Answer" xml:space="preserve">
-    <value>Một sáng kiến có thể do cá nhân hoặc nhóm tác giả thực hiện (tối đa 3 thành viên).</value>
+    <value>An initiative can be carried out by an individual or a group of authors (maximum 3 members).</value>
   </data>
   <data name="Q3_Question" xml:space="preserve">
-    <value>Tôi có thể chỉnh sửa hồ sơ sau khi nộp không?</value>
+    <value>Can I edit my application after submission?</value>
   </data>
   <data name="Q3_Answer" xml:space="preserve">
-    <value>Giảng viên chỉ có thể chỉnh sửa hồ sơ khi trạng thái hiển thị "Chờ sửa đổi" hoặc trước khi Hội đồng bắt đầu đánh giá.</value>
+    <value>Lecturers can only edit applications when the status shows "Waiting for Modification" or before the Council begins evaluation.</value>
   </data>
   <data name="Select Period" xml:space="preserve">
-    <value>Chọn đợt</value>
+    <value>Select Period</value>
   </data>
   <data name="Select Period Description" xml:space="preserve">
-    <value>Chọn năm học và đợt để xem tài liệu liên quan.</value>
+    <value>Select academic year and period to view related documents.</value>
   </data>
   <data name="Academic Year" xml:space="preserve">
-    <value>Năm học</value>
+    <value>Academic Year</value>
   </data>
   <data name="Initiative Period" xml:space="preserve">
-    <value>Đợt sáng kiến</value>
+    <value>Initiative Period</value>
   </data>
   <data name="(Current)" xml:space="preserve">
-    <value>(Hiện tại)</value>
+    <value>(Current)</value>
   </data>
   <data name="(Active)" xml:space="preserve">
-    <value>(Đang mở)</value>
+    <value>(Active)</value>
   </data>
   <data name="No active years available" xml:space="preserve">
-    <value>Không có năm học khả dụng</value>
+    <value>No active years available</value>
   </data>
   <data name="No active periods" xml:space="preserve">
-    <value>Không có đợt đang mở</value>
+    <value>No active periods</value>
   </data>
   <data name="Support Documents" xml:space="preserve">
-    <value>Tài liệu hỗ trợ</value>
+    <value>Support Documents</value>
   </data>
   <data name="Documents for:" xml:space="preserve">
-    <value>Tài liệu cho:</value>
+    <value>Documents for:</value>
   </data>
   <data name="Download forms and guides" xml:space="preserve">
-    <value>Tải xuống các biểu mẫu và hướng dẫn để chuẩn bị hồ sơ.</value>
+    <value>Download forms and guides to prepare your portfolio.</value>
   </data>
   <data name="No documents available for this period." xml:space="preserve">
-    <value>Không có tài liệu cho đợt này.</value>
+    <value>No documents available for this period.</value>
   </data>
   <data name="Download All (.zip)" xml:space="preserve">
-    <value>Tải tất cả (.zip)</value>
+    <value>Download All (.zip)</value>
   </data>
   <data name="Current Status" xml:space="preserve">
-    <value>Trạng thái hiện tại</value>
+    <value>Current Status</value>
   </data>
   <data name="Deadline:" xml:space="preserve">
-    <value>Hạn chót:</value>
+    <value>Deadline:</value>
   </data>
   <data name="days remaining" xml:space="preserve">
-    <value>ngày còn lại</value>
+    <value>days remaining</value>
   </data>
   <data name="No Active Period" xml:space="preserve">
-    <value>Không có đợt đang mở</value>
+    <value>No Active Period</value>
   </data>
   <data name="No active period description" xml:space="preserve">
-    <value>Hiện tại không có đợt nộp sáng kiến nào đang mở.</value>
+    <value>Currently, there are no active initiative submission periods.</value>
   </data>
   <data name="Need Help?" xml:space="preserve">
-    <value>Cần hỗ trợ?</value>
+    <value>Need Help?</value>
   </data>
   <data name="Science &amp; Technology Office" xml:space="preserve">
-    <value>Phòng Khoa học &amp; Công nghệ</value>
+    <value>Science &amp; Technology Office</value>
   </data>
   <data name="Support Email" xml:space="preserve">
-    <value>Email hỗ trợ</value>
+    <value>Support Email</value>
   </data>
   <data name="Important Notice" xml:space="preserve">
-    <value>Lưu ý quan trọng</value>
+    <value>Important Notice</value>
   </data>
   <data name="Late submission notice" xml:space="preserve">
-    <value>Tất cả hồ sơ nộp muộn sẽ được tự động chuyển sang xét duyệt ở đợt tiếp theo của năm học sau.</value>
+    <value>All late submissions will be automatically moved for review in the next period of the following academic year.</value>
   </data>
 </root>
