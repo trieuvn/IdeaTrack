@@ -111,42 +111,71 @@
 
             <section class="mt-5 mb-5">
                 <h3 class="fw-bold mb-4">@Localizer["Frequently Asked Questions"]</h3>
-                <div class="accordion accordion-flush" id="faqAccordion">
-                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                @Localizer["FAQ1 Question"]
+                <style>
+                    /* Fix conflict between Bootstrap and Tailwind CSS on '.collapse' class */
+                    .accordion-collapse.collapse {
+                        visibility: visible !important;
+                    }
+
+                    /* Premium smooth transition */
+                    .accordion-collapse {
+                        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                    }
+
+                    /* Custom fade-in for content that syncs with expansion */
+                    .accordion-body {
+                        transition: all 0.5s ease-out;
+                        opacity: 0;
+                        transform: translateY(-10px);
+                    }
+
+                    .accordion-collapse.show .accordion-body {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+
+                    .accordion-button:not(.collapsed) {
+                        background-color: #fef2f2 !important;
+                        color: #b91c1c !important;
+                        box-shadow: none !important;
+                    }
+                </style>
+                <div class="accordion accordion-flush notranslate" id="faqAccordion">
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-4">
+                        <h2 class="accordion-header" id="headingFaq1">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                                @Localizer["Q1_Question"]
                             </button>
                         </h2>
-                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                @Localizer["FAQ1 Answer"]
+                        <div id="faq1" class="accordion-collapse collapse" aria-labelledby="headingFaq1" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body notranslate">
+                                <p class="mb-0 fw-normal" style="color: #444 !important; opacity: 1 !important; visibility: visible !important;">@Localizer["Q1_Answer"]</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                @Localizer["FAQ2 Question"]
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-4">
+                        <h2 class="accordion-header" id="headingFaq2">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                                @Localizer["Q2_Question"]
                             </button>
                         </h2>
-                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                @Localizer["FAQ2 Answer"]
+                        <div id="faq2" class="accordion-collapse collapse" aria-labelledby="headingFaq2" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body notranslate">
+                                <p class="mb-0 fw-normal" style="color: #444 !important; opacity: 1 !important; visibility: visible !important;">@Localizer["Q2_Answer"]</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                @Localizer["FAQ3 Question"]
+                    <div class="accordion-item border-0 mb-3 shadow-sm rounded-4">
+                        <h2 class="accordion-header" id="headingFaq3">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                                @Localizer["Q3_Question"]
                             </button>
                         </h2>
-                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body text-muted">
-                                @Localizer["FAQ3 Answer"]
+                        <div id="faq3" class="accordion-collapse collapse" aria-labelledby="headingFaq3" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body notranslate">
+                                <p class="mb-0 fw-normal" style="color: #444 !important; opacity: 1 !important; visibility: visible !important;">@Localizer["Q3_Answer"]</p>
                             </div>
                         </div>
                     </div>
